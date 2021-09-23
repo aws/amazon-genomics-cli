@@ -1,0 +1,11 @@
+digraph CramToBamFlow {
+  #rankdir=LR;
+  compound=true;
+
+  # Links
+  CALL_CramToBamTask -> CALL_ValidateSamFile
+
+  # Nodes
+  CALL_CramToBamTask [label="call CramToBamTask"]
+  CALL_ValidateSamFile [label="call ValidateSamFile"]
+}

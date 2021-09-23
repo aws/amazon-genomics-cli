@@ -1,0 +1,134 @@
+{
+  "$schema":"http://json-schema.org/draft-04/schema#",
+  "type":"object",
+  "properties":{
+    "name":{
+      "type":"string",
+      "pattern": "^[A-Za-z0-9]+$"
+    },
+    "schemaVersion":{
+      "type":"integer",
+      "minimum":1
+    },
+    "workflows":{
+      "type":[
+        "object",
+        "null"
+      ],
+      "patternProperties":{
+        ".*":{
+          "type":[
+            "object"
+          ],
+          "properties":{
+            "type":{
+              "type": "object",
+              "properties": {
+                "language": {
+                  "type": "string",
+                  "minLength":1
+                },
+                "version":{
+                  "type":[
+                    "number",
+                    "string"
+                  ],
+                  "minLength":1
+                }
+              },
+              "required": [
+                "language",
+                "version"
+              ]
+            },
+            "sourceURL":{
+              "type":"string",
+              "minLength":1
+            }
+          },
+          "required":[
+            "type",
+            "sourceURL"
+          ]
+        }
+      }
+    },
+    "contexts":{
+      "type":[
+        "object"
+      ],
+      "additionalProperties": false,
+      "patternProperties":{
+        "^[A-Za-z0-9]+$":{
+          "type":[
+            "object"
+          ],
+          "properties":{
+            "requestSpotInstances":{
+              "type":"boolean"
+            },
+            "instanceTypes":{
+              "type":[
+                "array",
+                "null"
+              ],
+              "items":[
+                {
+                  "type":"string",
+                  "minLength":1
+                }
+              ]
+            },
+            "engines": {
+              "type": "array",
+              "maxItems": 1,
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "engine": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": ["type", "engine"]
+              }
+            }
+          },
+          "required": [
+            "engines"
+          ]
+        }
+      }
+    },
+    "data":{
+      "type":[
+        "array",
+        "null"
+      ],
+      "items":{
+        "type":"object",
+        "properties":{
+          "readOnly":{
+            "type":"boolean"
+          },
+          "location":{
+            "type":"string",
+            "minLength":1
+          }
+        },
+        "required":[
+          "location"
+        ]
+      }
+    }
+  },
+  "required":[
+    "name",
+    "contexts"
+  ]
+}

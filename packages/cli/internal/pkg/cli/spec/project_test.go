@@ -1,0 +1,144 @@
+package spec
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v3"
+)
+
+func TestProjectYaml(t *testing.T) {
+	tests := map[string]struct {
+		obj  Project
+		yaml string
+	}{
+		"example": {
+			obj: Project{
+				Name:          "Demo",
+				SchemaVersion: LatestVersion,
+				Workflows: map[string]Workflow{
+					"haplotype": {Type: WorkflowType{"wdl", "1.42"}, SourceURL: "file://workflows/haplotypecaller-gvcf-gatk4.wdl"},
+					"hello":     {Type: WorkflowType{"wdl", "1.5"}, SourceURL: "file://workflows/hello.wdl"},
+					"read":      {Type: WorkflowType{"wdl", "a.b"}, SourceURL: "file://workflows/read.wdl"},
+				},
+				Data: []Data{
+					{Location: "s3://mybucket", ReadOnly: true},
+				},
+				Contexts: map[string]Context{
+					"testContext": {
+						Engines: []Engine{
+							{Type: "wdl", Engine: "cromwell"},
+						},
+					},
+				},
+			},
+			yaml: `name: Demo
+schemaVersion: 1
+workflows:
+    haplotype:
+        type:
+            language: wdl
+            version: "1.42"
+        sourceURL: file://workflows/haplotypecaller-gvcf-gatk4.wdl
+    hello:
+        type:
+            language: wdl
+            version: "1.5"
+        sourceURL: file://workflows/hello.wdl
+    read:
+        type:
+            language: wdl
+            version: a.b
+        sourceURL: file://workflows/read.wdl
+data:
+    - location: s3://mybucket
+      readOnly: true
+contexts:
+    testContext:
+        engines:
+            - type: wdl
+              engine: cromwell
+`,
+		},
+		"empty": {
+			obj: Project{},
+			yaml: `name: ""
+schemaVersion: 0
+`,
+		},
+		"complex": {
+			obj: Project{
+				Name:          "Complex",
+				SchemaVersion: LatestVersion,
+				Workflows: map[string]Workflow{
+					"wf1": {Type: WorkflowType{"wdl", "1.0"}, SourceURL: "file://workflows/wf1.wdl"},
+					"wf2": {Type: WorkflowType{"wdl", "abc.xyz"}, SourceURL: "s3://my-wf-bucket/wf2.wdl"},
+				},
+				Data: []Data{
+					{Location: "s3://mybucket/a", ReadOnly: true},
+					{Location: "s3://mybucket/b", ReadOnly: true},
+					{Location: "s3://myotherbucket"},
+				},
+				Contexts: map[string]Context{
+					"ctx1": {
+						Engines: []Engine{
+							{Type: "wdl", Engine: "miniwdl"},
+						},
+					},
+					"ctx2": {
+						Engines: []Engine{
+							{Type: "nextflow", Engine: "nextflow"},
+						},
+					},
+				},
+			},
+			yaml: `name: Complex
+schemaVersion: 1
+workflows:
+    wf1:
+        type:
+            language: wdl
+            version: "1.0"
+        sourceURL: file://workflows/wf1.wdl
+    wf2:
+        type:
+            language: wdl
+            version: abc.xyz
+        sourceURL: s3://my-wf-bucket/wf2.wdl
+data:
+    - location: s3://mybucket/a
+      readOnly: true
+    - location: s3://mybucket/b
+      readOnly: true
+    - location: s3://myotherbucket
+contexts:
+    ctx1:
+        engines:
+            - type: wdl
+              engine: miniwdl
+    ctx2:
+        engines:
+            - type: nextflow
+              engine: nextflow
+`,
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name+"Unmarshal", func(t *testing.T) {
+			expected := tt.obj
+			actual := Project{}
+			err := yaml.Unmarshal([]byte(tt.yaml), &actual)
+			require.NoError(t, err)
+			assert.Equal(t, expected, actual)
+		})
+		t.Run(name+"Marshal", func(t *testing.T) {
+			expected := tt.yaml
+			bytes, err := yaml.Marshal(tt.obj)
+			require.NoError(t, err)
+			actual := string(bytes)
+			assert.Equal(t, expected, actual)
+		})
+	}
+}

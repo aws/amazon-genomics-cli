@@ -1,15 +1,184 @@
-## My Project
+# Amazon Genomics CLI
 
-TODO: Fill this README out!
+## Overview
 
-Be sure to:
+The AWS Genomics Command Line Interface (AGC) is a tool to simplify the processes of deploying the AWS infrastructure required to
+run genomics workflows in the cloud, to submit those workflows to run, and to monitor the logs and outputs of those workflows.
 
-* Change the title in this README
-* Edit your repository description on GitHub
+## Quick Start
+
+To get an introduction to AGC refer to the [Quick Start Guide](https://github.com/aws/amazon-genomics-cli/wiki/Quick-Start-Guide)
+in our wiki.
+
+## Further Reading
+
+For full documentation, please refer to our [wiki](https://github.com/aws/amazon-genomics-cli/wiki).
+
+## Releases
+
+All releases can be accessed on our releases [page](https://github.com/aws/amazon-genomics-cli/releases).
+
+## Development
+
+To build from source you will need to ensure the following prerequisites are met.
+
+### One-time setup
+
+There are a few prerequisites you'll need to install on your machine before you can start developing.
+
+Once you've installed all the dependencies listed here, run `make init` to install the rest.
+
+
+#### Go
+
+The Amazon Genomics CLI is written in Go.
+
+To manage and install Go versions, we use [goenv](https://github.com/syndbg/goenv). Follow the installation
+instructions [here](https://github.com/syndbg/goenv/blob/master/INSTALL.md).
+
+#### Node
+
+AGC makes use of the AWS CDK to deploy infrastructure into an AWS account. Our CDK code is written in TypeScript.
+You'll need Node to ensure the appropriate dependencies are installed at build time.
+
+To manage and install Node versions, we use [nvm](https://github.com/nvm-sh/nvm).
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.bashrc
+echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Note: If you are using Zsh, replace `~/.bashrc` with `~/.zshrc`.
+
+#### Sed (OSX)
+
+OSX uses an outdated version of [sed](https://www.gnu.org/software/sed/manual/sed.html). If you are on a Mac, you will
+need to use a newer version of sed to ensure script compatibility.
+
+```bash
+brew install gnu-sed
+echo 'export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Note: If you are using Zsh, replace `~/.bashrc` with `~/.zshrc`.
+
+#### One time setup 
+
+Once you've installed all the dependencies listed here, run `make init` to automatically install all remaining dependencies.
+
+
+#### Make
+
+We use `make` to build, test and deploy artifacts. To build and test issue the `make` command from the project root.
+
+### Running Development Code
+
+To run against a development version of AGC, first build your relevant changes and then run `./scripts/run-dev.sh`. This will
+set the required environment variables and then enter into an AGC command shell.
+
+If you want to run from development code manually, ensure you have the following environment variables set.
+
+```shell
+export ECR_CROMWELL_ACCOUNT_ID=<some-value>
+export ECR_CROMWELL_REGION=<some-value>
+export ECR_CROMWELL_TAG=<some-value>
+export ECR_WES_ACCOUNT_ID=<some-value>
+export ECR_WES_REGION=<some-value>
+export ECR_WES_TAG=<some-value>
+```
+
+These environment variables point to the ECR account, region, and tags of the Cromwell engine and WES adaptor containers respectively
+that will be deployed for your contexts. They are written as Systems Manager Parameter Store variables when you activate
+your AGC account region (`agc account activate`). The `./scripts/run-dev.sh` contains logic to determine the current
+dev versions of the images which you would typically use. You may also use production images, the current values of which will
+be written when you activate an account with the production version of AGC. If you have customized containers that you 
+want to develop against you can specify these however you will need to make these available if you wish to make pull requests
+with code that depends on them.
+
+### Building locally with CodeBuild
+
+This package is buildable with AWS CodeBuild. You can use the AWS CodeBuild agent to run CodeBuild builds on a local
+machine.
+
+You only need to set up the build image the first time you run the agent, or when the image has changed. To set up the
+build image, use the following commands:
+
+```bash
+git clone https://github.com/aws/aws-codebuild-docker-images.git
+cd aws-codebuild-docker-images/ubuntu/standard/5.0
+docker build -t aws/codebuild/standard:5.0 .
+docker pull amazon/aws-codebuild-local:latest --disable-content-trust=false
+```
+
+Create an environment file (e.g. `env.txt`) with the appropriate entries depending on which image tags you want to use.
+
+```shell
+CROMWELL_ECR_TAG=2021-06-17T23-48-54Z
+WES_ECR_TAG=2021-06-17T23-48-54Z
+```
+
+In the root directory for this package, download and run the CodeBuild build script:
+
+```bash
+wget https://raw.githubusercontent.com/aws/aws-codebuild-docker-images/master/local_builds/codebuild_build.sh
+chmod +x codebuild_build.sh
+./codebuild_build.sh -i aws/codebuild/standard:5.0 -a ./output -c -e env.txt
+```
+
+### Configuring docker image location
+
+The default values for all variables are placeholders (e.g. 'WES_ECR_TAG_PLACEHOLDER'). It is replaces by the actual
+value during a build process.
+
+#### WES adapter for Cromwell
+
+Local environment variables:
+
+- `ECR_WES_ACCOUNT_ID`
+- `ECR_WES_REGION`
+- `ECR_WES_TAG`
+
+The corresponding AWS Systems Manager Parameter Store property names:
+
+- /agc/_common/wes/ecr-repo/account
+- /agc/_common/wes/ecr-repo/region
+- /agc/_common/wes/ecr-repo/tag
+
+#### Cromwell engine
+
+Local environment variables:
+
+- `ECR_CROMWELL_ACCOUNT_ID`
+- `ECR_CROMWELL_REGION`
+- `ECR_CROMWELL_TAG`
+
+The corresponding AWS Systems Manager Parameter Store property names:
+
+- /agc/_common/cromwell/ecr-repo/account
+- /agc/_common/cromwell/ecr-repo/region
+- /agc/_common/cromwell/ecr-repo/tag
+
+## Contributing
+
+### Issues
+
+See [Reporting Bugs/Feature Requests](CONTRIBUTING.md#reporting-bugsfeature-requests) for more information. For a list of
+open bugs and feature requests, please refer to our [issues](https://github.com/aws/amazon-genomics-cli/issues?q=is%3Aopen+is%3Aissue) page.
+
+### Pull Requests
+
+See [Contributing via Pull Requests](CONTRIBUTING.md#contributing-via-pull-requests)
 
 ## Security
 
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+See [Security Issue Notification](CONTRIBUTING.md#security-issue-notifications) for more information.
+
+## Attributions
+
+TODO, link to attribution docs
 
 ## License
 
