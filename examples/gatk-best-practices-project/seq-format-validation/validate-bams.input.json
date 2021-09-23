@@ -1,0 +1,6 @@
+{
+  "ValidateBamsWf.bam_array": [
+    "s3://gatk-test-data/wgs_bam/NA12878_24RG_hg38/NA12878_24RG_small.hg38.bam",
+    "s3://gatk-test-data/wgs_bam/NA12878_24RG_hg38/NA12878_24RG_med.hg38.bam"
+  ]
+}

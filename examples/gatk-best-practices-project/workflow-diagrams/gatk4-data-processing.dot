@@ -1,0 +1,48 @@
+digraph PreProcessingForVariantDiscovery_GATK4 {
+  #rankdir=LR;
+  compound=true;
+
+  # Links
+  SCATTER_1_VARIABLE_unmapped_bam -> CALL_MergeBamAlignment
+  CALL_SortAndFixTags -> CALL_BaseRecalibrator
+  SCATTER_2_VARIABLE_subgroup -> CALL_ApplyBQSR
+  CALL_CreateSequenceGroupingTSV -> SCATTER_2_VARIABLE_subgroup
+  CALL_GatherBqsrReports -> CALL_ApplyBQSR
+  CALL_SortAndFixTags -> CALL_ApplyBQSR
+  CALL_CreateSequenceGroupingTSV -> SCATTER_0_VARIABLE_subgroup
+  CALL_MergeBamAlignment -> CALL_MarkDuplicates
+  SCATTER_1_VARIABLE_unmapped_bam -> CALL_SamToFastqAndBwaMem
+  CALL_GetBwaVersion -> CALL_MergeBamAlignment
+  CALL_ApplyBQSR -> CALL_GatherBamFiles
+  CALL_MarkDuplicates -> CALL_SortAndFixTags
+  CALL_BaseRecalibrator -> CALL_GatherBqsrReports
+  SCATTER_0_VARIABLE_subgroup -> CALL_BaseRecalibrator
+  CALL_SamToFastqAndBwaMem -> CALL_MergeBamAlignment
+
+  # Nodes
+  CALL_SortAndFixTags [label="call SortAndFixTags"]
+  subgraph cluster_1 {
+    style="filled,solid";
+    fillcolor=white;
+    CALL_SamToFastqAndBwaMem [label="call SamToFastqAndBwaMem"]
+    CALL_MergeBamAlignment [label="call MergeBamAlignment"]
+    SCATTER_1_VARIABLE_unmapped_bam [shape="hexagon" label="scatter over File as unmapped_bam"]
+  }
+  CALL_GetBwaVersion [label="call GetBwaVersion"]
+  CALL_GatherBamFiles [label="call GatherBamFiles"]
+  subgraph cluster_2 {
+    style="filled,solid";
+    fillcolor=white;
+    CALL_ApplyBQSR [label="call ApplyBQSR"]
+    SCATTER_2_VARIABLE_subgroup [shape="hexagon" label="scatter over Array[String] as subgroup"]
+  }
+  CALL_MarkDuplicates [label="call MarkDuplicates"]
+  CALL_CreateSequenceGroupingTSV [label="call CreateSequenceGroupingTSV"]
+  subgraph cluster_0 {
+    style="filled,solid";
+    fillcolor=white;
+    CALL_BaseRecalibrator [label="call BaseRecalibrator"]
+    SCATTER_0_VARIABLE_subgroup [shape="hexagon" label="scatter over Array[String] as subgroup"]
+  }
+  CALL_GatherBqsrReports [label="call GatherBqsrReports"]
+}

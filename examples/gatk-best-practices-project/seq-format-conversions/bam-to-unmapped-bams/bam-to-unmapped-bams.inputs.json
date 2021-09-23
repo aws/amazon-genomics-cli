@@ -1,0 +1,3 @@
+{
+  "BamToUnmappedBams.input_bam": "s3://gatk-test-data/wgs_bam/NA12878_20k_hg38/NA12878.bam"
+}

@@ -1,0 +1,48 @@
+digraph RNAseq {
+  #rankdir=LR;
+  compound=true;
+
+  # Links
+  CALL_StarAlign -> CALL_MergeBamAlignment
+  CALL_BaseRecalibrator -> CALL_ApplyBQSR
+  CALL_MarkDuplicates -> CALL_SplitNCigarReads
+  CALL_RevertSam -> CALL_SamToFastq
+  CALL_SplitNCigarReads -> CALL_BaseRecalibrator
+  SCATTER_1_VARIABLE_interval -> CALL_HaplotypeCaller
+  CALL_HaplotypeCaller -> CALL_MergeVCFs
+  CALL_StarGenerateReferences -> CALL_StarAlign
+  CALL_MergeBamAlignment -> CALL_MarkDuplicates
+  CALL_gtfToCallingIntervals -> CALL_ScatterIntervalList
+  CALL_MergeVCFs -> CALL_VariantFiltration
+  CALL_ScatterIntervalList -> SCATTER_1_VARIABLE_interval
+  CALL_SplitNCigarReads -> CALL_ApplyBQSR
+  CALL_ApplyBQSR -> CALL_HaplotypeCaller
+  CALL_RevertSam -> CALL_MergeBamAlignment
+  CALL_SamToFastq -> CALL_StarAlign
+
+  # Nodes
+  CALL_MergeBamAlignment [label="call MergeBamAlignment"]
+  CALL_ApplyBQSR [label="call ApplyBQSR"]
+  CALL_gtfToCallingIntervals [label="call gtfToCallingIntervals"]
+  subgraph cluster_0 {
+    style="filled,dashed";
+    fillcolor=white;
+    CALL_StarGenerateReferences [label="call StarGenerateReferences"]
+    CONDITIONAL_0_EXPRESSION [shape="hexagon" label="if (!(defined(zippedStarReferences)))" style="dashed" ]
+  }
+  CALL_VariantFiltration [label="call VariantFiltration"]
+  CALL_SamToFastq [label="call SamToFastq"]
+  CALL_MarkDuplicates [label="call MarkDuplicates"]
+  CALL_ScatterIntervalList [label="call ScatterIntervalList"]
+  subgraph cluster_1 {
+    style="filled,solid";
+    fillcolor=white;
+    CALL_HaplotypeCaller [label="call HaplotypeCaller"]
+    SCATTER_1_VARIABLE_interval [shape="hexagon" label="scatter over File as interval"]
+  }
+  CALL_MergeVCFs [label="call MergeVCFs"]
+  CALL_BaseRecalibrator [label="call BaseRecalibrator"]
+  CALL_RevertSam [label="call RevertSam"]
+  CALL_SplitNCigarReads [label="call SplitNCigarReads"]
+  CALL_StarAlign [label="call StarAlign"]
+}

@@ -1,0 +1,10 @@
+digraph UninterleaveFastqs {
+  #rankdir=LR;
+  compound=true;
+
+  # Links
+  
+
+  # Nodes
+  CALL_uninterleave_fqs [label="call uninterleave_fqs"]
+}

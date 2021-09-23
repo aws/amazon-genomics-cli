@@ -1,0 +1,15 @@
+digraph ValidateBamsWf {
+  #rankdir=LR;
+  compound=true;
+
+  # Links
+  SCATTER_0_VARIABLE_input_bam -> CALL_ValidateBAM
+
+  # Nodes
+  subgraph cluster_0 {
+    style="filled,solid";
+    fillcolor=white;
+    CALL_ValidateBAM [label="call ValidateBAM"]
+    SCATTER_0_VARIABLE_input_bam [shape="hexagon" label="scatter over File as input_bam"]
+  }
+}

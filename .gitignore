@@ -1,2 +1,12 @@
+/.idea/
+/output/
+codebuild_build.sh
 .DS_Store
-
+venv
+.venv
+*.iml
+coverage.out
+/packages/common/bin/
+vendor
+/docs/
+/site/content/en/docs/Reference/agc*
