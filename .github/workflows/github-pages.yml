@@ -46,6 +46,7 @@ jobs:
 
       - name: Generate Docs
         run: >
+          git submodule update --init --recursive &&
           (cd packages/cli && go mod vendor) && 
           make docs
 
