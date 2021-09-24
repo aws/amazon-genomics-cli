@@ -36,16 +36,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      - name: Setup Go environment
+        uses: actions/setup-go@v2.1.4
+        with:
+          go-version: 1.16.0
+
       - name: Clean Docs
         run: make clean-docs
 
       - name: Generate Docs
         run: >
-          echo $HOME &&
-          git clone https://github.com/syndbg/goenv.git $HOME/.goenv &&
-          export GOENV_ROOT="$HOME/.goenv &&
-          eval "$(goenv init -)" &&
-          $HOME/.goenv/bin/goenv install -f &&
           make init && 
           make docs
 
