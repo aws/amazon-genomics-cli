@@ -46,7 +46,7 @@ jobs:
 
       - name: Generate Docs
         run: >
-          make init && 
+          (cd packages/cli && go mod vendor) && 
           make docs
 
       - name: Deploy To Pages
