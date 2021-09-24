@@ -50,6 +50,7 @@ jobs:
       - name: Generate Docs
         run: >
           (cd packages/cli && go mod vendor) && 
+          (cd site && mkdir themes && cd themes && git clone --recurse-submodules --depth 1 https://github.com/google/docsy.git)
           make docs
 
       - name: Deploy To Pages
