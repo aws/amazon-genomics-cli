@@ -13,12 +13,6 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v2
-      - name: Checkout submodules
-        shell: bash
-        run: |
-          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
-          git submodule sync --recursive
-          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1        
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2   # see https://github.com/peaceiris/actions-hugo for details
@@ -50,7 +44,7 @@ jobs:
       - name: Generate Docs
         run: >
           (cd packages/cli && go mod vendor) && 
-          (cd site && mkdir themes && cd themes && git clone --recurse-submodules --depth 1 https://github.com/google/docsy.git)
+          (cd site && mkdir themes && cd themes && git clone --recurse-submodules --depth 1 https://github.com/google/docsy.git) &&
           make docs
 
       - name: Deploy To Pages
