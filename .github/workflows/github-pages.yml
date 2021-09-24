@@ -27,10 +27,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-          
-      - name: Setup Go environment
-        uses: actions/setup-go@v2.1.4
-
 
       - name: Cache dependencies
         uses: actions/cache@v1
@@ -44,11 +40,21 @@ jobs:
         run: make clean-docs
 
       - name: Generate Docs
-        run: go env -w GOPROXY=direct && make docs
+        run: >
+          echo $HOME
+          git clone https://github.com/syndbg/goenv.git $HOME/.goenv &&
+          export GOENV_ROOT="$HOME/.goenv &&
+          export PATH="$GOENV_ROOT/bin:$PATH &&
+          eval "$(goenv init -)" &&
+          export PATH="$GOROOT/bin:$PATH &&
+          export PATH="$PATH:$GOPATH/bin &&
+          goenv install -f &&
+          make init && 
+          make docs
 
       - name: Deploy To Pages
-        uses: peaceiris/actions-gh-pages@v3   # see https://github.com/peaceiris/actions-gh-pages for details
-        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: peaceiris/actions-gh-pages@v3           # see https://github.com/peaceiris/actions-gh-pages for details
+        if: ${{ github.ref == 'refs/heads/mjs-test' }}    # set to 'refs/heads/main' to only deploy when the branch is main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: mjs-docs                    # set to 'gh-pages to publish to github pages'
