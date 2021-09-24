@@ -85,8 +85,7 @@ section = ["HTML", "print", "RSS"]
 
 [params]
 copyright = "Amazon Web Services, Inc. or its affiliates."
-privacy_policy = "https://
-.amazon.com/privacy"
+privacy_policy = "https://aws.amazon.com/privacy"
 
 # First one is picked as the Twitter card image if not set on page.
 # images = ["images/project-illustration.png"]
