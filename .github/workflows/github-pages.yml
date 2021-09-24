@@ -13,9 +13,12 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true  # Fetch the Docsy theme
-          fetch-depth: 1         
+      - name: Checkout submodules
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1        
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2   # see https://github.com/peaceiris/actions-hugo for details
