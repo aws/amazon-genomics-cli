@@ -55,12 +55,12 @@ anchor = "smart"
 [languages]
 [languages.en]
 title = "Amazon Genomics CLI"
-description = "AWS Genomics CLI developer guide and documentation."
+description = "Amazon Genomics CLI developer guide and documentation."
 languageName ="English"
 # Weight used for sorting.
 weight = 1
 #[languages.tr]
-#title = "AWS Genomics CLI"
+#title = "Amazon Genomics CLI"
 #description = "Docsy er operativsystem for skyen"
 #languageName ="Türkçe"
 #contentDir = "content/tr"
@@ -85,7 +85,8 @@ section = ["HTML", "print", "RSS"]
 
 [params]
 copyright = "Amazon Web Services, Inc. or its affiliates."
-privacy_policy = "https://aws.amazon.com/privacy"
+privacy_policy = "https://
+.amazon.com/privacy"
 
 # First one is picked as the Twitter card image if not set on page.
 # images = ["images/project-illustration.png"]
@@ -109,12 +110,13 @@ version = "0.0"
 # url_latest_version = "https://example.com"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
-github_repo = "https://github.com/aws/amazon-genomics-cli"
+github_repo = "https://github.com/
+/amazon-genomics-cli"
 # An optional link to a related project repo. For example, the sibling repository where your product code lives.
 #github_project_repo = "https://github.com/google/docsy"
 
 # Specify a value here if your content directory is not in your repo's root directory
-# github_subdir = ""
+github_subdir = "site/"
 
 # Uncomment this if you have a newer GitHub repo with "main" as the default branch,
 # or specify a new value if you want to reference another branch in your GitHub links
@@ -150,7 +152,7 @@ footer_about_disable = false
 # If you want this feature, but occasionally need to remove the "Feedback" section from a single page,
 # add "hide_feedback: true" to the page's front matter.
 [params.ui.feedback]
-enable = true
+enable = false
 # The responses that the user sees after clicking "yes" (the page was helpful) or "no" (the page was not helpful).
 yes = 'Glad to hear it! Please <a href="https://github.com/aws/amazon-genomics-cli/issues/new">tell us how we can improve</a>.'
 no = 'Sorry to hear that. Please <a href="https://github.com/aws/amazon-genomics-cli/issues/new">tell us how we can improve</a>.'
