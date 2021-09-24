@@ -47,7 +47,7 @@ jobs:
         run: make clean-docs
 
       - name: Generate Docs
-        run: go env -w GOPROXY=direct && make init && make docs
+        run: go env -w GOPROXY=direct && make docs
 
       - name: Deploy To Pages
         uses: peaceiris/actions-gh-pages@v3   # see https://github.com/peaceiris/actions-gh-pages for details
