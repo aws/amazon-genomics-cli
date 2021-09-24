@@ -16,6 +16,13 @@ jobs:
         with:
           submodules: recursive  # Fetch the Docsy theme
           fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
+      
+      - name: Setup Goenv
+        run: >
+           git clone https://github.com/syndbg/goenv.git ~/.goenv
+           echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.bashrc
+           echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.bashrc
+
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2   # see https://github.com/peaceiris/actions-hugo for details
