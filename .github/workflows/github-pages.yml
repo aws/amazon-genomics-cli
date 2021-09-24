@@ -3,12 +3,6 @@
 name: github pages
 
 on:
-  push:
-    branches:
-      - main  # Set a branch to deploy
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:      # Allow manual triggering of the action
 
 
