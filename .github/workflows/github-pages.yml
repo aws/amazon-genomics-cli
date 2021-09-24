@@ -20,8 +20,8 @@ jobs:
       - name: Setup Goenv
         run: >
            git clone https://github.com/syndbg/goenv.git ~/.goenv
-           echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.bashrc
-           echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.bashrc
+           && echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.bashrc
+           && echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.bashrc
 
 
       - name: Setup Hugo
