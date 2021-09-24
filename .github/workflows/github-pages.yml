@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Clean Docs
-        run: make clean docs
+        run: make clean-docs
 
       - name: Generate Docs
         run: make docs
