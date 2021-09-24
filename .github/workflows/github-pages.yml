@@ -16,14 +16,6 @@ jobs:
         with:
           submodules: recursive  # Fetch the Docsy theme
           fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
-      
-      - name: Setup Goenv
-        run: >
-           cd $HOME
-           && git clone https://github.com/syndbg/goenv.git ~/.goenv
-           && echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.bashrc
-           && echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.bashrc
-
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2   # see https://github.com/peaceiris/actions-hugo for details
@@ -35,6 +27,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
+          
+      - name: Setup Go environment
+        uses: actions/setup-go@v2.1.4
+
 
       - name: Cache dependencies
         uses: actions/cache@v1
@@ -48,10 +44,7 @@ jobs:
         run: make clean-docs
 
       - name: Generate Docs
-        uses: actions/setup-go@v2 
-        with:
-          go-version: '1.16.4' # The Go version to download (if necessary) and use.
-          run: go env -w GOPROXY=direct && make docs
+        run: go env -w GOPROXY=direct && make docs
 
       - name: Deploy To Pages
         uses: peaceiris/actions-gh-pages@v3   # see https://github.com/peaceiris/actions-gh-pages for details
