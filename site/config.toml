@@ -1,5 +1,5 @@
 publishDir = "../docs"
-baseURL = "https://aws.github.io/amazon-genomics-cli"
+baseURL = "/"
 title = "Amazon Genomics CLI"
 
 enableRobotsTXT = true
