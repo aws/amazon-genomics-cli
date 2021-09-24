@@ -47,4 +47,5 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs   # Deploy the contents of ./docs to github pages
+          publish_branch: mjs-docs                    # set to 'gh-pages to publish to github pages'
+          publish_dir: ./docs                         # Deploy the contents of ./docs to github pages
