@@ -17,11 +17,11 @@ jobs:
           submodules: recursive  # Fetch the Docsy theme
           fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
       
-      - name: Setup Goenv
-        run: >
-           git clone https://github.com/syndbg/goenv.git ~/.goenv
-           && echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.bashrc
-           && echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.bashrc
+#       - name: Setup Goenv
+#         run: >
+#            git clone https://github.com/syndbg/goenv.git ~/.goenv
+#            && echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.bashrc
+#            && echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.bashrc
 
 
       - name: Setup Hugo
@@ -47,7 +47,7 @@ jobs:
         run: make clean-docs
 
       - name: Generate Docs
-        run: source ~/.bashrc && make init && make docs
+        run: go env -w GOPROXY=direct && make init && make docs
 
       - name: Deploy To Pages
         uses: peaceiris/actions-gh-pages@v3   # see https://github.com/peaceiris/actions-gh-pages for details
