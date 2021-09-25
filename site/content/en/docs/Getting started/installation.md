@@ -26,7 +26,7 @@ $ agc --help
 Commands
   Getting Started 🌱
     account     Commands for AWS account setup.
-                Install or remove AGC from your account.
+                Install or remove Amazon Genomics CLI from your account.
 
   Contexts
     context     Commands for contexts.
@@ -56,7 +56,7 @@ Examples
   `$ agc account --help`
 ```
 
-If this doesn’t work immediately, try:
+If this doesn't work immediately, try:
 
 * start a new terminal shell
 * modifying your `~/.bashrc` (or equivalent file) appending the following line and restarting your shell:
@@ -72,3 +72,88 @@ agc --version
 ```
 
 If you do not, you may need to uninstall any previous versions of Amazon Genomics CLI and reinstall the latest.
+
+## Command Completion
+
+Amazon Genomics CLI can generate shell completion scripts that enable 'Tab' completion of commands. 
+Command completion is optional and not required to use Amazon Genomics CLI. To generate a completion script you can use:
+
+```shell
+ agc generate <shell>
+``` 
+
+where "shell" is one of:
+
+### Bash
+
+```shell
+source <(agc completion bash)
+```
+
+To load completions for each session, execute once:
+#### Linux:
+```shell
+agc completion bash > /etc/bash_completion.d/agc
+```
+
+#### macOS:
+
+If you haven't already installed `bash-completion`, execute the following once
+
+```shell
+brew install bash-completion
+```
+
+and then, add the following line to your ~/.bash_profile:
+
+```shell
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+```
+
+Once bash completion is installed
+
+```shell
+agc completion bash > /usr/local/etc/bash_completion.d/agc
+```
+
+
+
+### Zsh:
+
+If shell completion is not already enabled in your environment, you will need to enable it.  You can execute the following once:
+
+```shell
+echo "autoload -U compinit; compinit" >> ~/.zshrc
+```
+
+To load completions for each session, execute once:
+
+```shell
+agc completion zsh > "${fpath[1]}/_agc"
+```
+
+You will need to start a new shell for this setup to take effect.
+
+### fish:
+
+```shell
+agc completion fish | source
+```
+
+To load completions for each session, execute once:
+```shell
+agc completion fish > ~/.config/fish/completions/agc.fish
+```
+PowerShell:
+
+```shell
+agc completion powershell | Out-String | Invoke-Expression
+```
+
+To load completions for every new session, run:
+
+```shell
+agc completion powershell > agc.ps1
+```
+
+and source this file from your PowerShell profile.

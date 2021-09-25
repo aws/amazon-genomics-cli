@@ -6,7 +6,7 @@ weight: 30
 description: >
     Data sets
 ---
-To run an analysis you need data. In the `agc-project.yaml` file of an AGC [project]({{< relref "projects" >}}) `data` is a list of data locations 
+To run an analysis you need data. In the `agc-project.yaml` file of an Amazon Genomics CLI [project]({{< relref "projects" >}}) `data` is a list of data locations 
 which can be used by the [contexts]({{< relref "contexts" >}}) of the project.
 
 In the example data definition below we are declaring that the project's contexts will be allowed to access the three
@@ -23,7 +23,7 @@ data:
 ```
 
 The contexts of the project will be *denied* access to all other S3 location except for the S3 bucket created or associated
-when the [account]( {{< relref "accounts" >}} ) was initialized by AGC.
+when the [account]( {{< relref "accounts" >}} ) was initialized by Amazon Genomics CLI.
 
 Declaring access in the project will only ensure your infrastructure is correctly configured to access the bucket. If
 the target bucket is further restricted, such as by an access control list or bucket policy, you will still be denied access.
@@ -31,7 +31,7 @@ In these cases you should work with the bucket owner to facilitate access.
 
 ### Read and Write
 
-The default value of `readOnly` is `true`. At the time of writing, write access is not supported (except for the AGC core S3 bucket)
+The default value of `readOnly` is `true`. At the time of writing, write access is not supported (except for the Amazon Genomics CLI core S3 bucket)
 
 ### Access to a Prefix
 

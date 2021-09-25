@@ -2,12 +2,12 @@
 
 ## Overview
 
-The AWS Genomics Command Line Interface (AGC) is a tool to simplify the processes of deploying the AWS infrastructure required to
+The Amazon Genomics CLI is a tool to simplify the processes of deploying the AWS infrastructure required to
 run genomics workflows in the cloud, to submit those workflows to run, and to monitor the logs and outputs of those workflows.
 
 ## Quick Start
 
-To get an introduction to AGC refer to the [Quick Start Guide](https://github.com/aws/amazon-genomics-cli/wiki/Quick-Start-Guide)
+To get an introduction to Amazon Genomics CLI refer to the [Quick Start Guide](https://github.com/aws/amazon-genomics-cli/wiki/Quick-Start-Guide)
 in our wiki.
 
 ## Further Reading
@@ -28,7 +28,6 @@ There are a few prerequisites you'll need to install on your machine before you 
 
 Once you've installed all the dependencies listed here, run `make init` to install the rest.
 
-
 #### Go
 
 The Amazon Genomics CLI is written in Go.
@@ -38,7 +37,7 @@ instructions [here](https://github.com/syndbg/goenv/blob/master/INSTALL.md).
 
 #### Node
 
-AGC makes use of the AWS CDK to deploy infrastructure into an AWS account. Our CDK code is written in TypeScript.
+Amazon Genomics CLI makes use of the AWS CDK to deploy infrastructure into an AWS account. Our CDK code is written in TypeScript.
 You'll need Node to ensure the appropriate dependencies are installed at build time.
 
 To manage and install Node versions, we use [nvm](https://github.com/nvm-sh/nvm).
@@ -65,7 +64,7 @@ source ~/.bashrc
 
 Note: If you are using Zsh, replace `~/.bashrc` with `~/.zshrc`.
 
-#### One time setup 
+#### One time setup
 
 Once you've installed all the dependencies listed here, run `make init` to automatically install all remaining dependencies.
 
@@ -76,8 +75,8 @@ We use `make` to build, test and deploy artifacts. To build and test issue the `
 
 ### Running Development Code
 
-To run against a development version of AGC, first build your relevant changes and then run `./scripts/run-dev.sh`. This will
-set the required environment variables and then enter into an AGC command shell.
+To run against a development version of Amazon Genomics CLI, first build your relevant changes and then run `./scripts/run-dev.sh`. This will
+set the required environment variables and then enter into an Amazon Genomics CLI command shell.
 
 If you want to run from development code manually, ensure you have the following environment variables set.
 
@@ -85,6 +84,9 @@ If you want to run from development code manually, ensure you have the following
 export ECR_CROMWELL_ACCOUNT_ID=<some-value>
 export ECR_CROMWELL_REGION=<some-value>
 export ECR_CROMWELL_TAG=<some-value>
+export ECR_NEXTFLOW_ACCOUNT_ID=<some-value>
+export ECR_NEXTFLOW_REGION=<some-value>
+export ECR_NEXTFLOW_TAG=<some-value>
 export ECR_WES_ACCOUNT_ID=<some-value>
 export ECR_WES_REGION=<some-value>
 export ECR_WES_TAG=<some-value>
@@ -92,9 +94,9 @@ export ECR_WES_TAG=<some-value>
 
 These environment variables point to the ECR account, region, and tags of the Cromwell engine and WES adaptor containers respectively
 that will be deployed for your contexts. They are written as Systems Manager Parameter Store variables when you activate
-your AGC account region (`agc account activate`). The `./scripts/run-dev.sh` contains logic to determine the current
+your Amazon Genomics CLI account region (`agc account activate`). The `./scripts/run-dev.sh` contains logic to determine the current
 dev versions of the images which you would typically use. You may also use production images, the current values of which will
-be written when you activate an account with the production version of AGC. If you have customized containers that you 
+be written when you activate an account with the production version of Amazon Genomics CLI. If you have customized containers that you 
 want to develop against you can specify these however you will need to make these available if you wish to make pull requests
 with code that depends on them.
 
@@ -117,6 +119,7 @@ Create an environment file (e.g. `env.txt`) with the appropriate entries dependi
 
 ```shell
 CROMWELL_ECR_TAG=2021-06-17T23-48-54Z
+ECR_NEXTFLOW_TAG=2021-06-17T23-48-54Z
 WES_ECR_TAG=2021-06-17T23-48-54Z
 ```
 
@@ -161,6 +164,20 @@ The corresponding AWS Systems Manager Parameter Store property names:
 - /agc/_common/cromwell/ecr-repo/region
 - /agc/_common/cromwell/ecr-repo/tag
 
+#### Nextflow engine
+
+Local environment variables:
+
+- `ECR_NEXTFLOW_ACCOUNT_ID`
+- `ECR_NEXTFLOW_REGION`
+- `ECR_NEXTFLOW_TAG`
+
+The corresponding AWS Systems Manager Parameter Store property names:
+
+- /agc/_common/nextflow/ecr-repo/account
+- /agc/_common/nextflow/ecr-repo/region
+- /agc/_common/nextflow/ecr-repo/tag
+
 ## Contributing
 
 ### Issues
@@ -175,10 +192,6 @@ See [Contributing via Pull Requests](CONTRIBUTING.md#contributing-via-pull-reque
 ## Security
 
 See [Security Issue Notification](CONTRIBUTING.md#security-issue-notifications) for more information.
-
-## Attributions
-
-TODO, link to attribution docs
 
 ## License
 

@@ -30,20 +30,20 @@ success and engine logs will be produced. The outputs for a completely cached wo
 ## Adapter Logs
 
 Adapter logs consist of any logs produced by a WES adapter for a workflow engine. They can reveal information such as
-the WES API calls that are made to the engine by AGC and any errors that may have occurred. 
+the WES API calls that are made to the engine by Amazon Genomics CLI and any errors that may have occurred. 
 
 ## Access Logs
 
-AGC talks to an engine via
+Amazon Genomics CLI talks to an engine via
 API Gateway which routes to the WES adapter. If an expected call does not appear in the adapter logs it may have been
 blocked or incorrectly routed in the API Gateway. The API Gateway access logs may be informative in this case.
 
 ## Commands
 
-A full reference of AGC `logs` commands are available [here]( {{< relref "../Reference/agc_logs" >}} )
+A full reference of Amazon Genomics CLI `logs` commands are available [here]( {{< relref "../Reference/agc_logs" >}} )
 
 ## Costs
 
 Amazon Genomics CLI logs are stored in CloudWatch and accessed using the CloudWatch APIs. Standard CloudWatch charges apply.
-All logs are retained permanently, even after a context is destroyed and AGC removed from an account. If they are no longer needed they may be removed
-using the AWS Console or the AWS CLI.
+All logs are retained permanently, even after a context is destroyed and other Amazon Genomics CLI infrastructure is 
+removed from an account. If they are no longer needed they may be removed using the AWS Console or the AWS CLI.
