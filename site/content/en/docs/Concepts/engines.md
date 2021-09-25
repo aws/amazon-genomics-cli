@@ -7,14 +7,13 @@ description: >
     Workflow engines parse and manage the tasks in a workflow
 ---
 
-A workflow engine is defined as part of a [context]( {{< relref "contexts" >}} ). A context may specify more than one workflow engine although there can
-only be one engine per supported workflow language. The workflow engine will manage the execution of any [workflows]( {{< relref "workflows" >}} ) submitted
-by AGC. When the context is deployed, an endpoint will be made available
-to AGC through which it will submit workflows and workflow commands to the engine according to the WES API specification.
+A workflow engine is defined as part of a [context]( {{< relref "contexts" >}} ). A context is currently limited to one workflow engine. The workflow engine will manage the execution of any [workflows]( {{< relref "workflows" >}} ) submitted
+by Amazon Genomics CLI. When the context is deployed, an endpoint will be made available
+to Amazon Genomics CLI through which it will submit workflows and workflow commands to the engine according to the WES API specification.
 
 ## Supported Engines and Workflow Languages
 
-Currently, AGC's officially supported engines can be used to run the following workflows:
+Currently, Amazon Genomics CLI's officially supported engines can be used to run the following workflows:
 
 | Engine | Language | Language Versions |
 ----------|---------|-------------------|
@@ -23,11 +22,6 @@ Currently, AGC's officially supported engines can be used to run the following w
 
 Overtime we plan to add additional engine and language support and provide the ability for third party developers to 
 develop engine plugins.
-
-## Default Engine
-
-A context can define one workflow engine per workflow language. If the [project YAML file]( {{< relref "projects#project-file-structure" >}} ) doesn't include a workflow engine
-definition for a context then a default engine is implied. Currently, the default engine is the Cromwell WDL engine.
 
 ## Engine Definition
 
@@ -40,7 +34,8 @@ contexts:
   onDemandCtx:
     requestSpotInstances: false
     engines:
-      wdl: cromwell
+      - type: wdl
+        engine: cromwell
 ```
 
 ## Commands
@@ -57,7 +52,7 @@ will be running for the entire time the context is deployed, even when no workfl
 recommend destroying the context when it is not needed. The Nextflow engine runs as a single batch job per workflow instance
 and is only running when workflows are running.
 
-In both cases a serverless WES API endpoint is deployed through [Amazon API Gateway](https://docs.aws.amazon.com/apigatewayv2/latest/api-reference/) to act as the interface between AGC and
+In both cases a serverless WES API endpoint is deployed through [Amazon API Gateway](https://docs.aws.amazon.com/apigatewayv2/latest/api-reference/) to act as the interface between Amazon Genomics CLI and
 the engine. 
 
 ### Tags
@@ -69,9 +64,9 @@ differentiate costs.
 
 Supported engines are currently deployed with configurations that allow them to make use of files in S3 and submit workflows
 as jobs to AWS Batch. Because the current generation of engines we support do not directly support the [WES API](https://ga4gh.github.io/workflow-execution-service-schemas/docs/), adapters
-are deployed as Fargate container tasks. AWS API Gateway is used to provide a gateway between AGC and the WES adapters.
+are deployed as Fargate container tasks. AWS API Gateway is used to provide a gateway between Amazon Genomics CLI and the WES adapters.
 
-When `workflow` commands are issued on AGC, it will send WES API calls to the appropriate endpoint. The adapter mapped 
+When `workflow` commands are issued on Amazon Genomics CLI, it will send WES API calls to the appropriate endpoint. The adapter mapped 
 to that endpoint will then translate the WES command and either send the command to the engines REST API for Cromwell, or
 spawn a Nextflow engine task and submit the workflow with that task. At this point the engine is responsible for creating
 controlling and destroying the resources that will be used for task execution.

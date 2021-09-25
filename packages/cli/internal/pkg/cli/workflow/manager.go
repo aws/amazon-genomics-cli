@@ -349,7 +349,7 @@ func (m *Manager) setEngineForWorkflowType(contextName string) {
 	}
 	enginesLen := len(m.contextSpec.Engines)
 	if enginesLen == 0 {
-		m.err = fmt.Errorf("context '%s' doesn't have any engiens defined", contextName)
+		m.err = fmt.Errorf("context '%s' doesn't have any engines defined", contextName)
 		return
 	}
 	if enginesLen > 1 {

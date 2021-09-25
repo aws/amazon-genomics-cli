@@ -4,7 +4,7 @@ date: 2021-09-09T10:16:57-04:00
 draft: false
 weight: 10
 description: >
-    Demonstrates installation and using the essential functions of AGC
+    Demonstrates installation and using the essential functions of Amazon Genomics CLI
 ---
 
 ## Prerequisites
@@ -22,35 +22,41 @@ instructions.
 Ensure you have initialized your account and created a username by following the [setup]( {{< relref "../Getting started/setup" >}} )
 instructions.
 
-## Create a Project
+## Initialize a project
 
-Amazon Genomics CLI uses local folders and config files to define projects. Projects contain configuration settings for contexts and workflows (more on these below). To create a new project do the following:
+Amazon Genomics CLI uses local folders and config files to define projects. Projects contain configuration settings for contexts and workflows (more on these below). To create a new project for running WDL based workflows do the following:
 
 ```shell
 mkdir myproject
 cd myproject
-agc project init myproject
+agc project init myproject --workflow-type wdl
 ```
 
-This will create a config file called  `agc-project.yaml` with the following content:
+> NOTE: for a Nextflow based project you can substitute `--workflow-type wdl` with `---workflow-type nextflow`.
+
+Projects may have workflows from different languages, so the `--workflow-type` flag is simply to provide the stub for
+an initial workflow engine.
+
+This will create a config file called  `agc-project.yaml` with the following contents:
 
 ```yaml
 name: myproject
+schemaVersion: 1
 contexts:
-ctx1: {}
+    ctx1:
+        engines:
+            - type: wdl
+              engine: cromwell
 ```
 
-This config file will be used to define aspects of the project - e.g. contexts and named workflows the project uses. 
-For more representative project YAML files, look at the example projects in `~/agc/examples` which are created when AGC 
-is installed.
+This config file will be used to define aspects of the project - e.g. the contexts and named workflows the project uses. For a
+more representative project config, look at the projects in `~/agc/examples`. Unless otherwise stated, command line activities for the remainder of this document will assume they are run from within the `~/agc/examples/demo-wdl-project/` project folder.
 
 ## Contexts
 
-
-Amazon Genomics CLI uses a concept called “contexts” to run workflows. Contexts encapsulate and automate time-consuming tasks like
-configuring and deploying workflow engines, creating data access policies, and tuning compute clusters for operation at
-scale. When a project is first initialized, the resultant project config will include a configuration for a context called 
-`ctx1`. In the `myproject` folder you created above, after running the following:
+Amazon Genomics CLI uses a concept called “contexts” to run workflows. Contexts encapsulate and automate time-consuming tasks 
+like configuring and deploying workflow engines, creating data access policies, and tuning compute clusters for operation at scale. 
+In the `demo-wdl-project` folder, after running the following:
 
 ```shell
 agc context list
@@ -59,90 +65,122 @@ agc context list
 You should see something like:
 
 ```
-2021-07-31T03:44:51Z 𝒊  Listing contexts.
-CONTEXTNAME    ctx1
-```
-
-You can customize this context as needed. In the ~/agc/examples/demo-project this has been reconfigured and renamed myContext:
-
-```shell
-cd ~/agc/examples/demo-project
-agc context list
-```
-
-```
-2021-09-02T04:12:33Z 𝒊  Listing contexts.
+2021-09-22T01:15:41Z 𝒊  Listing contexts.
 CONTEXTNAME    myContext
+CONTEXTNAME    spotCtx
 ```
 
-You need to have a context running to be able to run workflows. To deploy the context `myContext` in the demo-project, run:
+In this project there are two contexts, one configured to run with On-Demand instances (myContext), and one configured to use SPOT instances (spotCtx).
+
+You need to have a context running to be able to run workflows. To deploy the context `myContext` in the demo-wdl-project, run:
 
 ```shell
-agc context deploy myContext
+agc context deploy -c myContext
 ```
 
-This will take 5-10min to complete.
+This will take 10-15min to complete.
 
 If you have more than one context configured, and want to deploy them all at once, you can run:
 
-```
+```shell
 agc context deploy --all
 ```
 
 Contexts have read-write access to a context specific prefix in the S3 bucket Amazon Genomics CLI creates during account activation. You can check this for the `myContext` context with:
 
 ```shell
-agc context describe myContext
+agc context describe -c myContext
 ```
 
 You should see something like:
 
 ```
-CONTEXT    myContext    false    NOT_STARTED
-OUTPUTLOCATION    s3://agc-733263974272-us-east-2/project/Demo/userid/pwymingJKP3z/context/myContext
+CONTEXT    myContext    false    STARTED
+OUTPUTLOCATION    s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext
 ```
 
-You can add more data locations using the data section of the `agc-project.yaml` config file. All contexts will have an appropriate access policy created for the data locations listed when they are deployed. For example, the following config adds three public buckets from the Registry of Open Data on AWS:
+You can add more data locations using the `data` section of the `agc-project.yaml` config file. All contexts will have an 
+appropriate access policy created for the data locations listed when they are deployed. For example, the following config adds three public buckets from the Registry of Open Data on AWS:
 
 ```yaml
 name: myproject
 data:
-- location: s3://broad-references
-  readOnly: true
-- location: s3://gatk-test-data
-  readOnly: true
-- location: s3://1000genomes
-  readOnly: true
+  - location: s3://broad-references
+    readOnly: true
+  - location: s3://gatk-test-data
+    readOnly: true
+  - location: s3://1000genomes
+    readOnly: true
 ```
 
 Note, you need to redeploy any running contexts to update their access to data locations. Do this by simply (re)running.
 
 ```shell
-agc context deploy myContext
+agc context deploy -c myContext
 ```
 
-Contexts also define what types of compute your workflow will run on - i.e. if you want to run workflows using SPOT or On-demand instances. By default, contexts use On-demand instances. The configuration for a context that uses SPOT instances looks like the following:
+Contexts also define what types of compute your workflow will run on - i.e. if you want to run workflows using SPOT or On-demand instances. 
+By default, contexts use On-demand instances. The configuration for a context that uses SPOT instances looks like the following:
 
 ```yaml
 contexts:
-# The spot context uses EC2 spot instances which are usually cheaper but may be interrupted
-spotCtx:
-requestSpotInstances: true
+  # The spot context uses EC2 spot instances which are usually cheaper but may be interrupted
+  spotCtx:
+    requestSpotInstances: true
+```
+
+You can also explicitly specify what instance types contexts will be able to use for workflow jobs. By default, Amazon Genomics CLI 
+will use a select set of instance types optimized for running genomics workflow jobs that balance data I/O performance and 
+mitigation of workflow failure due to SPOT reclamation. In short, Amazon Genomics CLI uses AWS Batch for job execution 
+and selects instance types based on the requirements of submitted jobs, up to `4xlarge` instance types. If you have a use case
+that requires a specific set of instance types, you can define them with something like:
+
+```yaml
+contexts:
+  specialCtx:
+    instanceTypes:
+      - c5
+      - m5
+      - r5
+```
+
+The above will create a context called `specialCtx` that will use any size of instances in the C5, M5, and R5 instance families.
+Contexts are elastic with a minimum vCPU capacity of 0 and a maximum of 256. When all vCPUs are allocated to jobs, further
+tasks will be queued.
+
+Contexts also launch an engine for specific workflow types. You can have one engine per context and, currently, engines for WDL and Nextflow are supported.
+
+A contexts configured with WDL and Nextflow engines respectively look like:
+
+```yaml
+contexts:
+  wdlContext:
+    engines:
+      - type: wdl
+        engine: cromwell
+
+  nfContext:
+    engines:
+      - type: nextflow
+        engine: nextflow
 ```
 
 ## Workflows
 
 ### **Add a workflow**
 
-Bioinformatics workflows are written in languages like WDL in either single script files, or in packages of multiple files (e.g. when there are multiple related workflows that leverage reusable elements). Currently WDL is the only language that Amazon Genomics CLI supports. To learn more about writing WDL workflows, we suggest resources like the [OpenWDL - Learn WDL course](https://github.com/openwdl/learn-wdl).
+Bioinformatics workflows are written in languages like WDL and Nextflow in either single script files, or in packages of 
+multiple files (e.g. when there are multiple related workflows that leverage reusable elements). Currently, Amazon Genomics CLI supports both WDL and Nextflow. 
+To learn more about WDL workflows, we suggest resources like the [OpenWDL - Learn WDL course](https://github.com/openwdl/learn-wdl). To learn more about Nextflow workflows, we suggest [Nextflow’s documentation](https://nextflow.io/docs/latest/index.html) and [NF-Core](https://nf-co.re/).
 
-For clarity, we’ll refer to these workflow script files as “workflow definitions”. A “workflow specification” for Amazon Genomics CLI references workflow definitions and combines it with additional metadata, like the workflow language the definition is written in, which Amazon Genomics CLI will use to execute it on appropriate compute resources.
+For clarity, we’ll refer to these workflow script files as “workflow definitions”. A “workflow specification” for Amazon Genomics CLI references workflow definitions and combines it with additional metadata, 
+like the workflow language the definition is written in, which Amazon Genomics CLI will use to execute it on appropriate compute resources.
 
-There is a “hello” workflow in the `~/agc/examples/demo-project` folder that looks like:
+There is a “hello” workflow definition in the `~/agc/examples/demo-wdl-project/workflows/hello` folder that looks like:
 
 ```
 version 1.0
-workflow w {
+workflow hello_agc {
     call hello {}
 }
 task hello {
@@ -159,10 +197,24 @@ The workflow specification for this workflow in the project config looks like:
 ```yaml
 workflows:
   hello:
-    type: wdl
-    version: 1.0  # this is the WDL spec version
-    sourceURL: /path/to/hello.wdl
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: workflows/hello.wdl
 ```
+
+Here the workflow is expected to conform to the `WDL-1.0` specification. A specification for a “hello” workflow written in Nextflow DSL1 would look like:
+
+```yaml
+workflows:
+  hello:
+    type:
+      language: nextflow
+      version: 1.0
+    sourceURL: workflows/hello
+```
+
+For Nextflow DSL2 workflows set `type.version` to `dsl2`.
 
 NOTE: When referring to local workflow definitions, `sourceURL` must either be a full absolute path or a path relative to the `agc-project.yaml` file. Path expansion is currently not supported.
 
@@ -172,7 +224,7 @@ You can quickly get a list of available configured workflows with:
 agc workflow list
 ```
 
-For the `demo-project`, this should return something like:
+For the `demo-wdl-project`, this should return something like:
 
 ```
 2021-09-02T05:14:47Z 𝒊  Listing workflows.
@@ -195,10 +247,14 @@ The workflow specification for the workflow above would simply point to the pare
 ```yaml
 workflows:
   hello-dir-abs:
-    type: wdl
+    type:
+        language: wdl
+        version: 1.0
     sourceURL: /abspath/to/hello-dir
   hello-dir-rel:
-    type: wdl
+    type:
+        language: wdl
+        version: 1.0
     sourceURL: relpath/to/hello-dir
 ```
 
@@ -225,16 +281,20 @@ The `MANIFEST.json` file would be:
 }
 ```
 
-At minimum, MANIFEST files must have a `mainWorkflowURL` property which is a relative path to the workflow file in its parent directory.
+At minimum, MANIFEST files *must* have a `mainWorkflowURL` property which is a relative path to the workflow file in its parent directory.
 
 Workflows can also be from remote sources like GitHub:
 
-```
+```yaml
 workflows:
   remote:
-    type: wdl
+    type:
+        language: wdl
+        version: 1.0  # this is the WDL spec version
     sourceURL: https://raw.githubusercontent.com/openwdl/learn-wdl/master/1_script_examples/1_hello_worlds/1_hello/hello.wdl
 ```
+
+> NOTE: remote sourceURLs for Nextflow workflows can be Git repo URLs like: https://github.com/nextflow-io/rnaseq-nf.git
 
 ### Running a workflow
 
@@ -244,10 +304,10 @@ To run a workflow you need a running context. See the section on contexts above 
 agc workflow run hello --context myContext
 ```
 
-If you have another context in your project, for example one named “testCtx”, you can run the “hello” workflow there with:
+If you have another context in your project, for example one named “test”, you can run the “hello” workflow there with:
 
 ```shell
-agc workflow run hello --context testCtx
+agc workflow run hello --context test
 ```
 
 If your workflow was successfully submitted you should get something like:
@@ -257,9 +317,10 @@ If your workflow was successfully submitted you should get something like:
 "06604478-0897-462a-9ad1-47dd5c5717ca"
 ```
 
-The last line is the workflow execution id. You use this id to reference a specific workflow execution.
+The last line is the workflow run id. You use this id to reference a specific workflow execution.
 
-Running workflows is an asynchronous process. After submitting a workflow from the CLI, it is handled entirely in the cloud. You can now close your terminal session if needed. The workflow will still continue to run. You can also run multiple workflows at a time. The underlying compute resources will automatically scale. Try running multiple instances of the “hello” workflow at once.
+Running workflows is an asynchronous process. After submitting a workflow from the CLI, it is handled entirely in the cloud. 
+You can now close your terminal session if needed. The workflow will still continue to run. You can also run multiple workflows at a time. The underlying compute resources will automatically scale. Try running multiple instances of the “hello” workflow at once.
 
 You can check the status of all running workflows with:
 
@@ -270,40 +331,39 @@ agc workflow status
 You should see something like this:
 
 ```
-WORKFLOWINSTANCE    ctx1    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z
+WORKFLOWINSTANCE    myContext    66826672-778e-449d-8f28-2274d5b09f05    true    COMPLETE    2021-09-10T21:57:37Z    hello
 ```
 
-For more information, you can use:
+By default, the `workflow status` command will show the state of all workflows across all running contexts.
+
+To show only the status of workflow instances of a specific workflow you can use:
 
 ```shell
-agc workflow status -l
+agc workflow status -n <workflow-name>
 ```
 
-This will provide extra details like if a workflow completed with an error and workflow execution duration:
-
-```
-### TODO UPDATE ###
-```
-
-The columns are `duration, execution-id, info, workflow-name, start-time, status`
-
-If you have multiple workflows running simultaneously the above commands will show the state of all of them, as well as workflows that have previously completed.
-
-If you want to check the status of a specific workflow you can do so by referencing the workflow execution by it’s unique id:
+To show only the status of workflows instances in a specific context you can use:
 
 ```shell
-agc workflow status <workflow-instance-id>
+agc workflow status -c <context-name>
 ```
 
-If you need to stop a running workflow, run:
+If you want to check the status of a specific workflow you can do so by referencing the workflow execution by its run id:
 
 ```shell
-agc workflow stop <workflow-instance-id>
+agc workflow status -r <workflow-run-id>
+```
+
+If you need to stop a running workflow instance, run:
+
+```shell
+agc workflow stop <workflow-run-id>
 ```
 
 ### Using workflow inputs
 
-You can provide runtime inputs to workflows at the command line. For example, the `demo-project` has a workflow named  `read` that requires reading a data file that looks like:
+You can provide runtime inputs to workflows at the command line. For example, the `demo-wdl-project` has a workflow named `read` that requires reading a data file.
+The specification of read looks like:
 
 ```
 version 1.0
@@ -348,7 +408,9 @@ Finally, you would submit the workflow with its corresponding inputs file with:
 agc workflow run read --args inputs/read.inputs.json
 ```
 
-Amazon Genomics CLI will scan the file provided to `--args` for local paths, sync those files to S3, and rewrite the inputs file in transit to point to the appropriate S3 locations. Paths in the `*.inputs.json` file provided as `--args` are referenced relative to the `*.inputs.json` file.
+Amazon Genomics CLI will scan the file provided to `--args` for local paths, sync those files to S3, and rewrite the 
+inputs file in transit to point to the appropriate S3 locations. Paths in the `*.inputs.json` file provided as `--args` 
+are referenced relative to the `*.inputs.json` file.
 
 ### Accessing workflow results
 
@@ -382,7 +444,8 @@ PRE workflow/
 ```
 
 
-The `cromwell-execution` prefix is specific to the engine Amazon Genomics CLI uses to run WDL workflows. Workflow results will be in `cromwell-execution` partitioned by workflow name, workflow execution id, and task name. The `workflow` prefix is where named workflows are cached when you run workflows definitions stored in your local environment.
+The `cromwell-execution` prefix is specific to the engine Amazon Genomics CLI uses to run WDL workflows. 
+Workflow results will be in `cromwell-execution` partitioned by workflow name, workflow run id, and task name. The `workflow` prefix is where named workflows are cached when you run workflows definitions stored in your local environment.
 
 ### Accessing workflow logs
 
@@ -398,54 +461,22 @@ This will return the logs for all runs of the workflow. If you just want the log
 agc logs workflow <workflow-name> -r <workflow-instance-id>
 ```
 
-You should see something like this:
+This will print out the `stdout` generated by each workflow task.
+
+For the hello workflow above, this would look like:
 
 ```
-LogStreamName 1e0fdb8f-2522-46a2-8064-6109a936eebd:
-  TaskLogs:
-    Name: w.hello
-    LogStreamName: 82004336-17eb-4ee1-9d3d-ba4cf3b06b83
-    StartTime: 2021-06-16T18:25:08.170Z,    EndTime: 2021-06-16T18:25:53.594Z
-    Stdout: s3://agc-<account-id>-<region>/project/<project-name>/cromwell-execution/w/1e0fdb8f-2522-46a2-8064-6109a936eebd/call-hello/hello-stdout.log
-    Stderr: s3://agc-<account-id>-<region>/project/<project-name>/cromwell-execution/w/1e0fdb8f-2522-46a2-8064-6109a936eebd/call-hello/hello-stderr.log
-    CW log:
-      log-group: /aws/batch/job
-      log-stream: cromwell_ubuntu_latest72d98123b11b4086634680ff136112993c23763c/default/ebf7361dbf354437bfb9b15053a145f6
-    ExitCode: 0
+Fri, 10 Sep 2021 22:00:04 +0000    download: s3://agc-123456789012-us-east-2/scripts/3e129a27928c192b7804501aabdfc29e to tmp/tmp.BqCb2iaae/batch-file-temp
+Fri, 10 Sep 2021 22:00:04 +0000    *** LOCALIZING INPUTS ***
+Fri, 10 Sep 2021 22:00:05 +0000    download: s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext/cromwell-execution/hello_agc/66826672-778e-449d-8f28-2274d5b09f05/call-hello/script to agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext/cromwell-execution/hello_agc/66826672-778e-449d-8f28-2274d5b09f05/call-hello/script
+Fri, 10 Sep 2021 22:00:05 +0000    *** COMPLETED LOCALIZATION ***
+Fri, 10 Sep 2021 22:00:05 +0000    Hello Amazon Genomics CLI!
+Fri, 10 Sep 2021 22:00:05 +0000    *** DELOCALIZING OUTPUTS ***
+Fri, 10 Sep 2021 22:00:05 +0000    upload: ./hello-rc.txt to s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext/cromwell-execution/hello_agc/66826672-778e-449d-8f28-2274d5b09f05/call-hello/hello-rc.txt
+Fri, 10 Sep 2021 22:00:06 +0000    upload: ./hello-stderr.log to s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext/cromwell-execution/hello_agc/66826672-778e-449d-8f28-2274d5b09f05/call-hello/hello-stderr.log
+Fri, 10 Sep 2021 22:00:06 +0000    upload: ./hello-stdout.log to s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext/cromwell-execution/hello_agc/66826672-778e-449d-8f28-2274d5b09f05/call-hello/hello-stdout.log
+Fri, 10 Sep 2021 22:00:06 +0000    *** COMPLETED DELOCALIZATION ***
 ```
-
-For each task – which corresponds to an AWS Batch job that was run – you will be told what stdout/stderr files exist in the
-S3 output bucket and what Cloudwatch log streams exist.
-
-To retrieve the content of a specific Cloudwatch log stream, use the following command:
-
-```shell
-agc logs log [<log-stream-group>] <log-stream-name>
-```
-
-The values for `log-stream-group` and `log-stream-name` to use are in the `CW log` section of each task in the workflow log. In the example above, these are:
-
-```
-log-group: /aws/batch/job
-log-stream: cromwell_ubuntu_latest72d98123b11b4086634680ff136112993c23763c/default/ebf7361dbf354437bfb9b15053a145f6
-```
-
-Logs for individual tasks look like:
-
-```
-Event messages for Cloudwatch log stream {/aws/batch/job, cromwell_ubuntu_latest72d98123b11b4086634680ff136112993c23763c/default/ebf7361dbf354437bfb9b15053a145f6}:
-  *** LOCALIZING INPUTS ***
-  download: s3://agc-<account-id>-<region>/project/<project-name>/cromwell-execution/w/1e0fdb8f-2522-46a2-8064-6109a936eebd/call-hello/script to phosphate-output-bucket-733263974272-us-west-2-demo/cromwell-execution/w/1e0fdb8f-2522-46a2-8064-6109a936eebd/call-hello/script
-  *** COMPLETED LOCALIZATION ***
-  Hello Amazon Genomics CLI!
-  *** DELOCALIZING OUTPUTS ***
-  upload: ./hello-rc.txt to s3://agc-<account-id>-<region>/project/<project-name>/cromwell-execution/w/1e0fdb8f-2522-46a2-8064-6109a936eebd/call-hello/hello-rc.txt
-  upload: ./hello-stderr.log to s3://agc-<account-id>-<region>/project/<project-name>/cromwell-execution/w/1e0fdb8f-2522-46a2-8064-6109a936eebd/call-hello/hello-stderr.log
-  upload: ./hello-stdout.log to s3://agc-<account-id>-<region>/project/<project-name>/cromwell-execution/w/1e0fdb8f-2522-46a2-8064-6109a936eebd/call-hello/hello-stdout.log
-  *** COMPLETED DELOCALIZATION ***
-```
-
-If you omit the log-stream-group then the AWS Batch log stream group (/aws/batch/job/) will be assumed.
 
 If your workflow fails, useful debug information is typically reported by the workflow engine logs. These are unique per context. To get those for a context named `myContext`, you would run:
 
@@ -456,33 +487,36 @@ agc logs engine --context myContext
 You should get something like:
 
 ```
-Event messages for Cloudwatch log stream {/agc/myproj/prod/cromwell---11e32d1d-6812-4de0-9581-2c795a7f0831, cromwell/web/d8901182b3154adca986953da11feb52}:
-  2021-07-07 04:39:44,705  INFO  - Running with database db.url = jdbc:hsqldb:mem:a8c7c9a2-df8e-442f-ab62-db3ad3267dd5;shutdown=false;hsqldb.tx=mvcc
-  2021-07-07 04:39:53,424  INFO  - Running migration RenameWorkflowOptionsInMetadata with a read batch size of 100000 and a write batch size of 100000
-  2021-07-07 04:39:53,435  INFO  - [RenameWorkflowOptionsInMetadata] 100%
-  2021-07-07 04:39:53,588  INFO  - Running with database db.url = jdbc:hsqldb:mem:3e482536-11e0-439d-8b34-cfc98d8f7810;shutdown=false;hsqldb.tx=mvcc
-  2021-07-07 04:39:54,050  WARN  - Unrecognized configuration key(s) for AwsBatch: auth, numCreateDefinitionAttempts, filesystems.s3.duplication-strategy, numSubmitAttempts, default-runtime-attributes.scriptBucketName
-  2021-07-07 04:39:54,297  INFO  - Slf4jLogger started
-  2021-07-07 04:39:54,528 cromwell-system-akka.dispatchers.engine-dispatcher-4 INFO  - Workflow heartbeat configuration:
-  {
-    "cromwellId" : "cromid-f52e2fc",
-    "heartbeatInterval" : "2 minutes",
-    "ttl" : "10 minutes",
-    "failureShutdownDuration" : "5 minutes",
-    "writeBatchSize" : 10000,
-    "writeThreshold" : 10000
-  }
-  2021-07-07 04:39:54,727 cromwell-system-akka.dispatchers.service-dispatcher-8 INFO  - Metadata summary refreshing every 1 second.
-  
-[... truncated ...]
-
-  2021-07-07 04:55:41,717 cromwell-system-akka.dispatchers.engine-dispatcher-20 INFO  - WorkflowExecutionActor-f7ec14a3-ef3f-4ab8-8a94-dd3a8f8c0ae5 [UUID(f7ec14a3)]: Workflow w complete. Final Outputs:
-  {
-    "w.hello.out": "Hello Amazon Genomics CLI!"
-  }
-  2021-07-07 04:55:41,720 cromwell-system-akka.dispatchers.engine-dispatcher-20 INFO  - WorkflowManagerActor WorkflowActor-f7ec14a3-ef3f-4ab8-8a94-dd3a8f8c0ae5 is in a terminal state: WorkflowSucceededState
-  2021-07-07 04:55:41,720 cromwell-system-akka.dispatchers.engine-dispatcher-20 INFO  - WorkflowManagerActor WorkflowActor-cd7b3d2d-6e57-4957-897b-4b092331da96 is in a terminal state: WorkflowSucceededState
+Fri, 10 Sep 2021 23:40:49 +0000    2021-09-10 23:40:49,421 cromwell-system-akka.dispatchers.api-dispatcher-175 INFO  - WDL (1.0) workflow 1473f547-85d8-4402-adfc-e741b7df69f2 submitted
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,711 cromwell-system-akka.dispatchers.engine-dispatcher-30 INFO  - 1 new workflows fetched by cromid-2054603: 1473f547-85d8-4402-adfc-e741b7df69f2
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,712 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowManagerActor: Starting workflow UUID(1473f547-85d8-4402-adfc-e741b7df69f2)
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,712 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowManagerActor: Successfully started WorkflowActor-1473f547-85d8-4402-adfc-e741b7df69f2
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,712 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - Retrieved 1 workflows from the WorkflowStoreActor
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,716 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - MaterializeWorkflowDescriptorActor [UUID(1473f547)]: Parsing workflow as WDL 1.0
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,721 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - MaterializeWorkflowDescriptorActor [UUID(1473f547)]: Call-to-Backend assignments: hello_agc.hello -> AWSBATCH
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,722  WARN  - Unrecognized configuration key(s) for AwsBatch: auth, numCreateDefinitionAttempts, filesystems.s3.duplication-strategy, numSubmitAttempts, default-runtime-attributes.scriptBucketName
+Fri, 10 Sep 2021 23:40:53 +0000    2021-09-10 23:40:53,741 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowExecutionActor-1473f547-85d8-4402-adfc-e741b7df69f2 [UUID(1473f547)]: Starting hello_agc.hello
+Fri, 10 Sep 2021 23:40:54 +0000    2021-09-10 23:40:54,030 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - Assigned new job execution tokens to the following groups: 1473f547: 1
+Fri, 10 Sep 2021 23:40:55 +0000    2021-09-10 23:40:55,501 cromwell-system-akka.dispatchers.engine-dispatcher-4 INFO  - 1473f547-85d8-4402-adfc-e741b7df69f2-EngineJobExecutionActor-hello_agc.hello:NA:1 [UUID(1473f547)]: Call cache hit process had 0 total hit failures before completing successfully
+Fri, 10 Sep 2021 23:40:56 +0000    2021-09-10 23:40:56,842 cromwell-system-akka.dispatchers.engine-dispatcher-31 INFO  - WorkflowExecutionActor-1473f547-85d8-4402-adfc-e741b7df69f2 [UUID(1473f547)]: Job results retrieved (CallCached): 'hello_agc.hello' (scatter index: None, attempt 1)
+Fri, 10 Sep 2021 23:40:57 +0000    2021-09-10 23:40:57,820 cromwell-system-akka.dispatchers.engine-dispatcher-4 INFO  - WorkflowExecutionActor-1473f547-85d8-4402-adfc-e741b7df69f2 [UUID(1473f547)]: Workflow hello_agc complete. Final Outputs:
+Fri, 10 Sep 2021 23:40:57 +0000    {
+Fri, 10 Sep 2021 23:40:57 +0000      "hello_agc.hello.out": "Hello Amazon Genomics CLI!"
+Fri, 10 Sep 2021 23:40:57 +0000    }
+Fri, 10 Sep 2021 23:40:59 +0000    2021-09-10 23:40:59,826 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowManagerActor: Workflow actor for 1473f547-85d8-4402-adfc-e741b7df69f2 completed with status 'Succeeded'. The workflow will be removed from the workflow store.
 ```
+
+### Additional workflow examples
+
+The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on GATK Best Practices. You can find these in:
+
+```shell
+~/agc/examples/gatk-best-practices-project
+```
+
+These workflows come pre-packaged with `MANIFEST.json` files that specify example input data available publicly in the [AWS Registry of Open Data](https://registry.opendata.aws/).
+
+Note: these workflows take between 5 min to ~3hrs to complete.
 
 ## Cleanup
 
@@ -491,16 +525,16 @@ When you are done running workflows, it is recommended you stop all cloud resour
 Stop a context with:
 
 ```shell
-agc context destroy <context-name>
+agc context destroy -c <context-name>
 ```
 
-This will destroy all compute resources in a context, but retain any data in S3. If you want to destroy all your running contexts at onece, you can use:
+This will destroy all compute resources in a context, but retain any data in S3. If you want to destroy all your running contexts at once, you can use:
 
 ```shell
 agc context destroy --all
 ```
 
-Note, you will not be able to destroy a context that has a running workflow. Workflow will need to complete on their own or stopped before you can destroy the context.
+Note, you will not be able to destroy a context that has a running workflow. Workflows will need to complete on their own or stopped before you can destroy the context.
 
 If you want stop using Amazon Genomics CLI in your AWS account entirely, you need to deactivate it:
 
@@ -508,7 +542,7 @@ If you want stop using Amazon Genomics CLI in your AWS account entirely, you nee
 agc account deactivate
 ```
 
-This will remove Amazon Genomics CLI’s core infrastructure. If Amazon Genomics CLI created a VPC as part of the `activate` process, it will be **removed**. If Amazon Genomics CLI created an S3 bucket for you it will be **retained**.
+This will remove Amazon Genomics CLI’s core infrastructure. If Amazon Genomics CLI created a VPC as part of the `activate` process, it will be **removed**. If Amazon Genomics CLI created an S3 bucket for you, it will be **retained**.
 
 To uninstall Amazon Genomics CLI from your local machine, run the following command:
 

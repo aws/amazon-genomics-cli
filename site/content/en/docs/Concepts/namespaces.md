@@ -4,14 +4,14 @@ date: 2021-08-31T17:26:20-04:00
 draft: false
 weight: 60
 description: >
-    AGC uses namespacing to prevent conflicts
+    Amazon Genomics CLI uses namespacing to prevent conflicts
 ---
-AGC uses namespacing to prevent conflicts when there are multiple [users]( {{< relref "users" >}} ), [contexts]( {{< relref "contexts" >}} ), and [projects]( {{< relref "projects" >}} ) in the same AWS account and region.
+Amazon Genomics CLI uses namespacing to prevent conflicts when there are multiple [users]( {{< relref "users" >}} ), [contexts]( {{< relref "contexts" >}} ), and [projects]( {{< relref "projects" >}} ) in the same AWS account and region.
 
 In any given account and region, an individual user may have many projects with many deployed contexts all running at the
 same time without conflict as long as:
 
-1. No other user with the same AGC username exists in the same account and region.
+1. No other user with the same Amazon Genomics CLI username exists in the same account and region.
 2. All projects, used by that user, have a unique name.
 3. All contexts within a project have a unique name.
 
@@ -19,7 +19,7 @@ same time without conflict as long as:
 
 Project definitions can be shared between users. A simple way to achieve this is by putting the project YAML file and associated
 workflow definitions into a source control system like Git. If two users in the same account and region start contexts
-from the same project definition, these contexts are discrete and include the AGC username in the names of their respective
+from the same project definition, these contexts are discrete and include the Amazon Genomics CLI username in the names of their respective
 infrastructures.
 
 Therefore, the following combination are allowed:
@@ -32,7 +32,7 @@ instances do not have the same infrastructure.
 
 ## Tags
 
-All AGC infrastructure is tagged with the `application-name` key and a value of `agc`
+All Amazon Genomics CLI infrastructure is tagged with the `application-name` key and a value of `agc`
 Aside from the core account infrastructure, all deployed infrastructure is tagged with the following key value pairs:
 
 

@@ -8,7 +8,7 @@ description: >
 ---
 ## What is a Context?
 
-A context is a set of cloud resources. AGC runs [workflows]( {{< relref "workflows" >}} ) in a context. A deployed context will include an 
+A context is a set of cloud resources. Amazon Genomics CLI runs [workflows]( {{< relref "workflows" >}} ) in a context. A deployed context will include an 
 [engine]( {{< relref "engines" >}}) that can interpret
 and manage the running of a workflow along with compute resources that will run the individual tasks of the workflow. The
 deployed context will also contain any resources needed by the engine or compute resources including any security, permissions
@@ -29,8 +29,24 @@ Contexts must have unique names and are defined as YAML maps.
 A context may request use of [Spot priced](https://aws.amazon.com/ec2/spot/pricing/) compute resources with `requestSpotInstances: true`. The default value is `false`.
 
 A context must define an array of one or more `engines`. Each engine definition must specify the workflow language that it 
-will interpret. For each language AGC has a default engine however users may specify the exact engine in the `engine`
+will interpret. For each language Amazon Genomics CLI has a default engine however, users may specify the exact engine in the `engine`
 parameter.
+
+## Instance Types
+
+You may optionally specify the instance types to be used in a context. This can be a specific type such as `r5.2xlarge`
+or it can be an instance family such as `c5` or a combination. By default, a context will use instance types up to `4xlarge`
+
+> Note, if you only specify large instance types you will be using those instances for running even the smallest tasks so
+we recommend including smaller types as well.
+
+Ensure that any custom types you list are available in the region that you're using with Amazon Genomics CLI or the 
+context will fail to deploy. You can obtain a list using the following command
+
+```shell
+aws ec2 describe-instance-type-offerings \
+    --region <region_name>
+```
 
 ### Examples
 
@@ -44,23 +60,30 @@ contexts:
   onDemandCtx:
     requestSpotInstances: false
     engines:
-      language: wdl
+      - type: wdl
+        engine: cromwell
 ```
 
-The above example defines a WDL engine will be deployed but doesn't specify which one. In this case AGC will choose a default
-WDL engine (currently Cromwell).
-
-In the following snippet the engine is explicitly defined. This can be useful when there are mutliple engines that can
-interpret a language, and you have a preference for which to use.
 
 ```yaml
   # The spot context uses EC2 spot instances which are usually cheaper but may be interrupted
   spotCtx:
     requestSpotInstances: true
     engines:
-      language: wdl
-      engine: cromwell
+      - type: wdl
+        engine: cromwell
 ...
+```
+
+The following context may use any instance type from the `m5`, `c5` or `r5` families
+
+```yaml
+contexts:
+  nfLargeCtx:
+    instanceTypes: [ "c5", "m5", "r5" ]
+      engines:
+        - type: nextflow
+          engine: nextflow
 ```
 
 ## Context Commands
@@ -80,7 +103,7 @@ The command `agc context list [flags]` will list the names of all contexts defin
 
 The command `agc context deploy -c <context-name> [flags]` is used to deploy the cloud infrastructure required by the context.
 If the context is already running the existing infrastructure will be updated to reflect changes in project YAML. For example
-if you added another `data` definition in your project and run `agc context deploy <context-name>` then the deployed context
+if you added another `data` definition in your project and run `agc context deploy -c <context-name>` then the deployed context
 will be updated to allow access to the new data.
 
 All contexts defined in the project YAML can be deployed or updated using the `--all` flag.
@@ -146,7 +169,7 @@ Context infrastructure is defined as code as [AWS CDK](https://aws.amazon.com/cd
 deployed a context will produce one or more stacks in Cloudformation. Details can be viewed in the Cloudformation console
 or with the AWS CLI.
 
-A context includes an endpoint compliant with the [GA4GH WES API](https://ga4gh.github.io/workflow-execution-service-schemas/docs/). This API is how AGC submits workflows to the context. The
+A context includes an endpoint compliant with the [GA4GH WES API](https://ga4gh.github.io/workflow-execution-service-schemas/docs/). This API is how Amazon Genomics CLI submits workflows to the context. The
 context also contains one or more workflow engines. These may either be deployed as long-running services as is the case
 with Cromwell or as "head" jobs that are responsible for a single workflow, as is the case for NextFlow. Engines run as
 "head" jobs are started and stopped on demand thereby saving resources.

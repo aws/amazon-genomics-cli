@@ -1,5 +1,5 @@
-## AGC Website
-AGC's website is built with [hugo](https://gohugo.io/) and the [docsy](https://www.docsy.dev/) theme.
+## Amazon Genomics CLI Website
+The Amazon Genomics CLI website is built with [hugo](https://gohugo.io/) and the [docsy](https://www.docsy.dev/) theme.
 
 ### Pre-requisites
 1. Make sure that you have installed the [hugo](https://gohugo.io/getting-started/installing/) binary.

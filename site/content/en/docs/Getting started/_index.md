@@ -7,6 +7,6 @@ description: >
 ---
 
 {{% pageinfo %}}
-The following links will help you install AGC and quickly run a demo workflow.
+The following links will help you install Amazon Genomics CLI and quickly run a demo workflow.
 {{% /pageinfo %}}
 
