@@ -47,7 +47,7 @@ the workflow task logs.
 
 ## Parallel Steps
 
-Workflows often contain parallel steps where many individual tasks are computed in parallel. AGC makes use of elastic compute
+Workflows often contain parallel steps where many individual tasks are computed in parallel. Amazon Genomics CLI makes use of elastic compute
 clusters to scale to these requirements. Each context will deploy an elastic compute cluster with a minimum of 0 vCPU and a maximum of 256 vCPU. No individual task
 may use more than 256 vCPU. Smaller tasks may be run in parallel up to the maximum of 256 vCPU. Once that limit is met, additional
 tasks will be queued to run when capacity becomes free.
@@ -67,7 +67,7 @@ tasks by chromosome or batching inputs.
 
 Some container registries will throttle container access from anonymous accounts. Because each task in a workflow uses
 a container large or frequently run workflows may not be able to access their required containers. While compute clusters
-deployed by AGC are configured to cache containers this is only available on a per-instance basis. Further, due to the 
+deployed by Amazon Genomics CLI are configured to cache containers this is only available on a per-instance basis. Further, due to the 
 elastic nature of the clusters instances with cached container images are frequently shutdown. All of this will potentially
 lead to an excess of requests. To avoid this we recommend using registries that don't impose these limits, or using images
 hosted in an ECR registry in your AWS account.

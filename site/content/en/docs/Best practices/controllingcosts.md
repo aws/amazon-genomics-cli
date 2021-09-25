@@ -7,20 +7,20 @@ description: >
 ---
 
 When you begin to run large scale workflows frequently it will become important to be able to understand the costs involved and
-how to optimize your workflow and use of AGC to reduce costs.
+how to optimize your workflow and use of Amazon Genomics CLI to reduce costs.
 
 ## Use AWS Cost Explorer to Report on Costs
 
 AWS Cost Explorer has an easy-to-use interface that lets you visualize, understand, and manage your AWS costs and usage over time.
 We recommend you use this tool to gain sight into the costs of running your genomics workflows. At the time of writing AWS Cost Explorer
-can only be enabled using the AWS Console so AGC won't be able to set this up for you. As a first step you will need to [enable cost explorer](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/ce-getting-started.html) for your 
+can only be enabled using the AWS Console so Amazon Genomics CLI won't be able to set this up for you. As a first step you will need to [enable cost explorer](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/ce-getting-started.html) for your 
 AWS account.
 
-AGC will tag the infrastructure it creates with tags. Application, user, project and context tags are all generated as
+Amazon Genomics CLI will tag the infrastructure it creates with tags. Application, user, project and context tags are all generated as
 appropriate and these can be used as [cost allocation tags](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html) 
-to determine which account costs are coming from AGC and which user, context and project.
+to determine which account costs are coming from Amazon Genomics CLI and which user, context and project.
 
-Within Cost Explorer the AGC tags will be referred to as ["User Defined Cost Allocation Tags"](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/custom-tags.html).
+Within Cost Explorer the Amazon Genomics CLI tags will be referred to as ["User Defined Cost Allocation Tags"](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/custom-tags.html).
 Before a tag can be used in a cost report it must be [activated](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/activating-tags.html). Costs associated with
 tags are only available for infrastructure used *after* activation of a tag, so it will not be possible to retrospectively
 examine costs.
@@ -75,22 +75,22 @@ your container will need an appropriate allocation of memory.
 
 ## Use the most cost-effective instance generation
 
-When you specify the instance types in a context, as opposed to letting AGC do it for you, consider the cost and performance of the instance types with respect to your workflow requirements.
+When you specify the `instanceTypes` in a context, as opposed to letting Amazon Genomics CLI do it for you, consider the cost and performance of the instance types with respect to your workflow requirements.
 Fifth generation EC2 types (`c5`, `m5`, `r5`) have a lower on-demand price and have higher clock speeds than their 4th
 generation counterparts (`c4`, `m4`, `r4`). Therefore, for on-demand compute environments, those instance types should be
 preferred. In spot compute environments we suggest using both 4th and 5th generation types as this increases the pool of
 available types meaning Batch will be able to choose the instance type that is cheapest and least likely to be
 interrupted.
 
-## Deploy AGC where your S3 data is
+## Deploy Amazon Genomics CLI where your S3 data is
 
 Genomics workflows may need to access considerable amounts of data stored in S3. Although S3 uses global namespaces, buckets
-do reside in regions. If you access a lot of S3 data it makes sense to deploy your AGC infrastructure in the same region
+do reside in regions. If you access a lot of S3 data it makes sense to deploy your Amazon Genomics CLI infrastructure in the same region
 to avoid cross region data charges.
 
 Further, if you use a custom VPC we recommend deploying a VPC endpoint for S3 so that you do no incur NAT Gateway charges
 for data coming from the same region. If you do not you might find that NAT Gateway charges are the largest part of your
-workflow run costs. If you allow AGC to create your VPC (the default), appropriate VPC endpoints will be setup for you.
+workflow run costs. If you allow Amazon Genomics CLI to create your VPC (the default), appropriate VPC endpoints will be setup for you.
 Note that VPC endpoints cannot avoid cross region data charges, so you will still want to deploy in the region where most of
 your data resides.
 
@@ -110,6 +110,6 @@ Each task in a workflow requires access to a container image, and some of these 
 large packages like GATK. This can lead to large NAT Gateway traffic charges. To avoid these charges, we recommend deploying
 copies of frequently used container images into your accounts private ECR registry.
 
-AGC deployed VPCs use a VPC gateway to talk to private ECR registries in your account thereby avoiding NAT Gateway traffic. The gateway is
+Amazon Genomics CLI deployed VPCs use a VPC gateway to talk to private ECR registries in your account thereby avoiding NAT Gateway traffic. The gateway is
 limited to registries in the same region as the VPC, so to avoid cross-region traffic you should deploy images into the region(s) that you
-use for AGC.
+use for Amazon Genomics CLI.

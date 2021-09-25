@@ -5,7 +5,7 @@ draft: false
 weight: 10
 ---
 
-To run AGC the following prerequisites must be met:
+To run Amazon Genomics CLI the following prerequisites must be met:
 
 * A computer with one of the following operating systems:
   * macOS 10.14+
@@ -15,7 +15,7 @@ To run AGC the following prerequisites must be met:
 * An AWS Account
 * An AWS role with sufficient access. TODO add IAM details.
 
-Running AGC on Windows has not been tested, but it should run in WSL 2 with Ubuntu 20.04
+Running Amazon Genomics CLI on Windows has not been tested, but it should run in WSL 2 with Ubuntu 20.04
 
 ## Prerequisite installation
 
@@ -45,7 +45,7 @@ sudo apt install awscli
 sudo yum install -y nodejs`
 ```
 
-* configure a default region
+* If you have not already done so, configure your AWS credentials and default region
 
 ```
 aws configure

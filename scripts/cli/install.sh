@@ -37,4 +37,4 @@ install_cdk () {
     (cd "$BASE_DIR/cdk" && tar -xzf ./cdk.tgz --strip-components=1 && npm install --silent)
 }
 
-install_cli && install_cdk && echo "Installation complete. Once \$PATH variable has been adjusted, run 'agc' to get started!"
+install_cli && install_cdk && echo "Installation complete. Once \$PATH variable has been adjusted, run 'agc --help' to get started!"

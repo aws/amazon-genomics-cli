@@ -8,11 +8,12 @@ description: >
 
 ## What is the Amazon Genomics CLI?
 
-Amazon Genomics CLI is a command line tool designed to simplify running genomics workflows in the cloud by:
-
-1. Automating the deployment of the infrastructure required to run genomics workflows on elastic resources in the cloud
-2. Submitting workflows to the deployed infrastructure and providing tools to monitor those workflows
-3. Cleaning up and shutting down infrastructure when you are done running your genomics workflows
+Amazon Genomics CLI is an open source tool for genomics and life science customers that simplifies and automates the 
+deployment of cloud infrastructure, providing you with an easy-to-use command line interface to quickly setup and run 
+genomics workflows on Amazon Web Services (AWS) specified by languages like WDL. By removing the heavy lifting from 
+setting up and running genomics workflows in the cloud, software developers and researchers can automatically provision, 
+configure and scale cloud resources to enable faster and more cost-effective population-level genetics studies, drug 
+discovery cycles, and more.
 
 ## Why do I want it?
 

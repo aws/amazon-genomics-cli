@@ -1,5 +1,5 @@
 publishDir = "../docs"
-baseURL = "https://github.com/aws/amazon-genomics-cli"
+baseURL = "/"
 title = "Amazon Genomics CLI"
 
 enableRobotsTXT = true
@@ -55,12 +55,12 @@ anchor = "smart"
 [languages]
 [languages.en]
 title = "Amazon Genomics CLI"
-description = "AWS Genomics CLI developer guide and documentation."
+description = "Amazon Genomics CLI developer guide and documentation."
 languageName ="English"
 # Weight used for sorting.
 weight = 1
 #[languages.tr]
-#title = "AWS Genomics CLI"
+#title = "Amazon Genomics CLI"
 #description = "Docsy er operativsystem for skyen"
 #languageName ="Türkçe"
 #contentDir = "content/tr"
@@ -94,13 +94,13 @@ privacy_policy = "https://aws.amazon.com/privacy"
 # This menu appears only if you have at least one [params.versions] set.
 version_menu = "Releases"
 
-# Flag used in the "version-banner" partial to decide whether to display a 
+# Flag used in the "version-banner" partial to decide whether to display a
 # banner on every page indicating that this is an archived version of the docs.
 # Set this flag to "true" if you want to display the banner.
 archived_version = false
 
 # The version number for the version of the docs represented in this doc set.
-# Used in the "version-banner" partial to display a version number for the 
+# Used in the "version-banner" partial to display a version number for the
 # current doc set.
 version = "0.0"
 
@@ -114,7 +114,7 @@ github_repo = "https://github.com/aws/amazon-genomics-cli"
 #github_project_repo = "https://github.com/google/docsy"
 
 # Specify a value here if your content directory is not in your repo's root directory
-# github_subdir = ""
+github_subdir = "site/"
 
 # Uncomment this if you have a newer GitHub repo with "main" as the default branch,
 # or specify a new value if you want to reference another branch in your GitHub links
@@ -150,13 +150,13 @@ footer_about_disable = false
 # If you want this feature, but occasionally need to remove the "Feedback" section from a single page,
 # add "hide_feedback: true" to the page's front matter.
 [params.ui.feedback]
-enable = true
+enable = false
 # The responses that the user sees after clicking "yes" (the page was helpful) or "no" (the page was not helpful).
 yes = 'Glad to hear it! Please <a href="https://github.com/aws/amazon-genomics-cli/issues/new">tell us how we can improve</a>.'
 no = 'Sorry to hear that. Please <a href="https://github.com/aws/amazon-genomics-cli/issues/new">tell us how we can improve</a>.'
 
 # Adds a reading time to the top of each doc.
-# If you want this feature, but occasionally need to remove the Reading time from a single page, 
+# If you want this feature, but occasionally need to remove the Reading time from a single page,
 # add "hide_readingtime: true" to the page's front matter
 [params.ui.readingtime]
 enable = false

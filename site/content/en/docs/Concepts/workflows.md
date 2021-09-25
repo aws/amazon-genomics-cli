@@ -7,19 +7,19 @@ description: >
     A Workflow is a series of steps or tasks to be executed as part of an analysis.
 ---
 
-A Workflow is a series of steps or tasks to be executed as part of an analysis. To run a workflow on AGC, first you must
+A Workflow is a series of steps or tasks to be executed as part of an analysis. To run a workflow using Amazon Genomics CLI, first you must
 have deployed a context with suitable compute resources and with a workflow engine that can interpret the language of
 the workflow.
 
 ## Specification in Project YAML
 
-In an AGC project you can specify multiple workflows in a YAML map. The following example defines four WDL version 1.0 
+In an Amazon Genomics CLI project you can specify multiple workflows in a YAML map. The following example defines four WDL version 1.0 
 workflows. The `sourceURL` property defines the location of the workflow file. If the location is relative then the 
 relevant file is assumed to be relative to the location of the project YAML file. Absolute file locations are also possible
 although this may reduce the portability of a project if it is intended to be shared. Web URLS are supported as locations
 of the workflow definition file.
 
-At this time AGC does *not* resolve path aliases so, for example, a `sourceURL` like `~/workflows/worklfow.wdl` is not
+At this time Amazon Genomics CLI does *not* resolve path aliases so, for example, a `sourceURL` like `~/workflows/worklfow.wdl` is not
 supported.
 
 The `type` object declares the `language` of the workflow (eg, wdl, nextflow etc). The run a workflow there must be a
@@ -51,8 +51,8 @@ workflows:
 
 ### Multi-file Workflows
 
-Some workflow languages allow for the import of other workflows. To accommodate this, AGC supports using a directory as
-a source URL. When a directory is supplied as the `sourceURL`, AGC uses the following rules to determine the name of 
+Some workflow languages allow for the import of other workflows. To accommodate this, Amazon Genomics CLI supports using a directory as
+a source URL. When a directory is supplied as the `sourceURL`, Amazon Genomics CLI uses the following rules to determine the name of 
 the main workflow file and any supporting files:
 
 1. If the source URL resolves to a single non-zipped file, then the file is assumed to be a workflow file. Dependent resources (if any) are hardcoded in the file and must be resolvable by the Wes adapter or implicitly the workflow engine (e.g the Wes adapter figures out if the engine can resolve them and if not it resolves them itself).
@@ -92,8 +92,8 @@ The following snippet demonstrates a valid `MANIFEST.json` file:
 
 ## Engine Selection
 
-When a workflow is submitted to run, AGC will match the workflow type with the map of engines in the context. For example,
-if the workflow `type` is `wdl` AGC will attempt to identify and engine designated as the engine for that type. There
+When a workflow is submitted to run, Amazon Genomics CLI will match the workflow type with the map of engines in the context. For example,
+if the workflow `type` is `wdl` Amazon Genomics CLI will attempt to identify and engine designated as the engine for that type. There
 may only be one engine per type. If no suitable engine is found in the context an error will be reported.
  
 ## Workflow Instances
@@ -154,7 +154,7 @@ To display the status of a specific workflow instance you can provide the id of 
 ### `stop`
 
 A running workflow *instance* can be stopped at any time using the `agc workflow stop <instance-id>` command. When issued,
-AGC will look up the appropriate context and engine using the `instance-id` of the workflow and instruct the engine to 
+Amazon Genomics CLI will look up the appropriate context and engine using the `instance-id` of the workflow and instruct the engine to 
 stop the workflow. What happens next depends on the actual workflow engine. For example, in the case of the Cromwell WDL
 engine, any currently executing tasks will halt, any pending tasks will be removed from the work queue and no further
 tasks will be started for that workflow instance.
@@ -168,5 +168,5 @@ of the spot instances will be determined by the rules governing spot instance ch
 
 ### Tags
 
-Resources used by AGC are tagged including the username, project name and the context name. Currently, tagging is *not* 
+Resources used by Amazon Genomics CLI are tagged including the username, project name and the context name. Currently, tagging is *not* 
 possible at the level of an individual workflow.

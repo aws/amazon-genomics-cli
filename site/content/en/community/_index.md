@@ -8,11 +8,11 @@ menu:
 Amazon Genomics CLI is an open-source project licensed under the Apache license. We welcome code contributions, bug reports,
 communications and suggestions for improvements.
 
-## AGC on GitHub
+## Amazon Genomics CLI on GitHub
 
 ### Source
 
-Source code for the AGC project, including this documentation can be found in [GitHub](https://github.com/aws/amazon-genomics-cli)
+Source code for the Amazon Genomics CLI project, including this documentation can be found in [GitHub](https://github.com/aws/amazon-genomics-cli)
 
 ### Bug Reports and Feature Requests
 
