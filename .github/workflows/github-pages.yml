@@ -3,12 +3,6 @@
 name: github pages
 
 on:
-  push:
-    branches:
-      - main  # Set a branch to deploy
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:      # Allow manual triggering of the action
 
 
@@ -19,9 +13,6 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: recursive  # Fetch the Docsy theme
-          fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2   # see https://github.com/peaceiris/actions-hugo for details
@@ -42,15 +33,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      - name: Setup Go environment
+        uses: actions/setup-go@v2.1.4
+        with:
+          go-version: 1.16.0
+
       - name: Clean Docs
-        run: make clean docs
+        run: make clean-docs
 
       - name: Generate Docs
-        run: make docs
+        run: >
+          (cd packages/cli && go mod vendor) && 
+          (cd site && mkdir themes && cd themes && git clone --recurse-submodules --depth 1 https://github.com/google/docsy.git && cd docsy && sudo npm install -D --save autoprefixer && sudo npm install -D --save postcss-cli) &&
+          make docs
 
       - name: Deploy To Pages
-        uses: peaceiris/actions-gh-pages@v3   # see https://github.com/peaceiris/actions-gh-pages for details
-        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: peaceiris/actions-gh-pages@v3           # see https://github.com/peaceiris/actions-gh-pages for details
+        if: ${{ github.ref == 'refs/heads/mjs-test' }}    # set to 'refs/heads/main' to only deploy when the branch is main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs   # Deploy the contents of ./docs to github pages
+          publish_branch: mjs-docs                    # set to 'gh-pages to publish to github pages'
+          publish_dir: ./docs                         # Deploy the contents of ./docs to github pages
