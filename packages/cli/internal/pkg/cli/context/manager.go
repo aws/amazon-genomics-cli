@@ -98,7 +98,7 @@ func (m *Manager) readContextSpec(contextName string) {
 	if m.err != nil {
 		return
 	}
-	contextSpec, err := spec.GetContext(m.projectSpec, contextName)
+	contextSpec, err := m.projectSpec.GetContext(contextName)
 	if err != nil {
 		m.err = err
 		return
@@ -174,7 +174,7 @@ func (m *Manager) setContextEnv(contextName string) {
 		return
 	}
 
-	context, err := spec.GetContext(m.projectSpec, contextName)
+	context, err := m.projectSpec.GetContext(contextName)
 	if err != nil {
 		m.err = err
 		return

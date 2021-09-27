@@ -335,7 +335,7 @@ func (m *Manager) setContext(contextName string) {
 		return
 	}
 
-	contextSpec, err := spec.GetContext(m.projectSpec, contextName)
+	contextSpec, err := m.projectSpec.GetContext(contextName)
 	if err != nil {
 		m.err = err
 		return

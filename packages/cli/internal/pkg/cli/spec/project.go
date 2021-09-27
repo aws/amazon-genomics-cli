@@ -12,7 +12,7 @@ type Project struct {
 	Contexts      map[string]Context  `yaml:"contexts,omitempty"`
 }
 
-func GetContext(projectSpec Project, contextName string) (Context, error) {
+func (projectSpec *Project) GetContext(contextName string) (Context, error) {
 	contextSpec, ok := projectSpec.Contexts[contextName]
 	if !ok {
 		return Context{}, fmt.Errorf("context '%s' is not defined in Project '%s' specification", contextName, projectSpec.Name)

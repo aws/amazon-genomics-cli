@@ -207,7 +207,7 @@ func TestGetContext(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			context, err := GetContext(tt.args.projectSpec, tt.args.contextName)
+			context, err := tt.args.projectSpec.GetContext(tt.args.contextName)
 			if tt.expectedError != nil {
 				assert.Error(t, err, tt.expectedError.Error())
 			} else {
