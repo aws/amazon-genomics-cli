@@ -48,21 +48,6 @@ func (mr *MockOSMockRecorder) Chdir(dir interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Chdir", reflect.TypeOf((*MockOS)(nil).Chdir), dir)
 }
 
-// MkdirTemp mocks base method.
-func (m *MockOS) MkdirTemp(dir, pattern string) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MkdirTemp", dir, pattern)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// MkdirTemp indicates an expected call of MkdirTemp.
-func (mr *MockOSMockRecorder) MkdirTemp(dir, pattern interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MkdirTemp", reflect.TypeOf((*MockOS)(nil).MkdirTemp), dir, pattern)
-}
-
 // Remove mocks base method.
 func (m *MockOS) Remove(name string) error {
 	m.ctrl.T.Helper()
@@ -75,6 +60,21 @@ func (m *MockOS) Remove(name string) error {
 func (mr *MockOSMockRecorder) Remove(name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Remove", reflect.TypeOf((*MockOS)(nil).Remove), name)
+}
+
+// UserHomeDir mocks base method.
+func (m *MockOS) UserHomeDir() (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserHomeDir")
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserHomeDir indicates an expected call of UserHomeDir.
+func (mr *MockOSMockRecorder) UserHomeDir() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserHomeDir", reflect.TypeOf((*MockOS)(nil).UserHomeDir))
 }
 
 // RemoveAll mocks base method.

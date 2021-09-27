@@ -19,8 +19,10 @@ type Client struct {
 	configFilePath string
 }
 
+var osUserHomeDir = os.UserHomeDir
+
 func NewConfigClient() (*Client, error) {
-	homeDir, err := os.UserHomeDir()
+	homeDir, err := DetermineHomeDir()
 	if err != nil {
 		return nil, err
 	}
@@ -34,6 +36,15 @@ func NewConfigClient() (*Client, error) {
 	configFilePath := filepath.Join(configDirPath, configFileName)
 
 	return &Client{configFilePath: configFilePath}, nil
+}
+
+// DetermineHomeDir returns the file system directory where the AGC files live.
+func DetermineHomeDir() (string, error) {
+	dir, err := osUserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	return dir, nil
 }
 
 func ensureDirExistence(dirPath string) error {

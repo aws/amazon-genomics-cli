@@ -1,8 +1,11 @@
 package config
 
 import (
+	"errors"
 	"testing"
 
+	iomocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/io"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -48,4 +51,73 @@ func TestConfig_UserId(t *testing.T) {
 			assert.Equal(t, expectedUserId, actualUserId)
 		})
 	}
+}
+
+func TestDetermineHomeDir_Success(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockOs := iomocks.NewMockOS(ctrl)
+	osUserHomeDir = mockOs.UserHomeDir
+	expectedPath := "/some/dir"
+	mockOs.EXPECT().UserHomeDir().Return(expectedPath, nil)
+	actualPath, err := DetermineHomeDir()
+
+	assert.NoError(t, err)
+	assert.Equal(t, expectedPath, actualPath)
+}
+
+func TestDetermineHomeDir_Failure(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockOs := iomocks.NewMockOS(ctrl)
+	osUserHomeDir = mockOs.UserHomeDir
+	expectedError := errors.New("some error")
+	mockOs.EXPECT().UserHomeDir().Return("", expectedError)
+	_, err := DetermineHomeDir()
+
+	assert.Error(t, err, expectedError.Error())
+}
+
+func TestDetermineHomeDir_Success(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockOs := iomocks.NewMockOS(ctrl)
+	osUserHomeDir = mockOs.UserHomeDir
+	expectedPath := "/some/dir"
+	mockOs.EXPECT().UserHomeDir().Return(expectedPath, nil)
+	actualPath, err := DetermineHomeDir()
+
+	assert.NoError(t, err)
+	assert.Equal(t, expectedPath, actualPath)
+}
+
+func TestDetermineHomeDir_Failure(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockOs := iomocks.NewMockOS(ctrl)
+	osUserHomeDir = mockOs.UserHomeDir
+	expectedError := errors.New("some error")
+	mockOs.EXPECT().UserHomeDir().Return("", expectedError)
+	_, err := DetermineHomeDir()
+
+	assert.Error(t, err, expectedError.Error())
+}
+
+func TestDetermineHomeDir_Success(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockOs := iomocks.NewMockOS(ctrl)
+	osUserHomeDir = mockOs.UserHomeDir
+	expectedPath := "/some/dir"
+	mockOs.EXPECT().UserHomeDir().Return(expectedPath, nil)
+	actualPath, err := DetermineHomeDir()
+
+	assert.NoError(t, err)
+	assert.Equal(t, expectedPath, actualPath)
+}
+
+func TestDetermineHomeDir_Failure(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockOs := iomocks.NewMockOS(ctrl)
+	osUserHomeDir = mockOs.UserHomeDir
+	expectedError := errors.New("some error")
+	mockOs.EXPECT().UserHomeDir().Return("", expectedError)
+	_, err := DetermineHomeDir()
+
+	assert.Error(t, err, expectedError.Error())
 }

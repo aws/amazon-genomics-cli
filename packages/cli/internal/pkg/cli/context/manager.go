@@ -3,7 +3,6 @@ package context
 import (
 	"fmt"
 	"net/url"
-	"os"
 	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
@@ -70,7 +69,7 @@ func NewManager(profile string) *Manager {
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to create Project client for context manager")
 	}
-	homeDir, err := os.UserHomeDir()
+	homeDir, err := config.DetermineHomeDir()
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to determine home directory")
 	}
