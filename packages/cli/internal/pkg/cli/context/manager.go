@@ -1,7 +1,6 @@
 package context
 
 import (
-	"fmt"
 	"net/url"
 	"os"
 	"strings"
@@ -99,9 +98,9 @@ func (m *Manager) readContextSpec(contextName string) {
 	if m.err != nil {
 		return
 	}
-	contextSpec, ok := m.projectSpec.Contexts[contextName]
-	if !ok {
-		m.err = fmt.Errorf("context '%s' is not defined in Project '%s' specification", contextName, m.projectSpec.Name)
+	contextSpec, err := spec.GetContext(m.projectSpec, contextName)
+	if err != nil {
+		m.err = err
 		return
 	}
 	m.contextSpec = contextSpec
@@ -175,8 +174,9 @@ func (m *Manager) setContextEnv(contextName string) {
 		return
 	}
 
-	if _, contextFound := m.projectSpec.Contexts[contextName]; !contextFound {
-		m.err = fmt.Errorf("context '%s' does not exist", contextName)
+	context, err := spec.GetContext(m.projectSpec, contextName)
+	if err != nil {
+		m.err = err
 		return
 	}
 
@@ -193,8 +193,8 @@ func (m *Manager) setContextEnv(contextName string) {
 		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
 		// TODO: we default to a single engine in a context for now
 		// need to allow for multiple engines in the same context
-		EngineName:        m.projectSpec.Contexts[contextName].Engines[0].Engine,
-		EngineDesignation: m.projectSpec.Contexts[contextName].Engines[0].Engine,
+		EngineName:        context.Engines[0].Engine,
+		EngineDesignation: context.Engines[0].Engine,
 	}
 }
 

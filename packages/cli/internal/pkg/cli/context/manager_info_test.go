@@ -95,7 +95,7 @@ func TestManager_Info(t *testing.T) {
 			},
 		},
 		"unknown context": {
-			expectedErr: fmt.Errorf("context 'testContextName1' does not exist"),
+			expectedErr: fmt.Errorf("context 'testContextName1' is not defined in Project 'testProjectName' specification"),
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
@@ -140,7 +140,7 @@ func TestManager_Info(t *testing.T) {
 			},
 		},
 		"context not exist error": {
-			expectedErr: fmt.Errorf("context 'testContextName1' does not exist"),
+			expectedErr: fmt.Errorf("context 'testContextName1' is not defined in Project 'testProjectName' specification"),
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)

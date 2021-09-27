@@ -1,6 +1,7 @@
 package spec
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -139,6 +140,79 @@ contexts:
 			require.NoError(t, err)
 			actual := string(bytes)
 			assert.Equal(t, expected, actual)
+		})
+	}
+}
+
+func TestGetContext(t *testing.T) {
+	type args struct {
+		projectSpec Project
+		contextName string
+	}
+	tests := []struct {
+		name            string
+		args            args
+		expectedContext Context
+		expectedError   error
+	}{
+		{
+			name: "Unknown context name",
+			args: args{
+				projectSpec: Project{
+					Name: "myProject",
+					Contexts: map[string]Context{
+						"ctx1": {
+							Engines: []Engine{
+								{Type: "wdl", Engine: "miniwdl"},
+							},
+						},
+						"ctx2": {
+							Engines: []Engine{
+								{Type: "nextflow", Engine: "nextflow"},
+							},
+						},
+					},
+				},
+				contextName: "badContextName",
+			},
+			expectedError: errors.New("context 'badContextName' is not defined in Project 'myProject' specification"),
+		},
+		{
+			name: "Existing context name ",
+			args: args{
+				projectSpec: Project{
+					Name: "Complex",
+					Contexts: map[string]Context{
+						"ctx1": {
+							Engines: []Engine{
+								{Type: "wdl", Engine: "miniwdl"},
+							},
+						},
+						"ctx2": {
+							Engines: []Engine{
+								{Type: "nextflow", Engine: "nextflow"},
+							},
+						},
+					},
+				},
+				contextName: "ctx1",
+			},
+			expectedError: nil,
+			expectedContext: Context{
+				Engines: []Engine{
+					{Type: "wdl", Engine: "miniwdl"},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			context, err := GetContext(tt.args.projectSpec, tt.args.contextName)
+			if tt.expectedError != nil {
+				assert.Error(t, err, tt.expectedError.Error())
+			} else {
+				assert.Equal(t, tt.expectedContext, context)
+			}
 		})
 	}
 }
