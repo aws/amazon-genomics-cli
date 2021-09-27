@@ -10,7 +10,7 @@ weight: 20
 Download the Amazon Genomics CLI zip, unzip its contents, and run the `install.sh` script:
 
 ```
-aws s3 cp s3://healthai-public-assets-us-east-1/amazon-genomics-cli/0.9.0/amazon-genomics-cli.zip .
+aws s3 cp s3://healthai-public-assets-us-east-1/amazon-genomics-cli/1.0.0/amazon-genomics-cli.zip .
 unzip amazon-genomics-cli.zip -d agc
 ./agc/install.sh
 ```
