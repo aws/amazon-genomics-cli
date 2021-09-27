@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/context"
-	contextmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/context"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

@@ -77,6 +77,20 @@ func (mr *MockOSMockRecorder) Remove(name interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Remove", reflect.TypeOf((*MockOS)(nil).Remove), name)
 }
 
+// RemoveAll mocks base method.
+func (m *MockOS) RemoveAll(path string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveAll", path)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RemoveAll indicates an expected call of RemoveAll.
+func (mr *MockOSMockRecorder) RemoveAll(path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveAll", reflect.TypeOf((*MockOS)(nil).RemoveAll), path)
+}
+
 // MockZip is a mock of Zip interface.
 type MockZip struct {
 	ctrl     *gomock.Controller

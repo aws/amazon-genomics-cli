@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/context"
-	awsmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/aws"
-	contextmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/context"
-	"github.com/aws/amazon-genomics-cli/common/aws/cwl"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
+	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )

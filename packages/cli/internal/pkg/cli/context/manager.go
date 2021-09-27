@@ -6,14 +6,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/config"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/storage"
-	"github.com/aws/amazon-genomics-cli/common/aws"
-	"github.com/aws/amazon-genomics-cli/common/aws/cdk"
-	"github.com/aws/amazon-genomics-cli/common/aws/cfn"
-	"github.com/aws/amazon-genomics-cli/common/aws/s3"
-	"github.com/aws/amazon-genomics-cli/common/aws/ssm"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ssm"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/rs/zerolog/log"
 )
 

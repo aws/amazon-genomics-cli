@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/types"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/workflow"
-	managermocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/manager"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/types"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
+	managermocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/manager"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )

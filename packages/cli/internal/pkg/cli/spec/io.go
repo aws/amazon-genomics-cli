@@ -4,7 +4,7 @@ import (
 	_ "embed"
 	"io/ioutil"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/yaml.v3"
 )

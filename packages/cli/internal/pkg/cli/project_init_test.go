@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
-	storagemocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/storage"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/storage"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 )

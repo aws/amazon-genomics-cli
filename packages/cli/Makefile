@@ -7,7 +7,7 @@ COVERAGE=coverage.out
 DESTINATION=./bin/local/${BINARY_NAME}
 VERSION=$(shell git describe --always --tags)
 
-LINKER_FLAGS=-X github.com/aws/amazon-genomics-cli/cli/internal/pkg/version.Version=${VERSION}
+LINKER_FLAGS=-X github.com/aws/amazon-genomics-cli/internal/pkg/version.Version=${VERSION}
 # RELEASE_BUILD_LINKER_FLAGS disables DWARF and symbol table generation to reduce binary size
 RELEASE_BUILD_LINKER_FLAGS=-s -w
 

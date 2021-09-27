@@ -7,8 +7,8 @@ package storagemocks
 import (
 	reflect "reflect"
 
-	config "github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/config"
-	spec "github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
+	config "github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	spec "github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	gomock "github.com/golang/mock/gomock"
 )
 
