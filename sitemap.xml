@@ -72,103 +72,103 @@
     <lastmod>2021-09-26T13:25:45-04:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_account/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_account_activate/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_account_deactivate/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_completion/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_completion_bash/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_completion_fish/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_completion_powershell/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_completion_zsh/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_configure/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_configure_describe/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_configure_email/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_context/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_context_deploy/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_context_describe/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_context_destroy/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_context_list/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_context_status/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_logs/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_logs_access/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_logs_adapter/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_logs_engine/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_logs_workflow/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_project/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_project_describe/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_project_init/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_version/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_workflow/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_workflow_describe/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_workflow_list/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_workflow_run/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_workflow_status/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/reference/agc_workflow_stop/</loc>
-    <lastmod>2021-09-27T03:41:45+00:00</lastmod>
+    <lastmod>2021-09-27T03:57:16+00:00</lastmod>
   </url><url>
     <loc>/docs/best-practices/controllingcosts/</loc>
     <lastmod>2021-09-26T13:25:45-04:00</lastmod>
