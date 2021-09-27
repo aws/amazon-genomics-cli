@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Amazon Genomics CLI – Getting Started</title>
-    <link>/docs/getting-started/</link>
+    <link>/amazon-genomics-cli/docs/getting-started/</link>
     <description>Recent content in Getting Started on Amazon Genomics CLI</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="/docs/getting-started/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="/amazon-genomics-cli/docs/getting-started/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -15,10 +15,10 @@
     
     <item>
       <title>Docs: Prerequisites</title>
-      <link>/docs/getting-started/prerequisites/</link>
+      <link>/amazon-genomics-cli/docs/getting-started/prerequisites/</link>
       <pubDate>Tue, 07 Sep 2021 13:42:19 -0400</pubDate>
       
-      <guid>/docs/getting-started/prerequisites/</guid>
+      <guid>/amazon-genomics-cli/docs/getting-started/prerequisites/</guid>
       <description>
         
         
@@ -80,10 +80,10 @@ aws configure
     
     <item>
       <title>Docs: Installation</title>
-      <link>/docs/getting-started/installation/</link>
+      <link>/amazon-genomics-cli/docs/getting-started/installation/</link>
       <pubDate>Tue, 07 Sep 2021 13:42:31 -0400</pubDate>
       
-      <guid>/docs/getting-started/installation/</guid>
+      <guid>/amazon-genomics-cli/docs/getting-started/installation/</guid>
       <description>
         
         
@@ -175,10 +175,10 @@ Command completion is optional and not required to use Amazon Genomics CLI. To g
     
     <item>
       <title>Docs: Setup</title>
-      <link>/docs/getting-started/setup/</link>
+      <link>/amazon-genomics-cli/docs/getting-started/setup/</link>
       <pubDate>Tue, 07 Sep 2021 13:42:50 -0400</pubDate>
       
-      <guid>/docs/getting-started/setup/</guid>
+      <guid>/amazon-genomics-cli/docs/getting-started/setup/</guid>
       <description>
         
         
@@ -207,10 +207,10 @@ CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defin
     
     <item>
       <title>Docs: Hello world</title>
-      <link>/docs/getting-started/helloworld/</link>
+      <link>/amazon-genomics-cli/docs/getting-started/helloworld/</link>
       <pubDate>Tue, 07 Sep 2021 14:01:59 -0400</pubDate>
       
-      <guid>/docs/getting-started/helloworld/</guid>
+      <guid>/amazon-genomics-cli/docs/getting-started/helloworld/</guid>
       <description>
         
         
@@ -218,9 +218,9 @@ CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defin
 with some demo projects including a simple &amp;ldquo;hello world&amp;rdquo; workflow.&lt;/p&gt;
 &lt;h2 id=&#34;running-hello-world&#34;&gt;Running Hello World&lt;/h2&gt;
 &lt;ol&gt;
-&lt;li&gt;Ensure you have met the &lt;a href=&#34;/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; and &lt;a href=&#34;/docs/getting-started/installation/&#34;&gt;installed&lt;/a&gt; Amazon Genomics CLI&lt;/li&gt;
-&lt;li&gt;Ensure you have followed the &lt;a href=&#34;/docs/getting-started/setup/&#34;&gt;activation&lt;/a&gt; steps&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cd ~/agc/examples/demo-project&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Ensure you have met the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; and &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/installation/&#34;&gt;installed&lt;/a&gt; Amazon Genomics CLI&lt;/li&gt;
+&lt;li&gt;Ensure you have followed the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/setup/&#34;&gt;activation&lt;/a&gt; steps&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd ~/agc/examples/demo-wdl-project&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;agc context deploy myContext&lt;/code&gt;, this step takes approximately 5 minutes to deploy the infrastructure&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;agc workflow run hello --context myContext&lt;/code&gt;, take note of the returned workflow instance ID.&lt;/li&gt;
 &lt;li&gt;Check on the status of the workflow &lt;code&gt;agc workflow status &amp;lt;workflow-instance-id&amp;gt;&lt;/code&gt;. Initially you will see status like &lt;code&gt;SUBMITTED&lt;/code&gt; but after the elastic compute resources have been spun up and the workflow runs you should see something like the following: &lt;code&gt;WORKFLOWINSTANCE    ctx1    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z&lt;/code&gt;&lt;/li&gt;
@@ -255,8 +255,8 @@ path. The rest of the path depends on the engine used to run the workflow. For C
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note uninstalling the CLI will &lt;em&gt;not&lt;/em&gt; remove any resources or persistent data from your AWS account.&lt;/p&gt;
 &lt;h2 id=&#34;next-steps&#34;&gt;Next Steps&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;Familiarize yourself with &lt;a href=&#34;/docs/concepts/&#34;&gt;Amazon Genomics CLI Concepts&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Try some &lt;a href=&#34;/docs/tutorials/&#34;&gt;tutorials&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Familiarize yourself with &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/&#34;&gt;Amazon Genomics CLI Concepts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Try some &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/tutorials/&#34;&gt;tutorials&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>

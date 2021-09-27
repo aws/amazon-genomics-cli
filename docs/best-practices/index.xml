@@ -1,12 +1,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Amazon Genomics CLI – Best Practices</title>
-    <link>/docs/best-practices/</link>
+    <link>/amazon-genomics-cli/docs/best-practices/</link>
     <description>Recent content in Best Practices on Amazon Genomics CLI</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Fri, 17 Sep 2021 17:55:46 -0400</lastBuildDate>
     
-	  <atom:link href="/docs/best-practices/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="/amazon-genomics-cli/docs/best-practices/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -16,10 +16,10 @@
     
     <item>
       <title>Docs: Controlling Costs</title>
-      <link>/docs/best-practices/controllingcosts/</link>
+      <link>/amazon-genomics-cli/docs/best-practices/controllingcosts/</link>
       <pubDate>Fri, 17 Sep 2021 18:01:56 -0400</pubDate>
       
-      <guid>/docs/best-practices/controllingcosts/</guid>
+      <guid>/amazon-genomics-cli/docs/best-practices/controllingcosts/</guid>
       <description>
         
         
@@ -107,10 +107,10 @@ use for Amazon Genomics CLI.&lt;/p&gt;
     
     <item>
       <title>Docs: Scaling Workloads</title>
-      <link>/docs/best-practices/scalingworkloads/</link>
+      <link>/amazon-genomics-cli/docs/best-practices/scalingworkloads/</link>
       <pubDate>Fri, 17 Sep 2021 17:59:52 -0400</pubDate>
       
-      <guid>/docs/best-practices/scalingworkloads/</guid>
+      <guid>/amazon-genomics-cli/docs/best-practices/scalingworkloads/</guid>
       <description>
         
         

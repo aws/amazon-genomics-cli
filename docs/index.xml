@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Amazon Genomics CLI – Documentation</title>
-    <link>/docs/</link>
+    <link>/amazon-genomics-cli/docs/</link>
     <description>Recent content in Documentation on Amazon Genomics CLI</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="/docs/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="/amazon-genomics-cli/docs/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -15,10 +15,10 @@
     
     <item>
       <title>Docs: Accounts</title>
-      <link>/docs/concepts/accounts/</link>
+      <link>/amazon-genomics-cli/docs/concepts/accounts/</link>
       <pubDate>Thu, 02 Sep 2021 13:52:05 -0400</pubDate>
       
-      <guid>/docs/concepts/accounts/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/accounts/</guid>
       <description>
         
         
@@ -43,7 +43,7 @@ is not shared and is unique and namespaced by user and project.&lt;/p&gt;
 be created for you. Although we use AWS best practices for these, if your organization has specific security requirements
 for networking and storage this may be the easiest way to activate Amazon Genomics CLI in your environment.&lt;/p&gt;
 &lt;h2 id=&#34;account-commands&#34;&gt;Account Commands&lt;/h2&gt;
-&lt;p&gt;A full reference of the account commands is &lt;a href=&#34;/docs/reference/agc_account/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A full reference of the account commands is &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_account/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;activate&#34;&gt;&lt;code&gt;activate&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;You can activate an account using &lt;code&gt;agc account activate&lt;/code&gt;. An account must be activated before any contexts can be deployed
 or workflows run.&lt;/p&gt;
@@ -74,7 +74,7 @@ time with the &lt;code&gt;--force&lt;/code&gt; flag. Note that this will also in
 may fail due to the infrastructure state being inconsistent with the &lt;a href=&#34;https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/index.html&#34;&gt;CloudFormation&lt;/a&gt; state. If this happens you may need
 to manually clean up through the CloudFormation console.&lt;/p&gt;
 &lt;h2 id=&#34;costs&#34;&gt;Costs&lt;/h2&gt;
-&lt;p&gt;Core infrastructure deployed for Amazon Genomics CLI is &lt;a href=&#34;/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the &lt;code&gt;application-name: agc&lt;/code&gt; tag. This tag can be activated for cost
+&lt;p&gt;Core infrastructure deployed for Amazon Genomics CLI is &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the &lt;code&gt;application-name: agc&lt;/code&gt; tag. This tag can be activated for cost
 tracking in &lt;a href=&#34;https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/ce-what-is.html&#34;&gt;AWS CostExplorer&lt;/a&gt;. The core infrastructure is shared and &lt;em&gt;not&lt;/em&gt; tagged with any username, context name or
 project name.&lt;/p&gt;
 &lt;p&gt;While an account region is activated there will be ongoing charges from the core infrastructure deployed including things such
@@ -113,10 +113,10 @@ infrastructure can be found in &lt;a href=&#34;https://github.com/aws/amazon-gen
     
     <item>
       <title>Docs: Users</title>
-      <link>/docs/concepts/users/</link>
+      <link>/amazon-genomics-cli/docs/concepts/users/</link>
       <pubDate>Fri, 03 Sep 2021 09:59:23 -0400</pubDate>
       
-      <guid>/docs/concepts/users/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/users/</guid>
       <description>
         
         
@@ -145,20 +145,20 @@ console and remove it from there.&lt;/p&gt;
     
     <item>
       <title>Docs: Walk through</title>
-      <link>/docs/tutorials/walkthrough/</link>
+      <link>/amazon-genomics-cli/docs/tutorials/walkthrough/</link>
       <pubDate>Thu, 09 Sep 2021 10:16:57 -0400</pubDate>
       
-      <guid>/docs/tutorials/walkthrough/</guid>
+      <guid>/amazon-genomics-cli/docs/tutorials/walkthrough/</guid>
       <description>
         
         
         &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
-&lt;p&gt;Ensure you have completed the &lt;a href=&#34;/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; before beginning.&lt;/p&gt;
+&lt;p&gt;Ensure you have completed the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; before beginning.&lt;/p&gt;
 &lt;h2 id=&#34;download-and-install-amazon-genomics-cli&#34;&gt;Download and install Amazon Genomics CLI&lt;/h2&gt;
-&lt;p&gt;Download the Amazon Genomics CLI according to the &lt;a href=&#34;/docs/getting-started/installation/&#34;&gt;installation&lt;/a&gt;
+&lt;p&gt;Download the Amazon Genomics CLI according to the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/installation/&#34;&gt;installation&lt;/a&gt;
 instructions.&lt;/p&gt;
 &lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;
-&lt;p&gt;Ensure you have initialized your account and created a username by following the &lt;a href=&#34;/docs/getting-started/setup/&#34;&gt;setup&lt;/a&gt;
+&lt;p&gt;Ensure you have initialized your account and created a username by following the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/setup/&#34;&gt;setup&lt;/a&gt;
 instructions.&lt;/p&gt;
 &lt;h2 id=&#34;initialize-a-project&#34;&gt;Initialize a project&lt;/h2&gt;
 &lt;p&gt;Amazon Genomics CLI uses local folders and config files to define projects. Projects contain configuration settings for contexts and workflows (more on these below). To create a new project for running WDL based workflows do the following:&lt;/p&gt;
@@ -469,10 +469,10 @@ Fri, 10 Sep 2021 23:40:59 +0000    2021-09-10 23:40:59,826 cromwell-system-akka.
     
     <item>
       <title>Docs: Prerequisites</title>
-      <link>/docs/getting-started/prerequisites/</link>
+      <link>/amazon-genomics-cli/docs/getting-started/prerequisites/</link>
       <pubDate>Tue, 07 Sep 2021 13:42:19 -0400</pubDate>
       
-      <guid>/docs/getting-started/prerequisites/</guid>
+      <guid>/amazon-genomics-cli/docs/getting-started/prerequisites/</guid>
       <description>
         
         
@@ -534,14 +534,14 @@ aws configure
     
     <item>
       <title>Docs: Projects</title>
-      <link>/docs/concepts/projects/</link>
+      <link>/amazon-genomics-cli/docs/concepts/projects/</link>
       <pubDate>Tue, 31 Aug 2021 17:27:06 -0400</pubDate>
       
-      <guid>/docs/concepts/projects/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/projects/</guid>
       <description>
         
         
-        &lt;p&gt;An Amazon Genomics CLI project defines the &lt;a href=&#34;/docs/concepts/projects/&#34;&gt;projects&lt;/a&gt;, &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;, &lt;a href=&#34;/docs/concepts/data/&#34;&gt;data&lt;/a&gt; and &lt;a href=&#34;/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; that make up a genomics analysis. Each project is defined
+        &lt;p&gt;An Amazon Genomics CLI project defines the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/projects/&#34;&gt;projects&lt;/a&gt;, &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;, &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/data/&#34;&gt;data&lt;/a&gt; and &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; that make up a genomics analysis. Each project is defined
 in a project file named &lt;code&gt;agc-project.yaml&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;project-file-location&#34;&gt;Project File Location&lt;/h2&gt;
 &lt;p&gt;To find the project definition, Amazon Genomics CLI will look for a file named &lt;code&gt;agc-project.yaml&lt;/code&gt; in the current working directory. If
@@ -579,7 +579,7 @@ there was a workflow definition in &lt;code&gt;a/b/&lt;/code&gt; then Amazon Gen
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is fully usable project called &amp;ldquo;myProject&amp;rdquo; with a single context named &amp;ldquo;ctx1&amp;rdquo;. At this point &amp;ldquo;ctx1&amp;rdquo; can be &lt;a href=&#34;/docs/concepts/contexts/#deploy&#34;&gt;deployed&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is fully usable project called &amp;ldquo;myProject&amp;rdquo; with a single context named &amp;ldquo;ctx1&amp;rdquo;. At this point &amp;ldquo;ctx1&amp;rdquo; can be &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/#deploy&#34;&gt;deployed&lt;/a&gt;
 however, there are currently no workflows defined.&lt;/p&gt;
 &lt;h3 id=&#34;name&#34;&gt;&lt;code&gt;name&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;A string that identifies the project&lt;/p&gt;
@@ -587,10 +587,10 @@ however, there are currently no workflows defined.&lt;/p&gt;
 &lt;p&gt;An integer defining the schema version. Version numbers will be incremented when changes are made to the project schema
 that are not backward compatible.&lt;/p&gt;
 &lt;h3 id=&#34;contexts&#34;&gt;&lt;code&gt;contexts&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;A map of context names to context definitions. Each context in the project must have a unique name. The &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;
+&lt;p&gt;A map of context names to context definitions. Each context in the project must have a unique name. The &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;
 documentation provides more details.&lt;/p&gt;
 &lt;h3 id=&#34;workflows&#34;&gt;&lt;code&gt;workflows&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;A map of workflow names to workflow definitions. Workflow names must be unique in a project. The &lt;a href=&#34;/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt;
+&lt;p&gt;A map of workflow names to workflow definitions. Workflow names must be unique in a project. The &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt;
 documentation provides more details.&lt;/p&gt;
 &lt;h3 id=&#34;data&#34;&gt;&lt;code&gt;data&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;An array of data sources that the contexts of the project have access to. For example:&lt;/p&gt;
@@ -602,7 +602,7 @@ documentation provides more details.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://1000genomes-dragen-3.7.6&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
-&lt;p&gt;A full reference of project commands are available &lt;a href=&#34;/docs/reference/agc_project/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A full reference of project commands are available &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_project/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;init&#34;&gt;&lt;code&gt;init&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The &lt;code&gt;agc project init &amp;lt;project-name&amp;gt; --workflow-type &amp;lt;worklow-type&amp;gt;&lt;/code&gt; command can be used to initialize a minimal &lt;code&gt;agc-project.yaml&lt;/code&gt; file in the current
 directory. Alternatively project yaml files can be created with any text editor.&lt;/p&gt;
@@ -624,7 +624,7 @@ sure that data locations are appropriately shared.&lt;/p&gt;
 &lt;p&gt;A project itself doesn&amp;rsquo;t have infrastructure. It is not deployed and therefore has no direct costs. If the contexts defined
 by an infrastructure are deployed or the workflows run then those &lt;em&gt;will&lt;/em&gt; incur costs.&lt;/p&gt;
 &lt;h3 id=&#34;tags&#34;&gt;Tags&lt;/h3&gt;
-&lt;p&gt;The project &lt;code&gt;name&lt;/code&gt; will be &lt;a href=&#34;/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt;
+&lt;p&gt;The project &lt;code&gt;name&lt;/code&gt; will be &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt;
 on any deployed contexts or workflows defined in this project allowing costs to be aggregated to the project level.&lt;/p&gt;
 &lt;h2 id=&#34;technical-details&#34;&gt;Technical Details&lt;/h2&gt;
 &lt;p&gt;A project is purely a &lt;a href=&#34;https://en.wikipedia.org/wiki/YAML&#34;&gt;YAML&lt;/a&gt; definition. The values in the &lt;code&gt;agc-project.yaml&lt;/code&gt; file are used by CDK when Amazon Genomics CLI deploys contexts
@@ -636,10 +636,10 @@ context infrastructure.&lt;/p&gt;
     
     <item>
       <title>Docs: Installation</title>
-      <link>/docs/getting-started/installation/</link>
+      <link>/amazon-genomics-cli/docs/getting-started/installation/</link>
       <pubDate>Tue, 07 Sep 2021 13:42:31 -0400</pubDate>
       
-      <guid>/docs/getting-started/installation/</guid>
+      <guid>/amazon-genomics-cli/docs/getting-started/installation/</guid>
       <description>
         
         
@@ -731,26 +731,26 @@ Command completion is optional and not required to use Amazon Genomics CLI. To g
     
     <item>
       <title>Docs: Contexts</title>
-      <link>/docs/concepts/contexts/</link>
+      <link>/amazon-genomics-cli/docs/concepts/contexts/</link>
       <pubDate>Tue, 31 Aug 2021 17:26:49 -0400</pubDate>
       
-      <guid>/docs/concepts/contexts/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/contexts/</guid>
       <description>
         
         
         &lt;h2 id=&#34;what-is-a-context&#34;&gt;What is a Context?&lt;/h2&gt;
-&lt;p&gt;A context is a set of cloud resources. Amazon Genomics CLI runs &lt;a href=&#34;/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; in a context. A deployed context will include an
-&lt;a href=&#34;/docs/concepts/engines/&#34;&gt;engine&lt;/a&gt; that can interpret
+&lt;p&gt;A context is a set of cloud resources. Amazon Genomics CLI runs &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; in a context. A deployed context will include an
+&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/engines/&#34;&gt;engine&lt;/a&gt; that can interpret
 and manage the running of a workflow along with compute resources that will run the individual tasks of the workflow. The
 deployed context will also contain any resources needed by the engine or compute resources including any security, permissions
-and &lt;a href=&#34;/docs/concepts/logs/&#34;&gt;logging&lt;/a&gt; capabilities. Deployed contexts are &lt;a href=&#34;/docs/concepts/namespaces/&#34;&gt;namespaced&lt;/a&gt; based on the user, project and context name so that resources
+and &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/logs/&#34;&gt;logging&lt;/a&gt; capabilities. Deployed contexts are &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/&#34;&gt;namespaced&lt;/a&gt; based on the user, project and context name so that resources
 are isolated, preventing collisions.&lt;/p&gt;
 &lt;p&gt;When a workflow is run the user will decide which context will run it. For example, you might choose to submit a workflow
 to a context that uses &amp;ldquo;Spot priced&amp;rdquo; resources or one that uses &amp;ldquo;On Demand&amp;rdquo; priced resources.&lt;/p&gt;
-&lt;p&gt;When deployed context resources that require a VPC will be deployed into the VPC that was specified when the &lt;a href=&#34;/docs/concepts/accounts/&#34;&gt;account&lt;/a&gt; was
+&lt;p&gt;When deployed context resources that require a VPC will be deployed into the VPC that was specified when the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/accounts/&#34;&gt;account&lt;/a&gt; was
 activated.&lt;/p&gt;
 &lt;h2 id=&#34;how-is-a-context-defined&#34;&gt;How is a Context Defined?&lt;/h2&gt;
-&lt;p&gt;A context is defined in the YAML file that defines the &lt;a href=&#34;/docs/concepts/projects/&#34;&gt;project&lt;/a&gt;. A project has at least one context but may have many.
+&lt;p&gt;A context is defined in the YAML file that defines the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/projects/&#34;&gt;project&lt;/a&gt;. A project has at least one context but may have many.
 Contexts must have unique names and are defined as YAML maps.&lt;/p&gt;
 &lt;p&gt;A context may request use of &lt;a href=&#34;https://aws.amazon.com/ec2/spot/pricing/&#34;&gt;Spot priced&lt;/a&gt; compute resources with &lt;code&gt;requestSpotInstances: true&lt;/code&gt;. The default value is &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;A context must define an array of one or more &lt;code&gt;engines&lt;/code&gt;. Each engine definition must specify the workflow language that it
@@ -793,7 +793,7 @@ WDL engine.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;context-commands&#34;&gt;Context Commands&lt;/h2&gt;
-&lt;p&gt;A full reference of context commands is &lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A full reference of context commands is &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;describe&#34;&gt;&lt;code&gt;describe&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The command &lt;code&gt;agc context describe &amp;lt;context-name&amp;gt; [flags]&lt;/code&gt; will describe the named context as defined in the project YAML
 as well as other relevant account information.&lt;/p&gt;
@@ -848,7 +848,7 @@ can still be interrupted if total demand for on demand instances in an availabil
 full details see &lt;a href=&#34;https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html&#34;&gt;Spot Instance Interruptions&lt;/a&gt;
 and &lt;a href=&#34;https://aws.amazon.com/ec2/spot/pricing/&#34;&gt;EC2 Spot Pricing&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;tags&#34;&gt;Tags&lt;/h3&gt;
-&lt;p&gt;All context infrastructure is &lt;a href=&#34;/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the context name, username and project name. These tags may be used to help
+&lt;p&gt;All context infrastructure is &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the context name, username and project name. These tags may be used to help
 differentiate costs.&lt;/p&gt;
 &lt;h2 id=&#34;technical-details&#34;&gt;Technical Details&lt;/h2&gt;
 &lt;p&gt;Context infrastructure is defined as code as &lt;a href=&#34;https://aws.amazon.com/cdk/&#34;&gt;AWS CDK&lt;/a&gt; apps. For examples, take a look at the &lt;code&gt;packages/cdk&lt;/code&gt; folder. When
@@ -869,10 +869,10 @@ code we recommend destroying any relevant running contexts and redeploying them.
     
     <item>
       <title>Docs: Setup</title>
-      <link>/docs/getting-started/setup/</link>
+      <link>/amazon-genomics-cli/docs/getting-started/setup/</link>
       <pubDate>Tue, 07 Sep 2021 13:42:50 -0400</pubDate>
       
-      <guid>/docs/getting-started/setup/</guid>
+      <guid>/amazon-genomics-cli/docs/getting-started/setup/</guid>
       <description>
         
         
@@ -901,15 +901,15 @@ CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defin
     
     <item>
       <title>Docs: Data</title>
-      <link>/docs/concepts/data/</link>
+      <link>/amazon-genomics-cli/docs/concepts/data/</link>
       <pubDate>Tue, 31 Aug 2021 17:27:22 -0400</pubDate>
       
-      <guid>/docs/concepts/data/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/data/</guid>
       <description>
         
         
-        &lt;p&gt;To run an analysis you need data. In the &lt;code&gt;agc-project.yaml&lt;/code&gt; file of an Amazon Genomics CLI &lt;a href=&#34;/docs/concepts/projects/&#34;&gt;project&lt;/a&gt; &lt;code&gt;data&lt;/code&gt; is a list of data locations
-which can be used by the &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt; of the project.&lt;/p&gt;
+        &lt;p&gt;To run an analysis you need data. In the &lt;code&gt;agc-project.yaml&lt;/code&gt; file of an Amazon Genomics CLI &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/projects/&#34;&gt;project&lt;/a&gt; &lt;code&gt;data&lt;/code&gt; is a list of data locations
+which can be used by the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt; of the project.&lt;/p&gt;
 &lt;p&gt;In the example data definition below we are declaring that the project&amp;rsquo;s contexts will be allowed to access the three
 listed S3 bucket URIs.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -920,7 +920,7 @@ listed S3 bucket URIs.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://1000genomes-dragen-3.7.6&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The contexts of the project will be &lt;em&gt;denied&lt;/em&gt; access to all other S3 location except for the S3 bucket created or associated
-when the &lt;a href=&#34;/docs/concepts/accounts/&#34;&gt;account&lt;/a&gt; was initialized by Amazon Genomics CLI.&lt;/p&gt;
+when the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/accounts/&#34;&gt;account&lt;/a&gt; was initialized by Amazon Genomics CLI.&lt;/p&gt;
 &lt;p&gt;Declaring access in the project will only ensure your infrastructure is correctly configured to access the bucket. If
 the target bucket is further restricted, such as by an access control list or bucket policy, you will still be denied access.
 In these cases you should work with the bucket owner to facilitate access.&lt;/p&gt;
@@ -937,7 +937,7 @@ See &lt;a href=&#34;https://aws.amazon.com/premiumsupport/knowledge-center/cross
 &lt;h2 id=&#34;updating-data-sources&#34;&gt;Updating Data Sources&lt;/h2&gt;
 &lt;p&gt;If data definitions are added to or removed from a project definition the change will &lt;em&gt;not&lt;/em&gt; be reflected in deployed contexts
 until they are updated. This can be done with &lt;code&gt;agc context deploy --all&lt;/code&gt; for all contexts or by using a context name to update
-only one. See &lt;a href=&#34;/docs/concepts/contexts/#deploy&#34;&gt;&lt;code&gt;context deploy&lt;/code&gt;&lt;/a&gt; for details.&lt;/p&gt;
+only one. See &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/#deploy&#34;&gt;&lt;code&gt;context deploy&lt;/code&gt;&lt;/a&gt; for details.&lt;/p&gt;
 
 
 &lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
@@ -958,10 +958,10 @@ The CDK code does not modify any data in the buckets or any other bucket policie
     
     <item>
       <title>Docs: Hello world</title>
-      <link>/docs/getting-started/helloworld/</link>
+      <link>/amazon-genomics-cli/docs/getting-started/helloworld/</link>
       <pubDate>Tue, 07 Sep 2021 14:01:59 -0400</pubDate>
       
-      <guid>/docs/getting-started/helloworld/</guid>
+      <guid>/amazon-genomics-cli/docs/getting-started/helloworld/</guid>
       <description>
         
         
@@ -969,9 +969,9 @@ The CDK code does not modify any data in the buckets or any other bucket policie
 with some demo projects including a simple &amp;ldquo;hello world&amp;rdquo; workflow.&lt;/p&gt;
 &lt;h2 id=&#34;running-hello-world&#34;&gt;Running Hello World&lt;/h2&gt;
 &lt;ol&gt;
-&lt;li&gt;Ensure you have met the &lt;a href=&#34;/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; and &lt;a href=&#34;/docs/getting-started/installation/&#34;&gt;installed&lt;/a&gt; Amazon Genomics CLI&lt;/li&gt;
-&lt;li&gt;Ensure you have followed the &lt;a href=&#34;/docs/getting-started/setup/&#34;&gt;activation&lt;/a&gt; steps&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cd ~/agc/examples/demo-project&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Ensure you have met the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; and &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/installation/&#34;&gt;installed&lt;/a&gt; Amazon Genomics CLI&lt;/li&gt;
+&lt;li&gt;Ensure you have followed the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/setup/&#34;&gt;activation&lt;/a&gt; steps&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd ~/agc/examples/demo-wdl-project&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;agc context deploy myContext&lt;/code&gt;, this step takes approximately 5 minutes to deploy the infrastructure&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;agc workflow run hello --context myContext&lt;/code&gt;, take note of the returned workflow instance ID.&lt;/li&gt;
 &lt;li&gt;Check on the status of the workflow &lt;code&gt;agc workflow status &amp;lt;workflow-instance-id&amp;gt;&lt;/code&gt;. Initially you will see status like &lt;code&gt;SUBMITTED&lt;/code&gt; but after the elastic compute resources have been spun up and the workflow runs you should see something like the following: &lt;code&gt;WORKFLOWINSTANCE    ctx1    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z&lt;/code&gt;&lt;/li&gt;
@@ -1006,8 +1006,8 @@ path. The rest of the path depends on the engine used to run the workflow. For C
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note uninstalling the CLI will &lt;em&gt;not&lt;/em&gt; remove any resources or persistent data from your AWS account.&lt;/p&gt;
 &lt;h2 id=&#34;next-steps&#34;&gt;Next Steps&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;Familiarize yourself with &lt;a href=&#34;/docs/concepts/&#34;&gt;Amazon Genomics CLI Concepts&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Try some &lt;a href=&#34;/docs/tutorials/&#34;&gt;tutorials&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Familiarize yourself with &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/&#34;&gt;Amazon Genomics CLI Concepts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Try some &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/tutorials/&#34;&gt;tutorials&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1015,10 +1015,10 @@ path. The rest of the path depends on the engine used to run the workflow. For C
     
     <item>
       <title>Docs: Workflows</title>
-      <link>/docs/concepts/workflows/</link>
+      <link>/amazon-genomics-cli/docs/concepts/workflows/</link>
       <pubDate>Tue, 31 Aug 2021 17:27:16 -0400</pubDate>
       
-      <guid>/docs/concepts/workflows/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/workflows/</guid>
       <description>
         
         
@@ -1034,7 +1034,7 @@ of the workflow definition file.&lt;/p&gt;
 &lt;p&gt;At this time Amazon Genomics CLI does &lt;em&gt;not&lt;/em&gt; resolve path aliases so, for example, a &lt;code&gt;sourceURL&lt;/code&gt; like &lt;code&gt;~/workflows/worklfow.wdl&lt;/code&gt; is not
 supported.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;type&lt;/code&gt; object declares the &lt;code&gt;language&lt;/code&gt; of the workflow (eg, wdl, nextflow etc). The run a workflow there must be a
-deployed &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt; with a matching language. The &lt;code&gt;version&lt;/code&gt; property refers to the workflow language version.&lt;/p&gt;
+deployed &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt; with a matching language. The &lt;code&gt;version&lt;/code&gt; property refers to the workflow language version.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;workflows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;hello&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -1109,7 +1109,7 @@ to submit multiple instances of the same workflow and to have these run concurre
 &lt;p&gt;All workflows are coordinated by the engine, they are submitted to and executed in the context that is specified at submission time.
 The workflow engine decides how the workflow is to be run and the context provides compute resources to run the workflow.&lt;/p&gt;
 &lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
-&lt;p&gt;A full reference of workflow commands is available &lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A full reference of workflow commands is available &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;run&#34;&gt;&lt;code&gt;run&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;Invoking &lt;code&gt;agc workflow run &amp;lt;workflow-name&amp;gt; -c &amp;lt;context-name&amp;gt;&lt;/code&gt; will run the named workflow in a specific context. The
 unique ID of that workflow instance run will be returned if the submission is successful.&lt;/p&gt;
@@ -1152,14 +1152,14 @@ possible at the level of an individual workflow.&lt;/p&gt;
     
     <item>
       <title>Docs: Engines</title>
-      <link>/docs/concepts/engines/</link>
+      <link>/amazon-genomics-cli/docs/concepts/engines/</link>
       <pubDate>Tue, 31 Aug 2021 17:28:39 -0400</pubDate>
       
-      <guid>/docs/concepts/engines/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/engines/</guid>
       <description>
         
         
-        &lt;p&gt;A workflow engine is defined as part of a &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt;. A context is currently limited to one workflow engine. The workflow engine will manage the execution of any &lt;a href=&#34;/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; submitted
+        &lt;p&gt;A workflow engine is defined as part of a &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt;. A context is currently limited to one workflow engine. The workflow engine will manage the execution of any &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; submitted
 by Amazon Genomics CLI. When the context is deployed, an endpoint will be made available
 to Amazon Genomics CLI through which it will submit workflows and workflow commands to the engine according to the WES API specification.&lt;/p&gt;
 &lt;h2 id=&#34;supported-engines-and-workflow-languages&#34;&gt;Supported Engines and Workflow Languages&lt;/h2&gt;
@@ -1188,7 +1188,7 @@ to Amazon Genomics CLI through which it will submit workflows and workflow comma
 &lt;p&gt;Overtime we plan to add additional engine and language support and provide the ability for third party developers to
 develop engine plugins.&lt;/p&gt;
 &lt;h2 id=&#34;engine-definition&#34;&gt;Engine Definition&lt;/h2&gt;
-&lt;p&gt;An engine is defined within a &lt;code&gt;context&lt;/code&gt; definition of the &lt;a href=&#34;/docs/concepts/projects/#project-file-structure&#34;&gt;project YAML file&lt;/a&gt; file as a map. For example, the following snippet
+&lt;p&gt;An engine is defined within a &lt;code&gt;context&lt;/code&gt; definition of the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/projects/#project-file-structure&#34;&gt;project YAML file&lt;/a&gt; file as a map. For example, the following snippet
 defines a WDL engine of type &lt;code&gt;cromwell&lt;/code&gt; as part of the context named &lt;code&gt;onDemandCtx&lt;/code&gt;. There may be one engine defined
 for each supported language.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -1198,8 +1198,8 @@ for each supported language.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;cromwell&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
-&lt;p&gt;There are no commands specific to engines. Engines are &lt;a href=&#34;/docs/concepts/contexts/#deploy&#34;&gt;deployed&lt;/a&gt; along with contexts by the &lt;a href=&#34;/docs/concepts/contexts/#context-commands&#34;&gt;&lt;code&gt;context&lt;/code&gt; commands&lt;/a&gt; and workflows
-are run using the &lt;a href=&#34;/docs/concepts/workflows/#commands&#34;&gt;&lt;code&gt;workflow&lt;/code&gt; commands&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;There are no commands specific to engines. Engines are &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/#deploy&#34;&gt;deployed&lt;/a&gt; along with contexts by the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/#context-commands&#34;&gt;&lt;code&gt;context&lt;/code&gt; commands&lt;/a&gt; and workflows
+are run using the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/workflows/#commands&#34;&gt;&lt;code&gt;workflow&lt;/code&gt; commands&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;costs&#34;&gt;Costs&lt;/h2&gt;
 &lt;p&gt;The costs associated with an engine depend on the actual infrastructure required by the engine. In the case of the Cromwell,
 the engine runs in &amp;ldquo;server&amp;rdquo; mode as an &lt;a href=&#34;https://docs.aws.amazon.com/AmazonECS/latest/userguide/index.html&#34;&gt;AWS ECS Fargate&lt;/a&gt; container using an
@@ -1210,7 +1210,7 @@ and is only running when workflows are running.&lt;/p&gt;
 &lt;p&gt;In both cases a serverless WES API endpoint is deployed through &lt;a href=&#34;https://docs.aws.amazon.com/apigatewayv2/latest/api-reference/&#34;&gt;Amazon API Gateway&lt;/a&gt; to act as the interface between Amazon Genomics CLI and
 the engine.&lt;/p&gt;
 &lt;h3 id=&#34;tags&#34;&gt;Tags&lt;/h3&gt;
-&lt;p&gt;Being part of a context, engine related infrastructure is &lt;a href=&#34;/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the context name, username and project name. These tags may be used to help
+&lt;p&gt;Being part of a context, engine related infrastructure is &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the context name, username and project name. These tags may be used to help
 differentiate costs.&lt;/p&gt;
 &lt;h2 id=&#34;technical-details&#34;&gt;Technical Details&lt;/h2&gt;
 &lt;p&gt;Supported engines are currently deployed with configurations that allow them to make use of files in S3 and submit workflows
@@ -1226,10 +1226,10 @@ controlling and destroying the resources that will be used for task execution.&l
     
     <item>
       <title>Docs: Logs</title>
-      <link>/docs/concepts/logs/</link>
+      <link>/amazon-genomics-cli/docs/concepts/logs/</link>
       <pubDate>Tue, 31 Aug 2021 17:30:49 -0400</pubDate>
       
-      <guid>/docs/concepts/logs/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/logs/</guid>
       <description>
         
         
@@ -1255,7 +1255,7 @@ the WES API calls that are made to the engine by Amazon Genomics CLI and any err
 API Gateway which routes to the WES adapter. If an expected call does not appear in the adapter logs it may have been
 blocked or incorrectly routed in the API Gateway. The API Gateway access logs may be informative in this case.&lt;/p&gt;
 &lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
-&lt;p&gt;A full reference of Amazon Genomics CLI &lt;code&gt;logs&lt;/code&gt; commands are available &lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A full reference of Amazon Genomics CLI &lt;code&gt;logs&lt;/code&gt; commands are available &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;costs&#34;&gt;Costs&lt;/h2&gt;
 &lt;p&gt;Amazon Genomics CLI logs are stored in CloudWatch and accessed using the CloudWatch APIs. Standard CloudWatch charges apply.
 All logs are retained permanently, even after a context is destroyed and other Amazon Genomics CLI infrastructure is
@@ -1266,14 +1266,14 @@ removed from an account. If they are no longer needed they may be removed using 
     
     <item>
       <title>Docs: Namespaces</title>
-      <link>/docs/concepts/namespaces/</link>
+      <link>/amazon-genomics-cli/docs/concepts/namespaces/</link>
       <pubDate>Tue, 31 Aug 2021 17:26:20 -0400</pubDate>
       
-      <guid>/docs/concepts/namespaces/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/namespaces/</guid>
       <description>
         
         
-        &lt;p&gt;Amazon Genomics CLI uses namespacing to prevent conflicts when there are multiple &lt;a href=&#34;/docs/concepts/users/&#34;&gt;users&lt;/a&gt;, &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;, and &lt;a href=&#34;/docs/concepts/projects/&#34;&gt;projects&lt;/a&gt; in the same AWS account and region.&lt;/p&gt;
+        &lt;p&gt;Amazon Genomics CLI uses namespacing to prevent conflicts when there are multiple &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/users/&#34;&gt;users&lt;/a&gt;, &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;, and &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/projects/&#34;&gt;projects&lt;/a&gt; in the same AWS account and region.&lt;/p&gt;
 &lt;p&gt;In any given account and region, an individual user may have many projects with many deployed contexts all running at the
 same time without conflict as long as:&lt;/p&gt;
 &lt;ol&gt;
@@ -1327,10 +1327,10 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
     
     <item>
       <title>Docs: agc</title>
-      <link>/docs/reference/agc/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc/</guid>
       <description>
         
         
@@ -1347,17 +1347,17 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
       --version   version for agc
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_account/&#34;&gt;agc account&lt;/a&gt;	 - Commands for AWS account setup.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_account/&#34;&gt;agc account&lt;/a&gt;	 - Commands for AWS account setup.
 Install or remove AGC from your account.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_configure/&#34;&gt;agc configure&lt;/a&gt;	 - Commands for configuration.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_configure/&#34;&gt;agc configure&lt;/a&gt;	 - Commands for configuration.
 Configuration is stored per user.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
 Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_project/&#34;&gt;agc project&lt;/a&gt;	 - Commands to interact with projects.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_version/&#34;&gt;agc version&lt;/a&gt;	 - Print the version number.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_project/&#34;&gt;agc project&lt;/a&gt;	 - Commands to interact with projects.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_version/&#34;&gt;agc version&lt;/a&gt;	 - Print the version number.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
 Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1366,10 +1366,10 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     
     <item>
       <title>Docs: agc account</title>
-      <link>/docs/reference/agc_account/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_account/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_account/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_account/</guid>
       <description>
         
         
@@ -1387,9 +1387,9 @@ These commands should be used to install or remove AGC from your AWS account.&lt
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_account_activate/&#34;&gt;agc account activate&lt;/a&gt;	 - Activate AGC in an AWS account.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_account_deactivate/&#34;&gt;agc account deactivate&lt;/a&gt;	 - Deactivate AGC in an AWS account.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_account_activate/&#34;&gt;agc account activate&lt;/a&gt;	 - Activate AGC in an AWS account.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_account_deactivate/&#34;&gt;agc account deactivate&lt;/a&gt;	 - Deactivate AGC in an AWS account.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1397,10 +1397,10 @@ These commands should be used to install or remove AGC from your AWS account.&lt
     
     <item>
       <title>Docs: agc account activate</title>
-      <link>/docs/reference/agc_account_activate/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_account_activate/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_account_activate/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_account_activate/</guid>
       <description>
         
         
@@ -1426,7 +1426,7 @@ Activate AGC in your AWS account with a custom S3 bucket and VPC.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_account/&#34;&gt;agc account&lt;/a&gt;	 - Commands for AWS account setup.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_account/&#34;&gt;agc account&lt;/a&gt;	 - Commands for AWS account setup.
 Install or remove AGC from your account.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1435,10 +1435,10 @@ Install or remove AGC from your account.&lt;/li&gt;
     
     <item>
       <title>Docs: agc account deactivate</title>
-      <link>/docs/reference/agc_account_deactivate/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_account_deactivate/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_account_deactivate/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_account_deactivate/</guid>
       <description>
         
         
@@ -1464,7 +1464,7 @@ Deactivate AGC in your AWS account.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_account/&#34;&gt;agc account&lt;/a&gt;	 - Commands for AWS account setup.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_account/&#34;&gt;agc account&lt;/a&gt;	 - Commands for AWS account setup.
 Install or remove AGC from your account.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1473,10 +1473,10 @@ Install or remove AGC from your account.&lt;/li&gt;
     
     <item>
       <title>Docs: agc completion</title>
-      <link>/docs/reference/agc_completion/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_completion/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_completion/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_completion/</guid>
       <description>
         
         
@@ -1491,11 +1491,11 @@ See each sub-command&amp;rsquo;s help for details on how to use the generated sc
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion_bash/&#34;&gt;agc completion bash&lt;/a&gt;	 - generate the autocompletion script for bash&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion_fish/&#34;&gt;agc completion fish&lt;/a&gt;	 - generate the autocompletion script for fish&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion_powershell/&#34;&gt;agc completion powershell&lt;/a&gt;	 - generate the autocompletion script for powershell&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion_zsh/&#34;&gt;agc completion zsh&lt;/a&gt;	 - generate the autocompletion script for zsh&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_completion_bash/&#34;&gt;agc completion bash&lt;/a&gt;	 - generate the autocompletion script for bash&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_completion_fish/&#34;&gt;agc completion fish&lt;/a&gt;	 - generate the autocompletion script for fish&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_completion_powershell/&#34;&gt;agc completion powershell&lt;/a&gt;	 - generate the autocompletion script for powershell&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_completion_zsh/&#34;&gt;agc completion zsh&lt;/a&gt;	 - generate the autocompletion script for zsh&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1503,10 +1503,10 @@ See each sub-command&amp;rsquo;s help for details on how to use the generated sc
     
     <item>
       <title>Docs: agc completion bash</title>
-      <link>/docs/reference/agc_completion_bash/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_completion_bash/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_completion_bash/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_completion_bash/</guid>
       <description>
         
         
@@ -1532,7 +1532,7 @@ $ agc completion bash &amp;gt; /usr/local/etc/bash_completion.d/agc&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1540,10 +1540,10 @@ $ agc completion bash &amp;gt; /usr/local/etc/bash_completion.d/agc&lt;/p&gt;
     
     <item>
       <title>Docs: agc completion fish</title>
-      <link>/docs/reference/agc_completion_fish/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_completion_fish/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_completion_fish/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_completion_fish/</guid>
       <description>
         
         
@@ -1564,7 +1564,7 @@ $ agc completion fish &amp;gt; ~/.config/fish/completions/agc.fish&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1572,10 +1572,10 @@ $ agc completion fish &amp;gt; ~/.config/fish/completions/agc.fish&lt;/p&gt;
     
     <item>
       <title>Docs: agc completion powershell</title>
-      <link>/docs/reference/agc_completion_powershell/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_completion_powershell/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_completion_powershell/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_completion_powershell/</guid>
       <description>
         
         
@@ -1595,7 +1595,7 @@ to your powershell profile.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1603,10 +1603,10 @@ to your powershell profile.&lt;/p&gt;
     
     <item>
       <title>Docs: agc completion zsh</title>
-      <link>/docs/reference/agc_completion_zsh/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_completion_zsh/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_completion_zsh/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_completion_zsh/</guid>
       <description>
         
         
@@ -1631,7 +1631,7 @@ to enable it.  You can execute the following once:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1639,10 +1639,10 @@ to enable it.  You can execute the following once:&lt;/p&gt;
     
     <item>
       <title>Docs: agc configure</title>
-      <link>/docs/reference/agc_configure/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_configure/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_configure/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_configure/</guid>
       <description>
         
         
@@ -1659,9 +1659,9 @@ Configure local settings and preferences to customize the CLI experience.&lt;/p&
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_configure_describe/&#34;&gt;agc configure describe&lt;/a&gt;	 - Shows current configuration of the AGC setup for current user&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_configure_email/&#34;&gt;agc configure email&lt;/a&gt;	 - Sets user email address to be used to tag AGC resources created in the account&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_configure_describe/&#34;&gt;agc configure describe&lt;/a&gt;	 - Shows current configuration of the AGC setup for current user&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_configure_email/&#34;&gt;agc configure email&lt;/a&gt;	 - Sets user email address to be used to tag AGC resources created in the account&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1669,10 +1669,10 @@ Configure local settings and preferences to customize the CLI experience.&lt;/p&
     
     <item>
       <title>Docs: agc configure describe</title>
-      <link>/docs/reference/agc_configure_describe/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_configure_describe/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_configure_describe/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_configure_describe/</guid>
       <description>
         
         
@@ -1691,7 +1691,7 @@ USER: Email Id&lt;/p&gt;
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_configure/&#34;&gt;agc configure&lt;/a&gt;	 - Commands for configuration.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_configure/&#34;&gt;agc configure&lt;/a&gt;	 - Commands for configuration.
 Configuration is stored per user.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1700,10 +1700,10 @@ Configuration is stored per user.&lt;/li&gt;
     
     <item>
       <title>Docs: agc configure email</title>
-      <link>/docs/reference/agc_configure_email/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_configure_email/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_configure_email/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_configure_email/</guid>
       <description>
         
         
@@ -1717,7 +1717,7 @@ Configuration is stored per user.&lt;/li&gt;
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_configure/&#34;&gt;agc configure&lt;/a&gt;	 - Commands for configuration.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_configure/&#34;&gt;agc configure&lt;/a&gt;	 - Commands for configuration.
 Configuration is stored per user.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1726,10 +1726,10 @@ Configuration is stored per user.&lt;/li&gt;
     
     <item>
       <title>Docs: agc context</title>
-      <link>/docs/reference/agc_context/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_context/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_context/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_context/</guid>
       <description>
         
         
@@ -1748,12 +1748,12 @@ particular context.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context_deploy/&#34;&gt;agc context deploy&lt;/a&gt;	 - Deploy contexts in the current project&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context_describe/&#34;&gt;agc context describe&lt;/a&gt;	 - Show the information for a specific context in the current project&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context_destroy/&#34;&gt;agc context destroy&lt;/a&gt;	 - Destroy contexts in the current project.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context_list/&#34;&gt;agc context list&lt;/a&gt;	 - List contexts in the project&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context_status/&#34;&gt;agc context status&lt;/a&gt;	 - Show the status for the deployed contexts in the project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context_deploy/&#34;&gt;agc context deploy&lt;/a&gt;	 - Deploy contexts in the current project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context_describe/&#34;&gt;agc context describe&lt;/a&gt;	 - Show the information for a specific context in the current project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context_destroy/&#34;&gt;agc context destroy&lt;/a&gt;	 - Destroy contexts in the current project.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context_list/&#34;&gt;agc context list&lt;/a&gt;	 - List contexts in the project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context_status/&#34;&gt;agc context status&lt;/a&gt;	 - Show the status for the deployed contexts in the project&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1761,10 +1761,10 @@ particular context.&lt;/p&gt;
     
     <item>
       <title>Docs: agc context deploy</title>
-      <link>/docs/reference/agc_context_deploy/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_context_deploy/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_context_deploy/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_context_deploy/</guid>
       <description>
         
         
@@ -1790,7 +1790,7 @@ STRING&lt;/p&gt;
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
 Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1799,10 +1799,10 @@ Contexts specify workflow engines and computational fleets to use when running a
     
     <item>
       <title>Docs: agc context describe</title>
-      <link>/docs/reference/agc_context_describe/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_context_describe/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_context_describe/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_context_describe/</guid>
       <description>
         
         
@@ -1825,7 +1825,7 @@ OUTPUTLOCATION: Url&lt;/p&gt;
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
 Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1834,10 +1834,10 @@ Contexts specify workflow engines and computational fleets to use when running a
     
     <item>
       <title>Docs: agc context destroy</title>
-      <link>/docs/reference/agc_context_destroy/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_context_destroy/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_context_destroy/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_context_destroy/</guid>
       <description>
         
         
@@ -1859,7 +1859,7 @@ It destroys AGC resources in AWS.&lt;/p&gt;
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
 Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1868,10 +1868,10 @@ Contexts specify workflow engines and computational fleets to use when running a
     
     <item>
       <title>Docs: agc context list</title>
-      <link>/docs/reference/agc_context_list/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_context_list/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_context_list/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_context_list/</guid>
       <description>
         
         
@@ -1890,7 +1890,7 @@ CONTEXTNAME: Name&lt;/p&gt;
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
 Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1899,10 +1899,10 @@ Contexts specify workflow engines and computational fleets to use when running a
     
     <item>
       <title>Docs: agc context status</title>
-      <link>/docs/reference/agc_context_status/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_context_status/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_context_status/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_context_status/</guid>
       <description>
         
         
@@ -1923,7 +1923,7 @@ INSTANCE: ContextName ContextReason ContextStatus IsDefinedInProjectFile&lt;/p&g
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
 Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1932,10 +1932,10 @@ Contexts specify workflow engines and computational fleets to use when running a
     
     <item>
       <title>Docs: agc logs</title>
-      <link>/docs/reference/agc_logs/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_logs/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_logs/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_logs/</guid>
       <description>
         
         
@@ -1954,11 +1954,11 @@ access rights to.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs_access/&#34;&gt;agc logs access&lt;/a&gt;	 - Show workflow access logs for a given context.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs_adapter/&#34;&gt;agc logs adapter&lt;/a&gt;	 - Show workflow adapter logs for a given context.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs_engine/&#34;&gt;agc logs engine&lt;/a&gt;	 - Show workflow engine logs for a given context.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs_workflow/&#34;&gt;agc logs workflow&lt;/a&gt;	 - Show the task logs of a given workflow&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs_access/&#34;&gt;agc logs access&lt;/a&gt;	 - Show workflow access logs for a given context.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs_adapter/&#34;&gt;agc logs adapter&lt;/a&gt;	 - Show workflow adapter logs for a given context.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs_engine/&#34;&gt;agc logs engine&lt;/a&gt;	 - Show workflow engine logs for a given context.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs_workflow/&#34;&gt;agc logs workflow&lt;/a&gt;	 - Show the task logs of a given workflow&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1966,10 +1966,10 @@ access rights to.&lt;/p&gt;
     
     <item>
       <title>Docs: agc logs access</title>
-      <link>/docs/reference/agc_logs_access/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_logs_access/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_logs_access/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_logs_access/</guid>
       <description>
         
         
@@ -2000,7 +2000,7 @@ If no start, end, or look back periods are set, this command will show logs from
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -2008,10 +2008,10 @@ If no start, end, or look back periods are set, this command will show logs from
     
     <item>
       <title>Docs: agc logs adapter</title>
-      <link>/docs/reference/agc_logs_adapter/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_logs_adapter/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_logs_adapter/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_logs_adapter/</guid>
       <description>
         
         
@@ -2042,7 +2042,7 @@ If no start, end, or look back periods are set, this command will show logs from
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -2050,10 +2050,10 @@ If no start, end, or look back periods are set, this command will show logs from
     
     <item>
       <title>Docs: agc logs engine</title>
-      <link>/docs/reference/agc_logs_engine/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_logs_engine/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_logs_engine/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_logs_engine/</guid>
       <description>
         
         
@@ -2084,7 +2084,7 @@ If no start, end, or look back periods are set, this command will show logs from
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -2092,10 +2092,10 @@ If no start, end, or look back periods are set, this command will show logs from
     
     <item>
       <title>Docs: agc logs workflow</title>
-      <link>/docs/reference/agc_logs_workflow/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_logs_workflow/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_logs_workflow/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_logs_workflow/</guid>
       <description>
         
         
@@ -2124,7 +2124,7 @@ If the &amp;ndash;run flag is omitted then the latest workflow run is used.&lt;/
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -2132,10 +2132,10 @@ If the &amp;ndash;run flag is omitted then the latest workflow run is used.&lt;/
     
     <item>
       <title>Docs: agc project</title>
-      <link>/docs/reference/agc_project/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_project/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_project/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_project/</guid>
       <description>
         
         
@@ -2151,9 +2151,9 @@ and contexts you are working with.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_project_describe/&#34;&gt;agc project describe&lt;/a&gt;	 - Describe a project&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_project_init/&#34;&gt;agc project init&lt;/a&gt;	 - Initialize current directory with a new empty AGC project for a particular workflow type.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_project_describe/&#34;&gt;agc project describe&lt;/a&gt;	 - Describe a project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_project_init/&#34;&gt;agc project init&lt;/a&gt;	 - Initialize current directory with a new empty AGC project for a particular workflow type.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -2161,10 +2161,10 @@ and contexts you are working with.&lt;/p&gt;
     
     <item>
       <title>Docs: agc project describe</title>
-      <link>/docs/reference/agc_project_describe/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_project_describe/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_project_describe/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_project_describe/</guid>
       <description>
         
         
@@ -2185,7 +2185,7 @@ DATA: Location ReadOnly&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_project/&#34;&gt;agc project&lt;/a&gt;	 - Commands to interact with projects.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_project/&#34;&gt;agc project&lt;/a&gt;	 - Commands to interact with projects.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -2193,10 +2193,10 @@ DATA: Location ReadOnly&lt;/p&gt;
     
     <item>
       <title>Docs: agc project init</title>
-      <link>/docs/reference/agc_project_init/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_project_init/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_project_init/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_project_init/</guid>
       <description>
         
         
@@ -2217,7 +2217,7 @@ Initialize a new project named &amp;quot;myProject&amp;quot;.
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_project/&#34;&gt;agc project&lt;/a&gt;	 - Commands to interact with projects.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_project/&#34;&gt;agc project&lt;/a&gt;	 - Commands to interact with projects.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -2225,10 +2225,10 @@ Initialize a new project named &amp;quot;myProject&amp;quot;.
     
     <item>
       <title>Docs: agc version</title>
-      <link>/docs/reference/agc_version/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_version/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_version/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_version/</guid>
       <description>
         
         
@@ -2241,7 +2241,7 @@ Initialize a new project named &amp;quot;myProject&amp;quot;.
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -2249,10 +2249,10 @@ Initialize a new project named &amp;quot;myProject&amp;quot;.
     
     <item>
       <title>Docs: agc workflow</title>
-      <link>/docs/reference/agc_workflow/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_workflow/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_workflow/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_workflow/</guid>
       <description>
         
         
@@ -2272,12 +2272,12 @@ typed according to which workflow definition language they use (e.g. WDL).&lt;/p
 &lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow_describe/&#34;&gt;agc workflow describe&lt;/a&gt;	 - Show the information for a specific workflow in the current project&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow_list/&#34;&gt;agc workflow list&lt;/a&gt;	 - Show a list of workflows related to the current project&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow_run/&#34;&gt;agc workflow run&lt;/a&gt;	 - Run a workflow&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow_status/&#34;&gt;agc workflow status&lt;/a&gt;	 - Show the status for workflow run(s) in the current project.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow_stop/&#34;&gt;agc workflow stop&lt;/a&gt;	 - Stop the workflow with the specified workflow instance id.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow_describe/&#34;&gt;agc workflow describe&lt;/a&gt;	 - Show the information for a specific workflow in the current project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow_list/&#34;&gt;agc workflow list&lt;/a&gt;	 - Show a list of workflows related to the current project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow_run/&#34;&gt;agc workflow run&lt;/a&gt;	 - Run a workflow&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow_status/&#34;&gt;agc workflow status&lt;/a&gt;	 - Show the status for workflow run(s) in the current project.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow_stop/&#34;&gt;agc workflow stop&lt;/a&gt;	 - Stop the workflow with the specified workflow instance id.&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -2285,10 +2285,10 @@ typed according to which workflow definition language they use (e.g. WDL).&lt;/p
     
     <item>
       <title>Docs: agc workflow describe</title>
-      <link>/docs/reference/agc_workflow_describe/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_workflow_describe/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_workflow_describe/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_workflow_describe/</guid>
       <description>
         
         
@@ -2308,7 +2308,7 @@ WORKFLOW: Name Source TypeLanguage TypeVersion&lt;/p&gt;
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
 Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2317,10 +2317,10 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     
     <item>
       <title>Docs: agc workflow list</title>
-      <link>/docs/reference/agc_workflow_list/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_workflow_list/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_workflow_list/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_workflow_list/</guid>
       <description>
         
         
@@ -2339,7 +2339,7 @@ WORKFLOWNAME: Name&lt;/p&gt;
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
 Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2348,10 +2348,10 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     
     <item>
       <title>Docs: agc workflow run</title>
-      <link>/docs/reference/agc_workflow_run/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_workflow_run/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_workflow_run/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_workflow_run/</guid>
       <description>
         
         
@@ -2375,7 +2375,7 @@ using input parameters contained in file &amp;quot;file:///Users/ec2-user/myproj
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
 Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2384,10 +2384,10 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     
     <item>
       <title>Docs: agc workflow status</title>
-      <link>/docs/reference/agc_workflow_status/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_workflow_status/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_workflow_status/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_workflow_status/</guid>
       <description>
         
         
@@ -2405,7 +2405,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
 Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2414,10 +2414,10 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     
     <item>
       <title>Docs: agc workflow stop</title>
-      <link>/docs/reference/agc_workflow_stop/</link>
-      <pubDate>Mon, 27 Sep 2021 03:57:16 +0000</pubDate>
+      <link>/amazon-genomics-cli/docs/reference/agc_workflow_stop/</link>
+      <pubDate>Mon, 27 Sep 2021 04:00:19 +0000</pubDate>
       
-      <guid>/docs/reference/agc_workflow_stop/</guid>
+      <guid>/amazon-genomics-cli/docs/reference/agc_workflow_stop/</guid>
       <description>
         
         
@@ -2437,7 +2437,7 @@ agc workflow stop ae12347654329
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+&lt;li&gt;&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
 Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2446,10 +2446,10 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     
     <item>
       <title>Docs: Controlling Costs</title>
-      <link>/docs/best-practices/controllingcosts/</link>
+      <link>/amazon-genomics-cli/docs/best-practices/controllingcosts/</link>
       <pubDate>Fri, 17 Sep 2021 18:01:56 -0400</pubDate>
       
-      <guid>/docs/best-practices/controllingcosts/</guid>
+      <guid>/amazon-genomics-cli/docs/best-practices/controllingcosts/</guid>
       <description>
         
         
@@ -2537,10 +2537,10 @@ use for Amazon Genomics CLI.&lt;/p&gt;
     
     <item>
       <title>Docs: Scaling Workloads</title>
-      <link>/docs/best-practices/scalingworkloads/</link>
+      <link>/amazon-genomics-cli/docs/best-practices/scalingworkloads/</link>
       <pubDate>Fri, 17 Sep 2021 17:59:52 -0400</pubDate>
       
-      <guid>/docs/best-practices/scalingworkloads/</guid>
+      <guid>/amazon-genomics-cli/docs/best-practices/scalingworkloads/</guid>
       <description>
         
         

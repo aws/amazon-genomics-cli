@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Amazon Genomics CLI – Concepts</title>
-    <link>/docs/concepts/</link>
+    <link>/amazon-genomics-cli/docs/concepts/</link>
     <description>Recent content in Concepts on Amazon Genomics CLI</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="/docs/concepts/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="/amazon-genomics-cli/docs/concepts/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -15,10 +15,10 @@
     
     <item>
       <title>Docs: Accounts</title>
-      <link>/docs/concepts/accounts/</link>
+      <link>/amazon-genomics-cli/docs/concepts/accounts/</link>
       <pubDate>Thu, 02 Sep 2021 13:52:05 -0400</pubDate>
       
-      <guid>/docs/concepts/accounts/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/accounts/</guid>
       <description>
         
         
@@ -43,7 +43,7 @@ is not shared and is unique and namespaced by user and project.&lt;/p&gt;
 be created for you. Although we use AWS best practices for these, if your organization has specific security requirements
 for networking and storage this may be the easiest way to activate Amazon Genomics CLI in your environment.&lt;/p&gt;
 &lt;h2 id=&#34;account-commands&#34;&gt;Account Commands&lt;/h2&gt;
-&lt;p&gt;A full reference of the account commands is &lt;a href=&#34;/docs/reference/agc_account/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A full reference of the account commands is &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_account/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;activate&#34;&gt;&lt;code&gt;activate&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;You can activate an account using &lt;code&gt;agc account activate&lt;/code&gt;. An account must be activated before any contexts can be deployed
 or workflows run.&lt;/p&gt;
@@ -74,7 +74,7 @@ time with the &lt;code&gt;--force&lt;/code&gt; flag. Note that this will also in
 may fail due to the infrastructure state being inconsistent with the &lt;a href=&#34;https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/index.html&#34;&gt;CloudFormation&lt;/a&gt; state. If this happens you may need
 to manually clean up through the CloudFormation console.&lt;/p&gt;
 &lt;h2 id=&#34;costs&#34;&gt;Costs&lt;/h2&gt;
-&lt;p&gt;Core infrastructure deployed for Amazon Genomics CLI is &lt;a href=&#34;/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the &lt;code&gt;application-name: agc&lt;/code&gt; tag. This tag can be activated for cost
+&lt;p&gt;Core infrastructure deployed for Amazon Genomics CLI is &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the &lt;code&gt;application-name: agc&lt;/code&gt; tag. This tag can be activated for cost
 tracking in &lt;a href=&#34;https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/ce-what-is.html&#34;&gt;AWS CostExplorer&lt;/a&gt;. The core infrastructure is shared and &lt;em&gt;not&lt;/em&gt; tagged with any username, context name or
 project name.&lt;/p&gt;
 &lt;p&gt;While an account region is activated there will be ongoing charges from the core infrastructure deployed including things such
@@ -113,10 +113,10 @@ infrastructure can be found in &lt;a href=&#34;https://github.com/aws/amazon-gen
     
     <item>
       <title>Docs: Users</title>
-      <link>/docs/concepts/users/</link>
+      <link>/amazon-genomics-cli/docs/concepts/users/</link>
       <pubDate>Fri, 03 Sep 2021 09:59:23 -0400</pubDate>
       
-      <guid>/docs/concepts/users/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/users/</guid>
       <description>
         
         
@@ -145,14 +145,14 @@ console and remove it from there.&lt;/p&gt;
     
     <item>
       <title>Docs: Projects</title>
-      <link>/docs/concepts/projects/</link>
+      <link>/amazon-genomics-cli/docs/concepts/projects/</link>
       <pubDate>Tue, 31 Aug 2021 17:27:06 -0400</pubDate>
       
-      <guid>/docs/concepts/projects/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/projects/</guid>
       <description>
         
         
-        &lt;p&gt;An Amazon Genomics CLI project defines the &lt;a href=&#34;/docs/concepts/projects/&#34;&gt;projects&lt;/a&gt;, &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;, &lt;a href=&#34;/docs/concepts/data/&#34;&gt;data&lt;/a&gt; and &lt;a href=&#34;/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; that make up a genomics analysis. Each project is defined
+        &lt;p&gt;An Amazon Genomics CLI project defines the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/projects/&#34;&gt;projects&lt;/a&gt;, &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;, &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/data/&#34;&gt;data&lt;/a&gt; and &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; that make up a genomics analysis. Each project is defined
 in a project file named &lt;code&gt;agc-project.yaml&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;project-file-location&#34;&gt;Project File Location&lt;/h2&gt;
 &lt;p&gt;To find the project definition, Amazon Genomics CLI will look for a file named &lt;code&gt;agc-project.yaml&lt;/code&gt; in the current working directory. If
@@ -190,7 +190,7 @@ there was a workflow definition in &lt;code&gt;a/b/&lt;/code&gt; then Amazon Gen
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is fully usable project called &amp;ldquo;myProject&amp;rdquo; with a single context named &amp;ldquo;ctx1&amp;rdquo;. At this point &amp;ldquo;ctx1&amp;rdquo; can be &lt;a href=&#34;/docs/concepts/contexts/#deploy&#34;&gt;deployed&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is fully usable project called &amp;ldquo;myProject&amp;rdquo; with a single context named &amp;ldquo;ctx1&amp;rdquo;. At this point &amp;ldquo;ctx1&amp;rdquo; can be &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/#deploy&#34;&gt;deployed&lt;/a&gt;
 however, there are currently no workflows defined.&lt;/p&gt;
 &lt;h3 id=&#34;name&#34;&gt;&lt;code&gt;name&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;A string that identifies the project&lt;/p&gt;
@@ -198,10 +198,10 @@ however, there are currently no workflows defined.&lt;/p&gt;
 &lt;p&gt;An integer defining the schema version. Version numbers will be incremented when changes are made to the project schema
 that are not backward compatible.&lt;/p&gt;
 &lt;h3 id=&#34;contexts&#34;&gt;&lt;code&gt;contexts&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;A map of context names to context definitions. Each context in the project must have a unique name. The &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;
+&lt;p&gt;A map of context names to context definitions. Each context in the project must have a unique name. The &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;
 documentation provides more details.&lt;/p&gt;
 &lt;h3 id=&#34;workflows&#34;&gt;&lt;code&gt;workflows&lt;/code&gt;&lt;/h3&gt;
-&lt;p&gt;A map of workflow names to workflow definitions. Workflow names must be unique in a project. The &lt;a href=&#34;/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt;
+&lt;p&gt;A map of workflow names to workflow definitions. Workflow names must be unique in a project. The &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt;
 documentation provides more details.&lt;/p&gt;
 &lt;h3 id=&#34;data&#34;&gt;&lt;code&gt;data&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;An array of data sources that the contexts of the project have access to. For example:&lt;/p&gt;
@@ -213,7 +213,7 @@ documentation provides more details.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://1000genomes-dragen-3.7.6&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
-&lt;p&gt;A full reference of project commands are available &lt;a href=&#34;/docs/reference/agc_project/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A full reference of project commands are available &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_project/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;init&#34;&gt;&lt;code&gt;init&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The &lt;code&gt;agc project init &amp;lt;project-name&amp;gt; --workflow-type &amp;lt;worklow-type&amp;gt;&lt;/code&gt; command can be used to initialize a minimal &lt;code&gt;agc-project.yaml&lt;/code&gt; file in the current
 directory. Alternatively project yaml files can be created with any text editor.&lt;/p&gt;
@@ -235,7 +235,7 @@ sure that data locations are appropriately shared.&lt;/p&gt;
 &lt;p&gt;A project itself doesn&amp;rsquo;t have infrastructure. It is not deployed and therefore has no direct costs. If the contexts defined
 by an infrastructure are deployed or the workflows run then those &lt;em&gt;will&lt;/em&gt; incur costs.&lt;/p&gt;
 &lt;h3 id=&#34;tags&#34;&gt;Tags&lt;/h3&gt;
-&lt;p&gt;The project &lt;code&gt;name&lt;/code&gt; will be &lt;a href=&#34;/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt;
+&lt;p&gt;The project &lt;code&gt;name&lt;/code&gt; will be &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt;
 on any deployed contexts or workflows defined in this project allowing costs to be aggregated to the project level.&lt;/p&gt;
 &lt;h2 id=&#34;technical-details&#34;&gt;Technical Details&lt;/h2&gt;
 &lt;p&gt;A project is purely a &lt;a href=&#34;https://en.wikipedia.org/wiki/YAML&#34;&gt;YAML&lt;/a&gt; definition. The values in the &lt;code&gt;agc-project.yaml&lt;/code&gt; file are used by CDK when Amazon Genomics CLI deploys contexts
@@ -247,26 +247,26 @@ context infrastructure.&lt;/p&gt;
     
     <item>
       <title>Docs: Contexts</title>
-      <link>/docs/concepts/contexts/</link>
+      <link>/amazon-genomics-cli/docs/concepts/contexts/</link>
       <pubDate>Tue, 31 Aug 2021 17:26:49 -0400</pubDate>
       
-      <guid>/docs/concepts/contexts/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/contexts/</guid>
       <description>
         
         
         &lt;h2 id=&#34;what-is-a-context&#34;&gt;What is a Context?&lt;/h2&gt;
-&lt;p&gt;A context is a set of cloud resources. Amazon Genomics CLI runs &lt;a href=&#34;/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; in a context. A deployed context will include an
-&lt;a href=&#34;/docs/concepts/engines/&#34;&gt;engine&lt;/a&gt; that can interpret
+&lt;p&gt;A context is a set of cloud resources. Amazon Genomics CLI runs &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; in a context. A deployed context will include an
+&lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/engines/&#34;&gt;engine&lt;/a&gt; that can interpret
 and manage the running of a workflow along with compute resources that will run the individual tasks of the workflow. The
 deployed context will also contain any resources needed by the engine or compute resources including any security, permissions
-and &lt;a href=&#34;/docs/concepts/logs/&#34;&gt;logging&lt;/a&gt; capabilities. Deployed contexts are &lt;a href=&#34;/docs/concepts/namespaces/&#34;&gt;namespaced&lt;/a&gt; based on the user, project and context name so that resources
+and &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/logs/&#34;&gt;logging&lt;/a&gt; capabilities. Deployed contexts are &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/&#34;&gt;namespaced&lt;/a&gt; based on the user, project and context name so that resources
 are isolated, preventing collisions.&lt;/p&gt;
 &lt;p&gt;When a workflow is run the user will decide which context will run it. For example, you might choose to submit a workflow
 to a context that uses &amp;ldquo;Spot priced&amp;rdquo; resources or one that uses &amp;ldquo;On Demand&amp;rdquo; priced resources.&lt;/p&gt;
-&lt;p&gt;When deployed context resources that require a VPC will be deployed into the VPC that was specified when the &lt;a href=&#34;/docs/concepts/accounts/&#34;&gt;account&lt;/a&gt; was
+&lt;p&gt;When deployed context resources that require a VPC will be deployed into the VPC that was specified when the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/accounts/&#34;&gt;account&lt;/a&gt; was
 activated.&lt;/p&gt;
 &lt;h2 id=&#34;how-is-a-context-defined&#34;&gt;How is a Context Defined?&lt;/h2&gt;
-&lt;p&gt;A context is defined in the YAML file that defines the &lt;a href=&#34;/docs/concepts/projects/&#34;&gt;project&lt;/a&gt;. A project has at least one context but may have many.
+&lt;p&gt;A context is defined in the YAML file that defines the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/projects/&#34;&gt;project&lt;/a&gt;. A project has at least one context but may have many.
 Contexts must have unique names and are defined as YAML maps.&lt;/p&gt;
 &lt;p&gt;A context may request use of &lt;a href=&#34;https://aws.amazon.com/ec2/spot/pricing/&#34;&gt;Spot priced&lt;/a&gt; compute resources with &lt;code&gt;requestSpotInstances: true&lt;/code&gt;. The default value is &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;A context must define an array of one or more &lt;code&gt;engines&lt;/code&gt;. Each engine definition must specify the workflow language that it
@@ -309,7 +309,7 @@ WDL engine.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;context-commands&#34;&gt;Context Commands&lt;/h2&gt;
-&lt;p&gt;A full reference of context commands is &lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A full reference of context commands is &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;describe&#34;&gt;&lt;code&gt;describe&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The command &lt;code&gt;agc context describe &amp;lt;context-name&amp;gt; [flags]&lt;/code&gt; will describe the named context as defined in the project YAML
 as well as other relevant account information.&lt;/p&gt;
@@ -364,7 +364,7 @@ can still be interrupted if total demand for on demand instances in an availabil
 full details see &lt;a href=&#34;https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html&#34;&gt;Spot Instance Interruptions&lt;/a&gt;
 and &lt;a href=&#34;https://aws.amazon.com/ec2/spot/pricing/&#34;&gt;EC2 Spot Pricing&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;tags&#34;&gt;Tags&lt;/h3&gt;
-&lt;p&gt;All context infrastructure is &lt;a href=&#34;/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the context name, username and project name. These tags may be used to help
+&lt;p&gt;All context infrastructure is &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the context name, username and project name. These tags may be used to help
 differentiate costs.&lt;/p&gt;
 &lt;h2 id=&#34;technical-details&#34;&gt;Technical Details&lt;/h2&gt;
 &lt;p&gt;Context infrastructure is defined as code as &lt;a href=&#34;https://aws.amazon.com/cdk/&#34;&gt;AWS CDK&lt;/a&gt; apps. For examples, take a look at the &lt;code&gt;packages/cdk&lt;/code&gt; folder. When
@@ -385,15 +385,15 @@ code we recommend destroying any relevant running contexts and redeploying them.
     
     <item>
       <title>Docs: Data</title>
-      <link>/docs/concepts/data/</link>
+      <link>/amazon-genomics-cli/docs/concepts/data/</link>
       <pubDate>Tue, 31 Aug 2021 17:27:22 -0400</pubDate>
       
-      <guid>/docs/concepts/data/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/data/</guid>
       <description>
         
         
-        &lt;p&gt;To run an analysis you need data. In the &lt;code&gt;agc-project.yaml&lt;/code&gt; file of an Amazon Genomics CLI &lt;a href=&#34;/docs/concepts/projects/&#34;&gt;project&lt;/a&gt; &lt;code&gt;data&lt;/code&gt; is a list of data locations
-which can be used by the &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt; of the project.&lt;/p&gt;
+        &lt;p&gt;To run an analysis you need data. In the &lt;code&gt;agc-project.yaml&lt;/code&gt; file of an Amazon Genomics CLI &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/projects/&#34;&gt;project&lt;/a&gt; &lt;code&gt;data&lt;/code&gt; is a list of data locations
+which can be used by the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt; of the project.&lt;/p&gt;
 &lt;p&gt;In the example data definition below we are declaring that the project&amp;rsquo;s contexts will be allowed to access the three
 listed S3 bucket URIs.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -404,7 +404,7 @@ listed S3 bucket URIs.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://1000genomes-dragen-3.7.6&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The contexts of the project will be &lt;em&gt;denied&lt;/em&gt; access to all other S3 location except for the S3 bucket created or associated
-when the &lt;a href=&#34;/docs/concepts/accounts/&#34;&gt;account&lt;/a&gt; was initialized by Amazon Genomics CLI.&lt;/p&gt;
+when the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/accounts/&#34;&gt;account&lt;/a&gt; was initialized by Amazon Genomics CLI.&lt;/p&gt;
 &lt;p&gt;Declaring access in the project will only ensure your infrastructure is correctly configured to access the bucket. If
 the target bucket is further restricted, such as by an access control list or bucket policy, you will still be denied access.
 In these cases you should work with the bucket owner to facilitate access.&lt;/p&gt;
@@ -421,7 +421,7 @@ See &lt;a href=&#34;https://aws.amazon.com/premiumsupport/knowledge-center/cross
 &lt;h2 id=&#34;updating-data-sources&#34;&gt;Updating Data Sources&lt;/h2&gt;
 &lt;p&gt;If data definitions are added to or removed from a project definition the change will &lt;em&gt;not&lt;/em&gt; be reflected in deployed contexts
 until they are updated. This can be done with &lt;code&gt;agc context deploy --all&lt;/code&gt; for all contexts or by using a context name to update
-only one. See &lt;a href=&#34;/docs/concepts/contexts/#deploy&#34;&gt;&lt;code&gt;context deploy&lt;/code&gt;&lt;/a&gt; for details.&lt;/p&gt;
+only one. See &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/#deploy&#34;&gt;&lt;code&gt;context deploy&lt;/code&gt;&lt;/a&gt; for details.&lt;/p&gt;
 
 
 &lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
@@ -442,10 +442,10 @@ The CDK code does not modify any data in the buckets or any other bucket policie
     
     <item>
       <title>Docs: Workflows</title>
-      <link>/docs/concepts/workflows/</link>
+      <link>/amazon-genomics-cli/docs/concepts/workflows/</link>
       <pubDate>Tue, 31 Aug 2021 17:27:16 -0400</pubDate>
       
-      <guid>/docs/concepts/workflows/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/workflows/</guid>
       <description>
         
         
@@ -461,7 +461,7 @@ of the workflow definition file.&lt;/p&gt;
 &lt;p&gt;At this time Amazon Genomics CLI does &lt;em&gt;not&lt;/em&gt; resolve path aliases so, for example, a &lt;code&gt;sourceURL&lt;/code&gt; like &lt;code&gt;~/workflows/worklfow.wdl&lt;/code&gt; is not
 supported.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;type&lt;/code&gt; object declares the &lt;code&gt;language&lt;/code&gt; of the workflow (eg, wdl, nextflow etc). The run a workflow there must be a
-deployed &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt; with a matching language. The &lt;code&gt;version&lt;/code&gt; property refers to the workflow language version.&lt;/p&gt;
+deployed &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt; with a matching language. The &lt;code&gt;version&lt;/code&gt; property refers to the workflow language version.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;workflows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;hello&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -536,7 +536,7 @@ to submit multiple instances of the same workflow and to have these run concurre
 &lt;p&gt;All workflows are coordinated by the engine, they are submitted to and executed in the context that is specified at submission time.
 The workflow engine decides how the workflow is to be run and the context provides compute resources to run the workflow.&lt;/p&gt;
 &lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
-&lt;p&gt;A full reference of workflow commands is available &lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A full reference of workflow commands is available &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;run&#34;&gt;&lt;code&gt;run&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;Invoking &lt;code&gt;agc workflow run &amp;lt;workflow-name&amp;gt; -c &amp;lt;context-name&amp;gt;&lt;/code&gt; will run the named workflow in a specific context. The
 unique ID of that workflow instance run will be returned if the submission is successful.&lt;/p&gt;
@@ -579,14 +579,14 @@ possible at the level of an individual workflow.&lt;/p&gt;
     
     <item>
       <title>Docs: Engines</title>
-      <link>/docs/concepts/engines/</link>
+      <link>/amazon-genomics-cli/docs/concepts/engines/</link>
       <pubDate>Tue, 31 Aug 2021 17:28:39 -0400</pubDate>
       
-      <guid>/docs/concepts/engines/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/engines/</guid>
       <description>
         
         
-        &lt;p&gt;A workflow engine is defined as part of a &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt;. A context is currently limited to one workflow engine. The workflow engine will manage the execution of any &lt;a href=&#34;/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; submitted
+        &lt;p&gt;A workflow engine is defined as part of a &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt;. A context is currently limited to one workflow engine. The workflow engine will manage the execution of any &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/workflows/&#34;&gt;workflows&lt;/a&gt; submitted
 by Amazon Genomics CLI. When the context is deployed, an endpoint will be made available
 to Amazon Genomics CLI through which it will submit workflows and workflow commands to the engine according to the WES API specification.&lt;/p&gt;
 &lt;h2 id=&#34;supported-engines-and-workflow-languages&#34;&gt;Supported Engines and Workflow Languages&lt;/h2&gt;
@@ -615,7 +615,7 @@ to Amazon Genomics CLI through which it will submit workflows and workflow comma
 &lt;p&gt;Overtime we plan to add additional engine and language support and provide the ability for third party developers to
 develop engine plugins.&lt;/p&gt;
 &lt;h2 id=&#34;engine-definition&#34;&gt;Engine Definition&lt;/h2&gt;
-&lt;p&gt;An engine is defined within a &lt;code&gt;context&lt;/code&gt; definition of the &lt;a href=&#34;/docs/concepts/projects/#project-file-structure&#34;&gt;project YAML file&lt;/a&gt; file as a map. For example, the following snippet
+&lt;p&gt;An engine is defined within a &lt;code&gt;context&lt;/code&gt; definition of the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/projects/#project-file-structure&#34;&gt;project YAML file&lt;/a&gt; file as a map. For example, the following snippet
 defines a WDL engine of type &lt;code&gt;cromwell&lt;/code&gt; as part of the context named &lt;code&gt;onDemandCtx&lt;/code&gt;. There may be one engine defined
 for each supported language.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -625,8 +625,8 @@ for each supported language.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;cromwell&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
-&lt;p&gt;There are no commands specific to engines. Engines are &lt;a href=&#34;/docs/concepts/contexts/#deploy&#34;&gt;deployed&lt;/a&gt; along with contexts by the &lt;a href=&#34;/docs/concepts/contexts/#context-commands&#34;&gt;&lt;code&gt;context&lt;/code&gt; commands&lt;/a&gt; and workflows
-are run using the &lt;a href=&#34;/docs/concepts/workflows/#commands&#34;&gt;&lt;code&gt;workflow&lt;/code&gt; commands&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;There are no commands specific to engines. Engines are &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/#deploy&#34;&gt;deployed&lt;/a&gt; along with contexts by the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/#context-commands&#34;&gt;&lt;code&gt;context&lt;/code&gt; commands&lt;/a&gt; and workflows
+are run using the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/workflows/#commands&#34;&gt;&lt;code&gt;workflow&lt;/code&gt; commands&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;costs&#34;&gt;Costs&lt;/h2&gt;
 &lt;p&gt;The costs associated with an engine depend on the actual infrastructure required by the engine. In the case of the Cromwell,
 the engine runs in &amp;ldquo;server&amp;rdquo; mode as an &lt;a href=&#34;https://docs.aws.amazon.com/AmazonECS/latest/userguide/index.html&#34;&gt;AWS ECS Fargate&lt;/a&gt; container using an
@@ -637,7 +637,7 @@ and is only running when workflows are running.&lt;/p&gt;
 &lt;p&gt;In both cases a serverless WES API endpoint is deployed through &lt;a href=&#34;https://docs.aws.amazon.com/apigatewayv2/latest/api-reference/&#34;&gt;Amazon API Gateway&lt;/a&gt; to act as the interface between Amazon Genomics CLI and
 the engine.&lt;/p&gt;
 &lt;h3 id=&#34;tags&#34;&gt;Tags&lt;/h3&gt;
-&lt;p&gt;Being part of a context, engine related infrastructure is &lt;a href=&#34;/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the context name, username and project name. These tags may be used to help
+&lt;p&gt;Being part of a context, engine related infrastructure is &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the context name, username and project name. These tags may be used to help
 differentiate costs.&lt;/p&gt;
 &lt;h2 id=&#34;technical-details&#34;&gt;Technical Details&lt;/h2&gt;
 &lt;p&gt;Supported engines are currently deployed with configurations that allow them to make use of files in S3 and submit workflows
@@ -653,10 +653,10 @@ controlling and destroying the resources that will be used for task execution.&l
     
     <item>
       <title>Docs: Logs</title>
-      <link>/docs/concepts/logs/</link>
+      <link>/amazon-genomics-cli/docs/concepts/logs/</link>
       <pubDate>Tue, 31 Aug 2021 17:30:49 -0400</pubDate>
       
-      <guid>/docs/concepts/logs/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/logs/</guid>
       <description>
         
         
@@ -682,7 +682,7 @@ the WES API calls that are made to the engine by Amazon Genomics CLI and any err
 API Gateway which routes to the WES adapter. If an expected call does not appear in the adapter logs it may have been
 blocked or incorrectly routed in the API Gateway. The API Gateway access logs may be informative in this case.&lt;/p&gt;
 &lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
-&lt;p&gt;A full reference of Amazon Genomics CLI &lt;code&gt;logs&lt;/code&gt; commands are available &lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A full reference of Amazon Genomics CLI &lt;code&gt;logs&lt;/code&gt; commands are available &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_logs/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;costs&#34;&gt;Costs&lt;/h2&gt;
 &lt;p&gt;Amazon Genomics CLI logs are stored in CloudWatch and accessed using the CloudWatch APIs. Standard CloudWatch charges apply.
 All logs are retained permanently, even after a context is destroyed and other Amazon Genomics CLI infrastructure is
@@ -693,14 +693,14 @@ removed from an account. If they are no longer needed they may be removed using 
     
     <item>
       <title>Docs: Namespaces</title>
-      <link>/docs/concepts/namespaces/</link>
+      <link>/amazon-genomics-cli/docs/concepts/namespaces/</link>
       <pubDate>Tue, 31 Aug 2021 17:26:20 -0400</pubDate>
       
-      <guid>/docs/concepts/namespaces/</guid>
+      <guid>/amazon-genomics-cli/docs/concepts/namespaces/</guid>
       <description>
         
         
-        &lt;p&gt;Amazon Genomics CLI uses namespacing to prevent conflicts when there are multiple &lt;a href=&#34;/docs/concepts/users/&#34;&gt;users&lt;/a&gt;, &lt;a href=&#34;/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;, and &lt;a href=&#34;/docs/concepts/projects/&#34;&gt;projects&lt;/a&gt; in the same AWS account and region.&lt;/p&gt;
+        &lt;p&gt;Amazon Genomics CLI uses namespacing to prevent conflicts when there are multiple &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/users/&#34;&gt;users&lt;/a&gt;, &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;contexts&lt;/a&gt;, and &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/projects/&#34;&gt;projects&lt;/a&gt; in the same AWS account and region.&lt;/p&gt;
 &lt;p&gt;In any given account and region, an individual user may have many projects with many deployed contexts all running at the
 same time without conflict as long as:&lt;/p&gt;
 &lt;ol&gt;
