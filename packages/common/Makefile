@@ -14,9 +14,6 @@ release:
 $(PACKAGES):
 	(cd $@; $(MAKE) $(target))
 
-init:
-	GOBIN=${GOBIN} go get golang.org/x/tools/cmd/goimports
-
 format:
 	../../scripts/fiximports.sh
 	${GOBIN}/goimports -w .
@@ -26,6 +23,7 @@ test:
 
 .PHONY: tools format
 tools:
+	GOBIN=${GOBIN} go get golang.org/x/tools/cmd/goimports
 	GOBIN=${GOBIN} go get github.com/golang/mock/mockgen
 
 gen-mocks:
