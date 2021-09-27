@@ -1,0 +1,266 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Amazon Genomics CLI – Getting Started</title>
+    <link>/docs/getting-started/</link>
+    <description>Recent content in Getting Started on Amazon Genomics CLI</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/getting-started/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Prerequisites</title>
+      <link>/docs/getting-started/prerequisites/</link>
+      <pubDate>Tue, 07 Sep 2021 13:42:19 -0400</pubDate>
+      
+      <guid>/docs/getting-started/prerequisites/</guid>
+      <description>
+        
+        
+        &lt;p&gt;To run Amazon Genomics CLI the following prerequisites must be met:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A computer with one of the following operating systems:
+&lt;ul&gt;
+&lt;li&gt;macOS 10.14+&lt;/li&gt;
+&lt;li&gt;Amazon Linux 2&lt;/li&gt;
+&lt;li&gt;Ubuntu 20.04&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Internet access&lt;/li&gt;
+&lt;li&gt;An AWS Account&lt;/li&gt;
+&lt;li&gt;An AWS role with sufficient access. TODO add IAM details.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Running Amazon Genomics CLI on Windows has not been tested, but it should run in WSL 2 with Ubuntu 20.04&lt;/p&gt;
+&lt;h2 id=&#34;prerequisite-installation&#34;&gt;Prerequisite installation&lt;/h2&gt;
+&lt;h3 id=&#34;ubuntu-2004&#34;&gt;Ubuntu 20.04&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Install node.js&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;curl -fsSL https://deb.nodesource.com/setup_15.x | sudo -E bash -
+sudo apt-get install -y nodejs
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Install and configure AWS CLI&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt install awscli
+`aws configure`
+`# ... set access key ID, secret access key, and region`
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;amazon-linux-2-eg-on-an-ec2-instance&#34;&gt;Amazon Linux 2 (e.g. on an EC2 instance)&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Install node&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;`curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
+sudo yum install -y nodejs`
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;If you have not already done so, configure your AWS credentials and default region&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;aws configure
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;macos&#34;&gt;MacOS&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Install &lt;a href=&#34;https://brew.sh/&#34;&gt;Homebrew&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;/bin/bash -c &amp;quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Install node&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;`brew install node`
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;Install and configure AWS CLI&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;`brew install awscli`
+aws configure
+# ... set access key ID, secret access key, and region
+&lt;/code&gt;&lt;/pre&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Installation</title>
+      <link>/docs/getting-started/installation/</link>
+      <pubDate>Tue, 07 Sep 2021 13:42:31 -0400</pubDate>
+      
+      <guid>/docs/getting-started/installation/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;download-and-install-amazon-genomics-cli&#34;&gt;Download and install Amazon Genomics CLI&lt;/h2&gt;
+&lt;p&gt;Download the Amazon Genomics CLI zip, unzip its contents, and run the &lt;code&gt;install.sh&lt;/code&gt; script:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;aws s3 cp s3://healthai-public-assets-us-east-1/amazon-genomics-cli/0.9.0/amazon-genomics-cli.zip .
+unzip amazon-genomics-cli.zip -d agc
+./agc/install.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will place the &lt;code&gt;agc&lt;/code&gt; command in &lt;code&gt;~/bin&lt;/code&gt; and attempt to add the command to your &lt;code&gt;$PATH&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The Amazon Genomics CLI is a statically compiled Go binary. It should run in your environment natively without any additional setup. Test the CLI with:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ agc --help
+👩🧬 Launch and manage genomics workloads on AWS.
+
+Commands
+  Getting Started 🌱
+    account     Commands for AWS account setup.
+                Install or remove Amazon Genomics CLI from your account.
+
+  Contexts
+    context     Commands for contexts.
+                Contexts specify workflow engines and computational fleets to use when running a workflow.
+
+  Logs
+    logs        Commands for various logs.
+
+  Projects
+    project     Commands to interact with projects.
+
+  Workflows
+    workflow    Commands for workflows.
+                Workflows are potentially-dynamic graphs of computational tasks to execute.
+
+  Settings ⚙️
+    version     Print the version number.
+    configure   Commands for configuration.
+                Configuration is stored per user.
+
+Flags
+  -h, --help      help for agc
+  -v, --verbose   Display verbose diagnostic information.
+      --version   version for agc
+Examples
+  Displays the help menu for the specified sub-command.
+  `$ agc account --help`
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If this doesn&amp;rsquo;t work immediately, try:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;start a new terminal shell&lt;/li&gt;
+&lt;li&gt;modifying your &lt;code&gt;~/.bashrc&lt;/code&gt; (or equivalent file) appending the following line and restarting your shell:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;export PATH=~/bin:$PATH
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Verify that you have the latest version of Amazon Genomics CLI with:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc --version
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you do not, you may need to uninstall any previous versions of Amazon Genomics CLI and reinstall the latest.&lt;/p&gt;
+&lt;h2 id=&#34;command-completion&#34;&gt;Command Completion&lt;/h2&gt;
+&lt;p&gt;Amazon Genomics CLI can generate shell completion scripts that enable &amp;lsquo;Tab&amp;rsquo; completion of commands.
+Command completion is optional and not required to use Amazon Genomics CLI. To generate a completion script you can use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt; agc generate &amp;lt;shell&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;where &amp;ldquo;shell&amp;rdquo; is one of:&lt;/p&gt;
+&lt;h3 id=&#34;bash&#34;&gt;Bash&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; &amp;lt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;agc completion bash&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To load completions for each session, execute once:&lt;/p&gt;
+&lt;h4 id=&#34;linux&#34;&gt;Linux:&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc completion bash &amp;gt; /etc/bash_completion.d/agc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;macos&#34;&gt;macOS:&lt;/h4&gt;
+&lt;p&gt;If you haven&amp;rsquo;t already installed &lt;code&gt;bash-completion&lt;/code&gt;, execute the following once&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;brew install bash-completion
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and then, add the following line to your ~/.bash_profile:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;[[&lt;/span&gt; -r &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;/usr/local/etc/profile.d/bash_completion.sh&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;]]&lt;/span&gt; &lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; . &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;/usr/local/etc/profile.d/bash_completion.sh&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once bash completion is installed&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc completion bash &amp;gt; /usr/local/etc/bash_completion.d/agc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;zsh&#34;&gt;Zsh:&lt;/h3&gt;
+&lt;p&gt;If shell completion is not already enabled in your environment, you will need to enable it.  You can execute the following once:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;autoload -U compinit; compinit&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; ~/.zshrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To load completions for each session, execute once:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc completion zsh &amp;gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;fpath&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[1]&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;/_agc&amp;#34;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will need to start a new shell for this setup to take effect.&lt;/p&gt;
+&lt;h3 id=&#34;fish&#34;&gt;fish:&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc completion fish &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To load completions for each session, execute once:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc completion fish &amp;gt; ~/.config/fish/completions/agc.fish
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;PowerShell:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc completion powershell &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Out-String &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;|&lt;/span&gt; Invoke-Expression
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To load completions for every new session, run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc completion powershell &amp;gt; agc.ps1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and source this file from your PowerShell profile.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Setup</title>
+      <link>/docs/getting-started/setup/</link>
+      <pubDate>Tue, 07 Sep 2021 13:42:50 -0400</pubDate>
+      
+      <guid>/docs/getting-started/setup/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;cdk-bootstrap&#34;&gt;CDK Bootstrap&lt;/h2&gt;
+&lt;p&gt;Amazon Genomics CLI uses AWS CDK to deploy infrastructure. If you have not already done so, you will need to &amp;ldquo;bootstrap&amp;rdquo; CDK into the account and region where you plan to use Amazon Genomics CLI.
+CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defined infrastructure. Full details are available
+&lt;a href=&#34;https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To bootstrap a single region:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;cdk bootstrap aws://ACCOUNT-NUMBER-1/REGION-1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;If you plan to use Amazon Genomics CLI in multiple regions you can use this form of the command:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;cdk bootstrap aws://ACCOUNT-NUMBER-1/REGION-1 aws://ACCOUNT-NUMBER-1/REGION-2 ...&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cdk bootstrap 123456789012/us-east-1 123456789012/us-west-1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;account-activation&#34;&gt;Account activation&lt;/h2&gt;
+&lt;p&gt;To start using Amazon Genomics CLI with your AWS account, you need to activate it.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc account activate
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will create the core infrastructure that Amazon Genomics CLI needs to operate, which includes a DynamoDB table, an S3 bucket and a VPC. This will take ~5min to complete. You only need to do this once per account region.&lt;/p&gt;
+&lt;p&gt;The DynamoDB table is used by the CLI for persistent state. The S3 bucket is used for durable workflow data and Amazon Genomics CLI metadata and the VPC is used to isolate compute resources. You can specify your own preexisting S3 Bucket or VPC if needed using &lt;code&gt;--bucket&lt;/code&gt; and &lt;code&gt;--vpc&lt;/code&gt; options.&lt;/p&gt;
+&lt;h2 id=&#34;define-a-username&#34;&gt;Define a username&lt;/h2&gt;
+&lt;p&gt;Amazon Genomics CLI requires that you define a username and email. You can do this using the following command:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;agc configure email you@youremail.com&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The username only needs to be configured once per computer that you use Amazon Genomics CLI from.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Hello world</title>
+      <link>/docs/getting-started/helloworld/</link>
+      <pubDate>Tue, 07 Sep 2021 14:01:59 -0400</pubDate>
+      
+      <guid>/docs/getting-started/helloworld/</guid>
+      <description>
+        
+        
+        &lt;p&gt;When you install Amazon Genomics CLI it will create a folder named &lt;code&gt;agc&lt;/code&gt;. Inside there is an &lt;code&gt;examples/demo-project&lt;/code&gt; folder containing an &lt;code&gt;agc-project.yaml&lt;/code&gt;
+with some demo projects including a simple &amp;ldquo;hello world&amp;rdquo; workflow.&lt;/p&gt;
+&lt;h2 id=&#34;running-hello-world&#34;&gt;Running Hello World&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Ensure you have met the &lt;a href=&#34;/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; and &lt;a href=&#34;/docs/getting-started/installation/&#34;&gt;installed&lt;/a&gt; Amazon Genomics CLI&lt;/li&gt;
+&lt;li&gt;Ensure you have followed the &lt;a href=&#34;/docs/getting-started/setup/&#34;&gt;activation&lt;/a&gt; steps&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd ~/agc/examples/demo-project&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;agc context deploy myContext&lt;/code&gt;, this step takes approximately 5 minutes to deploy the infrastructure&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;agc workflow run hello --context myContext&lt;/code&gt;, take note of the returned workflow instance ID.&lt;/li&gt;
+&lt;li&gt;Check on the status of the workflow &lt;code&gt;agc workflow status &amp;lt;workflow-instance-id&amp;gt;&lt;/code&gt;. Initially you will see status like &lt;code&gt;SUBMITTED&lt;/code&gt; but after the elastic compute resources have been spun up and the workflow runs you should see something like the following: &lt;code&gt;WORKFLOWINSTANCE    ctx1    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Congratulations! You have just run your first workflow in the cloud using Amazon Genomics CLI! At this point you can run additional workflows, including submitting several instances of the &amp;ldquo;hello world&amp;rdquo; workflow.
+The elastic compute resources will expand and contract as necessary to accommodate the backlog of submitted workflows.&lt;/p&gt;
+&lt;h2 id=&#34;reviewing-the-results&#34;&gt;Reviewing the Results&lt;/h2&gt;
+&lt;p&gt;Workflow results are written to an S3 bucket specified or created by Amazon Genomics CLI during account activation.
+You can list or retrieve the S3 URI for the bucket with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;AGC_BUCKET&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;aws ssm get-parameter &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --name /agc/_common/bucket &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --query &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;Parameter.Value&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --output text&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and then use &lt;code&gt;aws s3&lt;/code&gt; commands to explore and retrieve data from the bucket. Workflow output will be in the
+&lt;code&gt;s3://agc-&amp;lt;account-num&amp;gt;-&amp;lt;region&amp;gt;/project/&amp;lt;project-name&amp;gt;/userid/&amp;lt;user-id&amp;gt;/context/&amp;lt;context-name&amp;gt;/workflow/&amp;lt;workflow-name&amp;gt;/&lt;/code&gt;
+path. The rest of the path depends on the engine used to run the workflow. For Cromwell it will continue with:
+&lt;code&gt;.../cromwell-execution/&amp;lt;wdl-wf-name&amp;gt;/&amp;lt;workflow-run-id&amp;gt;/&amp;lt;task-name&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;You can also obtain task logs for a workflow using the following form &lt;code&gt;agc logs workflow &amp;lt;workflow-name&amp;gt; -r &amp;lt;instance-id&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note, if the workflow did not actually run any tasks due to call caching then there will be no output from this command.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;cleaning-up&#34;&gt;Cleaning Up&lt;/h2&gt;
+&lt;p&gt;Once you are done with &lt;code&gt;myContext&lt;/code&gt; you can destroy it with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context destroy -c myContext
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will remove the cloud resources associated with the named context, but will keep any S3 outputs and CloudWatch logs.&lt;/p&gt;
+&lt;p&gt;If you want stop using Amazon Genomics CLI in your AWS account entirely, you need to deactivate it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account deactivate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will remove Amazon Genomics CLI’s core infrastructure. If Amazon Genomics CLI created a VPC as part of the activate process, it will be &lt;em&gt;removed&lt;/em&gt;. If Amazon Genomics CLI created an S3 bucket for you, it will be &lt;em&gt;retained&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;To uninstall Amazon Genomics CLI from your local machine, run the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;./agc/uninstall.sh
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note uninstalling the CLI will &lt;em&gt;not&lt;/em&gt; remove any resources or persistent data from your AWS account.&lt;/p&gt;
+&lt;h2 id=&#34;next-steps&#34;&gt;Next Steps&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Familiarize yourself with &lt;a href=&#34;/docs/concepts/&#34;&gt;Amazon Genomics CLI Concepts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Try some &lt;a href=&#34;/docs/tutorials/&#34;&gt;tutorials&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

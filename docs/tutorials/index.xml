@@ -1,0 +1,342 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Amazon Genomics CLI – Tutorials</title>
+    <link>/docs/tutorials/</link>
+    <description>Recent content in Tutorials on Amazon Genomics CLI</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 04 Jan 2017 00:00:00 +0000</lastBuildDate>
+    
+	  <atom:link href="/docs/tutorials/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Walk through</title>
+      <link>/docs/tutorials/walkthrough/</link>
+      <pubDate>Thu, 09 Sep 2021 10:16:57 -0400</pubDate>
+      
+      <guid>/docs/tutorials/walkthrough/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Ensure you have completed the &lt;a href=&#34;/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; before beginning.&lt;/p&gt;
+&lt;h2 id=&#34;download-and-install-amazon-genomics-cli&#34;&gt;Download and install Amazon Genomics CLI&lt;/h2&gt;
+&lt;p&gt;Download the Amazon Genomics CLI according to the &lt;a href=&#34;/docs/getting-started/installation/&#34;&gt;installation&lt;/a&gt;
+instructions.&lt;/p&gt;
+&lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;
+&lt;p&gt;Ensure you have initialized your account and created a username by following the &lt;a href=&#34;/docs/getting-started/setup/&#34;&gt;setup&lt;/a&gt;
+instructions.&lt;/p&gt;
+&lt;h2 id=&#34;initialize-a-project&#34;&gt;Initialize a project&lt;/h2&gt;
+&lt;p&gt;Amazon Genomics CLI uses local folders and config files to define projects. Projects contain configuration settings for contexts and workflows (more on these below). To create a new project for running WDL based workflows do the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;mkdir myproject
+&lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; myproject
+agc project init myproject --workflow-type wdl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;NOTE: for a Nextflow based project you can substitute &lt;code&gt;--workflow-type wdl&lt;/code&gt; with &lt;code&gt;---workflow-type nextflow&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Projects may have workflows from different languages, so the &lt;code&gt;--workflow-type&lt;/code&gt; flag is simply to provide the stub for
+an initial workflow engine.&lt;/p&gt;
+&lt;p&gt;This will create a config file called  &lt;code&gt;agc-project.yaml&lt;/code&gt; with the following contents:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;myproject&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;schemaVersion&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;ctx1&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;            &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;              &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;cromwell&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This config file will be used to define aspects of the project - e.g. the contexts and named workflows the project uses. For a
+more representative project config, look at the projects in &lt;code&gt;~/agc/examples&lt;/code&gt;. Unless otherwise stated, command line activities for the remainder of this document will assume they are run from within the &lt;code&gt;~/agc/examples/demo-wdl-project/&lt;/code&gt; project folder.&lt;/p&gt;
+&lt;h2 id=&#34;contexts&#34;&gt;Contexts&lt;/h2&gt;
+&lt;p&gt;Amazon Genomics CLI uses a concept called “contexts” to run workflows. Contexts encapsulate and automate time-consuming tasks
+like configuring and deploying workflow engines, creating data access policies, and tuning compute clusters for operation at scale.
+In the &lt;code&gt;demo-wdl-project&lt;/code&gt; folder, after running the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context list
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see something like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;2021-09-22T01:15:41Z 𝒊  Listing contexts.
+CONTEXTNAME    myContext
+CONTEXTNAME    spotCtx
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In this project there are two contexts, one configured to run with On-Demand instances (myContext), and one configured to use SPOT instances (spotCtx).&lt;/p&gt;
+&lt;p&gt;You need to have a context running to be able to run workflows. To deploy the context &lt;code&gt;myContext&lt;/code&gt; in the demo-wdl-project, run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context deploy -c myContext
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will take 10-15min to complete.&lt;/p&gt;
+&lt;p&gt;If you have more than one context configured, and want to deploy them all at once, you can run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context deploy --all
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Contexts have read-write access to a context specific prefix in the S3 bucket Amazon Genomics CLI creates during account activation. You can check this for the &lt;code&gt;myContext&lt;/code&gt; context with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context describe -c myContext
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see something like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CONTEXT    myContext    false    STARTED
+OUTPUTLOCATION    s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can add more data locations using the &lt;code&gt;data&lt;/code&gt; section of the &lt;code&gt;agc-project.yaml&lt;/code&gt; config file. All contexts will have an
+appropriate access policy created for the data locations listed when they are deployed. For example, the following config adds three public buckets from the Registry of Open Data on AWS:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;myproject&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://broad-references&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://gatk-test-data&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://1000genomes&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note, you need to redeploy any running contexts to update their access to data locations. Do this by simply (re)running.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context deploy -c myContext
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Contexts also define what types of compute your workflow will run on - i.e. if you want to run workflows using SPOT or On-demand instances.
+By default, contexts use On-demand instances. The configuration for a context that uses SPOT instances looks like the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# The spot context uses EC2 spot instances which are usually cheaper but may be interrupted&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;spotCtx&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;requestSpotInstances&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can also explicitly specify what instance types contexts will be able to use for workflow jobs. By default, Amazon Genomics CLI
+will use a select set of instance types optimized for running genomics workflow jobs that balance data I/O performance and
+mitigation of workflow failure due to SPOT reclamation. In short, Amazon Genomics CLI uses AWS Batch for job execution
+and selects instance types based on the requirements of submitted jobs, up to &lt;code&gt;4xlarge&lt;/code&gt; instance types. If you have a use case
+that requires a specific set of instance types, you can define them with something like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;specialCtx&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;instanceTypes&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#000&#34;&gt;c5&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#000&#34;&gt;m5&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#000&#34;&gt;r5&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above will create a context called &lt;code&gt;specialCtx&lt;/code&gt; that will use any size of instances in the C5, M5, and R5 instance families.
+Contexts are elastic with a minimum vCPU capacity of 0 and a maximum of 256. When all vCPUs are allocated to jobs, further
+tasks will be queued.&lt;/p&gt;
+&lt;p&gt;Contexts also launch an engine for specific workflow types. You can have one engine per context and, currently, engines for WDL and Nextflow are supported.&lt;/p&gt;
+&lt;p&gt;A contexts configured with WDL and Nextflow engines respectively look like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;wdlContext&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;cromwell&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;nfContext&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;workflows&#34;&gt;Workflows&lt;/h2&gt;
+&lt;h3 id=&#34;add-a-workflow&#34;&gt;&lt;strong&gt;Add a workflow&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;Bioinformatics workflows are written in languages like WDL and Nextflow in either single script files, or in packages of
+multiple files (e.g. when there are multiple related workflows that leverage reusable elements). Currently, Amazon Genomics CLI supports both WDL and Nextflow.
+To learn more about WDL workflows, we suggest resources like the &lt;a href=&#34;https://github.com/openwdl/learn-wdl&#34;&gt;OpenWDL - Learn WDL course&lt;/a&gt;. To learn more about Nextflow workflows, we suggest &lt;a href=&#34;https://nextflow.io/docs/latest/index.html&#34;&gt;Nextflow’s documentation&lt;/a&gt; and &lt;a href=&#34;https://nf-co.re/&#34;&gt;NF-Core&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For clarity, we’ll refer to these workflow script files as “workflow definitions”. A “workflow specification” for Amazon Genomics CLI references workflow definitions and combines it with additional metadata,
+like the workflow language the definition is written in, which Amazon Genomics CLI will use to execute it on appropriate compute resources.&lt;/p&gt;
+&lt;p&gt;There is a “hello” workflow definition in the &lt;code&gt;~/agc/examples/demo-wdl-project/workflows/hello&lt;/code&gt; folder that looks like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;version 1.0
+workflow hello_agc {
+    call hello {}
+}
+task hello {
+    command { echo &amp;quot;Hello Amazon Genomics CLI!&amp;quot; }
+    runtime {
+        docker: &amp;quot;ubuntu:latest&amp;quot;
+    }
+    output { String out = read_string( stdout() ) }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The workflow specification for this workflow in the project config looks like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;workflows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;hello&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;version&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1.0&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;sourceURL&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;workflows/hello.wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here the workflow is expected to conform to the &lt;code&gt;WDL-1.0&lt;/code&gt; specification. A specification for a “hello” workflow written in Nextflow DSL1 would look like:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;workflows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;hello&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;version&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1.0&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;sourceURL&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;workflows/hello&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For Nextflow DSL2 workflows set &lt;code&gt;type.version&lt;/code&gt; to &lt;code&gt;dsl2&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;NOTE: When referring to local workflow definitions, &lt;code&gt;sourceURL&lt;/code&gt; must either be a full absolute path or a path relative to the &lt;code&gt;agc-project.yaml&lt;/code&gt; file. Path expansion is currently not supported.&lt;/p&gt;
+&lt;p&gt;You can quickly get a list of available configured workflows with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow list
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the &lt;code&gt;demo-wdl-project&lt;/code&gt;, this should return something like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;2021-09-02T05:14:47Z 𝒊  Listing workflows.
+WORKFLOWNAME    haplotype
+WORKFLOWNAME    hello
+WORKFLOWNAME    read
+WORKFLOWNAME    words-with-vowels
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;hello&lt;/code&gt; workflow specification points to a single-file workflow. Workflows can also be directories. For example, if you have a workflow that looks like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;workflows/hello-dir
+|-- inputs.json
+`-- main.wdl
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The workflow specification for the workflow above would simply point to the parent directory:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;workflows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;hello-dir-abs&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;version&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1.0&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;sourceURL&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;/abspath/to/hello-dir&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;hello-dir-rel&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;version&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1.0&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;sourceURL&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;relpath/to/hello-dir&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this case, your workflow must be named &lt;code&gt;main.&amp;lt;workflow-type&amp;gt;&lt;/code&gt; - e.g. &lt;code&gt;main.wdl&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;You can also provide a &lt;code&gt;MANIFEST.json&lt;/code&gt; file that points to a specific workflow file to run. If you have a folder like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;workflows/hello-manifest/
+|-- MANIFEST.json
+|-- hello.wdl
+|-- inputs.json
+`-- options.json
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;MANIFEST.json&lt;/code&gt; file would be:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-json5&#34; data-lang=&#34;json5&#34;&gt;{
+    &amp;quot;mainWorkflowURL&amp;quot;: &amp;quot;hello.wdl&amp;quot;,
+    &amp;quot;inputFileURLs&amp;quot;: [
+        &amp;quot;inputs.json&amp;quot;
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;At minimum, MANIFEST files &lt;em&gt;must&lt;/em&gt; have a &lt;code&gt;mainWorkflowURL&lt;/code&gt; property which is a relative path to the workflow file in its parent directory.&lt;/p&gt;
+&lt;p&gt;Workflows can also be from remote sources like GitHub:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;workflows&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;remote&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;version&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1.0&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# this is the WDL spec version&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;sourceURL&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;https://raw.githubusercontent.com/openwdl/learn-wdl/master/1_script_examples/1_hello_worlds/1_hello/hello.wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;NOTE: remote sourceURLs for Nextflow workflows can be Git repo URLs like: &lt;a href=&#34;https://github.com/nextflow-io/rnaseq-nf.git&#34;&gt;https://github.com/nextflow-io/rnaseq-nf.git&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;running-a-workflow&#34;&gt;Running a workflow&lt;/h3&gt;
+&lt;p&gt;To run a workflow you need a running context. See the section on contexts above if you need to start one. To run the “hello” workflow in the “myContext” context, run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run hello --context myContext
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you have another context in your project, for example one named “test”, you can run the “hello” workflow there with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run hello --context &lt;span style=&#34;color:#204a87&#34;&gt;test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If your workflow was successfully submitted you should get something like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;2021-08-04T23:01:37Z 𝒊  Running workflow. Workflow name: &#39;hello&#39;, Arguments: &#39;&#39;, Context: &#39;myContext&#39;
+&amp;quot;06604478-0897-462a-9ad1-47dd5c5717ca&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The last line is the workflow run id. You use this id to reference a specific workflow execution.&lt;/p&gt;
+&lt;p&gt;Running workflows is an asynchronous process. After submitting a workflow from the CLI, it is handled entirely in the cloud.
+You can now close your terminal session if needed. The workflow will still continue to run. You can also run multiple workflows at a time. The underlying compute resources will automatically scale. Try running multiple instances of the “hello” workflow at once.&lt;/p&gt;
+&lt;p&gt;You can check the status of all running workflows with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow status
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;WORKFLOWINSTANCE    myContext    66826672-778e-449d-8f28-2274d5b09f05    true    COMPLETE    2021-09-10T21:57:37Z    hello
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;By default, the &lt;code&gt;workflow status&lt;/code&gt; command will show the state of all workflows across all running contexts.&lt;/p&gt;
+&lt;p&gt;To show only the status of workflow instances of a specific workflow you can use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow status -n &amp;lt;workflow-name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To show only the status of workflows instances in a specific context you can use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow status -c &amp;lt;context-name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you want to check the status of a specific workflow you can do so by referencing the workflow execution by its run id:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow status -r &amp;lt;workflow-run-id&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you need to stop a running workflow instance, run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow stop &amp;lt;workflow-run-id&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;using-workflow-inputs&#34;&gt;Using workflow inputs&lt;/h3&gt;
+&lt;p&gt;You can provide runtime inputs to workflows at the command line. For example, the &lt;code&gt;demo-wdl-project&lt;/code&gt; has a workflow named &lt;code&gt;read&lt;/code&gt; that requires reading a data file.
+The specification of read looks like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;version 1.0
+workflow ReadFile {
+    input {
+        File input_file
+    }
+    call read_file { input: input_file = input_file }
+}
+
+task read_file {
+    input {
+        File input_file
+    }
+    String content = read_string(input_file)
+
+    command {
+        echo &#39;~{content}&#39;
+    }
+    runtime {
+        docker: &amp;quot;ubuntu:latest&amp;quot;
+        memory: &amp;quot;4G&amp;quot;
+    }
+
+    output { String out = read_string( stdout() ) }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can create an input file locally for this workflow:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;mkdir inputs
+&lt;span style=&#34;color:#204a87&#34;&gt;echo&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;this is some data&amp;#34;&lt;/span&gt; &amp;gt; inputs/data.txt
+cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; inputs/read.inputs.json
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;{&amp;#34;ReadFile.input_file&amp;#34;: &amp;#34;data.txt&amp;#34;}
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, you would submit the workflow with its corresponding inputs file with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run &lt;span style=&#34;color:#204a87&#34;&gt;read&lt;/span&gt; --args inputs/read.inputs.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Amazon Genomics CLI will scan the file provided to &lt;code&gt;--args&lt;/code&gt; for local paths, sync those files to S3, and rewrite the
+inputs file in transit to point to the appropriate S3 locations. Paths in the &lt;code&gt;*.inputs.json&lt;/code&gt; file provided as &lt;code&gt;--args&lt;/code&gt;
+are referenced relative to the &lt;code&gt;*.inputs.json&lt;/code&gt; file.&lt;/p&gt;
+&lt;h3 id=&#34;accessing-workflow-results&#34;&gt;Accessing workflow results&lt;/h3&gt;
+&lt;p&gt;Workflow results are written to an S3 bucket specified or created by Amazon Genomics CLI during account activation. See the section on account activation above for more details. You can list or retrieve the S3 URI for the bucket with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#000&#34;&gt;AGC_BUCKET&lt;/span&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;$(&lt;/span&gt;aws ssm get-parameter &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --name /agc/_common/bucket &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --query &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#39;Parameter.Value&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&lt;/span&gt;    --output text&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and then use &lt;code&gt;aws s3&lt;/code&gt; commands to explore and retrieve data from the bucket. For example, to list the bucket contents:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;aws s3 ls &lt;span style=&#34;color:#000&#34;&gt;$AGC_BUCKET&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see something like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;PRE project/
+PRE scripts/
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Data for multiple projects are kept in &lt;code&gt;project/&amp;lt;project-name&amp;gt;&lt;/code&gt; prefixes. Looking into one you should see:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;PRE cromwell-execution/
+PRE workflow/
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;cromwell-execution&lt;/code&gt; prefix is specific to the engine Amazon Genomics CLI uses to run WDL workflows.
+Workflow results will be in &lt;code&gt;cromwell-execution&lt;/code&gt; partitioned by workflow name, workflow run id, and task name. The &lt;code&gt;workflow&lt;/code&gt; prefix is where named workflows are cached when you run workflows definitions stored in your local environment.&lt;/p&gt;
+&lt;h3 id=&#34;accessing-workflow-logs&#34;&gt;Accessing workflow logs&lt;/h3&gt;
+&lt;p&gt;You can get a summary of the log information for a workflow as follows:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc logs workflow &amp;lt;workflow-name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will return the logs for all runs of the workflow. If you just want the logs for a specific workflow run, you can use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc logs workflow &amp;lt;workflow-name&amp;gt; -r &amp;lt;workflow-instance-id&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will print out the &lt;code&gt;stdout&lt;/code&gt; generated by each workflow task.&lt;/p&gt;
+&lt;p&gt;For the hello workflow above, this would look like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Fri, 10 Sep 2021 22:00:04 +0000    download: s3://agc-123456789012-us-east-2/scripts/3e129a27928c192b7804501aabdfc29e to tmp/tmp.BqCb2iaae/batch-file-temp
+Fri, 10 Sep 2021 22:00:04 +0000    *** LOCALIZING INPUTS ***
+Fri, 10 Sep 2021 22:00:05 +0000    download: s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext/cromwell-execution/hello_agc/66826672-778e-449d-8f28-2274d5b09f05/call-hello/script to agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext/cromwell-execution/hello_agc/66826672-778e-449d-8f28-2274d5b09f05/call-hello/script
+Fri, 10 Sep 2021 22:00:05 +0000    *** COMPLETED LOCALIZATION ***
+Fri, 10 Sep 2021 22:00:05 +0000    Hello Amazon Genomics CLI!
+Fri, 10 Sep 2021 22:00:05 +0000    *** DELOCALIZING OUTPUTS ***
+Fri, 10 Sep 2021 22:00:05 +0000    upload: ./hello-rc.txt to s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext/cromwell-execution/hello_agc/66826672-778e-449d-8f28-2274d5b09f05/call-hello/hello-rc.txt
+Fri, 10 Sep 2021 22:00:06 +0000    upload: ./hello-stderr.log to s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext/cromwell-execution/hello_agc/66826672-778e-449d-8f28-2274d5b09f05/call-hello/hello-stderr.log
+Fri, 10 Sep 2021 22:00:06 +0000    upload: ./hello-stdout.log to s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext/cromwell-execution/hello_agc/66826672-778e-449d-8f28-2274d5b09f05/call-hello/hello-stdout.log
+Fri, 10 Sep 2021 22:00:06 +0000    *** COMPLETED DELOCALIZATION ***
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If your workflow fails, useful debug information is typically reported by the workflow engine logs. These are unique per context. To get those for a context named &lt;code&gt;myContext&lt;/code&gt;, you would run:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc logs engine --context myContext
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should get something like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Fri, 10 Sep 2021 23:40:49 +0000    2021-09-10 23:40:49,421 cromwell-system-akka.dispatchers.api-dispatcher-175 INFO  - WDL (1.0) workflow 1473f547-85d8-4402-adfc-e741b7df69f2 submitted
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,711 cromwell-system-akka.dispatchers.engine-dispatcher-30 INFO  - 1 new workflows fetched by cromid-2054603: 1473f547-85d8-4402-adfc-e741b7df69f2
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,712 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowManagerActor: Starting workflow UUID(1473f547-85d8-4402-adfc-e741b7df69f2)
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,712 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowManagerActor: Successfully started WorkflowActor-1473f547-85d8-4402-adfc-e741b7df69f2
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,712 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - Retrieved 1 workflows from the WorkflowStoreActor
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,716 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - MaterializeWorkflowDescriptorActor [UUID(1473f547)]: Parsing workflow as WDL 1.0
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,721 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - MaterializeWorkflowDescriptorActor [UUID(1473f547)]: Call-to-Backend assignments: hello_agc.hello -&amp;gt; AWSBATCH
+Fri, 10 Sep 2021 23:40:52 +0000    2021-09-10 23:40:52,722  WARN  - Unrecognized configuration key(s) for AwsBatch: auth, numCreateDefinitionAttempts, filesystems.s3.duplication-strategy, numSubmitAttempts, default-runtime-attributes.scriptBucketName
+Fri, 10 Sep 2021 23:40:53 +0000    2021-09-10 23:40:53,741 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowExecutionActor-1473f547-85d8-4402-adfc-e741b7df69f2 [UUID(1473f547)]: Starting hello_agc.hello
+Fri, 10 Sep 2021 23:40:54 +0000    2021-09-10 23:40:54,030 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - Assigned new job execution tokens to the following groups: 1473f547: 1
+Fri, 10 Sep 2021 23:40:55 +0000    2021-09-10 23:40:55,501 cromwell-system-akka.dispatchers.engine-dispatcher-4 INFO  - 1473f547-85d8-4402-adfc-e741b7df69f2-EngineJobExecutionActor-hello_agc.hello:NA:1 [UUID(1473f547)]: Call cache hit process had 0 total hit failures before completing successfully
+Fri, 10 Sep 2021 23:40:56 +0000    2021-09-10 23:40:56,842 cromwell-system-akka.dispatchers.engine-dispatcher-31 INFO  - WorkflowExecutionActor-1473f547-85d8-4402-adfc-e741b7df69f2 [UUID(1473f547)]: Job results retrieved (CallCached): &#39;hello_agc.hello&#39; (scatter index: None, attempt 1)
+Fri, 10 Sep 2021 23:40:57 +0000    2021-09-10 23:40:57,820 cromwell-system-akka.dispatchers.engine-dispatcher-4 INFO  - WorkflowExecutionActor-1473f547-85d8-4402-adfc-e741b7df69f2 [UUID(1473f547)]: Workflow hello_agc complete. Final Outputs:
+Fri, 10 Sep 2021 23:40:57 +0000    {
+Fri, 10 Sep 2021 23:40:57 +0000      &amp;quot;hello_agc.hello.out&amp;quot;: &amp;quot;Hello Amazon Genomics CLI!&amp;quot;
+Fri, 10 Sep 2021 23:40:57 +0000    }
+Fri, 10 Sep 2021 23:40:59 +0000    2021-09-10 23:40:59,826 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowManagerActor: Workflow actor for 1473f547-85d8-4402-adfc-e741b7df69f2 completed with status &#39;Succeeded&#39;. The workflow will be removed from the workflow store.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;additional-workflow-examples&#34;&gt;Additional workflow examples&lt;/h3&gt;
+&lt;p&gt;The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on GATK Best Practices. You can find these in:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;~/agc/examples/gatk-best-practices-project
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;These workflows come pre-packaged with &lt;code&gt;MANIFEST.json&lt;/code&gt; files that specify example input data available publicly in the &lt;a href=&#34;https://registry.opendata.aws/&#34;&gt;AWS Registry of Open Data&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Note: these workflows take between 5 min to ~3hrs to complete.&lt;/p&gt;
+&lt;h2 id=&#34;cleanup&#34;&gt;Cleanup&lt;/h2&gt;
+&lt;p&gt;When you are done running workflows, it is recommended you stop all cloud resources to save costs.&lt;/p&gt;
+&lt;p&gt;Stop a context with:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context destroy -c &amp;lt;context-name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will destroy all compute resources in a context, but retain any data in S3. If you want to destroy all your running contexts at once, you can use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context destroy --all
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note, you will not be able to destroy a context that has a running workflow. Workflows will need to complete on their own or stopped before you can destroy the context.&lt;/p&gt;
+&lt;p&gt;If you want stop using Amazon Genomics CLI in your AWS account entirely, you need to deactivate it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account deactivate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will remove Amazon Genomics CLI’s core infrastructure. If Amazon Genomics CLI created a VPC as part of the &lt;code&gt;activate&lt;/code&gt; process, it will be &lt;strong&gt;removed&lt;/strong&gt;. If Amazon Genomics CLI created an S3 bucket for you, it will be &lt;strong&gt;retained&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;To uninstall Amazon Genomics CLI from your local machine, run the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;./agc/uninstall.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Note uninstalling the CLI will not remove any resources or persistent data from your AWS account.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

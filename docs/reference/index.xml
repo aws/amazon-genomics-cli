@@ -1,0 +1,1136 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Amazon Genomics CLI – Reference</title>
+    <link>/docs/reference/</link>
+    <description>Recent content in Reference on Amazon Genomics CLI</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/reference/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: agc</title>
+      <link>/docs/reference/agc/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc&#34;&gt;agc&lt;/h2&gt;
+&lt;p&gt;👩🧬 Launch and manage genomics workloads on AWS.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+  Displays the help menu for the specified sub-command.
+  /code $ agc account --help
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help      help for agc
+  -v, --verbose   Display verbose diagnostic information.
+      --version   version for agc
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_account/&#34;&gt;agc account&lt;/a&gt;	 - Commands for AWS account setup.
+Install or remove AGC from your account.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_configure/&#34;&gt;agc configure&lt;/a&gt;	 - Commands for configuration.
+Configuration is stored per user.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_project/&#34;&gt;agc project&lt;/a&gt;	 - Commands to interact with projects.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_version/&#34;&gt;agc version&lt;/a&gt;	 - Print the version number.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc account</title>
+      <link>/docs/reference/agc_account/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_account/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-account&#34;&gt;agc account&lt;/h2&gt;
+&lt;p&gt;Commands for AWS account setup.
+Install or remove AGC from your account.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Commands for AWS account setup.
+AGC requires core infrastructure to be running in an account to function.
+These commands should be used to install or remove AGC from your AWS account.&lt;/p&gt;
+&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -h, --help                help for account
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_account_activate/&#34;&gt;agc account activate&lt;/a&gt;	 - Activate AGC in an AWS account.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_account_deactivate/&#34;&gt;agc account deactivate&lt;/a&gt;	 - Deactivate AGC in an AWS account.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc account activate</title>
+      <link>/docs/reference/agc_account_activate/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_account_activate/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-account-activate&#34;&gt;agc account activate&lt;/h2&gt;
+&lt;p&gt;Activate AGC in an AWS account.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Activate AGC in an AWS account.
+AGC will use your default AWS credentials to deploy all AWS resources
+it needs to that account and region.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc account activate [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+Activate AGC in your AWS account with a custom S3 bucket and VPC.
+/code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;      --bucket string   The name of an S3 bucket that AGC will use to store its data.
+                        An autogenerated name will be used if not specified. A new bucket will be created if the bucket does not exist.
+  -h, --help            help for activate
+      --vpc string      The ID of a VPC that AGC will run in. 
+                        A new VPC will be created if not specified.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_account/&#34;&gt;agc account&lt;/a&gt;	 - Commands for AWS account setup.
+Install or remove AGC from your account.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc account deactivate</title>
+      <link>/docs/reference/agc_account_deactivate/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_account_deactivate/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-account-deactivate&#34;&gt;agc account deactivate&lt;/h2&gt;
+&lt;p&gt;Deactivate AGC in an AWS account.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Deactivate AGC in an AWS account.
+AGC will use your default AWS credentials to remove all core AWS resources
+it has created in that account and region. Deactivation may take up to 5 minutes to complete and return.
+Buckets and logs will be preserved.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc account deactivate [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+Deactivate AGC in your AWS account.
+/code $ agc account deactivate
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -f, --force   Force account deactivation by removing all resources associated with AGC.
+                This includes project and context resources, even if they are running workflows.
+                If not specified, only the core resources will be deleted if possible.
+  -h, --help    help for deactivate
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_account/&#34;&gt;agc account&lt;/a&gt;	 - Commands for AWS account setup.
+Install or remove AGC from your account.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc completion</title>
+      <link>/docs/reference/agc_completion/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_completion/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-completion&#34;&gt;agc completion&lt;/h2&gt;
+&lt;p&gt;generate the autocompletion script for the specified shell&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Generate the autocompletion script for agc for the specified shell.
+See each sub-command&amp;rsquo;s help for details on how to use the generated script.&lt;/p&gt;
+&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for completion
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion_bash/&#34;&gt;agc completion bash&lt;/a&gt;	 - generate the autocompletion script for bash&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion_fish/&#34;&gt;agc completion fish&lt;/a&gt;	 - generate the autocompletion script for fish&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion_powershell/&#34;&gt;agc completion powershell&lt;/a&gt;	 - generate the autocompletion script for powershell&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion_zsh/&#34;&gt;agc completion zsh&lt;/a&gt;	 - generate the autocompletion script for zsh&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc completion bash</title>
+      <link>/docs/reference/agc_completion_bash/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_completion_bash/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-completion-bash&#34;&gt;agc completion bash&lt;/h2&gt;
+&lt;p&gt;generate the autocompletion script for bash&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Generate the autocompletion script for the bash shell.&lt;/p&gt;
+&lt;p&gt;This script depends on the &amp;lsquo;bash-completion&amp;rsquo; package.
+If it is not installed already, you can install it via your OS&amp;rsquo;s package manager.&lt;/p&gt;
+&lt;p&gt;To load completions in your current shell session:
+$ source &amp;lt;(agc completion bash)&lt;/p&gt;
+&lt;p&gt;To load completions for every new session, execute once:
+Linux:
+$ agc completion bash &amp;gt; /etc/bash_completion.d/agc
+MacOS:
+$ agc completion bash &amp;gt; /usr/local/etc/bash_completion.d/agc&lt;/p&gt;
+&lt;p&gt;You will need to start a new shell for this setup to take effect.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc completion bash
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help              help for bash
+      --no-descriptions   disable completion descriptions
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc completion fish</title>
+      <link>/docs/reference/agc_completion_fish/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_completion_fish/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-completion-fish&#34;&gt;agc completion fish&lt;/h2&gt;
+&lt;p&gt;generate the autocompletion script for fish&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Generate the autocompletion script for the fish shell.&lt;/p&gt;
+&lt;p&gt;To load completions in your current shell session:
+$ agc completion fish | source&lt;/p&gt;
+&lt;p&gt;To load completions for every new session, execute once:
+$ agc completion fish &amp;gt; ~/.config/fish/completions/agc.fish&lt;/p&gt;
+&lt;p&gt;You will need to start a new shell for this setup to take effect.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc completion fish [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help              help for fish
+      --no-descriptions   disable completion descriptions
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc completion powershell</title>
+      <link>/docs/reference/agc_completion_powershell/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_completion_powershell/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-completion-powershell&#34;&gt;agc completion powershell&lt;/h2&gt;
+&lt;p&gt;generate the autocompletion script for powershell&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Generate the autocompletion script for powershell.&lt;/p&gt;
+&lt;p&gt;To load completions in your current shell session:
+PS C:&amp;gt; agc completion powershell | Out-String | Invoke-Expression&lt;/p&gt;
+&lt;p&gt;To load completions for every new session, add the output of the above command
+to your powershell profile.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc completion powershell [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help              help for powershell
+      --no-descriptions   disable completion descriptions
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc completion zsh</title>
+      <link>/docs/reference/agc_completion_zsh/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_completion_zsh/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-completion-zsh&#34;&gt;agc completion zsh&lt;/h2&gt;
+&lt;p&gt;generate the autocompletion script for zsh&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Generate the autocompletion script for the zsh shell.&lt;/p&gt;
+&lt;p&gt;If shell completion is not already enabled in your environment you will need
+to enable it.  You can execute the following once:&lt;/p&gt;
+&lt;p&gt;$ echo &amp;ldquo;autoload -U compinit; compinit&amp;rdquo; &amp;raquo; ~/.zshrc&lt;/p&gt;
+&lt;p&gt;To load completions for every new session, execute once:&lt;/p&gt;
+&lt;h1 id=&#34;linux&#34;&gt;Linux:&lt;/h1&gt;
+&lt;p&gt;$ agc completion zsh &amp;gt; &amp;ldquo;${fpath[1]}/_agc&amp;rdquo;&lt;/p&gt;
+&lt;h1 id=&#34;macos&#34;&gt;macOS:&lt;/h1&gt;
+&lt;p&gt;$ agc completion zsh &amp;gt; /usr/local/share/zsh/site-functions/_agc&lt;/p&gt;
+&lt;p&gt;You will need to start a new shell for this setup to take effect.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc completion zsh [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help              help for zsh
+      --no-descriptions   disable completion descriptions
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_completion/&#34;&gt;agc completion&lt;/a&gt;	 - generate the autocompletion script for the specified shell&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc configure</title>
+      <link>/docs/reference/agc_configure/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_configure/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-configure&#34;&gt;agc configure&lt;/h2&gt;
+&lt;p&gt;Commands for configuration.
+Configuration is stored per user.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Commands for configuration.
+Configure local settings and preferences to customize the CLI experience.&lt;/p&gt;
+&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -h, --help                help for configure
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_configure_describe/&#34;&gt;agc configure describe&lt;/a&gt;	 - Shows current configuration of the AGC setup for current user&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_configure_email/&#34;&gt;agc configure email&lt;/a&gt;	 - Sets user email address to be used to tag AGC resources created in the account&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc configure describe</title>
+      <link>/docs/reference/agc_configure_describe/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_configure_describe/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-configure-describe&#34;&gt;agc configure describe&lt;/h2&gt;
+&lt;p&gt;Shows current configuration of the AGC setup for current user&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Running this command reads current configuration file for AGC and prints out it content
+Output of the command has following format:
+CONFIG:
+USER: Email Id&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc configure describe [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for describe
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_configure/&#34;&gt;agc configure&lt;/a&gt;	 - Commands for configuration.
+Configuration is stored per user.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc configure email</title>
+      <link>/docs/reference/agc_configure_email/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_configure_email/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-configure-email&#34;&gt;agc configure email&lt;/h2&gt;
+&lt;p&gt;Sets user email address to be used to tag AGC resources created in the account&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc configure email user_email_address [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for email
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_configure/&#34;&gt;agc configure&lt;/a&gt;	 - Commands for configuration.
+Configuration is stored per user.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc context</title>
+      <link>/docs/reference/agc_context/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_context/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-context&#34;&gt;agc context&lt;/h2&gt;
+&lt;p&gt;Commands for contexts.
+Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Commands for contexts.
+Contexts specify workflow engines and computational fleets to use when running a workflow.
+Users can quickly switch between infrastructure configurations by specifying a
+particular context.&lt;/p&gt;
+&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -h, --help                help for context
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context_deploy/&#34;&gt;agc context deploy&lt;/a&gt;	 - Deploy contexts in the current project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context_describe/&#34;&gt;agc context describe&lt;/a&gt;	 - Show the information for a specific context in the current project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context_destroy/&#34;&gt;agc context destroy&lt;/a&gt;	 - Destroy contexts in the current project.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context_list/&#34;&gt;agc context list&lt;/a&gt;	 - List contexts in the project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context_status/&#34;&gt;agc context status&lt;/a&gt;	 - Show the status for the deployed contexts in the project&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc context deploy</title>
+      <link>/docs/reference/agc_context_deploy/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_context_deploy/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-context-deploy&#34;&gt;agc context deploy&lt;/h2&gt;
+&lt;p&gt;Deploy contexts in the current project&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;deploy is for deploying one or more contexts.
+It creates AGC resources in AWS.&lt;/p&gt;
+&lt;p&gt;Output of the command has following format:
+DETAIL: AccessLogGroupName BucketLocation EngineLogGroupName Status StatusReason WesLogGroupName WesUrl
+SUMMARY: IsSpot Name
+STRING&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc context deploy {-c context_name ... | --all} [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+/code agc context deploy -c context1 -c context2
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;      --all               Deploy all contexts in the project
+  -c, --context strings   Names of one or more contexts to deploy
+  -h, --help              help for deploy
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc context describe</title>
+      <link>/docs/reference/agc_context_describe/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_context_describe/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-context-describe&#34;&gt;agc context describe&lt;/h2&gt;
+&lt;p&gt;Show the information for a specific context in the current project&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;describe is for showing information about the specified context.&lt;/p&gt;
+&lt;p&gt;Output of the command has following format:
+CONTEXT: Name RequestSpotInstances Status StatusReason
+INSTANCETYPE: Value
+OUTPUTLOCATION: Url&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc context describe context_name [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+/code agc context describe myCtx
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for describe
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc context destroy</title>
+      <link>/docs/reference/agc_context_destroy/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_context_destroy/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-context-destroy&#34;&gt;agc context destroy&lt;/h2&gt;
+&lt;p&gt;Destroy contexts in the current project.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;destroy is for destroying one or more contexts.
+It destroys AGC resources in AWS.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc context destroy {-c context_name ... | --all} [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+/code agc context destroy -c context1 -c context2
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;      --all               Destroy all contexts in the project
+  -c, --context strings   Names of one or more contexts to destroy
+  -h, --help              help for destroy
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc context list</title>
+      <link>/docs/reference/agc_context_list/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_context_list/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-context-list&#34;&gt;agc context list&lt;/h2&gt;
+&lt;p&gt;List contexts in the project&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;list is for showing a combined list of contexts specified in
+the project specification.&lt;/p&gt;
+&lt;p&gt;Output of the command has following format:
+CONTEXTNAME: Name&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc context list [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for list
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc context status</title>
+      <link>/docs/reference/agc_context_status/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_context_status/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-context-status&#34;&gt;agc context status&lt;/h2&gt;
+&lt;p&gt;Show the status for the deployed contexts in the project&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;status is for showing the status for the deployed contexts in the project.&lt;/p&gt;
+&lt;p&gt;Output of the command has following format:
+INSTANCE: ContextName ContextReason ContextStatus IsDefinedInProjectFile&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc context status [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+/code agc context status
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for status
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_context/&#34;&gt;agc context&lt;/a&gt;	 - Commands for contexts.
+Contexts specify workflow engines and computational fleets to use when running a workflow.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc logs</title>
+      <link>/docs/reference/agc_logs/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_logs/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-logs&#34;&gt;agc logs&lt;/h2&gt;
+&lt;p&gt;Commands for various logs.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Commands for various logs.
+Logs can currently be listed for workflows, workflow engines,
+and various AGC infrastructure parts.
+You can also show the content of any CloudWatch log stream that you have
+access rights to.&lt;/p&gt;
+&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -h, --help                help for logs
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs_access/&#34;&gt;agc logs access&lt;/a&gt;	 - Show workflow access logs for a given context.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs_adapter/&#34;&gt;agc logs adapter&lt;/a&gt;	 - Show workflow adapter logs for a given context.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs_engine/&#34;&gt;agc logs engine&lt;/a&gt;	 - Show workflow engine logs for a given context.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs_workflow/&#34;&gt;agc logs workflow&lt;/a&gt;	 - Show the task logs of a given workflow&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc logs access</title>
+      <link>/docs/reference/agc_logs_access/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_logs_access/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-logs-access&#34;&gt;agc logs access&lt;/h2&gt;
+&lt;p&gt;Show workflow access logs for a given context.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Show workflow access logs for a given context.
+If no start, end, or look back periods are set, this command will show logs from the last hour.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc logs access -c context_name [-f filter] [-s start_date] [-e end_date] [-l look_back] [-t] [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+/code agc logs access -c myCtx -s 2021/3/31 -e 2021/4/1 -f ERROR
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -c, --context string     Name of context
+  -e, --end string         A date to stop displaying logs.
+                           Supports most date formats, such as mm/dd/yy or yyyy-mm-dd-07:00.
+                           Times respect the system timezone.
+  -f, --filter string      Match terms, phrases, or values in the logs.
+  -h, --help               help for access
+  -l, --look-back string   A period of time to look back from now, such as &amp;quot;2h45m&amp;quot;.
+                           Valid time units are &amp;quot;s&amp;quot;, &amp;quot;m&amp;quot;, and &amp;quot;h&amp;quot;.
+  -s, --start string       A date to begin displaying logs.
+                           Supports most date formats, such as 2021/03/31 or 8/8/2021 01:00:01 PM.
+                           Times respect the system timezone.
+  -t, --tail               Follow the log output.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc logs adapter</title>
+      <link>/docs/reference/agc_logs_adapter/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_logs_adapter/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-logs-adapter&#34;&gt;agc logs adapter&lt;/h2&gt;
+&lt;p&gt;Show workflow adapter logs for a given context.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Show workflow adapter logs for a given context.
+If no start, end, or look back periods are set, this command will show logs from the last hour.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc logs adapter -c context_name [-f filter] [-s start_date] [-e end_date] [-l look_back] [-t] [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+/code agc logs adapter -c myCtx -s 2021/3/31 -e 2021/4/1 -f ERROR
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -c, --context string     Name of context
+  -e, --end string         A date to stop displaying logs.
+                           Supports most date formats, such as mm/dd/yy or yyyy-mm-dd-07:00.
+                           Times respect the system timezone.
+  -f, --filter string      Match terms, phrases, or values in the logs.
+  -h, --help               help for adapter
+  -l, --look-back string   A period of time to look back from now, such as &amp;quot;2h45m&amp;quot;.
+                           Valid time units are &amp;quot;s&amp;quot;, &amp;quot;m&amp;quot;, and &amp;quot;h&amp;quot;.
+  -s, --start string       A date to begin displaying logs.
+                           Supports most date formats, such as 2021/03/31 or 8/8/2021 01:00:01 PM.
+                           Times respect the system timezone.
+  -t, --tail               Follow the log output.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc logs engine</title>
+      <link>/docs/reference/agc_logs_engine/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_logs_engine/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-logs-engine&#34;&gt;agc logs engine&lt;/h2&gt;
+&lt;p&gt;Show workflow engine logs for a given context.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Show workflow engine logs for a given context.
+If no start, end, or look back periods are set, this command will show logs from the last hour.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc logs engine -c context_name [-f filter] [-s start_date] [-e end_date] [-l look_back] [-t] [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+/code agc logs engine -c myCtx -s 2021/3/31 -e 2021/4/1 -f ERROR
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -c, --context string     Name of context
+  -e, --end string         A date to stop displaying logs.
+                           Supports most date formats, such as mm/dd/yy or yyyy-mm-dd-07:00.
+                           Times respect the system timezone.
+  -f, --filter string      Match terms, phrases, or values in the logs.
+  -h, --help               help for engine
+  -l, --look-back string   A period of time to look back from now, such as &amp;quot;2h45m&amp;quot;.
+                           Valid time units are &amp;quot;s&amp;quot;, &amp;quot;m&amp;quot;, and &amp;quot;h&amp;quot;.
+  -s, --start string       A date to begin displaying logs.
+                           Supports most date formats, such as 2021/03/31 or 8/8/2021 01:00:01 PM.
+                           Times respect the system timezone.
+  -t, --tail               Follow the log output.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc logs workflow</title>
+      <link>/docs/reference/agc_logs_workflow/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_logs_workflow/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-logs-workflow&#34;&gt;agc logs workflow&lt;/h2&gt;
+&lt;p&gt;Show the task logs of a given workflow&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Show the task logs of a given workflow.
+If the &amp;ndash;run flag is omitted then the latest workflow run is used.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc logs workflow workflow_name [-r run_id] [--failed_tasks] [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -e, --end string         A date to stop displaying logs.
+                           Supports most date formats, such as mm/dd/yy or yyyy-mm-dd-07:00.
+                           Times respect the system timezone.
+      --failed-tasks       Only show logs of tasks that have not exited cleanly.
+  -f, --filter string      Match terms, phrases, or values in the logs.
+  -h, --help               help for workflow
+  -l, --look-back string   A period of time to look back from now, such as &amp;quot;2h45m&amp;quot;.
+                           Valid time units are &amp;quot;s&amp;quot;, &amp;quot;m&amp;quot;, and &amp;quot;h&amp;quot;.
+  -r, --run string         The ID of a workflow run to retrieve.
+  -s, --start string       A date to begin displaying logs.
+                           Supports most date formats, such as 2021/03/31 or 8/8/2021 01:00:01 PM.
+                           Times respect the system timezone.
+  -t, --tail               Follow the log output.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_logs/&#34;&gt;agc logs&lt;/a&gt;	 - Commands for various logs.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc project</title>
+      <link>/docs/reference/agc_project/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_project/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-project&#34;&gt;agc project&lt;/h2&gt;
+&lt;p&gt;Commands to interact with projects.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Commands to interact with projects.
+A project is a local configuration file that describes the workflows, data,
+and contexts you are working with.&lt;/p&gt;
+&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for project
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_project_describe/&#34;&gt;agc project describe&lt;/a&gt;	 - Describe a project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_project_init/&#34;&gt;agc project init&lt;/a&gt;	 - Initialize current directory with a new empty AGC project for a particular workflow type.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc project describe</title>
+      <link>/docs/reference/agc_project_describe/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_project_describe/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-project-describe&#34;&gt;agc project describe&lt;/h2&gt;
+&lt;p&gt;Describe a project&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Describe is for describing the current project specification. The current project specification is determined to be the agc-project.yaml file in the current working directory or a parent of the current directory&lt;/p&gt;
+&lt;p&gt;Output of the command has following format:
+PROJECT: Name
+DATA: Location ReadOnly&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc project describe [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+/code agc project describe
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for describe
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_project/&#34;&gt;agc project&lt;/a&gt;	 - Commands to interact with projects.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc project init</title>
+      <link>/docs/reference/agc_project_init/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_project_init/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-project-init&#34;&gt;agc project init&lt;/h2&gt;
+&lt;p&gt;Initialize current directory with a new empty AGC project for a particular workflow type.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Initialize current directory with a new empty AGC project for a particular workflow type.
+Project specification file &amp;lsquo;agc-project.yaml&amp;rsquo; will be created in the current directory.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc project init project_name [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+Initialize a new project named &amp;quot;myProject&amp;quot;.
+/code $ agc project init myProject --workflow-type my_workflow_type
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help                   help for init
+  -w, --workflow-type string   uses the specified workflow type for the default context. Valid values include nextflow, and wdl
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_project/&#34;&gt;agc project&lt;/a&gt;	 - Commands to interact with projects.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc version</title>
+      <link>/docs/reference/agc_version/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_version/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-version&#34;&gt;agc version&lt;/h2&gt;
+&lt;p&gt;Print the version number.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc version [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for version
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc workflow</title>
+      <link>/docs/reference/agc_workflow/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_workflow/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-workflow&#34;&gt;agc workflow&lt;/h2&gt;
+&lt;p&gt;Commands for workflows.
+Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Commands for workflows.
+Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/p&gt;
+&lt;p&gt;Workflow specifications are files whose content specify a workflow to execute
+given a particular set of input parameters to use. Workflow specifications are
+typed according to which workflow definition language they use (e.g. WDL).&lt;/p&gt;
+&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -h, --help                help for workflow
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -v, --verbose   Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 👩🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow_describe/&#34;&gt;agc workflow describe&lt;/a&gt;	 - Show the information for a specific workflow in the current project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow_list/&#34;&gt;agc workflow list&lt;/a&gt;	 - Show a list of workflows related to the current project&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow_run/&#34;&gt;agc workflow run&lt;/a&gt;	 - Run a workflow&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow_status/&#34;&gt;agc workflow status&lt;/a&gt;	 - Show the status for workflow run(s) in the current project.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow_stop/&#34;&gt;agc workflow stop&lt;/a&gt;	 - Stop the workflow with the specified workflow instance id.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc workflow describe</title>
+      <link>/docs/reference/agc_workflow_describe/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_workflow_describe/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-workflow-describe&#34;&gt;agc workflow describe&lt;/h2&gt;
+&lt;p&gt;Show the information for a specific workflow in the current project&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;describe is for showing details on the specified workflow.
+It includes workflow specification and list of recent instances of that workflow.
+An instance is created every time we run a workflow.&lt;/p&gt;
+&lt;p&gt;Output of the command has following format:
+WORKFLOW: Name Source TypeLanguage TypeVersion&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc workflow describe workflow_name [--max_instances] [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for describe
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc workflow list</title>
+      <link>/docs/reference/agc_workflow_list/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_workflow_list/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-workflow-list&#34;&gt;agc workflow list&lt;/h2&gt;
+&lt;p&gt;Show a list of workflows related to the current project&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;list is for showing a combined list of workflows defined in the project specification
+and workflow instances that were run in this AWS account.&lt;/p&gt;
+&lt;p&gt;Output of the command has following format:
+WORKFLOWNAME: Name&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc workflow list [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for list
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc workflow run</title>
+      <link>/docs/reference/agc_workflow_run/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_workflow_run/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-workflow-run&#34;&gt;agc workflow run&lt;/h2&gt;
+&lt;p&gt;Run a workflow&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;run is for running the specified workflow in the specified context.
+This command prints a run Id for the created workflow instance.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc workflow run workflow_name --context context_name [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+Run the workflow named &amp;quot;example-workflow&amp;quot;, against the &amp;quot;prod&amp;quot; context,
+using input parameters contained in file &amp;quot;file:///Users/ec2-user/myproj/test-args.json&amp;quot;
+/code $ agc workflow run example-workflow --context prod --args file:///Users/ec2-user/myproj/test-args.json
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -a, --args string      Arguments to use.
+  -c, --context string   Name of context
+  -h, --help             help for run
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc workflow status</title>
+      <link>/docs/reference/agc_workflow_status/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_workflow_status/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-workflow-status&#34;&gt;agc workflow status&lt;/h2&gt;
+&lt;p&gt;Show the status for workflow run(s) in the current project.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc workflow status [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -c, --context-name string    show status of workflow runs in a specific context
+  -h, --help                   help for status
+      --limit int              maximum number of workflow instances to show (default 20)
+  -r, --run-id string          show status of specific workflow run
+  -n, --workflow-name string   show status of workflow runs for a specific workflow name
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc workflow stop</title>
+      <link>/docs/reference/agc_workflow_stop/</link>
+      <pubDate>Mon, 27 Sep 2021 03:41:45 +0000</pubDate>
+      
+      <guid>/docs/reference/agc_workflow_stop/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-workflow-stop&#34;&gt;agc workflow stop&lt;/h2&gt;
+&lt;p&gt;Stop the workflow with the specified workflow instance id.&lt;/p&gt;
+&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
+&lt;p&gt;Stop the workflow with the specified workflow instance id. Signals to the workflow engine that all running tasks of the
+workflow instance should be stopped and any pending tasks should be cancelled.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc workflow stop workflow_instance_id [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+agc workflow stop ae12347654329
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for stop
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
+Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

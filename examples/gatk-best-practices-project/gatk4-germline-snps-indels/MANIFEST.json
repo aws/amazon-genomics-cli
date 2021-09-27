@@ -1,7 +1,0 @@
-{
-  "mainWorkflowURL": "haplotypecaller-gvcf-gatk4.wdl",
-  "inputFileURLs": [
-    "haplotypecaller-gvcf-gatk4.hg38.wgs.inputs.json"
-  ],
-  "optionFileURL": "options.json"
-}

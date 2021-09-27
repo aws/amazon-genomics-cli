@@ -1,7 +1,0 @@
-{
-  "mainWorkflowURL": "gatk4-basic-joint-genotyping.wdl",
-  "inputFileURLs": [
-    "gatk4-basic-joint-genotyping.inputs.json"
-  ],
-  "optionFileURL": "options.json"
-}
