@@ -7,20 +7,22 @@ weight: 20
 
 ## Download and install Amazon Genomics CLI
 
-Download the Amazon Genomics CLI zip, unzip its contents, and run the `install.sh` script:
+Download the Amazon Genomics CLI zip from [releases page](https://github.com/aws/amazon-genomics-cli/releases) of our Github repo.
+
+Next, unzip its contents, and run the `install.sh` script:
 
 ```
-aws s3 cp s3://healthai-public-assets-us-east-1/amazon-genomics-cli/1.0.0/amazon-genomics-cli.zip .
 unzip amazon-genomics-cli.zip -d agc
 ./agc/install.sh
 ```
 
-This will place the `agc` command in `~/bin` and attempt to add the command to your `$PATH`
+This will place the `agc` command in `$HOME/bin`.
 
 The Amazon Genomics CLI is a statically compiled Go binary. It should run in your environment natively without any additional setup. Test the CLI with:
 
 ```
 $ agc --help
+
 👩🧬 Launch and manage genomics workloads on AWS.
 
 Commands
@@ -59,10 +61,10 @@ Examples
 If this doesn't work immediately, try:
 
 * start a new terminal shell
-* modifying your `~/.bashrc` (or equivalent file) appending the following line and restarting your shell:
+* modifying your `$HOME/.bashrc` (or equivalent file) appending the following line and restarting your shell:
 
 ```
-export PATH=~/bin:$PATH
+export PATH=$HOME/bin:$PATH
 ```
 
 Verify that you have the latest version of Amazon Genomics CLI with:
