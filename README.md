@@ -1,5 +1,7 @@
 # Amazon Genomics CLI
 
+[![Join the chat at https://gitter.im/aws/amazon-genomics-cli](https://badges.gitter.im/aws/amazon-genomics-cli.svg)](https://gitter.im/aws/amazon-genomics-cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Overview
 
 The Amazon Genomics CLI is a tool to simplify the processes of deploying the AWS infrastructure required to
