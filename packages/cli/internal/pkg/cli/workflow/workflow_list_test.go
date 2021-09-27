@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
-	awsmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/aws"
-	storagemocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/storage"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
+	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 )

@@ -3,7 +3,7 @@ package environment
 import (
 	"os"
 
-	"github.com/aws/amazon-genomics-cli/common/aws/ecr"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 )
 
 const DefaultEcrRegistry = "555741984805"

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/constants"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 )
 
 func RenderContextStackName(projectName, contextName, userId string) string {

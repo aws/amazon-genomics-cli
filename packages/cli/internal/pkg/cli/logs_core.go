@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/araddon/dateparse"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/context"
-	"github.com/aws/amazon-genomics-cli/common/aws/cwl"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )

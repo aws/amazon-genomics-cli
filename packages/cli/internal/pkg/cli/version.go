@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/aws/amazon-genomics-cli/cli/cmd/application/template"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/group"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/version"
+	"github.com/aws/amazon-genomics-cli/cmd/application/template"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/group"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
 	"github.com/spf13/cobra"
 )
 

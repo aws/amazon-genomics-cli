@@ -3,9 +3,9 @@ package cli
 import (
 	"testing"
 
-	awsmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/aws"
-	storagemocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/storage"
-	"github.com/aws/amazon-genomics-cli/common/aws/cdk"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
+	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
+	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )

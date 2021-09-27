@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"testing"
 
-	iomocks "github.com/aws/amazon-genomics-cli/common/internal/pkg/mocks/io"
+	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

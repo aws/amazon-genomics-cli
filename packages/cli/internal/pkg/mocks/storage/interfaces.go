@@ -1,6 +1,6 @@
 package storagemocks
 
-import "github.com/aws/amazon-genomics-cli/cli/internal/pkg/storage"
+import "github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 
 type ProjectClient interface {
 	storage.ProjectClient

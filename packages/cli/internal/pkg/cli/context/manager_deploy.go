@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/aws/amazon-genomics-cli/common/aws/cdk"
-	"github.com/aws/amazon-genomics-cli/common/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/rs/zerolog/log"
 )
 

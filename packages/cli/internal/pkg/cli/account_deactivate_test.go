@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/common/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/stretchr/testify/assert"
 )
 

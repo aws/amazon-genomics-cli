@@ -6,11 +6,11 @@ package cli
 import (
 	"fmt"
 
-	"github.com/aws/amazon-genomics-cli/cli/cmd/application/template"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/group"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/storage"
+	"github.com/aws/amazon-genomics-cli/cmd/application/template"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/group"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/spf13/cobra"
 )
 

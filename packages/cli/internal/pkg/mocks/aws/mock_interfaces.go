@@ -9,12 +9,12 @@ import (
 	reflect "reflect"
 	regexp "regexp"
 
-	batch "github.com/aws/amazon-genomics-cli/common/aws/batch"
-	cdk "github.com/aws/amazon-genomics-cli/common/aws/cdk"
-	cfn "github.com/aws/amazon-genomics-cli/common/aws/cfn"
-	cwl "github.com/aws/amazon-genomics-cli/common/aws/cwl"
-	ddb "github.com/aws/amazon-genomics-cli/common/aws/ddb"
-	ecr "github.com/aws/amazon-genomics-cli/common/aws/ecr"
+	batch "github.com/aws/amazon-genomics-cli/internal/pkg/aws/batch"
+	cdk "github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
+	cfn "github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	cwl "github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
+	ddb "github.com/aws/amazon-genomics-cli/internal/pkg/aws/ddb"
+	ecr "github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	types "github.com/aws/aws-sdk-go-v2/service/cloudformation/types"
 	gomock "github.com/golang/mock/gomock"
 )
