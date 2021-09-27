@@ -7,12 +7,12 @@ run genomics workflows in the cloud, to submit those workflows to run, and to mo
 
 ## Quick Start
 
-To get an introduction to Amazon Genomics CLI refer to the [Quick Start Guide](https://github.com/aws/amazon-genomics-cli/wiki/Quick-Start-Guide)
+To get an introduction to Amazon Genomics CLI refer to the [Quick Start Guide](https://aws.github.io/amazon-genomics-cli/docs/getting-started/)
 in our wiki.
 
 ## Further Reading
 
-For full documentation, please refer to our [wiki](https://github.com/aws/amazon-genomics-cli/wiki).
+For full documentation, please refer to our [docs](https://aws.github.io/amazon-genomics-cli/docs/).
 
 ## Releases
 
