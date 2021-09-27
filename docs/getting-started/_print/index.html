@@ -129,7 +129,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.5425f9e8d2861bace4c5bc5555bf809d.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.342faf5d79cd0d20e32d161a2353c3f6.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -314,13 +314,14 @@ aws configure
 	<h1 id="pg-0a923010193e6bc1a6f729e39b860d54">2 - Installation</h1>
     
 	<h2 id="download-and-install-amazon-genomics-cli">Download and install Amazon Genomics CLI</h2>
-<p>Download the Amazon Genomics CLI zip, unzip its contents, and run the <code>install.sh</code> script:</p>
-<pre><code>aws s3 cp s3://healthai-public-assets-us-east-1/amazon-genomics-cli/1.0.0/amazon-genomics-cli.zip .
-unzip amazon-genomics-cli.zip -d agc
+<p>Download the Amazon Genomics CLI zip from <a href="https://github.com/aws/amazon-genomics-cli/releases">releases page</a> of our Github repo.</p>
+<p>Next, unzip its contents, and run the <code>install.sh</code> script:</p>
+<pre><code>unzip amazon-genomics-cli.zip -d agc
 ./agc/install.sh
-</code></pre><p>This will place the <code>agc</code> command in <code>~/bin</code> and attempt to add the command to your <code>$PATH</code></p>
+</code></pre><p>This will place the <code>agc</code> command in <code>$HOME/bin</code>.</p>
 <p>The Amazon Genomics CLI is a statically compiled Go binary. It should run in your environment natively without any additional setup. Test the CLI with:</p>
 <pre><code>$ agc --help
+
 👩🧬 Launch and manage genomics workloads on AWS.
 
 Commands
@@ -357,9 +358,9 @@ Examples
 </code></pre><p>If this doesn&rsquo;t work immediately, try:</p>
 <ul>
 <li>start a new terminal shell</li>
-<li>modifying your <code>~/.bashrc</code> (or equivalent file) appending the following line and restarting your shell:</li>
+<li>modifying your <code>$HOME/.bashrc</code> (or equivalent file) appending the following line and restarting your shell:</li>
 </ul>
-<pre><code>export PATH=~/bin:$PATH
+<pre><code>export PATH=$HOME/bin:$PATH
 </code></pre><p>Verify that you have the latest version of Amazon Genomics CLI with:</p>
 <pre><code>agc --version
 </code></pre><p>If you do not, you may need to uninstall any previous versions of Amazon Genomics CLI and reinstall the latest.</p>

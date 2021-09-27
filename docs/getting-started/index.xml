@@ -88,13 +88,14 @@ aws configure
         
         
         &lt;h2 id=&#34;download-and-install-amazon-genomics-cli&#34;&gt;Download and install Amazon Genomics CLI&lt;/h2&gt;
-&lt;p&gt;Download the Amazon Genomics CLI zip, unzip its contents, and run the &lt;code&gt;install.sh&lt;/code&gt; script:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;aws s3 cp s3://healthai-public-assets-us-east-1/amazon-genomics-cli/1.0.0/amazon-genomics-cli.zip .
-unzip amazon-genomics-cli.zip -d agc
+&lt;p&gt;Download the Amazon Genomics CLI zip from &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/releases&#34;&gt;releases page&lt;/a&gt; of our Github repo.&lt;/p&gt;
+&lt;p&gt;Next, unzip its contents, and run the &lt;code&gt;install.sh&lt;/code&gt; script:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;unzip amazon-genomics-cli.zip -d agc
 ./agc/install.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will place the &lt;code&gt;agc&lt;/code&gt; command in &lt;code&gt;~/bin&lt;/code&gt; and attempt to add the command to your &lt;code&gt;$PATH&lt;/code&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will place the &lt;code&gt;agc&lt;/code&gt; command in &lt;code&gt;$HOME/bin&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The Amazon Genomics CLI is a statically compiled Go binary. It should run in your environment natively without any additional setup. Test the CLI with:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ agc --help
+
 👩🧬 Launch and manage genomics workloads on AWS.
 
 Commands
@@ -131,9 +132,9 @@ Examples
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If this doesn&amp;rsquo;t work immediately, try:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;start a new terminal shell&lt;/li&gt;
-&lt;li&gt;modifying your &lt;code&gt;~/.bashrc&lt;/code&gt; (or equivalent file) appending the following line and restarting your shell:&lt;/li&gt;
+&lt;li&gt;modifying your &lt;code&gt;$HOME/.bashrc&lt;/code&gt; (or equivalent file) appending the following line and restarting your shell:&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre&gt;&lt;code&gt;export PATH=~/bin:$PATH
+&lt;pre&gt;&lt;code&gt;export PATH=$HOME/bin:$PATH
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Verify that you have the latest version of Amazon Genomics CLI with:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc --version
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you do not, you may need to uninstall any previous versions of Amazon Genomics CLI and reinstall the latest.&lt;/p&gt;
