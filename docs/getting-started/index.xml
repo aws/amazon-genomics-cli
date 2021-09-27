@@ -89,7 +89,7 @@ aws configure
         
         &lt;h2 id=&#34;download-and-install-amazon-genomics-cli&#34;&gt;Download and install Amazon Genomics CLI&lt;/h2&gt;
 &lt;p&gt;Download the Amazon Genomics CLI zip, unzip its contents, and run the &lt;code&gt;install.sh&lt;/code&gt; script:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;aws s3 cp s3://healthai-public-assets-us-east-1/amazon-genomics-cli/0.9.0/amazon-genomics-cli.zip .
+&lt;pre&gt;&lt;code&gt;aws s3 cp s3://healthai-public-assets-us-east-1/amazon-genomics-cli/1.0.0/amazon-genomics-cli.zip .
 unzip amazon-genomics-cli.zip -d agc
 ./agc/install.sh
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will place the &lt;code&gt;agc&lt;/code&gt; command in &lt;code&gt;~/bin&lt;/code&gt; and attempt to add the command to your &lt;code&gt;$PATH&lt;/code&gt;&lt;/p&gt;
