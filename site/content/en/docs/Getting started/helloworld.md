@@ -13,7 +13,7 @@ with some demo projects including a simple "hello world" workflow.
 1. Ensure you have met the [prerequisites]( {{< relref "prerequisites" >}} ) and [installed]( {{< relref "installation" >}} ) Amazon Genomics CLI
 2. Ensure you have followed the [activation]( {{< relref "setup" >}} ) steps
 3. `cd ~/agc/examples/demo-wdl-project`
-4. `agc context deploy myContext`, this step takes approximately 5 minutes to deploy the infrastructure
+4. `agc context deploy --context myContext`, this step takes approximately 5 minutes to deploy the infrastructure
 5. `agc workflow run hello --context myContext`, take note of the returned workflow instance ID.
 6. Check on the status of the workflow `agc workflow status <workflow-instance-id>`. Initially you will see status like `SUBMITTED` but after the elastic compute resources have been spun up and the workflow runs you should see something like the following: `WORKFLOWINSTANCE    ctx1    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z`
 
