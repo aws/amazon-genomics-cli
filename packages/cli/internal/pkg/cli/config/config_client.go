@@ -2,13 +2,14 @@ package config
 
 import (
 	"fmt"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"hash/fnv"
 	"math/big"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 )
 
 const (
