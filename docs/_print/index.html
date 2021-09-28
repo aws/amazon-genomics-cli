@@ -126,7 +126,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.342faf5d79cd0d20e32d161a2353c3f6.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.4f03a1fe78f8abd2708d13fd85de8f73.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -1048,7 +1048,7 @@ with some demo projects including a simple &ldquo;hello world&rdquo; workflow.</
 <li>Ensure you have met the <a href="/amazon-genomics-cli/docs/getting-started/prerequisites/">prerequisites</a> and <a href="/amazon-genomics-cli/docs/getting-started/installation/">installed</a> Amazon Genomics CLI</li>
 <li>Ensure you have followed the <a href="/amazon-genomics-cli/docs/getting-started/setup/">activation</a> steps</li>
 <li><code>cd ~/agc/examples/demo-wdl-project</code></li>
-<li><code>agc context deploy myContext</code>, this step takes approximately 5 minutes to deploy the infrastructure</li>
+<li><code>agc context deploy --context myContext</code>, this step takes approximately 5 minutes to deploy the infrastructure</li>
 <li><code>agc workflow run hello --context myContext</code>, take note of the returned workflow instance ID.</li>
 <li>Check on the status of the workflow <code>agc workflow status &lt;workflow-instance-id&gt;</code>. Initially you will see status like <code>SUBMITTED</code> but after the elastic compute resources have been spun up and the workflow runs you should see something like the following: <code>WORKFLOWINSTANCE    ctx1    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z</code></li>
 </ol>
@@ -1465,9 +1465,9 @@ WDL engine.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">contexts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">nfLargeCtx</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">instanceTypes</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;c5&#34;</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;m5&#34;</span><span style="color:#000;font-weight:bold">,</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;r5&#34;</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">]</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">        </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">          </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div><h2 id="context-commands">Context Commands</h2>
 <p>A full reference of context commands is <a href="/amazon-genomics-cli/docs/reference/agc_context/">here</a></p>
 <h3 id="describe"><code>describe</code></h3>
@@ -3828,6 +3828,18 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
     <div class="row">
       <div class="col-6 col-sm-4 text-xs-center order-sm-2">
         
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Gitter" aria-label="Gitter">
+    <a class="text-white" target="_blank" rel="noopener" href="https://gitter.im/aws/amazon-genomics-cli" aria-label="Gitter">
+      <i class="fab fa-gitter"></i>
+    </a>
+  </li>
+  
+</ul>
+
         
         
       </div>

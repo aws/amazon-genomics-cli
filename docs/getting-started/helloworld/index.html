@@ -24,21 +24,21 @@
   <meta name="description" content="When you install Amazon Genomics CLI it will create a folder named agc. Inside there is an examples/demo-project folder containing an agc-project.yaml …">
 <meta property="og:title" content="Hello world" />
 <meta property="og:description" content="When you install Amazon Genomics CLI it will create a folder named agc. Inside there is an examples/demo-project folder containing an agc-project.yaml with some demo projects including a simple &ldquo;hello world&rdquo; workflow.
-Running Hello World  Ensure you have met the prerequisites and installed Amazon Genomics CLI Ensure you have followed the activation steps cd ~/agc/examples/demo-wdl-project agc context deploy myContext, this step takes approximately 5 minutes to deploy the infrastructure agc workflow run hello --context myContext, take note of the returned workflow instance ID." />
+Running Hello World  Ensure you have met the prerequisites and installed Amazon Genomics CLI Ensure you have followed the activation steps cd ~/agc/examples/demo-wdl-project agc context deploy --context myContext, this step takes approximately 5 minutes to deploy the infrastructure agc workflow run hello --context myContext, take note of the returned workflow instance ID." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/amazon-genomics-cli/docs/getting-started/helloworld/" /><meta property="article:section" content="docs" />
 <meta property="article:published_time" content="2021-09-07T14:01:59-04:00" />
-<meta property="article:modified_time" content="2021-09-27T14:10:35-07:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<meta property="article:modified_time" content="2021-09-28T11:52:15-07:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
 <meta itemprop="name" content="Hello world">
 <meta itemprop="description" content="When you install Amazon Genomics CLI it will create a folder named agc. Inside there is an examples/demo-project folder containing an agc-project.yaml with some demo projects including a simple &ldquo;hello world&rdquo; workflow.
-Running Hello World  Ensure you have met the prerequisites and installed Amazon Genomics CLI Ensure you have followed the activation steps cd ~/agc/examples/demo-wdl-project agc context deploy myContext, this step takes approximately 5 minutes to deploy the infrastructure agc workflow run hello --context myContext, take note of the returned workflow instance ID."><meta itemprop="datePublished" content="2021-09-07T14:01:59-04:00" />
-<meta itemprop="dateModified" content="2021-09-27T14:10:35-07:00" />
-<meta itemprop="wordCount" content="446">
+Running Hello World  Ensure you have met the prerequisites and installed Amazon Genomics CLI Ensure you have followed the activation steps cd ~/agc/examples/demo-wdl-project agc context deploy --context myContext, this step takes approximately 5 minutes to deploy the infrastructure agc workflow run hello --context myContext, take note of the returned workflow instance ID."><meta itemprop="datePublished" content="2021-09-07T14:01:59-04:00" />
+<meta itemprop="dateModified" content="2021-09-28T11:52:15-07:00" />
+<meta itemprop="wordCount" content="447">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Hello world"/>
 <meta name="twitter:description" content="When you install Amazon Genomics CLI it will create a folder named agc. Inside there is an examples/demo-project folder containing an agc-project.yaml with some demo projects including a simple &ldquo;hello world&rdquo; workflow.
-Running Hello World  Ensure you have met the prerequisites and installed Amazon Genomics CLI Ensure you have followed the activation steps cd ~/agc/examples/demo-wdl-project agc context deploy myContext, this step takes approximately 5 minutes to deploy the infrastructure agc workflow run hello --context myContext, take note of the returned workflow instance ID."/>
+Running Hello World  Ensure you have met the prerequisites and installed Amazon Genomics CLI Ensure you have followed the activation steps cd ~/agc/examples/demo-wdl-project agc context deploy --context myContext, this step takes approximately 5 minutes to deploy the infrastructure agc workflow run hello --context myContext, take note of the returned workflow instance ID."/>
 
 
 
@@ -132,7 +132,7 @@ Running Hello World  Ensure you have met the prerequisites and installed Amazon 
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.342faf5d79cd0d20e32d161a2353c3f6.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.4f03a1fe78f8abd2708d13fd85de8f73.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -159,7 +159,7 @@ Running Hello World  Ensure you have met the prerequisites and installed Amazon 
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.342faf5d79cd0d20e32d161a2353c3f6.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.4f03a1fe78f8abd2708d13fd85de8f73.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -442,7 +442,7 @@ with some demo projects including a simple &ldquo;hello world&rdquo; workflow.</
 <li>Ensure you have met the <a href="/amazon-genomics-cli/docs/getting-started/prerequisites/">prerequisites</a> and <a href="/amazon-genomics-cli/docs/getting-started/installation/">installed</a> Amazon Genomics CLI</li>
 <li>Ensure you have followed the <a href="/amazon-genomics-cli/docs/getting-started/setup/">activation</a> steps</li>
 <li><code>cd ~/agc/examples/demo-wdl-project</code></li>
-<li><code>agc context deploy myContext</code>, this step takes approximately 5 minutes to deploy the infrastructure</li>
+<li><code>agc context deploy --context myContext</code>, this step takes approximately 5 minutes to deploy the infrastructure</li>
 <li><code>agc workflow run hello --context myContext</code>, take note of the returned workflow instance ID.</li>
 <li>Check on the status of the workflow <code>agc workflow status &lt;workflow-instance-id&gt;</code>. Initially you will see status like <code>SUBMITTED</code> but after the elastic compute resources have been spun up and the workflow runs you should see something like the following: <code>WORKFLOWINSTANCE    ctx1    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z</code></li>
 </ol>
@@ -483,7 +483,7 @@ path. The rest of the path depends on the engine used to run the workflow. For C
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified September 27, 2021: <a href="https://github.com/aws/amazon-genomics-cli/commit/69405e41a81a8561ec09cb9f79b3cf2f9582343e">Merge pull request #21 from aws/wleepang-patch-2 (69405e4)</a>
+  Last modified September 28, 2021: <a href="https://github.com/aws/amazon-genomics-cli/commit/edc5d403714c2ff33440bb090b9e889fe1537336">Update contexts.md (#28) (edc5d40)</a>
 </div>
 
 </div>
@@ -498,6 +498,18 @@ path. The rest of the path depends on the engine used to run the workflow. For C
     <div class="row">
       <div class="col-6 col-sm-4 text-xs-center order-sm-2">
         
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Gitter" aria-label="Gitter">
+    <a class="text-white" target="_blank" rel="noopener" href="https://gitter.im/aws/amazon-genomics-cli" aria-label="Gitter">
+      <i class="fab fa-gitter"></i>
+    </a>
+  </li>
+  
+</ul>
+
         
         
       </div>
