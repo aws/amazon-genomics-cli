@@ -23,7 +23,7 @@ The Amazon Genomics CLI is a statically compiled Go binary. It should run in you
 ```
 $ agc --help
 
-👩🧬 Launch and manage genomics workloads on AWS.
+🧬 Launch and manage genomics workloads on AWS.
 
 Commands
   Getting Started 🌱

@@ -6,5 +6,5 @@
 package main
 
 const (
-	shortDescription = "👩\U0001F9EC Launch and manage genomics workloads on AWS."
+	shortDescription = "\U0001F9EC Launch and manage genomics workloads on AWS."
 )
