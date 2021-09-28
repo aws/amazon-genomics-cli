@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/rs/zerolog/log"
 )
 
@@ -31,11 +32,11 @@ func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, t
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		return nil, err
+		return nil, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
 	}
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		return nil, err
+		return nil, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
 	}
 	if err := cmd.Start(); err != nil {
 		return nil, fmt.Errorf("couldn't execute CDK deploy command: %w", err)

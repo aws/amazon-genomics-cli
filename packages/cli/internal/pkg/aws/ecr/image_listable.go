@@ -3,6 +3,7 @@ package ecr
 import (
 	"context"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
 )
@@ -18,7 +19,7 @@ func (c *Client) ImageListable(registry string, repositoryName string, imageTag 
 			options.Region = repositoryRegion
 		})
 		if err != nil {
-			return false, err
+			return false, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
 		}
 
 		for _, image := range listImagesOutput.ImageIds {

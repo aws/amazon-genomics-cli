@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -22,7 +23,7 @@ func (c *Client) GetWorkflowInstanceById(ctx context.Context, project, user, run
 	}
 	output, err := c.svc.GetItem(ctx, input)
 	if err != nil {
-		return WorkflowInstance{}, err
+		return WorkflowInstance{}, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
 	}
 	if output.Item == nil {
 		return WorkflowInstance{}, fmt.Errorf("workflow instance with id '%s' does not exist", runId)

@@ -23,6 +23,10 @@ func NewError(cause error, suggestedAction string) error {
 }
 
 func FindSuggestionForError(cause error, errorToSuggestionMap map[string]string) error {
+	if cause == nil {
+		return nil
+	}
+
 	err := new(Error)
 	err.Cause = cause
 

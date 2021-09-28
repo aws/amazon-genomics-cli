@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation/types"
@@ -23,7 +24,7 @@ func (c Client) DeleteStack(stackId string) (chan DeletionResult, error) {
 		StackName: aws.String(stackId),
 	})
 	if err != nil {
-		return nil, err
+		return nil, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
 	}
 
 	tracker := c.newStackDeletionTracker(stackId)

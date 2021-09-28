@@ -4,6 +4,7 @@ import (
 	"context"
 	"regexp"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation/types"
@@ -21,7 +22,7 @@ func (c Client) ListStacks(regexNameFilter *regexp.Regexp, statusFilter []types.
 		StackStatusFilter: statusFilter,
 	})
 	if err != nil {
-		return nil, err
+		return nil, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
 	}
 
 	var stacks []Stack
