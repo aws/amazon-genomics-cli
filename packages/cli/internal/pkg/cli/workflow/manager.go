@@ -335,9 +335,9 @@ func (m *Manager) setContext(contextName string) {
 		return
 	}
 
-	contextSpec, ok := m.projectSpec.Contexts[contextName]
-	if !ok {
-		m.err = fmt.Errorf("context '%s' is not defined in project specificaiton", contextName)
+	contextSpec, err := m.projectSpec.GetContext(contextName)
+	if err != nil {
+		m.err = err
 		return
 	}
 	m.contextSpec = contextSpec
