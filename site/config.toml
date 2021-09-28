@@ -173,6 +173,12 @@ enable = false
 #	url = "https://example.org/twitter"
 #	icon = "fab fa-twitter"
 #        desc = "Follow us on Twitter to get the latest news!"
+[[params.links.user]]
+	name = "Gitter"
+	url = "https://gitter.im/aws/amazon-genomics-cli"
+	icon = "fab fa-gitter"
+		desc = "Join the community conversation"
+
 #[[params.links.user]]
 #	name = "Stack Overflow"
 #	url = "https://example.org/stack"
