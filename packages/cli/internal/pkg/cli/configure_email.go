@@ -56,7 +56,7 @@ func BuildConfigureEmailCommand() *cobra.Command {
 				}
 				configClient, err := config.NewConfigClient()
 				if err != nil {
-					return err
+					return clierror.New("configure email", vars, err)
 				}
 				opts.configClient = configClient
 				log.Info().Msgf("Setting user email address to: '%s'", opts.userEmailAddress)
@@ -65,7 +65,7 @@ func BuildConfigureEmailCommand() *cobra.Command {
 				}
 				err = opts.Execute()
 				if err != nil {
-					return clierror.New("configure email", vars, err, "check that the folder $HOME/.agc is writable")
+					return clierror.New("configure email", vars, err)
 				}
 			}
 

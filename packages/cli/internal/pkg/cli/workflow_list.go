@@ -72,7 +72,7 @@ and workflow instances that were run in this AWS account.
 			}
 			workflowNames, err := opts.Execute()
 			if err != nil {
-				return clierror.New("logs access", vars, err, "check you have valid aws credentials, check that a valid agc-project.yaml file exists in this directory or one of it's parent directories and that it defines at least one workflow")
+				return clierror.New("logs access", vars, err)
 			}
 			format.Default.Write(workflowNames)
 			return nil

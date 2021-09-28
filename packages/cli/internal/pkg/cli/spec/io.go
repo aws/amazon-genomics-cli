@@ -1,10 +1,11 @@
 package spec
 
 import (
+	"bytes"
 	_ "embed"
+	"fmt"
 	"io/ioutil"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/yaml.v3"
 )
@@ -53,10 +54,19 @@ func ValidateProject(yamlBytes []byte) error {
 	}
 
 	if !result.Valid() {
-		return clierror.ProjectSpecValidationError(result.Errors())
+		return projectSpecValidationError(result.Errors())
 	}
 
 	return nil
+}
+
+func projectSpecValidationError(errors []gojsonschema.ResultError) error {
+	var errBuffer bytes.Buffer
+	errBuffer.WriteString("\n")
+	for idx, desc := range errors {
+		errBuffer.WriteString(fmt.Sprintf("\t%d. %s\n", idx+1, desc))
+	}
+	return fmt.Errorf(errBuffer.String())
 }
 
 // convertDocumentNode converts yaml derived interfaces into map[string]interface{}

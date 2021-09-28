@@ -124,8 +124,7 @@ It creates AGC resources in AWS.
 			log.Info().Msgf("Deploying context(s)")
 			contextInfo, err := opts.Execute()
 			if err != nil {
-				return clierror.New("context deploy", vars, err,
-					"check you have valid credentials and that you have sufficient permissions to deploy the AGC infrastructure")
+				return clierror.New("context deploy", vars, err)
 			}
 			format.Default.Write(contextInfo)
 			return nil

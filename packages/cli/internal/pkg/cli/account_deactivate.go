@@ -10,6 +10,7 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -52,7 +53,7 @@ func (o *accountDeactivateOpts) LoadStacks() error {
 
 func (o *accountDeactivateOpts) Validate() error {
 	if !o.force && len(o.stacks) > 1 {
-		return clierror.ActionableError{
+		return actionable.Error{
 			Cause:           errors.New("one or more contexts are still deployed"),
 			SuggestedAction: "use --force to destroy deployed contexts as well",
 		}
@@ -122,14 +123,14 @@ Deactivate AGC in your AWS account.
 				return err
 			}
 			if err := opts.LoadStacks(); err != nil {
-				return err
+				return clierror.New("account deactivate", vars, err)
 			}
 			if err := opts.Validate(); err != nil {
-				return err
+				return clierror.New("account deactivate", vars, err)
 			}
 			log.Info().Msgf("Deactivating AGC. Deactivation may take up to 5 minutes to complete and return.")
 			if err := opts.Execute(); err != nil {
-				return clierror.New("account deactivate", vars, err, "check you have valid aws credentials and that your account has been previously activated")
+				return clierror.New("account deactivate", vars, err)
 			}
 			return nil
 		}),

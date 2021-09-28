@@ -1,7 +1,8 @@
 package spec
 
 import (
-	"errors"
+	"fmt"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -175,7 +176,10 @@ func TestGetContext(t *testing.T) {
 				},
 				contextName: "badContextName",
 			},
-			expectedError: errors.New("context 'badContextName' is not defined in Project 'myProject' specification"),
+			expectedError: actionable.NewError(
+				fmt.Errorf("context 'badContextName' is not defined in Project 'myProject' specification"),
+				"Please add the context to your project spec and deploy it or specify a different context from the command 'agc context list'",
+			),
 		},
 		{
 			name: "Existing context name ",

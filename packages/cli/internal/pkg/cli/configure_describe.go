@@ -43,7 +43,7 @@ func BuildDescribeShowCommand() *cobra.Command {
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
 			opts, err := newConfigureDescribeContextOpts()
 			if err != nil {
-				return err
+				return clierror.New("configure describe", nil, err)
 			}
 
 			log.Info().Msgf("Reading user specific configuration")
@@ -52,7 +52,7 @@ func BuildDescribeShowCommand() *cobra.Command {
 			}
 			configuration, err := opts.Execute()
 			if err != nil {
-				return clierror.New("configure describe", nil, err, "you may need to configure your account")
+				return clierror.New("configure describe", nil, err)
 			}
 			format.Default.Write(configuration)
 

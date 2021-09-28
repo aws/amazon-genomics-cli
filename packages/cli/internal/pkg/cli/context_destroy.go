@@ -141,7 +141,7 @@ It destroys AGC resources in AWS.`,
 			log.Info().Msgf("Destroying context(s)'")
 			err = opts.Execute()
 			if err != nil {
-				return clierror.New("context destroy", vars, err, "check that the context has been deployed and is defined in the agc-project.yaml file")
+				return clierror.New("context destroy", vars, err)
 			}
 			return nil
 		}),

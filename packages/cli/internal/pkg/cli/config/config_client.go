@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"hash/fnv"
 	"math/big"
 	"os"
@@ -42,7 +43,7 @@ func NewConfigClient() (*Client, error) {
 func DetermineHomeDir() (string, error) {
 	dir, err := osUserHomeDir()
 	if err != nil {
-		return "", err
+		return "", actionable.NewError(err, "Please check that your home or user profile directory is defined within your environment variables")
 	}
 	return dir, nil
 }

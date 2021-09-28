@@ -143,7 +143,7 @@ Initialize a new project named "myProject".
 				return err
 			}
 			if err := opts.Execute(); err != nil {
-				return clierror.New("project init", vars, err, "check you have permissions to write a file in this directory")
+				return clierror.New("project init", vars, err)
 			}
 			return nil
 		}),

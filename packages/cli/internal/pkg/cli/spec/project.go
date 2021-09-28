@@ -1,6 +1,9 @@
 package spec
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
+)
 
 const LatestVersion = 1
 
@@ -15,7 +18,10 @@ type Project struct {
 func (projectSpec *Project) GetContext(contextName string) (Context, error) {
 	contextSpec, ok := projectSpec.Contexts[contextName]
 	if !ok {
-		return Context{}, fmt.Errorf("context '%s' is not defined in Project '%s' specification", contextName, projectSpec.Name)
+		return Context{}, actionable.NewError(
+			fmt.Errorf("context '%s' is not defined in Project '%s' specification", contextName, projectSpec.Name),
+			"Please add the context to your project spec and deploy it or specify a different context from the command 'agc context list'",
+		)
 	}
 
 	return contextSpec, nil
