@@ -15,10 +15,17 @@ workflows:
       language: nextflow
       version: 1.0
     sourceURL: workflows/sarek
+  atacseq:
+    type:
+      language: nextflow
+      version: 1.0
+    sourceURL: workflows/atacseq
 data:
   - location: s3://1000genomes
     readOnly: true
   - location: s3://ngi-igenomes
+    readOnly: true
+  - location: s3://encode-public
     readOnly: true
 contexts:
   nfCtx:                                  # By default, limited to 4xlarge instance types

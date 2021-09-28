@@ -1,0 +1,7 @@
+{
+  "mainWorkflowURL": "https://github.com/nf-core/atacseq.git",
+  "inputFileURLs": [
+    "inputs.json"
+  ],
+  "engineOptions": "-resume"
+}
