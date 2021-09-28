@@ -22,6 +22,10 @@ You can submit a bug report or make a feature request [here](https://github.com/
 
 If you would like to contribute to the code base, fork the repository and submit a [pull request](https://github.com/aws/amazon-genomics-cli/pulls)
 
+### Join the Conversation
+
+Chat with the community of Amazon Genomics CLI users on [Gitter](https://gitter.im/aws/amazon-genomics-cli)
+
 ## AWS Healthcare and Life Sciences
 
 Find out more about the [AWS Healthcare and Life Sciences community](https://aws.amazon.com/health/)
