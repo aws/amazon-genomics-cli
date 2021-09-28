@@ -74,7 +74,7 @@ func TestLogsEngineOpts_Execute_Group(t *testing.T) {
 	}
 
 	ctxMock.EXPECT().Info(testContextName1).Return(context.Detail{EngineLogGroupName: testLogGroupName}, nil)
-	cwlMock.EXPECT().GetLogsPaginated(cwl.GetLogsInput{testLogGroupName, nil, nil, "", nil}).Return(logPaginatorMock)
+	cwlMock.EXPECT().GetLogsPaginated(cwl.GetLogsInput{LogGroupName: testLogGroupName}).Return(logPaginatorMock)
 	gomock.InOrder(logPaginatorMock.EXPECT().HasMoreLogs().Return(true), logPaginatorMock.EXPECT().HasMoreLogs().Return(false))
 	logPaginatorMock.EXPECT().NextLogs().Return([]string{"log"}, nil)
 
@@ -112,7 +112,7 @@ func TestLogsEngineOpts_Execute_LogError(t *testing.T) {
 
 	someErr := fmt.Errorf("some log error")
 	ctxMock.EXPECT().Info(testContextName1).Return(context.Detail{EngineLogGroupName: testLogGroupName}, nil)
-	cwlMock.EXPECT().GetLogsPaginated(cwl.GetLogsInput{testLogGroupName, nil, nil, "", nil}).Return(logPaginatorMock)
+	cwlMock.EXPECT().GetLogsPaginated(cwl.GetLogsInput{LogGroupName: testLogGroupName}).Return(logPaginatorMock)
 	logPaginatorMock.EXPECT().HasMoreLogs().Return(true)
 	logPaginatorMock.EXPECT().NextLogs().Return(nil, someErr)
 

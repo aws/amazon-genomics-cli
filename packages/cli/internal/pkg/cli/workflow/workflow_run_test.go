@@ -76,7 +76,6 @@ type WorkflowRunTestSuite struct {
 	origRemoveFile    func(name string) error
 	origChdir         func(name string) error
 	origCompressToTmp func(srcPath string) (string, error)
-	origWesFactory    func(string) (*wes.Client, error)
 	origWriteToTmp    func(namePattern, content string) (string, error)
 
 	testProjSpec    spec.Project

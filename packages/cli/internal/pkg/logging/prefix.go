@@ -7,7 +7,7 @@ package logging
 
 // Log message prefixes.
 const (
-	successPrefix = "✔"
+	successPrefix = "✔" //nolint:deadcode,varcheck
 	errorPrefix   = "✘ "
 	warningPrefix = "⚠️ "
 	infoPrefix    = "𝒊 "

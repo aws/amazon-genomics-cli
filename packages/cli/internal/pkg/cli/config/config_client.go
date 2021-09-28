@@ -63,7 +63,10 @@ func ensureDirExistence(dirPath string) error {
 
 func hash(s string) string {
 	h := fnv.New32a()
-	h.Write([]byte(s))
+	_, err := h.Write([]byte(s))
+	if err != nil {
+		panic(fmt.Sprintf("Cannot write a hash for string %q: %v", s, err))
+	}
 
 	hashValue := h.Sum32()
 	hash62 := big.NewInt(int64(hashValue)).Text(62)
