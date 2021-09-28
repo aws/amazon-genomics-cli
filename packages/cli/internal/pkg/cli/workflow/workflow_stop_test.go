@@ -24,7 +24,6 @@ type WorkflowStopTestSuite struct {
 	mockConfigClient  *storagemocks.MockConfigClient
 	mockCfn           *awsmocks.MockCfnClient
 	mockWes           *wesmocks.MockWesClient
-	origWesFactory    func(string) (*wes.Client, error)
 	testProjSpec      spec.Project
 	testStackInfo     cfn.StackInfo
 	wfInstance        ddb.WorkflowInstance

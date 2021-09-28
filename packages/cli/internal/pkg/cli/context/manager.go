@@ -21,6 +21,7 @@ const (
 	cdkAppsDirBase    = ".agc/cdk/apps"
 )
 
+//nolint:structcheck
 type baseProps struct {
 	projectSpec spec.Project
 	contextSpec spec.Context
@@ -29,6 +30,7 @@ type baseProps struct {
 	homeDir     string
 }
 
+//nolint:structcheck
 type contextProps struct {
 	readBuckets      []string
 	readWriteBuckets []string
@@ -36,15 +38,15 @@ type contextProps struct {
 	artifactBucket   string
 	artifactUrl      string
 	contextEnv       contextEnvironment
-	wesUrl           string
 }
 
+//nolint:structcheck
 type infoProps struct {
 	contextStackInfo cfn.StackInfo
 	contextStatus    Status
-	contextInfo      Detail
 }
 
+//nolint:structcheck
 type listProps struct {
 	contexts map[string]Summary
 }

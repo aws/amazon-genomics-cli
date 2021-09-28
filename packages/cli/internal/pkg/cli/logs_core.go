@@ -76,7 +76,7 @@ func (v *logsSharedVars) setFilterFlags(cmd *cobra.Command) {
 
 func (v *logsSharedVars) setContextFlag(cmd *cobra.Command) {
 	cmd.Flags().StringVarP(&v.contextName, contextFlag, contextFlagShort, "", contextFlagDescription)
-	cmd.MarkFlagRequired(contextFlag)
+	cmd.MarkFlagRequired(contextFlag) //nolint:errcheck
 }
 
 func (o *logsSharedOpts) setDefaultEndTimeIfEmpty() {
@@ -120,7 +120,7 @@ func (o *logsSharedOpts) followLogGroup(logGroupName string, streams ...string) 
 		}
 		if len(event.Logs) > 0 {
 			for _, line := range event.Logs {
-				println(line)
+				println(line) //nolint:errcheck
 			}
 		} else {
 			log.Debug().Msg("No new logs")
@@ -143,7 +143,7 @@ func (o *logsSharedOpts) displayLogGroup(logGroupName string, startTime, endTime
 			return err
 		}
 		for _, line := range logs {
-			println(line)
+			println(line) //nolint:errcheck
 		}
 	}
 	return nil

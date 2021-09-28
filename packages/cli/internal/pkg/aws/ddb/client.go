@@ -13,8 +13,8 @@ const (
 
 	pkAttrName     = "PK"
 	skAttrName     = "SK"
-	gsi1PkAttrName = "GSI1_PK"
-	gsi1SkAttrName = "GSI1_SK"
+	gsi1PkAttrName = "GSI1_PK" //nolint:deadcode,varcheck
+	gsi1SkAttrName = "GSI1_SK" //nolint:deadcode,varcheck
 	lsi1SkAttrName = "LSI1_SK"
 	lsi2SkAttrName = "LSI2_SK"
 	lsi3SkAttrName = "LSI3_SK"

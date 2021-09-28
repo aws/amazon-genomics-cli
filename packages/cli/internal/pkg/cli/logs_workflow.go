@@ -99,9 +99,9 @@ func (o *logsWorkflowOpts) Execute() error {
 
 	logGroupName := "/aws/batch/job"
 	if o.tail {
-		err = o.followLogGroup(logGroupName, streams...)
+		_ = o.followLogGroup(logGroupName, streams...)
 	} else {
-		err = o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter, streams...)
+		_ = o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter, streams...)
 	}
 
 	return nil

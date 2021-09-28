@@ -12,9 +12,7 @@ import (
 func TestFSProjectClient_IsInitialized_SpecExists(t *testing.T) {
 	tempDir := t.TempDir()
 	specFile, err := os.Create(filepath.Join(tempDir, ProjectSpecFileName))
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 	_ = specFile.Close()
 	client, err := NewProjectClientWithLocation(tempDir)
 	require.NoError(t, err)
@@ -27,9 +25,7 @@ func TestFSProjectClient_NewClient_DirIsFile(t *testing.T) {
 	tempDir := t.TempDir()
 	projDirName := filepath.Join(tempDir, "myproject")
 	projDir, err := os.Create(projDirName)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 	_ = projDir.Close()
 	_, err = NewProjectClientWithLocation(projDirName)
 	assert.Error(t, err)
@@ -59,7 +55,7 @@ func TestFSProjectClient_IsInitialized_DirWithSpecName(t *testing.T) {
 func TestFSProjectClient_NewClient_CanFindProjectFileGoingUp(t *testing.T) {
 	tempDir := t.TempDir()
 	specFile, err := os.Create(filepath.Join(tempDir, ProjectSpecFileName))
-	defer specFile.Close()
+	defer specFile.Close() //nolint:errcheck,staticcheck
 	require.NoError(t, err)
 
 	const childDirName = "child-dir"
@@ -68,7 +64,7 @@ func TestFSProjectClient_NewClient_CanFindProjectFileGoingUp(t *testing.T) {
 	require.NoError(t, err)
 
 	wd, err := os.Getwd()
-	defer os.Chdir(wd)
+	defer os.Chdir(wd) //nolint:errcheck
 	require.NoError(t, err)
 
 	testCases := map[string]struct {
@@ -84,7 +80,7 @@ func TestFSProjectClient_NewClient_CanFindProjectFileGoingUp(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 
-			os.Chdir(tc.path)
+			os.Chdir(tc.path) //nolint:errcheck
 
 			client, err := NewProjectClient()
 			require.NoError(t, err)

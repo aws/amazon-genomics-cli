@@ -28,13 +28,13 @@ func filterCmdsByGroup(cmds []*cobra.Command, group string) []*cobra.Command {
 
 func h1(text string) string {
 	var s strings.Builder
-	color.New(color.Bold, color.Underline).Fprintf(&s, text)
+	color.New(color.Bold, color.Underline).Fprintf(&s, text) //nolint:errcheck
 	return s.String()
 }
 
 func h2(text string) string {
 	var s strings.Builder
-	color.New(color.Bold).Fprintf(&s, text)
+	color.New(color.Bold).Fprintf(&s, text) //nolint:errcheck
 	return s.String()
 }
 
