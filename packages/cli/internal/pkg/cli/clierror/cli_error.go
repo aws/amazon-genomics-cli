@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/rs/zerolog/log"
 )
 

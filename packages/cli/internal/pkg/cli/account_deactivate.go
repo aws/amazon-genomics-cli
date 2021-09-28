@@ -53,10 +53,10 @@ func (o *accountDeactivateOpts) LoadStacks() error {
 
 func (o *accountDeactivateOpts) Validate() error {
 	if !o.force && len(o.stacks) > 1 {
-		return actionable.Error{
-			Cause:           errors.New("one or more contexts are still deployed"),
-			SuggestedAction: "use --force to destroy deployed contexts as well",
-		}
+		return actionable.NewError(
+			errors.New("one or more contexts are still deployed"),
+			"use --force to destroy deployed contexts as well",
+		)
 	}
 	return nil
 }

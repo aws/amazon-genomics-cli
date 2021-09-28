@@ -10,8 +10,8 @@ type Error struct {
 	SuggestedAction string
 }
 
-func (e Error) Error() string {
-	return fmt.Sprintf("an error occurred caused by: %s\nsuggestion: %s", e.Cause, e.SuggestedAction)
+func (e *Error) Error() string {
+	return fmt.Sprintf("an error occurred caused by: %s\nsuggestion: %s\n", e.Cause, e.SuggestedAction)
 }
 
 func NewError(cause error, suggestedAction string) error {

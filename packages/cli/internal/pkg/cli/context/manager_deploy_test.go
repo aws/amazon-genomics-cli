@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/golang/mock/gomock"
@@ -55,7 +56,10 @@ func TestManager_Deploy(t *testing.T) {
 			},
 		},
 		"context error": {
-			expectedErr: fmt.Errorf("context 'testContextName1' is not defined in Project 'testProjectName' specification"),
+			expectedErr: actionable.NewError(
+				fmt.Errorf("context 'testContextName1' is not defined in Project 'testProjectName' specification"),
+				"Please add the context to your project spec and deploy it or specify a different context from the command 'agc context list'",
+			),
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)

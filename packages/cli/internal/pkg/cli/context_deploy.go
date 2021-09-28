@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
@@ -67,7 +68,12 @@ func (o *deployContextOpts) Execute() ([]context.Detail, error) {
 	hasErrors := false
 	for i, result := range results {
 		if result.err != nil {
-			log.Error().Err(result.err).Msgf("failed to deploy context '%s'", result.contextName)
+			actionableError, ok := result.err.(*actionable.Error)
+			if ok {
+				log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
+			} else {
+				log.Error().Err(result.err).Msgf("failed to deploy context '%s'", result.contextName)
+			}
 			hasErrors = true
 		}
 		contextDetails[i] = result.info

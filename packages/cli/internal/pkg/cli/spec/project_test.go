@@ -2,9 +2,9 @@ package spec
 
 import (
 	"fmt"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"testing"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"

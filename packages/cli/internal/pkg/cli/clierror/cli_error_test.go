@@ -2,9 +2,10 @@ package clierror
 
 import (
 	"errors"
+	"testing"
+
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func Test_New_ActionableError(t *testing.T) {
