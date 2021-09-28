@@ -1,0 +1,7 @@
+{
+  "mainWorkflowURL": "https://github.com/nextflow-io/rnaseq-nf.git",
+  "inputFileURLs": [
+    "inputs.json"
+  ],
+  "engineOptions": "-resume"
+}
