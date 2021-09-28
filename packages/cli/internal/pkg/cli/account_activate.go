@@ -13,6 +13,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/rs/zerolog/log"
@@ -114,7 +115,7 @@ func (o accountActivateOpts) generateDefaultBucket() (string, error) {
 }
 
 func (o accountActivateOpts) deployCoreInfrastructure(environmentVars []string) error {
-	homeDir, err := DetermineHomeDir()
+	homeDir, err := config.DetermineHomeDir()
 	if err != nil {
 		return err
 	}

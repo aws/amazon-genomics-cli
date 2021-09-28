@@ -21,15 +21,6 @@ func generateBucketName(accountId, region string) string {
 	return bucketName
 }
 
-// DetermineHomeDir returns the file system directory where the AGC files live.
-func DetermineHomeDir() (string, error) {
-	dir, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-	return dir, nil
-}
-
 // runCmdE wraps one of the run error methods, PreRunE, RunE, of a cobra command so that if a user
 // types "help" in the arguments the usage string is printed instead of running the command.
 func runCmdE(f func(cmd *cobra.Command, args []string) error) func(cmd *cobra.Command, args []string) error {

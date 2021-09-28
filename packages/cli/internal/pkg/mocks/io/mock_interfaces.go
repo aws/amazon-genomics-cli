@@ -91,6 +91,21 @@ func (mr *MockOSMockRecorder) RemoveAll(path interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveAll", reflect.TypeOf((*MockOS)(nil).RemoveAll), path)
 }
 
+// UserHomeDir mocks base method.
+func (m *MockOS) UserHomeDir() (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserHomeDir")
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserHomeDir indicates an expected call of UserHomeDir.
+func (mr *MockOSMockRecorder) UserHomeDir() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserHomeDir", reflect.TypeOf((*MockOS)(nil).UserHomeDir))
+}
+
 // MockZip is a mock of Zip interface.
 type MockZip struct {
 	ctrl     *gomock.Controller
