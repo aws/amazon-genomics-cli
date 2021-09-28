@@ -81,9 +81,9 @@ The following context may use any instance type from the `m5`, `c5` or `r5` fami
 contexts:
   nfLargeCtx:
     instanceTypes: [ "c5", "m5", "r5" ]
-      engines:
-        - type: nextflow
-          engine: nextflow
+    engines:
+      - type: nextflow
+        engine: nextflow
 ```
 
 ## Context Commands
