@@ -233,11 +233,11 @@ func TestLogsWorkflowOpts_Execute(t *testing.T) {
 			defer ctrl.Finish()
 
 			var output strings.Builder
-			println = func(args ...interface{}) (n int, err error) {
+			printLn = func(args ...interface{}) (n int, err error) {
 				output.WriteString(fmt.Sprintln(args...))
 				return
 			}
-			defer func() { println = fmt.Println }()
+			defer func() { printLn = fmt.Println }()
 
 			mockWorkflow := managermocks.NewMockWorkflowManager(ctrl)
 			mockContext := contextmocks.NewMockContextManager(ctrl)
