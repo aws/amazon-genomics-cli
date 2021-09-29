@@ -3,7 +3,7 @@ package ddb
 import (
 	"context"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	exp "github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
@@ -30,7 +30,7 @@ func (c *Client) ListWorkflowInstances(ctx context.Context, project, user string
 	}
 	output, err := c.svc.Query(ctx, input)
 	if err != nil {
-		return nil, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
+		return nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 	var instances []WorkflowInstance
 	err = attributevalue.UnmarshalListOfMaps(output.Items, &instances)

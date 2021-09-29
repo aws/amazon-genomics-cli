@@ -1,4 +1,4 @@
-package actionable
+package actionableerror
 
 var AwsErrorMessageToSuggestedActionMap = map[string]string{
 	"The security token included in the request is expire":     "Please refresh your aws credentials and try again",

@@ -1,6 +1,6 @@
 package cdk
 
-import "github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
+import "github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 
 func (client Client) DestroyApp(appDir string, context []string) (ProgressStream, error) {
 	cmdArgs := []string{
@@ -12,5 +12,5 @@ func (client Client) DestroyApp(appDir string, context []string) (ProgressStream
 	cmdArgs = appendContextArguments(cmdArgs, context)
 
 	progressStream, err := ExecuteCdkCommand(appDir, cmdArgs)
-	return progressStream, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
+	return progressStream, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 }

@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
@@ -17,7 +17,7 @@ func (c *Client) BucketExists(bucketName string) (bool, error) {
 		if errors.As(err, &errorType) {
 			return false, nil
 		}
-		return false, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
+		return false, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 	return true, nil
 }

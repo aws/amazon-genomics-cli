@@ -5,7 +5,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/transport/http"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -15,7 +15,7 @@ import (
 func (c *Client) SyncFile(bucketName, key, filePath string) error {
 	shouldSync, err := c.shouldSync(bucketName, key, filePath)
 	if err != nil {
-		return actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
+		return actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 	if shouldSync {
 		log.Debug().Msgf("Uploading '%s' to '%s'", filePath, RenderS3Uri(bucketName, key))
@@ -36,7 +36,7 @@ func (c *Client) shouldSync(bucketName, key, filePath string) (bool, error) {
 		if errors.As(err, &responseErr) && responseErr.HTTPStatusCode() == 404 {
 			return true, nil
 		}
-		return false, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
+		return false, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 	differentSize := localFile.Size() != remoteFile.ContentLength
 	localNewer := localFile.ModTime().After(*remoteFile.LastModified)
@@ -49,5 +49,5 @@ func (c *Client) getObjectMetadata(bucketName, key string) (*s3.HeadObjectOutput
 		Key:    aws.String(key),
 	})
 
-	return headObjectOutput, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
+	return headObjectOutput, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 }

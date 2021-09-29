@@ -1,10 +1,8 @@
 package spec
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
@@ -151,10 +149,10 @@ func TestGetContext(t *testing.T) {
 		contextName string
 	}
 	tests := []struct {
-		name            string
-		args            args
-		expectedContext Context
-		expectedError   error
+		name                 string
+		args                 args
+		expectedContext      Context
+		expectedErrorMessage string
 	}{
 		{
 			name: "Unknown context name",
@@ -176,10 +174,7 @@ func TestGetContext(t *testing.T) {
 				},
 				contextName: "badContextName",
 			},
-			expectedError: actionable.NewError(
-				fmt.Errorf("context 'badContextName' is not defined in Project 'myProject' specification"),
-				"Please add the context to your project spec and deploy it or specify a different context from the command 'agc context list'",
-			),
+			expectedErrorMessage: "context 'badContextName' is not defined in Project 'myProject' specification",
 		},
 		{
 			name: "Existing context name ",
@@ -201,7 +196,6 @@ func TestGetContext(t *testing.T) {
 				},
 				contextName: "ctx1",
 			},
-			expectedError: nil,
 			expectedContext: Context{
 				Engines: []Engine{
 					{Type: "wdl", Engine: "miniwdl"},
@@ -212,8 +206,8 @@ func TestGetContext(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			context, err := tt.args.projectSpec.GetContext(tt.args.contextName)
-			if tt.expectedError != nil {
-				assert.Error(t, err, tt.expectedError.Error())
+			if tt.expectedErrorMessage != "" {
+				assert.Error(t, err, tt.expectedErrorMessage)
 			} else {
 				assert.Equal(t, tt.expectedContext, context)
 			}

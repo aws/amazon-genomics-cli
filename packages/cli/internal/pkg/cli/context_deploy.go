@@ -4,11 +4,12 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/rs/zerolog/log"
@@ -68,7 +69,8 @@ func (o *deployContextOpts) Execute() ([]context.Detail, error) {
 	hasErrors := false
 	for i, result := range results {
 		if result.err != nil {
-			actionableError, ok := result.err.(*actionable.Error)
+			var actionableError *actionableerror.Error
+			ok := errors.As(result.err, &actionableError)
 			if ok {
 				log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
 			} else {

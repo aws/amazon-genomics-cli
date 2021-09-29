@@ -13,6 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const configureEmailCommand = "configure email"
+
 type emailContextVars struct {
 	userEmailAddress string
 }
@@ -56,7 +58,7 @@ func BuildConfigureEmailCommand() *cobra.Command {
 				}
 				configClient, err := config.NewConfigClient()
 				if err != nil {
-					return clierror.New("configure email", vars, err)
+					return clierror.New(configureEmailCommand, vars, err)
 				}
 				opts.configClient = configClient
 				log.Info().Msgf("Setting user email address to: '%s'", opts.userEmailAddress)
@@ -65,7 +67,7 @@ func BuildConfigureEmailCommand() *cobra.Command {
 				}
 				err = opts.Execute()
 				if err != nil {
-					return clierror.New("configure email", vars, err)
+					return clierror.New(configureEmailCommand, vars, err)
 				}
 			}
 

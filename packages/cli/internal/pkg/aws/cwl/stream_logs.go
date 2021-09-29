@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/util"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
@@ -32,7 +32,7 @@ func (c Client) StreamLogs(ctx context.Context, logGroupName string, streams ...
 				LogStreamNames: streams,
 			})
 			if err != nil {
-				stream <- StreamEvent{Err: actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)}
+				stream <- StreamEvent{Err: actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)}
 				return
 			}
 			if aws.ToString(lastToken) != aws.ToString(output.NextToken) {

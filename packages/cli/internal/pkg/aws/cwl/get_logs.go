@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/util"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
@@ -32,7 +32,7 @@ func (o GetLogsOutput) NextLogs() ([]string, error) {
 	var logs []string
 	output, err := o.paginator.NextPage(context.Background())
 	if err != nil {
-		return nil, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
+		return nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 	logs = append(logs, formatEvents(output.Events)...)
 	return logs, nil

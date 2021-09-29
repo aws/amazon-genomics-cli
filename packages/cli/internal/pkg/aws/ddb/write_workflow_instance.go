@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -34,7 +34,7 @@ func (c *Client) WriteWorkflowInstance(ctx context.Context, instance WorkflowIns
 		TableName: aws.String(TableName),
 	}
 	if _, err := c.svc.PutItem(ctx, input); err != nil {
-		return actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
+		return actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 	return nil
 }

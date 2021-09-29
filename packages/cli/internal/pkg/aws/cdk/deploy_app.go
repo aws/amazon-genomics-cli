@@ -3,7 +3,7 @@ package cdk
 import (
 	"os"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/actionable"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 )
 
 var mkDirTemp = os.MkdirTemp
@@ -21,5 +21,5 @@ func (client Client) DeployApp(appDir string, context []string) (ProgressStream,
 
 	progressStream, err := executeCdkCommandAndCleanupDirectory(appDir, cmdArgs, tmpDir)
 
-	return progressStream, actionable.FindSuggestionForError(err, actionable.AwsErrorMessageToSuggestedActionMap)
+	return progressStream, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 }
