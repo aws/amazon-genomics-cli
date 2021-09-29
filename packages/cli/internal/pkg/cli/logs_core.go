@@ -32,7 +32,9 @@ Valid time units are "s", "m", and "h".`
 
 	logFilterFlag            = "filter"
 	logFilterFlagShort       = "f"
-	logFilterFlagDescription = "Match terms, phrases, or values in the logs."
+	logFilterFlagDescription = `Match terms, phrases, or values in the logs.
+Filters are case sensitive and multiple terms combine with AND logic.
+Use a question mark for OR, such as "?ERROR ?WARN". Filter out terms with a minus, such as "-INFO".`
 
 	tailFlag            = "tail"
 	tailFlagShort       = "t"
