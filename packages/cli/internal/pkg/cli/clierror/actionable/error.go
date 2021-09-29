@@ -14,7 +14,7 @@ func (e *Error) Error() string {
 	return fmt.Sprintf("an error occurred caused by: %s\nsuggestion: %s\n", e.Cause, e.SuggestedAction)
 }
 
-func NewError(cause error, suggestedAction string) error {
+func New(cause error, suggestedAction string) error {
 	err := new(Error)
 	err.SuggestedAction = suggestedAction
 	err.Cause = cause
@@ -23,14 +23,14 @@ func NewError(cause error, suggestedAction string) error {
 }
 
 func FindSuggestionForError(cause error, errorToSuggestionMap map[string]string) error {
-	err := new(Error)
-	err.Cause = cause
-
 	errorMessage := cause.Error()
+
 	for expectedErrorMessage, suggestedAction := range errorToSuggestionMap {
 		if strings.Contains(errorMessage, expectedErrorMessage) {
-			err.SuggestedAction = suggestedAction
-			return err
+			return &Error{
+				SuggestedAction: suggestedAction,
+				Cause:           cause,
+			}
 		}
 	}
 

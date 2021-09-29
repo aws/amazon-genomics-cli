@@ -38,7 +38,7 @@ func Test_New_NoMatchingSuggestion(t *testing.T) {
 }
 
 func Test_Error_WithSuggestion(t *testing.T) {
-	err := NewError(fmt.Errorf("some error"), "some suggestion")
+	err := New(fmt.Errorf("some error"), "some suggestion")
 
 	assert.Equal(t, "an error occurred caused by: some error\nsuggestion: some suggestion\n", err.Error())
 }
