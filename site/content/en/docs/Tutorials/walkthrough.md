@@ -506,6 +506,13 @@ Fri, 10 Sep 2021 23:40:57 +0000    }
 Fri, 10 Sep 2021 23:40:59 +0000    2021-09-10 23:40:59,826 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowManagerActor: Workflow actor for 1473f547-85d8-4402-adfc-e741b7df69f2 completed with status 'Succeeded'. The workflow will be removed from the workflow store.
 ```
 
+You can filter logs with the `--filter` flag. The filter syntax adheres to [CloudWatch's filter and pattern syntax](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html).
+For example, the following will give you all error logs from the workflow engine:
+
+```shell
+agc logs engine --context myContext --filter ERROR
+```
+
 ### Additional workflow examples
 
 The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on GATK Best Practices. You can find these in:
