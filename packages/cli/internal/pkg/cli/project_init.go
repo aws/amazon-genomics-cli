@@ -125,7 +125,7 @@ func (o *initProjectOpts) validateProject() error {
 func BuildProjectInitCommand() *cobra.Command {
 	vars := initProjectVars{}
 	cmd := &cobra.Command{
-		Use:   "init project_name",
+		Use:   "init project_name --workflow-type my_workflow_type",
 		Short: "Initialize current directory with a new empty AGC project for a particular workflow type.",
 		Long: `Initialize current directory with a new empty AGC project for a particular workflow type.
 Project specification file 'agc-project.yaml' will be created in the current directory.`,
