@@ -72,7 +72,7 @@ export class BatchStack extends NestedStack {
       computeType,
       launchTemplateData: LAUNCH_TEMPLATE,
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
-      resourceTags: this.tags.tagValues(),
+      resourceTags: this.nestedStackParent?.tags.tagValues(),
     });
   }
 }
