@@ -3,8 +3,8 @@ package context
 import (
 	"regexp"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/awsresources"
-	"github.com/aws/amazon-genomics-cli/common/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 )
 
 func (m *Manager) StatusList() ([]Instance, error) {

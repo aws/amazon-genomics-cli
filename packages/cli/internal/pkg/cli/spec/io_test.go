@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/context"
-	awsmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/aws"
-	contextmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/context"
-	"github.com/aws/amazon-genomics-cli/common/aws/cwl"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
+	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
@@ -76,7 +76,7 @@ func TestLogsAccessOpts_Execute_Group(t *testing.T) {
 	}
 
 	ctxMock.EXPECT().Info(testContextName1).Return(context.Detail{AccessLogGroupName: testLogGroupName}, nil)
-	cwlMock.EXPECT().GetLogsPaginated(cwl.GetLogsInput{testLogGroupName, nil, nil, "", nil}).Return(logPaginatorMock)
+	cwlMock.EXPECT().GetLogsPaginated(cwl.GetLogsInput{LogGroupName: testLogGroupName}).Return(logPaginatorMock)
 	gomock.InOrder(logPaginatorMock.EXPECT().HasMoreLogs().Return(true), logPaginatorMock.EXPECT().HasMoreLogs().Return(false))
 	logPaginatorMock.EXPECT().NextLogs().Return([]string{"log"}, nil)
 
@@ -114,7 +114,7 @@ func TestLogsAccessOpts_Execute_LogError(t *testing.T) {
 
 	someErr := fmt.Errorf("some log error")
 	ctxMock.EXPECT().Info(testContextName1).Return(context.Detail{AccessLogGroupName: testLogGroupName}, nil)
-	cwlMock.EXPECT().GetLogsPaginated(cwl.GetLogsInput{testLogGroupName, nil, nil, "", nil}).Return(logPaginatorMock)
+	cwlMock.EXPECT().GetLogsPaginated(cwl.GetLogsInput{LogGroupName: testLogGroupName}).Return(logPaginatorMock)
 	logPaginatorMock.EXPECT().HasMoreLogs().Return(true)
 	logPaginatorMock.EXPECT().NextLogs().Return(nil, someErr)
 

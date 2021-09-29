@@ -6,10 +6,10 @@ package cli
 import (
 	"sort"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/format"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/types"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/workflow"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/types"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )

@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/common/aws"
-	"github.com/aws/amazon-genomics-cli/common/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )

@@ -1,19 +1,17 @@
 package context
 
 import (
-	"fmt"
 	"net/url"
-	"os"
 	"strings"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/config"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/storage"
-	"github.com/aws/amazon-genomics-cli/common/aws"
-	"github.com/aws/amazon-genomics-cli/common/aws/cdk"
-	"github.com/aws/amazon-genomics-cli/common/aws/cfn"
-	"github.com/aws/amazon-genomics-cli/common/aws/s3"
-	"github.com/aws/amazon-genomics-cli/common/aws/ssm"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ssm"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/rs/zerolog/log"
 )
 
@@ -23,6 +21,7 @@ const (
 	cdkAppsDirBase    = ".agc/cdk/apps"
 )
 
+//nolint:structcheck
 type baseProps struct {
 	projectSpec spec.Project
 	contextSpec spec.Context
@@ -31,6 +30,7 @@ type baseProps struct {
 	homeDir     string
 }
 
+//nolint:structcheck
 type contextProps struct {
 	readBuckets      []string
 	readWriteBuckets []string
@@ -38,15 +38,15 @@ type contextProps struct {
 	artifactBucket   string
 	artifactUrl      string
 	contextEnv       contextEnvironment
-	wesUrl           string
 }
 
+//nolint:structcheck
 type infoProps struct {
 	contextStackInfo cfn.StackInfo
 	contextStatus    Status
-	contextInfo      Detail
 }
 
+//nolint:structcheck
 type listProps struct {
 	contexts map[string]Summary
 }
@@ -70,7 +70,7 @@ func NewManager(profile string) *Manager {
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to create Project client for context manager")
 	}
-	homeDir, err := os.UserHomeDir()
+	homeDir, err := config.DetermineHomeDir()
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to determine home directory")
 	}
@@ -99,9 +99,9 @@ func (m *Manager) readContextSpec(contextName string) {
 	if m.err != nil {
 		return
 	}
-	contextSpec, ok := m.projectSpec.Contexts[contextName]
-	if !ok {
-		m.err = fmt.Errorf("context '%s' is not defined in Project '%s' specification", contextName, m.projectSpec.Name)
+	contextSpec, err := m.projectSpec.GetContext(contextName)
+	if err != nil {
+		m.err = err
 		return
 	}
 	m.contextSpec = contextSpec
@@ -175,8 +175,9 @@ func (m *Manager) setContextEnv(contextName string) {
 		return
 	}
 
-	if _, contextFound := m.projectSpec.Contexts[contextName]; !contextFound {
-		m.err = fmt.Errorf("context '%s' does not exist", contextName)
+	context, err := m.projectSpec.GetContext(contextName)
+	if err != nil {
+		m.err = err
 		return
 	}
 
@@ -193,8 +194,8 @@ func (m *Manager) setContextEnv(contextName string) {
 		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
 		// TODO: we default to a single engine in a context for now
 		// need to allow for multiple engines in the same context
-		EngineName:        m.projectSpec.Contexts[contextName].Engines[0].Engine,
-		EngineDesignation: m.projectSpec.Contexts[contextName].Engines[0].Engine,
+		EngineName:        context.Engines[0].Engine,
+		EngineDesignation: context.Engines[0].Engine,
 	}
 }
 

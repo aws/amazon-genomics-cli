@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-TARGET_FILE="./packages/cli/environment/environment.go"
+TARGET_FILE="./packages/cli/internal/pkg/environment/environment.go"
 WES_ECR_TAG_PLACEHOLDER="WES_ECR_TAG_PLACEHOLDER"
 CROMWELL_ECR_TAG_PLACEHOLDER="CROMWELL_ECR_TAG_PLACEHOLDER"
 NEXTFLOW_ECR_TAG_PLACEHOLDER="NEXTFLOW_ECR_TAG_PLACEHOLDER"

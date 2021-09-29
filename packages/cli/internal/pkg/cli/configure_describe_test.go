@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/stretchr/testify/require"
 )
 

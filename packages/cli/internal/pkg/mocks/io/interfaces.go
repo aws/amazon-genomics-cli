@@ -5,6 +5,9 @@ import "io/fs"
 type OS interface {
 	Remove(name string) error
 	Chdir(dir string) error
+	MkdirTemp(dir, pattern string) (string, error)
+	RemoveAll(path string) error
+	UserHomeDir() (string, error)
 }
 
 type Zip interface {

@@ -1,7 +1,7 @@
 package managermocks
 
 import (
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/workflow"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 )
 
 type WorkflowManager interface {

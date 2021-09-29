@@ -77,7 +77,7 @@ Please do **not** create a public github issue.
 
 ## Licensing
 
-See the [LICENSE](https://github.com/https://github.com/aws/amazon-genomics-cli/blob/main/LICENSE) file for our 
+See the [LICENSE](https://github.com/aws/amazon-genomics-cli/blob/main/LICENSE) file for our 
 project's licensing. We will ask you to confirm the licensing of your contribution.
 
 We may ask you to sign a [Contributor License Agreement (CLA)](http://en.wikipedia.org/wiki/Contributor_License_Agreement) 

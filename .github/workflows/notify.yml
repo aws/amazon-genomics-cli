@@ -1,0 +1,32 @@
+# This is a basic workflow to notify devs for new pull requests
+
+name: Notify
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on new pull request events but only for the main branch
+  pull_request:
+    types: [ opened ]
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "publish"
+  publish:
+    # The environment to use for secrets
+    environment: slack
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: slack-send
+        # You may pin to the exact commit or the version.
+        # uses: slackapi/slack-github-action@d5d276d7ae0f38f29322b80da9baf985cc80f8b1
+        uses: slackapi/slack-github-action@v1.15.0
+        with:
+          # Event payload can be parsed from
+          # https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request
+          payload: "{\"number\":\"${{ github.event.number }}\",\"url\":\"${{ github.event.pull_request.html_url }}\",\"title\":\"${{ github.event.pull_request.title }}\",\"user\":\"${{ github.event.pull_request.user.login }}\"}"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_FEED_WEBHOOK_URL }}

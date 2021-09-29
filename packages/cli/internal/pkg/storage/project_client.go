@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 )
 
 const ProjectSpecFileName = "agc-project.yaml"

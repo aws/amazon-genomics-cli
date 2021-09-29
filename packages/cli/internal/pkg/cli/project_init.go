@@ -6,11 +6,11 @@ package cli
 import (
 	"fmt"
 
-	"github.com/aws/amazon-genomics-cli/cli/cmd/application/template"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/group"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/storage"
+	"github.com/aws/amazon-genomics-cli/cmd/application/template"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/group"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/spf13/cobra"
 )
 
@@ -125,7 +125,7 @@ func (o *initProjectOpts) validateProject() error {
 func BuildProjectInitCommand() *cobra.Command {
 	vars := initProjectVars{}
 	cmd := &cobra.Command{
-		Use:   "init project_name",
+		Use:   "init project_name --workflow-type {wdl|nextflow}",
 		Short: "Initialize current directory with a new empty AGC project for a particular workflow type.",
 		Long: `Initialize current directory with a new empty AGC project for a particular workflow type.
 Project specification file 'agc-project.yaml' will be created in the current directory.`,

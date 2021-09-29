@@ -6,14 +6,14 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
-	awsmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/aws"
-	iomocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/io"
-	storagemocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/storage"
-	wesmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/wes"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/wes"
-	"github.com/aws/amazon-genomics-cli/common/aws/cfn"
-	"github.com/aws/amazon-genomics-cli/common/aws/ddb"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ddb"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
+	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"
+	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
+	wesmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/wes"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/wes"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation/types"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -76,7 +76,6 @@ type WorkflowRunTestSuite struct {
 	origRemoveFile    func(name string) error
 	origChdir         func(name string) error
 	origCompressToTmp func(srcPath string) (string, error)
-	origWesFactory    func(string) (*wes.Client, error)
 	origWriteToTmp    func(namePattern, content string) (string, error)
 
 	testProjSpec    spec.Project

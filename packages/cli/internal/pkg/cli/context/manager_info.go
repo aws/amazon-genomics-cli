@@ -3,9 +3,9 @@ package context
 import (
 	"errors"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/awsresources"
-	"github.com/aws/amazon-genomics-cli/common/aws/cfn"
-	"github.com/aws/amazon-genomics-cli/common/aws/s3"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 )
 
 func (m *Manager) Info(contextName string) (Detail, error) {

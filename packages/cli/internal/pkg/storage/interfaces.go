@@ -4,8 +4,8 @@
 package storage
 
 import (
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/config"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 )
 
 // StorageClient is the interface to storage systems

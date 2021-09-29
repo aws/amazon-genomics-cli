@@ -19,8 +19,10 @@ type Client struct {
 	configFilePath string
 }
 
+var osUserHomeDir = os.UserHomeDir
+
 func NewConfigClient() (*Client, error) {
-	homeDir, err := os.UserHomeDir()
+	homeDir, err := DetermineHomeDir()
 	if err != nil {
 		return nil, err
 	}
@@ -34,6 +36,15 @@ func NewConfigClient() (*Client, error) {
 	configFilePath := filepath.Join(configDirPath, configFileName)
 
 	return &Client{configFilePath: configFilePath}, nil
+}
+
+// DetermineHomeDir returns the file system directory where the AGC files live.
+func DetermineHomeDir() (string, error) {
+	dir, err := osUserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	return dir, nil
 }
 
 func ensureDirExistence(dirPath string) error {
@@ -52,7 +63,10 @@ func ensureDirExistence(dirPath string) error {
 
 func hash(s string) string {
 	h := fnv.New32a()
-	h.Write([]byte(s))
+	_, err := h.Write([]byte(s))
+	if err != nil {
+		panic(fmt.Sprintf("Cannot write a hash for string %q: %v", s, err))
+	}
 
 	hashValue := h.Sum32()
 	hash62 := big.NewInt(int64(hashValue)).Text(62)

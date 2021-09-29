@@ -7,14 +7,15 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/aws/amazon-genomics-cli/cli/environment"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/common/aws"
-	"github.com/aws/amazon-genomics-cli/common/aws/cdk"
-	"github.com/aws/amazon-genomics-cli/common/aws/ecr"
-	"github.com/aws/amazon-genomics-cli/common/aws/s3"
-	"github.com/aws/amazon-genomics-cli/common/aws/sts"
-	"github.com/aws/amazon-genomics-cli/common/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -114,7 +115,7 @@ func (o accountActivateOpts) generateDefaultBucket() (string, error) {
 }
 
 func (o accountActivateOpts) deployCoreInfrastructure(environmentVars []string) error {
-	homeDir, err := DetermineHomeDir()
+	homeDir, err := config.DetermineHomeDir()
 	if err != nil {
 		return err
 	}

@@ -9,21 +9,20 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/awsresources"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/config"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/zipfile"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/storage"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/wes"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/wes/option"
-	"github.com/aws/amazon-genomics-cli/common/aws"
-	"github.com/aws/amazon-genomics-cli/common/aws/cfn"
-	"github.com/aws/amazon-genomics-cli/common/aws/ddb"
-	"github.com/aws/amazon-genomics-cli/common/aws/s3"
-	"github.com/aws/amazon-genomics-cli/common/aws/ssm"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ddb"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ssm"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/zipfile"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/wes"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/wes/option"
 	"github.com/rs/zerolog/log"
 	"github.com/rsc/wes_client"
 )
@@ -46,52 +45,59 @@ var (
 	chdir = os.Chdir
 )
 
+//nolint:structcheck
 type baseProps struct {
 	projectSpec spec.Project
 	contextSpec spec.Context
 	userId      string
 }
 
+//nolint:structcheck
 type s3Props struct {
 	bucketName string
 	objectKey  string
 }
 
+//nolint:structcheck
 type runProps struct {
-	runId               string
-	workflowSpec        spec.Workflow
-	workflowEngine      string
-	parsedSourceURL     *url.URL
-	isLocal             bool
-	packPath            string
-	workflowUrl         string
-	workflowAttachments []string
-	inputUrl            string
-	input               Input
-	arguments           []string
-	attachments         []string
-	workflowParams      map[string]string
+	runId           string
+	workflowSpec    spec.Workflow
+	workflowEngine  string
+	parsedSourceURL *url.URL
+	isLocal         bool
+	packPath        string
+	workflowUrl     string
+	inputUrl        string
+	input           Input
+	arguments       []string
+	attachments     []string
+	workflowParams  map[string]string
 }
 
+//nolint:structcheck
 type listProps struct {
 	workflows map[string]Summary
 }
 
+//nolint:structcheck
 type wesProps struct {
 	contextStackInfo cfn.StackInfo
 	wesUrl           string
 }
 
+//nolint:structcheck
 type instanceProps struct {
 	instances           []InstanceSummary
 	filteredInstances   []InstanceSummary
 	instancesPerContext map[string][]*InstanceSummary
 }
 
+//nolint:structcheck
 type instanceStopProps struct {
 	instanceToStop ddb.WorkflowInstance
 }
 
+//nolint:structcheck
 type taskProps struct {
 	runContextName string
 	runLog         wes_client.RunLog
@@ -158,7 +164,6 @@ func (m *Manager) validateContextIsDeployed(contextName string) {
 	if !m.isContextDeployed(contextName) && m.err == nil {
 		m.err = fmt.Errorf("context '%s' is not deployed", contextName)
 	}
-	return
 }
 
 func (m *Manager) chdirIntoProject() {
@@ -335,9 +340,9 @@ func (m *Manager) setContext(contextName string) {
 		return
 	}
 
-	contextSpec, ok := m.projectSpec.Contexts[contextName]
-	if !ok {
-		m.err = fmt.Errorf("context '%s' is not defined in project specificaiton", contextName)
+	contextSpec, err := m.projectSpec.GetContext(contextName)
+	if err != nil {
+		m.err = err
 		return
 	}
 	m.contextSpec = contextSpec
@@ -476,45 +481,6 @@ func (m *Manager) readWorkflowsFromSpec() {
 	for name := range m.projectSpec.Workflows {
 		log.Debug().Msgf("Workflow '%s' is defined in project '%s'", name, m.projectSpec.Name)
 		m.workflows[name] = Summary{Name: name}
-	}
-}
-
-func (m *Manager) getDeployedContexts() []string {
-	if m.err != nil {
-		return nil
-	}
-	batchStackNameRegexp := regexp.MustCompile(awsresources.RenderContextStackNameRegexp(m.projectSpec.Name, m.userId))
-	stacks, err := m.Cfn.ListStacks(batchStackNameRegexp, cfn.ActiveStacksFilter)
-	if err != nil {
-		m.err = err
-		return nil
-	}
-	contextsMap := make(map[string]bool)
-	for _, stack := range stacks {
-		// TODO: we should take context name from the tag
-		contextName := batchStackNameRegexp.FindStringSubmatch(stack.Name)[1]
-		contextsMap[contextName] = true
-	}
-	var contextNames []string
-	for contextName := range contextsMap {
-		contextNames = append(contextNames, contextName)
-	}
-	return contextNames
-}
-
-func (m *Manager) listWorkflowsFromInstances() {
-	if m.err != nil {
-		return
-	}
-	summaries, err := m.Ddb.ListWorkflows(context.Background(), m.projectSpec.Name, m.userId)
-	if err != nil {
-		m.err = err
-		return
-	}
-	log.Debug().Msgf("There are %d workflows with instances", len(summaries))
-	for _, summary := range summaries {
-		log.Debug().Msgf("Workflow '%s' has instances", summary.Name)
-		m.workflows[summary.Name] = Summary{Name: summary.Name}
 	}
 }
 

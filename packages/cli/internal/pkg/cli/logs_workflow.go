@@ -6,11 +6,11 @@ package cli
 import (
 	"errors"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/context"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/workflow"
-	"github.com/aws/amazon-genomics-cli/common/aws"
-	"github.com/aws/amazon-genomics-cli/common/aws/batch"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/batch"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -99,9 +99,9 @@ func (o *logsWorkflowOpts) Execute() error {
 
 	logGroupName := "/aws/batch/job"
 	if o.tail {
-		err = o.followLogGroup(logGroupName, streams...)
+		_ = o.followLogGroup(logGroupName, streams...)
 	} else {
-		err = o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter, streams...)
+		_ = o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter, streams...)
 	}
 
 	return nil

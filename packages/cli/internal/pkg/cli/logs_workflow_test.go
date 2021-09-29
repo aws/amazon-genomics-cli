@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/workflow"
-	awsmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/aws"
-	contextmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/context"
-	managermocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/manager"
-	"github.com/aws/amazon-genomics-cli/common/aws/batch"
-	"github.com/aws/amazon-genomics-cli/common/aws/cwl"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/batch"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
+	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
+	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"
+	managermocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/manager"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )

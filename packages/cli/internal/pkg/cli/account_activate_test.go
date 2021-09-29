@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/common/aws/ecr"
-	"github.com/aws/amazon-genomics-cli/common/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )

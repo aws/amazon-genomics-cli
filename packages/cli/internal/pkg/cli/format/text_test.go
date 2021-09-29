@@ -28,6 +28,7 @@ type testNestedStruct struct {
 	bName string
 }
 
+//nolint:structcheck
 type testStructWithNestedStruct struct {
 	aId        int
 	bSubStruct testNestedStruct

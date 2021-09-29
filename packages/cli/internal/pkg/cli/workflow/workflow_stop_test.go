@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/cli/spec"
-	awsmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/aws"
-	storagemocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/storage"
-	wesmocks "github.com/aws/amazon-genomics-cli/cli/internal/pkg/mocks/wes"
-	"github.com/aws/amazon-genomics-cli/cli/internal/pkg/wes"
-	"github.com/aws/amazon-genomics-cli/common/aws/cfn"
-	"github.com/aws/amazon-genomics-cli/common/aws/ddb"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ddb"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
+	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
+	wesmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/wes"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/wes"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 )
@@ -24,7 +24,6 @@ type WorkflowStopTestSuite struct {
 	mockConfigClient  *storagemocks.MockConfigClient
 	mockCfn           *awsmocks.MockCfnClient
 	mockWes           *wesmocks.MockWesClient
-	origWesFactory    func(string) (*wes.Client, error)
 	testProjSpec      spec.Project
 	testStackInfo     cfn.StackInfo
 	wfInstance        ddb.WorkflowInstance
