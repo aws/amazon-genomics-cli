@@ -129,7 +129,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.4f03a1fe78f8abd2708d13fd85de8f73.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.42ca9319135d57badd1069b41f1aba4f.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -505,7 +505,10 @@ Fri, 10 Sep 2021 23:40:57 +0000    {
 Fri, 10 Sep 2021 23:40:57 +0000      &quot;hello_agc.hello.out&quot;: &quot;Hello Amazon Genomics CLI!&quot;
 Fri, 10 Sep 2021 23:40:57 +0000    }
 Fri, 10 Sep 2021 23:40:59 +0000    2021-09-10 23:40:59,826 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowManagerActor: Workflow actor for 1473f547-85d8-4402-adfc-e741b7df69f2 completed with status 'Succeeded'. The workflow will be removed from the workflow store.
-</code></pre><h3 id="additional-workflow-examples">Additional workflow examples</h3>
+</code></pre><p>You can filter logs with the <code>--filter</code> flag. The filter syntax adheres to <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html">CloudWatch&rsquo;s filter and pattern syntax</a>.
+For example, the following will give you all error logs from the workflow engine:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">agc logs engine --context myContext --filter ERROR
+</code></pre></div><h3 id="additional-workflow-examples">Additional workflow examples</h3>
 <p>The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on GATK Best Practices. You can find these in:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">~/agc/examples/gatk-best-practices-project
 </code></pre></div><p>These workflows come pre-packaged with <code>MANIFEST.json</code> files that specify example input data available publicly in the <a href="https://registry.opendata.aws/">AWS Registry of Open Data</a>.</p>

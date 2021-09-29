@@ -32,15 +32,15 @@ Synopsis Show workflow access logs for a given context. If no start, end, or loo
 agc logs access -c context_name [-f filter] [-s start_date] [-e end_date] [-l look_back] [-t] [flags] Examples  /code agc logs access -c myCtx -s 2021/3/31 -e 2021/4/1 -f ERROR Options  -c, --context string Name of context -e, --end string A date to stop displaying logs." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/amazon-genomics-cli/docs/reference/agc_logs_access/" /><meta property="article:section" content="docs" />
-<meta property="article:published_time" content="2021-09-28T18:54:28+00:00" />
-<meta property="article:modified_time" content="2021-09-28T18:54:28+00:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<meta property="article:published_time" content="2021-09-29T19:04:07+00:00" />
+<meta property="article:modified_time" content="2021-09-29T19:04:07+00:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
 <meta itemprop="name" content="agc logs access">
 <meta itemprop="description" content="agc logs access Show workflow access logs for a given context.
 Synopsis Show workflow access logs for a given context. If no start, end, or look back periods are set, this command will show logs from the last hour.
-agc logs access -c context_name [-f filter] [-s start_date] [-e end_date] [-l look_back] [-t] [flags] Examples  /code agc logs access -c myCtx -s 2021/3/31 -e 2021/4/1 -f ERROR Options  -c, --context string Name of context -e, --end string A date to stop displaying logs."><meta itemprop="datePublished" content="2021-09-28T18:54:28+00:00" />
-<meta itemprop="dateModified" content="2021-09-28T18:54:28+00:00" />
-<meta itemprop="wordCount" content="196">
+agc logs access -c context_name [-f filter] [-s start_date] [-e end_date] [-l look_back] [-t] [flags] Examples  /code agc logs access -c myCtx -s 2021/3/31 -e 2021/4/1 -f ERROR Options  -c, --context string Name of context -e, --end string A date to stop displaying logs."><meta itemprop="datePublished" content="2021-09-29T19:04:07+00:00" />
+<meta itemprop="dateModified" content="2021-09-29T19:04:07+00:00" />
+<meta itemprop="wordCount" content="226">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="agc logs access"/>
 <meta name="twitter:description" content="agc logs access Show workflow access logs for a given context.
@@ -139,7 +139,7 @@ agc logs access -c context_name [-f filter] [-s start_date] [-e end_date] [-l lo
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.4f03a1fe78f8abd2708d13fd85de8f73.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.42ca9319135d57badd1069b41f1aba4f.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -166,7 +166,7 @@ agc logs access -c context_name [-f filter] [-s start_date] [-e end_date] [-l lo
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.4f03a1fe78f8abd2708d13fd85de8f73.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.42ca9319135d57badd1069b41f1aba4f.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -462,6 +462,8 @@ If no start, end, or look back periods are set, this command will show logs from
                            Supports most date formats, such as mm/dd/yy or yyyy-mm-dd-07:00.
                            Times respect the system timezone.
   -f, --filter string      Match terms, phrases, or values in the logs.
+                           Filters are case sensitive and multiple terms combine with AND logic.
+                           Use a question mark for OR, such as &quot;?ERROR ?WARN&quot;. Filter out terms with a minus, such as &quot;-INFO&quot;.
   -h, --help               help for access
   -l, --look-back string   A period of time to look back from now, such as &quot;2h45m&quot;.
                            Valid time units are &quot;s&quot;, &quot;m&quot;, and &quot;h&quot;.

@@ -129,7 +129,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.4f03a1fe78f8abd2708d13fd85de8f73.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.42ca9319135d57badd1069b41f1aba4f.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -471,7 +471,7 @@ This the multi-page printable view of this section.
 	<h1 id="pg-2b15c20ecfd2a9b10c0c3a8803902bd1">1 - agc</h1>
     
 	<h2 id="agc">agc</h2>
-<p>👩🧬 Launch and manage genomics workloads on AWS.</p>
+<p>🧬 Launch and manage genomics workloads on AWS.</p>
 <pre><code>agc [flags]
 </code></pre><h3 id="examples">Examples</h3>
 <pre><code>
@@ -527,7 +527,7 @@ These commands should be used to install or remove AGC from your AWS account.</p
 <pre><code>  -v, --verbose   Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 👩🧬 Launch and manage genomics workloads on AWS.</li>
+<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_account_activate/">agc account activate</a>	 - Activate AGC in an AWS account.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_account_deactivate/">agc account deactivate</a>	 - Deactivate AGC in an AWS account.</li>
 </ul>
@@ -643,7 +643,7 @@ See each sub-command&rsquo;s help for details on how to use the generated script
 <pre><code>  -v, --verbose   Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 👩🧬 Launch and manage genomics workloads on AWS.</li>
+<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_completion_bash/">agc completion bash</a>	 - generate the autocompletion script for bash</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_completion_fish/">agc completion fish</a>	 - generate the autocompletion script for fish</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_completion_powershell/">agc completion powershell</a>	 - generate the autocompletion script for powershell</li>
@@ -831,7 +831,7 @@ Configure local settings and preferences to customize the CLI experience.</p>
 <pre><code>  -v, --verbose   Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 👩🧬 Launch and manage genomics workloads on AWS.</li>
+<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_configure_describe/">agc configure describe</a>	 - Shows current configuration of the AGC setup for current user</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_configure_email/">agc configure email</a>	 - Sets user email address to be used to tag AGC resources created in the account</li>
 </ul>
@@ -932,7 +932,7 @@ particular context.</p>
 <pre><code>  -v, --verbose   Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 👩🧬 Launch and manage genomics workloads on AWS.</li>
+<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_context_deploy/">agc context deploy</a>	 - Deploy contexts in the current project</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_context_describe/">agc context describe</a>	 - Show the information for a specific context in the current project</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_context_destroy/">agc context destroy</a>	 - Destroy contexts in the current project.</li>
@@ -1162,7 +1162,7 @@ access rights to.</p>
 <pre><code>  -v, --verbose   Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 👩🧬 Launch and manage genomics workloads on AWS.</li>
+<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_logs_access/">agc logs access</a>	 - Show workflow access logs for a given context.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_logs_adapter/">agc logs adapter</a>	 - Show workflow adapter logs for a given context.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_logs_engine/">agc logs engine</a>	 - Show workflow engine logs for a given context.</li>
@@ -1200,6 +1200,8 @@ If no start, end, or look back periods are set, this command will show logs from
                            Supports most date formats, such as mm/dd/yy or yyyy-mm-dd-07:00.
                            Times respect the system timezone.
   -f, --filter string      Match terms, phrases, or values in the logs.
+                           Filters are case sensitive and multiple terms combine with AND logic.
+                           Use a question mark for OR, such as &quot;?ERROR ?WARN&quot;. Filter out terms with a minus, such as &quot;-INFO&quot;.
   -h, --help               help for access
   -l, --look-back string   A period of time to look back from now, such as &quot;2h45m&quot;.
                            Valid time units are &quot;s&quot;, &quot;m&quot;, and &quot;h&quot;.
@@ -1246,6 +1248,8 @@ If no start, end, or look back periods are set, this command will show logs from
                            Supports most date formats, such as mm/dd/yy or yyyy-mm-dd-07:00.
                            Times respect the system timezone.
   -f, --filter string      Match terms, phrases, or values in the logs.
+                           Filters are case sensitive and multiple terms combine with AND logic.
+                           Use a question mark for OR, such as &quot;?ERROR ?WARN&quot;. Filter out terms with a minus, such as &quot;-INFO&quot;.
   -h, --help               help for adapter
   -l, --look-back string   A period of time to look back from now, such as &quot;2h45m&quot;.
                            Valid time units are &quot;s&quot;, &quot;m&quot;, and &quot;h&quot;.
@@ -1292,6 +1296,8 @@ If no start, end, or look back periods are set, this command will show logs from
                            Supports most date formats, such as mm/dd/yy or yyyy-mm-dd-07:00.
                            Times respect the system timezone.
   -f, --filter string      Match terms, phrases, or values in the logs.
+                           Filters are case sensitive and multiple terms combine with AND logic.
+                           Use a question mark for OR, such as &quot;?ERROR ?WARN&quot;. Filter out terms with a minus, such as &quot;-INFO&quot;.
   -h, --help               help for engine
   -l, --look-back string   A period of time to look back from now, such as &quot;2h45m&quot;.
                            Valid time units are &quot;s&quot;, &quot;m&quot;, and &quot;h&quot;.
@@ -1335,6 +1341,8 @@ If the &ndash;run flag is omitted then the latest workflow run is used.</p>
                            Times respect the system timezone.
       --failed-tasks       Only show logs of tasks that have not exited cleanly.
   -f, --filter string      Match terms, phrases, or values in the logs.
+                           Filters are case sensitive and multiple terms combine with AND logic.
+                           Use a question mark for OR, such as &quot;?ERROR ?WARN&quot;. Filter out terms with a minus, such as &quot;-INFO&quot;.
   -h, --help               help for workflow
   -l, --look-back string   A period of time to look back from now, such as &quot;2h45m&quot;.
                            Valid time units are &quot;s&quot;, &quot;m&quot;, and &quot;h&quot;.
@@ -1379,7 +1387,7 @@ and contexts you are working with.</p>
 <pre><code>  -v, --verbose   Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 👩🧬 Launch and manage genomics workloads on AWS.</li>
+<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_project_describe/">agc project describe</a>	 - Describe a project</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_project_init/">agc project init</a>	 - Initialize current directory with a new empty AGC project for a particular workflow type.</li>
 </ul>
@@ -1441,7 +1449,7 @@ DATA: Location ReadOnly</p>
 <h3 id="synopsis">Synopsis</h3>
 <p>Initialize current directory with a new empty AGC project for a particular workflow type.
 Project specification file &lsquo;agc-project.yaml&rsquo; will be created in the current directory.</p>
-<pre><code>agc project init project_name [flags]
+<pre><code>agc project init project_name --workflow-type {wdl|nextflow} [flags]
 </code></pre><h3 id="examples">Examples</h3>
 <pre><code>
 Initialize a new project named &quot;myProject&quot;.
@@ -1481,7 +1489,7 @@ Initialize a new project named &quot;myProject&quot;.
 <pre><code>  -v, --verbose   Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 👩🧬 Launch and manage genomics workloads on AWS.</li>
+<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
 </ul>
 
 </div>
@@ -1516,7 +1524,7 @@ typed according to which workflow definition language they use (e.g. WDL).</p>
 <pre><code>  -v, --verbose   Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 👩🧬 Launch and manage genomics workloads on AWS.</li>
+<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_workflow_describe/">agc workflow describe</a>	 - Show the information for a specific workflow in the current project</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_workflow_list/">agc workflow list</a>	 - Show a list of workflows related to the current project</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_workflow_run/">agc workflow run</a>	 - Run a workflow</li>

@@ -314,7 +314,10 @@ Fri, 10 Sep 2021 23:40:57 +0000    {
 Fri, 10 Sep 2021 23:40:57 +0000      &amp;quot;hello_agc.hello.out&amp;quot;: &amp;quot;Hello Amazon Genomics CLI!&amp;quot;
 Fri, 10 Sep 2021 23:40:57 +0000    }
 Fri, 10 Sep 2021 23:40:59 +0000    2021-09-10 23:40:59,826 cromwell-system-akka.dispatchers.engine-dispatcher-14 INFO  - WorkflowManagerActor: Workflow actor for 1473f547-85d8-4402-adfc-e741b7df69f2 completed with status &#39;Succeeded&#39;. The workflow will be removed from the workflow store.
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;additional-workflow-examples&#34;&gt;Additional workflow examples&lt;/h3&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can filter logs with the &lt;code&gt;--filter&lt;/code&gt; flag. The filter syntax adheres to &lt;a href=&#34;https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html&#34;&gt;CloudWatch&amp;rsquo;s filter and pattern syntax&lt;/a&gt;.
+For example, the following will give you all error logs from the workflow engine:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc logs engine --context myContext --filter ERROR
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;additional-workflow-examples&#34;&gt;Additional workflow examples&lt;/h3&gt;
 &lt;p&gt;The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on GATK Best Practices. You can find these in:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;~/agc/examples/gatk-best-practices-project
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;These workflows come pre-packaged with &lt;code&gt;MANIFEST.json&lt;/code&gt; files that specify example input data available publicly in the &lt;a href=&#34;https://registry.opendata.aws/&#34;&gt;AWS Registry of Open Data&lt;/a&gt;.&lt;/p&gt;
