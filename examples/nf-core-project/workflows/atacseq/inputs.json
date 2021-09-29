@@ -1,0 +1,5 @@
+{
+  "input": "s3://healthai-public-assets-us-east-1/agc-demo-data/atacseq/design.csv",
+  "genome": "GRCh38",
+  "single_end": true
+}
