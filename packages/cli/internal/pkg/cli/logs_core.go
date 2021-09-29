@@ -39,7 +39,9 @@ Valid time units are "s", "m", and "h".`
 	tailFlagDescription = "Follow the log output."
 )
 
-var printLn = fmt.Println
+var printLn = func(args ...interface{}) {
+	_, _ = fmt.Println(args)
+}
 
 type logsSharedVars struct {
 	tail        bool
@@ -120,7 +122,7 @@ func (o *logsSharedOpts) followLogGroup(logGroupName string, streams ...string) 
 		}
 		if len(event.Logs) > 0 {
 			for _, line := range event.Logs {
-				_, _ = printLn(line)
+				printLn(line)
 			}
 		} else {
 			log.Debug().Msg("No new logs")
@@ -143,7 +145,7 @@ func (o *logsSharedOpts) displayLogGroup(logGroupName string, startTime, endTime
 			return err
 		}
 		for _, line := range logs {
-			_, _ = printLn(line)
+			printLn(line)
 		}
 	}
 	return nil
