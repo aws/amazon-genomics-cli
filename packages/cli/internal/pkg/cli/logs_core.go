@@ -41,7 +41,9 @@ Use a question mark for OR, such as "?ERROR ?WARN". Filter out terms with a minu
 	tailFlagDescription = "Follow the log output."
 )
 
-var println = fmt.Println
+var printLn = func(args ...interface{}) {
+	_, _ = fmt.Println(args)
+}
 
 type logsSharedVars struct {
 	tail        bool
@@ -78,7 +80,7 @@ func (v *logsSharedVars) setFilterFlags(cmd *cobra.Command) {
 
 func (v *logsSharedVars) setContextFlag(cmd *cobra.Command) {
 	cmd.Flags().StringVarP(&v.contextName, contextFlag, contextFlagShort, "", contextFlagDescription)
-	cmd.MarkFlagRequired(contextFlag) //nolint:errcheck
+	_ = cmd.MarkFlagRequired(contextFlag)
 }
 
 func (o *logsSharedOpts) setDefaultEndTimeIfEmpty() {
@@ -122,7 +124,7 @@ func (o *logsSharedOpts) followLogGroup(logGroupName string, streams ...string) 
 		}
 		if len(event.Logs) > 0 {
 			for _, line := range event.Logs {
-				println(line) //nolint:errcheck
+				printLn(line)
 			}
 		} else {
 			log.Debug().Msg("No new logs")
@@ -145,7 +147,7 @@ func (o *logsSharedOpts) displayLogGroup(logGroupName string, startTime, endTime
 			return err
 		}
 		for _, line := range logs {
-			println(line) //nolint:errcheck
+			printLn(line)
 		}
 	}
 	return nil
