@@ -11,7 +11,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionable"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -54,7 +54,7 @@ func (o *accountDeactivateOpts) LoadStacks() error {
 
 func (o *accountDeactivateOpts) Validate() error {
 	if !o.force && len(o.stacks) > 1 {
-		return actionable.New(
+		return actionableerror.New(
 			errors.New("one or more contexts are still deployed"),
 			"use --force to destroy deployed contexts as well",
 		)

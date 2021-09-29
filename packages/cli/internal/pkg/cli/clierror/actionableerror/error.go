@@ -1,4 +1,4 @@
-package actionable
+package actionableerror
 
 import (
 	"fmt"

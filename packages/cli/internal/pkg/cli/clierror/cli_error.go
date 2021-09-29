@@ -1,9 +1,10 @@
 package clierror
 
 import (
+	"errors"
 	"fmt"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionable"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/rs/zerolog/log"
 )
 
@@ -15,13 +16,11 @@ type Error struct {
 }
 
 func (e *Error) Error() string {
+	message := fmt.Sprintf("an error occurred invoking '%s'\nwith variables: %+v\ncaused by: %s", e.Command, e.CommandVars, e.Cause)
 	if e.SuggestedAction != "" {
-		return fmt.Sprintf("an error occurred invoking '%s'\nwith variables: %+v\ncaused by: %s\nsuggestion: %s",
-			e.Command, e.CommandVars, e.Cause, e.SuggestedAction)
-
+		message = fmt.Sprintf("%s\nsuggestion: %s", message, e.SuggestedAction)
 	}
-	return fmt.Sprintf("an error occurred invoking '%s'\nwith variables: %+v\ncaused by: %s",
-		e.Command, e.CommandVars, e.Cause)
+	return message
 }
 
 func (e *Error) Unwrap() error {
@@ -31,7 +30,8 @@ func (e *Error) Unwrap() error {
 // New constructs an error message intended to be read by the CLI user. Holds context in the form of the invoked command (command),
 // the variables of the command (commandVars), the causal error (cause), and any suggested action the user might take to correct the problem (suggestedAction).
 func New(command string, commandVars interface{}, err error) *Error {
-	actionableError, ok := err.(*actionable.Error)
+	var actionableError *actionableerror.Error
+	ok := errors.As(err, &actionableError)
 	if ok {
 		log.Err(actionableError.Cause).Send()
 
