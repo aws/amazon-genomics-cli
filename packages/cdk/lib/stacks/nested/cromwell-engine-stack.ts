@@ -13,7 +13,7 @@ import { EngineOptions, ServiceContainer } from "../../types";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { LogGroup } from "monocdk/aws-logs";
 import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
-import { CromwellEngineRole } from "../../roles/cromwell-engine-roll";
+import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 
 export interface CromwellEngineStackProps extends EngineOptions, NestedStackProps {}
 

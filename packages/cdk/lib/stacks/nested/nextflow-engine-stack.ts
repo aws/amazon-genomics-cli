@@ -10,7 +10,7 @@ import { LogGroup } from "monocdk/aws-logs";
 import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { IJobQueue } from "monocdk/aws-batch";
-import { NextflowEngineRole } from "../../roles/nextflow-engine-roll";
+import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 
 export interface NextflowEngineStackProps extends EngineOptions, NestedStackProps {
   /**
