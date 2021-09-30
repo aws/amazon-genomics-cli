@@ -20,7 +20,7 @@ export interface CromwellEngineStackProps extends EngineOptions, NestedStackProp
 export class CromwellEngineStack extends NestedEngineStack {
   public readonly engine: SecureService;
   public readonly adapter: SecureService;
-  public readonly adapterRoll: IRole;
+  public readonly adapterRole: IRole;
   public readonly apiProxy: ApiProxy;
   public readonly adapterLogGroup: ILogGroup;
   public readonly engineLogGroup: ILogGroup;
@@ -38,7 +38,7 @@ export class CromwellEngineStack extends NestedEngineStack {
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
       policies: props.policyOptions,
     });
-    this.adapterRoll = new Role(this, "TaskRole", { assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"), ...props.policyOptions });
+    this.adapterRole = new Role(this, "TaskRole", { assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"), ...props.policyOptions });
     const namespace = new PrivateDnsNamespace(this, "EngineNamespace", {
       name: `${params.projectName}-${params.contextName}-${params.userId}.${APP_NAME}.amazon.com`,
       vpc: props.vpc,
@@ -51,7 +51,7 @@ export class CromwellEngineStack extends NestedEngineStack {
     // TODO: Move log group creation into service construct and make it a property
     this.engine = this.getEngineServiceDefinition(props.vpc, engineContainer, cloudMapOptions, this.engineLogGroup);
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
-    this.adapter = renderServiceWithContainer(this, "Adapter", params.getAdapterContainer(), props.vpc, this.adapterRoll, this.adapterLogGroup);
+    this.adapter = renderServiceWithContainer(this, "Adapter", params.getAdapterContainer(), props.vpc, this.adapterRole, this.adapterLogGroup);
 
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.contextName}${engineContainer.serviceName}ApiProxy`,
@@ -59,7 +59,7 @@ export class CromwellEngineStack extends NestedEngineStack {
       allowedAccountIds: [this.account],
     });
 
-    outputBucket.grantReadWrite(this.adapterRoll);
+    outputBucket.grantReadWrite(this.adapterRole);
   }
 
   protected getOutputs(): EngineOutputs {
