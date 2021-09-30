@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -21,5 +22,5 @@ func (c *Client) UploadFile(bucketName, key, filePath string) error {
 		Key:    aws.String(key),
 		Body:   file,
 	})
-	return err
+	return actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 }

@@ -1,6 +1,9 @@
 package cdk
 
-import "github.com/rs/zerolog/log"
+import (
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
+	"github.com/rs/zerolog/log"
+)
 
 func (client Client) ClearContext(appDir string) error {
 	log.Debug().Msgf("executeCDKClearContext(%s)", appDir)
@@ -12,11 +15,11 @@ func (client Client) ClearContext(appDir string) error {
 
 	stream, err := ExecuteCdkCommand(appDir, cmdArgs)
 	if err != nil {
-		return err
+		return actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 	for event := range stream {
 		if event.Err != nil {
-			return event.Err
+			return actionableerror.FindSuggestionForError(event.Err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 		}
 	}
 

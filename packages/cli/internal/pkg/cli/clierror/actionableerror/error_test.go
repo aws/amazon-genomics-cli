@@ -42,3 +42,13 @@ func Test_Error_WithSuggestion(t *testing.T) {
 
 	assert.Equal(t, "an error occurred caused by: some error\nsuggestion: some suggestion\n", err.Error())
 }
+
+func Test_Error_NoErrorReturnsNil(t *testing.T) {
+	var errorMessageToSuggestedActionMap = map[string]string{
+		"error occurred": "Please do this suggestion",
+		"some error":     "Please do this other suggestion",
+	}
+	err := FindSuggestionForError(nil, errorMessageToSuggestedActionMap)
+
+	assert.Nil(t, err)
+}
