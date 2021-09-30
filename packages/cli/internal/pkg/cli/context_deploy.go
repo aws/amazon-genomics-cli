@@ -4,10 +4,12 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/rs/zerolog/log"
@@ -67,7 +69,13 @@ func (o *deployContextOpts) Execute() ([]context.Detail, error) {
 	hasErrors := false
 	for i, result := range results {
 		if result.err != nil {
-			log.Error().Err(result.err).Msgf("failed to deploy context '%s'", result.contextName)
+			var actionableError *actionableerror.Error
+			ok := errors.As(result.err, &actionableError)
+			if ok {
+				log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
+			} else {
+				log.Error().Err(result.err).Msgf("failed to deploy context '%s'", result.contextName)
+			}
 			hasErrors = true
 		}
 		contextDetails[i] = result.info
@@ -124,8 +132,7 @@ It creates AGC resources in AWS.
 			log.Info().Msgf("Deploying context(s)")
 			contextInfo, err := opts.Execute()
 			if err != nil {
-				return clierror.New("context deploy", vars, err,
-					"check you have valid credentials and that you have sufficient permissions to deploy the AGC infrastructure")
+				return clierror.New("context deploy", vars, err)
 			}
 			format.Default.Write(contextInfo)
 			return nil

@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const configureDescribeCommand = "configure describe"
+
 type showContextOpts struct {
 	configClient storage.ConfigClient
 }
@@ -43,7 +45,7 @@ func BuildDescribeShowCommand() *cobra.Command {
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
 			opts, err := newConfigureDescribeContextOpts()
 			if err != nil {
-				return err
+				return clierror.New(configureDescribeCommand, nil, err)
 			}
 
 			log.Info().Msgf("Reading user specific configuration")
@@ -52,7 +54,7 @@ func BuildDescribeShowCommand() *cobra.Command {
 			}
 			configuration, err := opts.Execute()
 			if err != nil {
-				return clierror.New("configure describe", nil, err, "you may need to configure your account")
+				return clierror.New(configureDescribeCommand, nil, err)
 			}
 			format.Default.Write(configuration)
 

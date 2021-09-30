@@ -76,8 +76,7 @@ the project specification.
 			}
 			contexts, err := opts.Execute()
 			if err != nil {
-				return clierror.New("context list", vars, err,
-					"check that a agc-project.yaml file exists in this directory or it's parent directories, check that contexts are defined in the agc-project.yaml file")
+				return clierror.New("context list", vars, err)
 			}
 			format.Default.Write(contexts)
 			return nil

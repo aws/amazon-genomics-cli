@@ -31,8 +31,6 @@ export class ContextStack extends Stack {
           // TODO: Can these be scoped down?
           ManagedPolicy.fromAwsManagedPolicyName("AmazonEC2ContainerRegistryReadOnly"),
           ManagedPolicy.fromAwsManagedPolicyName("AmazonECS_FullAccess"),
-          ManagedPolicy.fromAwsManagedPolicyName("AmazonElasticFileSystemFullAccess"),
-          ManagedPolicy.fromAwsManagedPolicyName("AmazonS3ReadOnlyAccess"),
           ManagedPolicy.fromAwsManagedPolicyName("AWSBatchFullAccess"),
         ],
       },

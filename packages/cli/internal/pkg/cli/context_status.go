@@ -4,6 +4,7 @@
 package cli
 
 import (
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/spf13/cobra"
@@ -51,7 +52,7 @@ func BuildContextStatusCommand() *cobra.Command {
 			}
 			contextInstances, err := opts.Execute()
 			if err != nil {
-				return err
+				return clierror.New("context status", nil, err)
 			}
 			format.Default.Write(contextInstances)
 			return nil

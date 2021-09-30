@@ -92,7 +92,7 @@ func buildProjectDescribeCommand() *cobra.Command {
 			}
 			project, err := opts.Execute()
 			if err != nil {
-				return clierror.New("project describe", vars, err, "check that a valid agc-project.yaml file is present in this directory or one of it's parent directories")
+				return clierror.New("project describe", vars, err)
 			}
 			format.Default.Write(project)
 			return nil

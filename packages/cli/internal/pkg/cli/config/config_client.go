@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 )
 
 const (
@@ -42,7 +44,7 @@ func NewConfigClient() (*Client, error) {
 func DetermineHomeDir() (string, error) {
 	dir, err := osUserHomeDir()
 	if err != nil {
-		return "", err
+		return "", actionableerror.New(err, "Please check that your home or user profile directory is defined within your environment variables")
 	}
 	return dir, nil
 }

@@ -1,0 +1,61 @@
+---
+
+#Some popular workflows from https://nf-co.re/pipelines
+
+name: NFCorePopular
+schemaVersion: 1
+workflows:
+  rnaseq:
+    type:
+      language: nextflow
+      version: 1.0
+    sourceURL: workflows/rnaseq
+  sarek:
+    type:
+      language: nextflow
+      version: 1.0
+    sourceURL: workflows/sarek
+  atacseq:
+    type:
+      language: nextflow
+      version: 1.0
+    sourceURL: workflows/atacseq
+data:
+  - location: s3://1000genomes
+    readOnly: true
+  - location: s3://ngi-igenomes
+    readOnly: true
+  - location: s3://encode-public
+    readOnly: true
+contexts:
+  bigMemCtx:
+    instanceTypes:                     # Standard types plus r5.8xlarge due to memory requirements of some workflows like sarek
+      - "c5.large"
+      - "c5.xlarge"
+      - "c5.2xlarge"
+      - "c5.4xlarge"
+      - "c5n.large"
+      - "c5n.xlarge"
+      - "c5n.2xlarge"
+      - "c5n.4xlarge"
+      - "m5.large"
+      - "m5.xlarge"
+      - "m5.2xlarge"
+      - "m5.4xlarge"
+      - "m5n.large"
+      - "m5n.xlarge"
+      - "m5n.2xlarge"
+      - "m5n.4xlarge"
+      - "r5.large"
+      - "r5.xlarge"
+      - "r5.2xlarge"
+      - "r5.4xlarge"
+      - "r5.8xlarge"
+      - "r5n.large"
+      - "r5n.xlarge"
+      - "r5n.2xlarge"
+      - "r5n.4xlarge"
+      - "r5n.8xlarge"
+    engines:
+      - type: nextflow
+        engine: nextflow

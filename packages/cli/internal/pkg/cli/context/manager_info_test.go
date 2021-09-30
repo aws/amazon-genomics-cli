@@ -12,9 +12,9 @@ import (
 
 func TestManager_Info(t *testing.T) {
 	testCases := map[string]struct {
-		setupMocks   func(*testing.T) mockClients
-		expectedInfo Detail
-		expectedErr  error
+		setupMocks         func(*testing.T) mockClients
+		expectedInfo       Detail
+		expectedErrMessage string
 	}{
 		"unstarted context": {
 			expectedInfo: Detail{
@@ -95,7 +95,7 @@ func TestManager_Info(t *testing.T) {
 			},
 		},
 		"unknown context": {
-			expectedErr: fmt.Errorf("context 'testContextName1' is not defined in Project 'testProjectName' specification"),
+			expectedErrMessage: "context 'testContextName1' is not defined in Project 'testProjectName' specification",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
@@ -108,7 +108,7 @@ func TestManager_Info(t *testing.T) {
 			},
 		},
 		"read error": {
-			expectedErr: fmt.Errorf("some read error"),
+			expectedErrMessage: "some read error",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.projMock.EXPECT().Read().Return(spec.Project{}, fmt.Errorf("some read error"))
@@ -116,7 +116,7 @@ func TestManager_Info(t *testing.T) {
 			},
 		},
 		"output bucket error": {
-			expectedErr: fmt.Errorf("some output bucket error"),
+			expectedErrMessage: "some output bucket error",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
@@ -127,7 +127,7 @@ func TestManager_Info(t *testing.T) {
 			},
 		},
 		"stack error": {
-			expectedErr: fmt.Errorf("some stack error"),
+			expectedErrMessage: "some stack error",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
@@ -140,7 +140,7 @@ func TestManager_Info(t *testing.T) {
 			},
 		},
 		"context not exist error": {
-			expectedErr: fmt.Errorf("context 'testContextName1' is not defined in Project 'testProjectName' specification"),
+			expectedErrMessage: "context 'testContextName1' is not defined in Project 'testProjectName' specification",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
@@ -167,8 +167,8 @@ func TestManager_Info(t *testing.T) {
 
 			info, err := manager.Info(testContextName1)
 
-			if tc.expectedErr != nil {
-				assert.Equal(t, tc.expectedErr, err)
+			if tc.expectedErrMessage != "" {
+				assert.Error(t, err, tc.expectedErrMessage)
 			} else {
 				assert.NoError(t, err)
 				assert.Equal(t, tc.expectedInfo, info)

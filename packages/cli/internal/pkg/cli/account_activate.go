@@ -162,7 +162,7 @@ Activate AGC in your AWS account with a custom S3 bucket and VPC.
 			}
 			log.Info().Msgf("Activating AGC with bucket '%s' and VPC '%s'", opts.bucketName, opts.vpcId)
 			if err := opts.Execute(); err != nil {
-				return clierror.New("account activate", vars, err, "check you have valid aws credentials, check the custom bucket and VPC (if any) exist")
+				return clierror.New("account activate", vars, err)
 			}
 			return nil
 		}),

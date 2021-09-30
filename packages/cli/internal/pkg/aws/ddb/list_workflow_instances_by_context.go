@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	exp "github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
@@ -30,7 +31,7 @@ func (c *Client) ListWorkflowInstancesByContext(ctx context.Context, project, us
 	}
 	output, err := c.svc.Query(ctx, input)
 	if err != nil {
-		return nil, err
+		return nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 	var instances []WorkflowInstance
 	err = attributevalue.UnmarshalListOfMaps(output.Items, &instances)

@@ -60,7 +60,7 @@ using input parameters contained in file "file:///Users/ec2-user/myproj/test-arg
 			vars.WorkflowName = args[0]
 			opts, err := newRunWorkflowOpts(vars)
 			if err != nil {
-				return err
+				return clierror.New("workflow run", vars, err)
 			}
 			log.Info().Msgf("Running workflow. Workflow name: '%s', Arguments: '%s', Context: '%s'", opts.WorkflowName, opts.Arguments, opts.ContextName)
 			if err := opts.Validate(); err != nil {
@@ -68,8 +68,7 @@ using input parameters contained in file "file:///Users/ec2-user/myproj/test-arg
 			}
 			instanceId, err := opts.Execute()
 			if err != nil {
-				err = clierror.New("workflow run", vars, err, "check that your workflow and context are defined for this project")
-				return err
+				return clierror.New("workflow run", vars, err)
 			}
 			format.Default.Write(instanceId)
 			return nil

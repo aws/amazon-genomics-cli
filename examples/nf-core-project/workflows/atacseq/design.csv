@@ -1,0 +1,7 @@
+group,replicate,fastq_1,fastq_2
+control,1,s3://encode-public/2018/03/28/fcd337b8-eb68-41dd-be1f-c188446aa240/ENCFF793VAW.fastq.gz,
+control,2,s3://encode-public/2018/03/28/289c587c-9025-4048-86f2-5d0eca510b03/ENCFF022FVS.fastq.gz,
+control,3,s3://encode-public/2018/03/28/a5e6b7cd-be1e-474d-a5a2-1ca5388fea29/ENCFF224EAV.fastq.gz,
+treatment,1,s3://encode-public/2018/03/28/60f71ff2-2204-4f95-a527-2f10757fba57/ENCFF744SXE.fastq.gz,
+treatment,2,s3://encode-public/2018/03/28/cf5895e3-7a84-42f7-aee6-9b0206d588c7/ENCFF888HBH.fastq.gz,
+treatment,3,s3://encode-public/2018/03/28/1f08c2ac-21a7-4851-9afb-db28114bb41f/ENCFF799HXV.fastq.gz,

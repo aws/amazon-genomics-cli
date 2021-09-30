@@ -74,7 +74,7 @@ If no start, end, or look back periods are set, this command will show logs from
 			opts.setDefaultEndTimeIfEmpty()
 			log.Info().Msgf("Showing adapter logs for '%s'", opts.contextName)
 			if err = opts.Execute(); err != nil {
-				return clierror.New("logs adapter", vars, err, "check you have valid aws credentials, check that the named context is defined in the agc-project.yaml file, check the context is deployed")
+				return clierror.New("logs adapter", vars, err)
 
 			}
 			return nil

@@ -13,23 +13,32 @@ import { EngineOptions, ServiceContainer } from "../../types";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { LogGroup } from "monocdk/aws-logs";
 import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
+import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 
 export interface CromwellEngineStackProps extends EngineOptions, NestedStackProps {}
 
 export class CromwellEngineStack extends NestedEngineStack {
   public readonly engine: SecureService;
   public readonly adapter: SecureService;
-  public readonly taskRole: IRole;
+  public readonly adapterRole: IRole;
   public readonly apiProxy: ApiProxy;
   public readonly adapterLogGroup: ILogGroup;
   public readonly engineLogGroup: ILogGroup;
+  public readonly engineRole: IRole;
 
   constructor(scope: Construct, id: string, props: CromwellEngineStackProps) {
     super(scope, id, props);
-
     const params = props.contextParameters;
+    this.engineLogGroup = new LogGroup(this, "EngineLogGroup");
     const engineContainer = params.getEngineContainer(props.jobQueue.jobQueueArn);
-    this.taskRole = new Role(this, "TaskRole", { assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"), ...props.policyOptions });
+    const artifactBucket = Bucket.fromBucketName(this, "ArtifactBucket", params.artifactBucketName);
+    const outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
+    this.engineRole = new CromwellEngineRole(this, "CromwellEngineRole", {
+      readOnlyBucketArns: (params.readBucketArns ?? []).concat(artifactBucket.bucketArn),
+      readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
+      policies: props.policyOptions,
+    });
+    this.adapterRole = new Role(this, "TaskRole", { assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"), ...props.policyOptions });
     const namespace = new PrivateDnsNamespace(this, "EngineNamespace", {
       name: `${params.projectName}-${params.contextName}-${params.userId}.${APP_NAME}.amazon.com`,
       vpc: props.vpc,
@@ -38,11 +47,11 @@ export class CromwellEngineStack extends NestedEngineStack {
       name: engineContainer.serviceName,
       cloudMapNamespace: namespace,
     };
+
     // TODO: Move log group creation into service construct and make it a property
-    this.engineLogGroup = new LogGroup(this, "EngineLogGroup");
     this.engine = this.getEngineServiceDefinition(props.vpc, engineContainer, cloudMapOptions, this.engineLogGroup);
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
-    this.adapter = renderServiceWithContainer(this, "Adapter", params.getAdapterContainer(), props.vpc, this.taskRole, this.adapterLogGroup);
+    this.adapter = renderServiceWithContainer(this, "Adapter", params.getAdapterContainer(), props.vpc, this.adapterRole, this.adapterLogGroup);
 
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.contextName}${engineContainer.serviceName}ApiProxy`,
@@ -50,8 +59,7 @@ export class CromwellEngineStack extends NestedEngineStack {
       allowedAccountIds: [this.account],
     });
 
-    const outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
-    outputBucket.grantReadWrite(this.taskRole);
+    outputBucket.grantReadWrite(this.adapterRole);
   }
 
   protected getOutputs(): EngineOutputs {
@@ -70,9 +78,8 @@ export class CromwellEngineStack extends NestedEngineStack {
       encrypted: true,
       removalPolicy: RemovalPolicy.DESTROY,
     });
-
     const definition = new FargateTaskDefinition(this, "EngineTaskDef", {
-      taskRole: this.taskRole,
+      taskRole: this.engineRole,
       cpu: serviceContainer.cpu,
       memoryLimitMiB: serviceContainer.memoryLimitMiB,
     });
@@ -100,6 +107,7 @@ export class CromwellEngineStack extends NestedEngineStack {
       readOnly: false,
       sourceVolume: volumeName,
     });
+
     const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc, cloudMapOptions);
 
     fileSystem.connections.allowDefaultPortFrom(engine.service);

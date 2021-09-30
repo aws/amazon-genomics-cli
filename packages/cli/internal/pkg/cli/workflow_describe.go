@@ -72,7 +72,7 @@ An instance is created every time we run a workflow.
 			}
 			workflow, err := opts.Execute()
 			if err != nil {
-				return clierror.New("workflow describe", vars, err, "check that the named workflow is defined in the agc-project.yaml file")
+				return clierror.New("workflow describe", vars, err)
 			}
 			format.Default.Write(workflow)
 			return nil

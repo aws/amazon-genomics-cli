@@ -93,7 +93,7 @@ func buildRootCmd() *cobra.Command {
 			if vars.docPath != "" {
 				err := BuildCommandDocsForHugo(cmd, vars.docPath)
 				if err != nil {
-					return clierror.New("agc", args, err, "check the output path for docs is valid and writable")
+					return clierror.New("agc", args, err)
 				}
 			}
 			return nil

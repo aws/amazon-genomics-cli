@@ -11,6 +11,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -23,6 +24,7 @@ const (
 	deactivateForceFlagDescription = `Force account deactivation by removing all resources associated with AGC.
 This includes project and context resources, even if they are running workflows.
 If not specified, only the core resources will be deleted if possible.`
+	accountDeactivateCommand = "account deactivate"
 )
 
 type accountDeactivateVars struct {
@@ -52,10 +54,10 @@ func (o *accountDeactivateOpts) LoadStacks() error {
 
 func (o *accountDeactivateOpts) Validate() error {
 	if !o.force && len(o.stacks) > 1 {
-		return clierror.ActionableError{
-			Cause:           errors.New("one or more contexts are still deployed"),
-			SuggestedAction: "use --force to destroy deployed contexts as well",
-		}
+		return actionableerror.New(
+			errors.New("one or more contexts are still deployed"),
+			"use --force to destroy deployed contexts as well",
+		)
 	}
 	return nil
 }
@@ -112,9 +114,9 @@ func BuildAccountDeactivateCommand() *cobra.Command {
 AGC will use your default AWS credentials to remove all core AWS resources
 it has created in that account and region. Deactivation may take up to 5 minutes to complete and return.
 Buckets and logs will be preserved.`,
-		Example: `
+		Example: fmt.Sprintf(`
 Deactivate AGC in your AWS account.
-/code $ agc account deactivate`,
+/code $ agc %s`, accountDeactivateCommand),
 		Args: cobra.NoArgs,
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
 			opts, err := newAccountDeactivateOpts(vars)
@@ -122,14 +124,14 @@ Deactivate AGC in your AWS account.
 				return err
 			}
 			if err := opts.LoadStacks(); err != nil {
-				return err
+				return clierror.New(accountDeactivateCommand, vars, err)
 			}
 			if err := opts.Validate(); err != nil {
-				return err
+				return clierror.New(accountDeactivateCommand, vars, err)
 			}
 			log.Info().Msgf("Deactivating AGC. Deactivation may take up to 5 minutes to complete and return.")
 			if err := opts.Execute(); err != nil {
-				return clierror.New("account deactivate", vars, err, "check you have valid aws credentials and that your account has been previously activated")
+				return clierror.New(accountDeactivateCommand, vars, err)
 			}
 			return nil
 		}),
