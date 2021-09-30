@@ -39,8 +39,8 @@ export class BatchStack extends NestedStack {
     BucketOperations.grantBucketAccess(this, this.batchWorkers.role, (contextParameters.readBucketArns ?? []).concat(artifactBucket.bucketArn), true);
     BucketOperations.grantBucketAccess(this, this.batchHead.role, (contextParameters.readBucketArns ?? []).concat(artifactBucket.bucketArn), true);
 
-    BucketOperations.grantBucketAccess(this, this.batchWorkers.role, (contextParameters.readBucketArns ?? []).concat(outputBucket.bucketArn));
-    BucketOperations.grantBucketAccess(this, this.batchHead.role, (contextParameters.readBucketArns ?? []).concat(outputBucket.bucketArn));
+    BucketOperations.grantBucketAccess(this, this.batchWorkers.role, (contextParameters.readWriteBucketArns ?? []).concat(outputBucket.bucketArn));
+    BucketOperations.grantBucketAccess(this, this.batchHead.role, (contextParameters.readWriteBucketArns ?? []).concat(outputBucket.bucketArn));
 
     artifactBucket.grantRead(this.batchWorkers.role);
     artifactBucket.grantRead(this.batchHead.role);
