@@ -1,7 +1,6 @@
 package spec
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -150,10 +149,10 @@ func TestGetContext(t *testing.T) {
 		contextName string
 	}
 	tests := []struct {
-		name            string
-		args            args
-		expectedContext Context
-		expectedError   error
+		name                 string
+		args                 args
+		expectedContext      Context
+		expectedErrorMessage string
 	}{
 		{
 			name: "Unknown context name",
@@ -175,7 +174,7 @@ func TestGetContext(t *testing.T) {
 				},
 				contextName: "badContextName",
 			},
-			expectedError: errors.New("context 'badContextName' is not defined in Project 'myProject' specification"),
+			expectedErrorMessage: "context 'badContextName' is not defined in Project 'myProject' specification",
 		},
 		{
 			name: "Existing context name ",
@@ -197,7 +196,6 @@ func TestGetContext(t *testing.T) {
 				},
 				contextName: "ctx1",
 			},
-			expectedError: nil,
 			expectedContext: Context{
 				Engines: []Engine{
 					{Type: "wdl", Engine: "miniwdl"},
@@ -208,8 +206,8 @@ func TestGetContext(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			context, err := tt.args.projectSpec.GetContext(tt.args.contextName)
-			if tt.expectedError != nil {
-				assert.Error(t, err, tt.expectedError.Error())
+			if tt.expectedErrorMessage != "" {
+				assert.Error(t, err, tt.expectedErrorMessage)
 			} else {
 				assert.Equal(t, tt.expectedContext, context)
 			}

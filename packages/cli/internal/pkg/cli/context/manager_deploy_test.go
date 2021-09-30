@@ -17,8 +17,8 @@ func TestManager_Deploy(t *testing.T) {
 	logging.Verbose = true
 
 	testCases := map[string]struct {
-		setupMocks  func(*testing.T) mockClients
-		expectedErr error
+		setupMocks         func(*testing.T) mockClients
+		expectedErrMessage string
 	}{
 		"deploy success": {
 			setupMocks: func(t *testing.T) mockClients {
@@ -36,7 +36,7 @@ func TestManager_Deploy(t *testing.T) {
 			},
 		},
 		"read error": {
-			expectedErr: fmt.Errorf("some read error"),
+			expectedErrMessage: "some read error",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.projMock.EXPECT().Read().Return(spec.Project{}, fmt.Errorf("some read error"))
@@ -44,7 +44,7 @@ func TestManager_Deploy(t *testing.T) {
 			},
 		},
 		"output bucket error": {
-			expectedErr: fmt.Errorf("some outbut bucket error"),
+			expectedErrMessage: "some outbut bucket error",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
@@ -55,7 +55,7 @@ func TestManager_Deploy(t *testing.T) {
 			},
 		},
 		"context error": {
-			expectedErr: fmt.Errorf("context 'testContextName1' is not defined in Project 'testProjectName' specification"),
+			expectedErrMessage: "context 'testContextName1' is not defined in Project 'testProjectName' specification",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
@@ -67,7 +67,7 @@ func TestManager_Deploy(t *testing.T) {
 			},
 		},
 		"artifact bucket error": {
-			expectedErr: fmt.Errorf("some artifact bucket error"),
+			expectedErrMessage: "some artifact bucket error",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
@@ -79,7 +79,7 @@ func TestManager_Deploy(t *testing.T) {
 			},
 		},
 		"deploy error": {
-			expectedErr: fmt.Errorf("some context error"),
+			expectedErrMessage: "some context error",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
@@ -93,7 +93,7 @@ func TestManager_Deploy(t *testing.T) {
 			},
 		},
 		"clear context error": {
-			expectedErr: fmt.Errorf("failed to clear context"),
+			expectedErrMessage: "failed to clear context",
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
@@ -122,8 +122,8 @@ func TestManager_Deploy(t *testing.T) {
 
 			err := manager.Deploy(testContextName1, false)
 
-			if tc.expectedErr != nil {
-				assert.Equal(t, tc.expectedErr, err)
+			if tc.expectedErrMessage != "" {
+				assert.Error(t, err, tc.expectedErrMessage)
 			} else {
 				assert.NoError(t, err)
 			}

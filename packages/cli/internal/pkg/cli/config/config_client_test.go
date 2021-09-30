@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -69,9 +70,11 @@ func TestDetermineHomeDir_Failure(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockOs := iomocks.NewMockOS(ctrl)
 	osUserHomeDir = mockOs.UserHomeDir
-	expectedError := errors.New("some error")
-	mockOs.EXPECT().UserHomeDir().Return("", expectedError)
+	expectedOsError := errors.New("some error")
+	mockOs.EXPECT().UserHomeDir().Return("", expectedOsError)
 	_, err := DetermineHomeDir()
 
-	assert.Error(t, err, expectedError.Error())
+	expectedError := actionableerror.New(err, "Please check that your home or user profile directory is defined within your environment variables")
+
+	assert.Error(t, err, expectedError)
 }

@@ -83,7 +83,7 @@ func BuildContextDescribeCommand() *cobra.Command {
 			}
 			ctx, err := opts.Execute()
 			if err != nil {
-				return clierror.New("context describe", vars, err, "check that the desired context is defined in the agc-project.yaml file")
+				return clierror.New("context describe", vars, err)
 			}
 			format.Default.Write(ctx)
 			return nil

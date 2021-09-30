@@ -93,7 +93,7 @@ func BuildWorkflowStatusCommand() *cobra.Command {
 			}
 			statuses, err := opts.Execute()
 			if err != nil {
-				return clierror.New("workflow status", vars, err, "")
+				return clierror.New("workflow status", vars, err)
 			}
 			format.Default.Write(statuses)
 			return nil

@@ -1,10 +1,8 @@
 package spec
 
 import (
-	"errors"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -251,14 +249,7 @@ contexts:
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			err := ValidateProject([]byte(tt.yaml))
-			if assert.Error(t, err, "Expected invalid project spec") {
-				var aErr clierror.ActionableError
-				if errors.As(err, &aErr) {
-					assert.EqualError(t, aErr.Cause, tt.errMessage)
-					return
-				}
-				assert.Failf(t, "Unexpected error type", "Expected an instance of clierror.ActionableError, got: %#v", err)
-			}
+			assert.Error(t, err, tt.errMessage)
 		})
 	}
 }

@@ -3,6 +3,7 @@ package ecr
 import (
 	"fmt"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/rs/zerolog/log"
 )
 
@@ -23,11 +24,13 @@ func (c *Client) VerifyImageExists(reference ImageReference) error {
 
 	ok, err := c.ImageListable(reference.RegistryId, reference.RepositoryName, reference.ImageTag, reference.Region)
 	if err != nil {
-		return err
+		return actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 	if !ok {
-		return fmt.Errorf("cannot verify the presence of container '%s:%s' in region: '%s' of account: '%s'. check your environment variables and permissions",
-			reference.RepositoryName, reference.ImageTag, reference.Region, reference.RegistryId)
+		return actionableerror.New(
+			fmt.Errorf("cannot verify the presence of container '%s:%s' in region: '%s' of account: '%s'", reference.RepositoryName, reference.ImageTag, reference.Region, reference.RegistryId),
+			"Please check your environment variables and permissions",
+		)
 	}
 	return nil
 }

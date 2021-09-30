@@ -189,7 +189,7 @@ If the --run flag is omitted then the latest workflow run is used.`,
 			}
 			log.Info().Msgf("Showing the logs for '%s'", vars.workflowName)
 			if err = opts.Execute(); err != nil {
-				return clierror.New("logs workflow", vars, err, "check you have valid aws credentials, check that the named workflow is defined in the agc-project.yaml file")
+				return clierror.New("logs workflow", vars, err)
 			}
 			return nil
 		}),
