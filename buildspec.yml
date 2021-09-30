@@ -33,6 +33,8 @@ phases:
       - cp -a examples tmp
       - cp -a packages/cli/bin/local/. tmp
       - cp packages/cdk/cdk.tgz tmp
+      - cp LICENSE tmp
+      - cp THIRD-PARTY tmp
       - mkdir -p amazon-genomics-cli amazon-genomics-cli/$SEMANTIC_VERSION
       - (cd tmp && zip -r ../amazon-genomics-cli/$SEMANTIC_VERSION/amazon-genomics-cli.zip ./*)
 

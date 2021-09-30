@@ -337,7 +337,6 @@ limitations under the License.
 * For client_model see also this required NOTICE:
     Data model artifacts for Prometheus.
     Copyright 2012-2015 The Prometheus Authors
-
     This product includes software developed at
     SoundCloud Ltd. (http://soundcloud.com/).
 * For termtables see also this required NOTICE:
@@ -1177,7 +1176,7 @@ express Statement of Purpose.
 
 ------
 
-json-iterator; version 1.1.11 -- https://github.com/json-iterator/go
+** json-iterator; version 1.1.11 -- https://github.com/json-iterator/go
 
 MIT License
 
@@ -1203,7 +1202,7 @@ SOFTWARE.
 
 ------
 
-go-junit-report; version 0.0.0, 0.9.1 -- https://github.com/jstemmer/go-junit-report
+** go-junit-report; version 0.0.0, 0.9.1 -- https://github.com/jstemmer/go-junit-report
 
 Copyright (c) 2012 Joel Stemmer
 
@@ -1228,7 +1227,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ------
 
-jtolio; version 4.20.0 -- https://github.com/jtolio
+** jtolio; version 4.20.0 -- https://github.com/jtolio
 
 Copyright (c) 2013, Space Monkey, Inc.
 
@@ -1252,14 +1251,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------
 
 ** go-shellquote; version 0.0.0 -- https://github.com/kballard/go-shellquote
-
 ** tools; version 0.0.0 -- https://pkg.go.dev/golang.org/x/tools
 ** tools; version 0.1.0 -- https://pkg.go.dev/golang.org/x/tools
 ** tools; version 0.1.2 -- https://pkg.go.dev/golang.org/x/tools
 ** tools; version 0.1.6 -- https://pkg.go.dev/golang.org/x/
 ** sys; version 0.0.0 -- https://pkg.go.dev/golang.org/x/sys
 ** sync; version 0.0.0 -- https://pkg.go.dev/golang.org/x/sync
-** sync; version 0.0.0 -- https://pkg.go.dev/golang.org/x/oauth2
+** oauth2; version 0.0.0 -- https://pkg.go.dev/golang.org/x/oauth2
 ** net; version 0.0.0 -- https://pkg.go.dev/golang.org/x/net
 ** mod; version 0.0.0, 0.1.0, 0.1.1, 0.2.0, 0.3.0, 0.4.0, 0.4.1, 0.4.2 -- https://pkg.go.dev/golang.org/x/mod
 ** mobile; version 0.0.0 -- https://pkg.go.dev/golang.org/x/mobile
@@ -1799,7 +1797,7 @@ Exhibit B - “Incompatible With Secondary Licenses” Notice
 
 ------
 
-**vt10x; version 0.0.0 -- https://github.com/hinshun/vt10x
+** vt10x; version 0.0.0 -- https://github.com/hinshun/vt10x
 
 Copyright (C) 2013 James Gray
 
@@ -1855,7 +1853,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ------
 
-dns; version 1.0.14 -- https://github.com/miekg/dns
+** dns; version 1.0.14 -- https://github.com/miekg/dns
 
 Copyright (c) 2009 The Go Authors. All rights reserved.
 
@@ -1963,7 +1961,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ** check.v1; version 0.0.0 -- https://github.com/go-check
 ** check.v1; version 1.0.0 -- https://github.com/go-check
-** check.v1; version 1.0.0 -- https://github.com/go-check
 
 Copyright (c) 2010-2013 Gustavo Niemeyer <gustavo@niemeyer.net>
 
@@ -1991,7 +1988,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ------
 
-** go-errgo; version -- 2.1.0 -- https://github.com/go-errgo
+** go-errgo; version 2.1.0 -- https://github.com/go-errgo
 
 Copyright © 2013, Roger Peppe
 All rights reserved.
@@ -2054,7 +2051,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ------
 
-https://github.com/pkg/errors
+** errors; version 0.8.1, 0.9.1  -- https://github.com/pkg/errors
 
 Copyright (c) 2015, Dave Cheney <dave@cheney.net>
 All rights reserved.
@@ -2312,8 +2309,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------
 
 ** spf13/pflag; version v1.0.5 -- https://github.com/spf13/pflag
-Copyright (c) 2012 Alex Ogier. All rights reserved.
-Copyright (c) 2012 The Go Authors. All rights reserved.
 
 Copyright (c) 2012 Alex Ogier. All rights reserved.
 Copyright (c) 2012 The Go Authors. All rights reserved.
@@ -2376,6 +2371,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ------
+
 ** quote; version 3.1.0 -- https://pkg.go.dev/rsc.io/quote/v3
 
 Copyright (c) 2009 The Go Authors. All rights reserved.
@@ -2441,7 +2437,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ------
 
 ** go-isatty; version 0.0.12 -- https://github.com/mattn/go-isatty
-Copyright (c) Yasuhiro MATSUMOTO <mattn.jp@gmail.com>
 
 Copyright (c) Yasuhiro MATSUMOTO <mattn.jp@gmail.com>
 
@@ -2524,6 +2519,7 @@ SOFTWARE.
 ------
 
 ** survey; version 2.0.7 -- https://github.com/AlecAivazis/survey
+
 Copyright (c) 2018 Alec Aivazis
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -2547,7 +2543,6 @@ SOFTWARE.
 ------
 
 ** go-shellquote; version latest -- https://github.com/kballard/go-shellquote
-Copyright (C) 2014 Kevin Ballard
 
 Copyright (C) 2014 Kevin Ballard
 
@@ -2572,9 +2567,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------
 
 ** mgutz/ansi; version latest -- https://github.com/mgutz/ansi
-Copyright (c) 2013 Mario L. Gutierrez
 
-The MIT License (MIT)
 Copyright (c) 2013 Mario L. Gutierrez
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -2598,7 +2591,6 @@ SOFTWARE.
 ------
 
 ** fatih/color; version  v1.9.0 -- https://github.com/fatih/color
-Copyright (c) 2013 Fatih Arslan
 
 The MIT License (MIT)
 
@@ -2626,9 +2618,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------
 
 ** optional; version latest -- https://github.com/antihax/optional
-Copyright (c) 2016 Adam Hintz
 
 The MIT License (MIT)
+
 Copyright (c) 2016 Adam Hintz
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -2652,6 +2644,7 @@ SOFTWARE.
 ------
 
 ** toml; version v0.3.1 -- https://github.com/BurntSushi/toml
+
 Copyright (c) 2013 TOML authors
 
 The MIT License (MIT)
@@ -2703,7 +2696,6 @@ THE SOFTWARE.
 ------
 
 ** dateparse; version v0.0.0 -- https://github.com/araddon/dateparse
-Copyright (c) 2013 VividCortex
 
 The MIT License (MIT)
 
@@ -2730,7 +2722,6 @@ THE SOFTWARE.
 ------
 
 ** circbuf; version v0.0.0 -- https://github.com/armon/circbuf
-Copyright (c) 2013 Armon Dadgar
 
 The MIT License (MIT)
 
@@ -2756,6 +2747,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------
 
 ** xgb; version v0.0.0 -- github.com/BurntSushi/xgb
+
 Copyright (c) 2009 The XGB Authors. All rights reserved.
 
 // Redistribution and use in source and binary forms, with or without
@@ -2802,7 +2794,6 @@ Copyright (c) 2009 The XGB Authors. All rights reserved.
 ------
 
 ** go-metrics; version v0.0.0 -- https://github.com/armon/go-metrics
-Copyright (c) 2013 Armon Dadgar
 
 The MIT License (MIT)
 
@@ -2828,7 +2819,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------
 
 ** go-metrics; version v0.0.0 -- https://github.com/armon/go-metrics
-Copyright (c) 2013 Armon Dadgar
 
 The MIT License (MIT)
 
