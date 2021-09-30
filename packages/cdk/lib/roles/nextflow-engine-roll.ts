@@ -4,16 +4,14 @@ import { PolicyOptions } from "../types/engine-options";
 import { BucketOperations } from "../../common/BucketOperations";
 import { NextflowLogsPolicy } from "./policies/nextflow-logs-policy";
 
-interface NextflowEngineS3PolicyProps {
+interface NextflowEngineRoleProps {
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
   policies: PolicyOptions;
 }
 
 export class NextflowEngineRole extends iam.Role {
-  readonly props: NextflowEngineS3PolicyProps;
-
-  constructor(scope: cdk.Construct, id: string, props: NextflowEngineS3PolicyProps) {
+  constructor(scope: cdk.Construct, id: string, props: NextflowEngineRoleProps) {
     super(scope, id, {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {

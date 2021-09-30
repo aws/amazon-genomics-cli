@@ -4,16 +4,14 @@ import { PolicyOptions } from "../types/engine-options";
 import { BucketOperations } from "../../common/BucketOperations";
 import { S3ListAllBucketsPolicy } from "./policies/s3-list-all-buckets-policy";
 
-interface CromwellEngineS3PolicyProps {
+interface CromwellEngineRoleProps {
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
   policies: PolicyOptions;
 }
 
 export class CromwellEngineRole extends iam.Role {
-  readonly props: CromwellEngineS3PolicyProps;
-
-  constructor(scope: cdk.Construct, id: string, props: CromwellEngineS3PolicyProps) {
+  constructor(scope: cdk.Construct, id: string, props: CromwellEngineRoleProps) {
     super(scope, id, {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {
