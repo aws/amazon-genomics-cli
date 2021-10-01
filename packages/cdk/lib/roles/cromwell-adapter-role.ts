@@ -4,21 +4,15 @@ import { NextflowDescribeJobsBatchPolicy } from "./policies/nextflow-describe-jo
 import { NextflowSubmitJobBatchPolicy } from "./policies/nextflow-submit-job-batch-policy";
 import { BucketOperations } from "../../common/BucketOperations";
 
-export interface NextflowAdapterRoleProps {
-  headJobDefinitionArn: string;
-  jobQueueArn: string;
+export interface CromwellAdapterRoleProps {
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
 }
 
-export class NextflowAdapterRole extends iam.Role {
-  constructor(scope: cdk.Construct, id: string, props: NextflowAdapterRoleProps) {
+export class CromwellAdapterRole extends iam.Role {
+  constructor(scope: cdk.Construct, id: string, props: CromwellAdapterRoleProps) {
     super(scope, id, {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
-      inlinePolicies: {
-        NextflowDescribeJobsPolicy: new NextflowDescribeJobsBatchPolicy(),
-        NextflowSubmitJobsPolicy: new NextflowSubmitJobBatchPolicy(props),
-      },
     });
 
     BucketOperations.grantBucketAccess(this, this, props.readOnlyBucketArns, true);

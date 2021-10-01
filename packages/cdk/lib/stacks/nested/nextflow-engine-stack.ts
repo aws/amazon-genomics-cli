@@ -48,6 +48,8 @@ export class NextflowEngineStack extends NestedEngineStack {
     const adapterRole = new NextflowAdapterRole(this, "NextflowAdapterRole", {
       headJobDefinitionArn: this.nextflowEngine.headJobDefinition.jobDefinitionArn,
       jobQueueArn: props.jobQueue.jobQueueArn,
+      readOnlyBucketArns: [],
+      readWriteBucketArns: [outputBucket.bucketArn],
     });
 
     const engineLogGroup = this.nextflowEngine.logGroup;
