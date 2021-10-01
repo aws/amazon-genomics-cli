@@ -15,7 +15,7 @@ export class CromwellEngineRole extends iam.Role {
     super(scope, id, {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {
-        EngineS3Policy: new S3ListAllBucketsPolicy(),
+        CromwellListAllBucketsPolicy: new S3ListAllBucketsPolicy(),
       },
       ...props.policies,
     });

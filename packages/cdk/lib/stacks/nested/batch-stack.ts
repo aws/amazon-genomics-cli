@@ -2,7 +2,6 @@ import { NestedStack, NestedStackProps } from "monocdk";
 import { InstanceType, IVpc } from "monocdk/aws-ec2";
 import { Construct } from "constructs";
 import { LAUNCH_TEMPLATE } from "../../constants";
-import { IBucket } from "monocdk/aws-s3";
 import { Batch, ComputeType } from "../../constructs";
 import { ContextAppParameters } from "../../env";
 import { BucketOperations } from "../../../common/BucketOperations";
@@ -21,7 +20,6 @@ export interface BatchStackProps extends NestedStackProps {
 export class BatchStack extends NestedStack {
   public readonly batchWorkers: Batch;
   public readonly batchHead: Batch;
-  private readonly importedBuckets: Record<string, IBucket> = {};
 
   constructor(scope: Construct, id: string, props: BatchStackProps) {
     super(scope, id, props);

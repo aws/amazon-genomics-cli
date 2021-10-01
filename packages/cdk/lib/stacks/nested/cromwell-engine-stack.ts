@@ -38,7 +38,7 @@ export class CromwellEngineStack extends NestedEngineStack {
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
       policies: props.policyOptions,
     });
-    this.adapterRole = new Role(this, "TaskRole", { assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"), ...props.policyOptions });
+    this.adapterRole = new Role(this, "CromwellAdapterRole", { assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com") });
     const namespace = new PrivateDnsNamespace(this, "EngineNamespace", {
       name: `${params.projectName}-${params.contextName}-${params.userId}.${APP_NAME}.amazon.com`,
       vpc: props.vpc,
@@ -58,8 +58,6 @@ export class CromwellEngineStack extends NestedEngineStack {
       loadBalancer: this.adapter.loadBalancer,
       allowedAccountIds: [this.account],
     });
-
-    outputBucket.grantReadWrite(this.adapterRole);
   }
 
   protected getOutputs(): EngineOutputs {
@@ -109,7 +107,6 @@ export class CromwellEngineStack extends NestedEngineStack {
     });
 
     const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc, cloudMapOptions);
-
     fileSystem.connections.allowDefaultPortFrom(engine.service);
     return engine;
   }
