@@ -14,6 +14,7 @@ import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { LogGroup } from "monocdk/aws-logs";
 import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
 import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
+import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
 
 export interface CromwellEngineStackProps extends EngineOptions, NestedStackProps {}
 
@@ -38,7 +39,10 @@ export class CromwellEngineStack extends NestedEngineStack {
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
       policies: props.policyOptions,
     });
-    this.adapterRole = new Role(this, "TaskRole", { assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"), ...props.policyOptions });
+    this.adapterRole = new CromwellAdapterRole(this, "CromwellAdapterRole", {
+      readOnlyBucketArns: [],
+      readWriteBucketArns: [outputBucket.bucketArn],
+    });
     const namespace = new PrivateDnsNamespace(this, "EngineNamespace", {
       name: `${params.projectName}-${params.contextName}-${params.userId}.${APP_NAME}.amazon.com`,
       vpc: props.vpc,
@@ -58,8 +62,6 @@ export class CromwellEngineStack extends NestedEngineStack {
       loadBalancer: this.adapter.loadBalancer,
       allowedAccountIds: [this.account],
     });
-
-    outputBucket.grantReadWrite(this.adapterRole);
   }
 
   protected getOutputs(): EngineOutputs {
@@ -109,7 +111,6 @@ export class CromwellEngineStack extends NestedEngineStack {
     });
 
     const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc, cloudMapOptions);
-
     fileSystem.connections.allowDefaultPortFrom(engine.service);
     return engine;
   }
