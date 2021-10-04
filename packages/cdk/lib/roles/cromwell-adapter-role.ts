@@ -1,7 +1,5 @@
 import * as cdk from "monocdk";
 import * as iam from "monocdk/aws-iam";
-import { NextflowDescribeJobsBatchPolicy } from "./policies/nextflow-describe-jobs-batch-policy";
-import { NextflowSubmitJobBatchPolicy } from "./policies/nextflow-submit-job-batch-policy";
 import { BucketOperations } from "../../common/BucketOperations";
 
 export interface CromwellAdapterRoleProps {

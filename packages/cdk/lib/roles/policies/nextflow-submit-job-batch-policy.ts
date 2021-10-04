@@ -1,8 +1,12 @@
 import * as iam from "monocdk/aws-iam";
-import { NextflowAdapterRoleProps } from "../nextflow-adapter-role";
+
+export interface NextflowSubmitJobBatchPolicyProps {
+  headJobDefinitionArn: string;
+  jobQueueArn: string;
+}
 
 export class NextflowSubmitJobBatchPolicy extends iam.PolicyDocument {
-  constructor(props: NextflowAdapterRoleProps) {
+  constructor(props: NextflowSubmitJobBatchPolicyProps) {
     super({
       assignSids: true,
       statements: [

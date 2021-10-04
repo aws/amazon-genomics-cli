@@ -1,12 +1,10 @@
 import * as cdk from "monocdk";
 import * as iam from "monocdk/aws-iam";
 import { NextflowDescribeJobsBatchPolicy } from "./policies/nextflow-describe-jobs-batch-policy";
-import { NextflowSubmitJobBatchPolicy } from "./policies/nextflow-submit-job-batch-policy";
+import { NextflowSubmitJobBatchPolicy, NextflowSubmitJobBatchPolicyProps } from "./policies/nextflow-submit-job-batch-policy";
 import { BucketOperations } from "../../common/BucketOperations";
 
-export interface NextflowAdapterRoleProps {
-  headJobDefinitionArn: string;
-  jobQueueArn: string;
+export interface NextflowAdapterRoleProps extends NextflowSubmitJobBatchPolicyProps {
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
 }
