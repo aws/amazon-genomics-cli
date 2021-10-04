@@ -4,9 +4,9 @@ import { PolicyOptions } from "../types/engine-options";
 import { BucketOperations } from "../../common/BucketOperations";
 import { NextflowLogsPolicy } from "./policies/nextflow-logs-policy";
 import { NextflowBatchPolicy, NextflowBatchPolicyProps } from "./policies/nextflow-batch-policy";
-import { ManagedPolicy } from "monocdk/aws-iam";
+import { NextflowSubmitJobBatchPolicy, NextflowSubmitJobBatchPolicyProps } from "./policies/nextflow-submit-job-batch-policy";
 
-interface NextflowEngineRoleProps extends NextflowBatchPolicyProps {
+interface NextflowEngineRoleProps extends NextflowBatchPolicyProps, NextflowSubmitJobBatchPolicyProps {
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
   policies: PolicyOptions;
@@ -19,6 +19,7 @@ export class NextflowEngineRole extends iam.Role {
       inlinePolicies: {
         NextflowLogPolicy: new NextflowLogsPolicy(),
         NextflowBatchPolicy: new NextflowBatchPolicy(props),
+        NextflowBatchSubmitPolicy: new NextflowSubmitJobBatchPolicy(props),
       },
       ...props.policies,
     });

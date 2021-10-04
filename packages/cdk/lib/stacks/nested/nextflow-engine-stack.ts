@@ -34,7 +34,7 @@ export class NextflowEngineStack extends NestedEngineStack {
     const engineRole = new NextflowEngineRole(this, "NextflowEngineRole", {
       account: props.env?.account ?? "",
       region: props.env?.region ?? "",
-      jobQueueArn: props.headQueue.jobQueueArn,
+      submitJobPolicyArns: [props.headQueue.jobQueueArn],
       readOnlyBucketArns: (params.readBucketArns ?? []).concat(artifactBucket.bucketArn),
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
       policies: props.policyOptions,
@@ -49,8 +49,9 @@ export class NextflowEngineStack extends NestedEngineStack {
     });
 
     const adapterRole = new NextflowAdapterRole(this, "NextflowAdapterRole", {
-      headJobDefinitionArn: this.nextflowEngine.headJobDefinition.jobDefinitionArn,
-      jobQueueArn: props.jobQueue.jobQueueArn,
+      account: props.env?.account ?? "",
+      region: props.env?.region ?? "",
+      submitJobPolicyArns: [this.nextflowEngine.headJobDefinition.jobDefinitionArn, props.jobQueue.jobQueueArn],
       readOnlyBucketArns: [],
       readWriteBucketArns: [outputBucket.bucketArn],
     });

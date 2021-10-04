@@ -3,7 +3,6 @@ import * as iam from "monocdk/aws-iam";
 export interface NextflowBatchPolicyProps {
   account: string;
   region: string;
-  jobQueueArn: string;
 }
 
 export class NextflowBatchPolicy extends iam.PolicyDocument {
@@ -22,11 +21,6 @@ export class NextflowBatchPolicy extends iam.PolicyDocument {
           effect: iam.Effect.ALLOW,
           actions: ["batch:RegisterJobDefinition"],
           resources: [nextflowJobArn],
-        }),
-        new iam.PolicyStatement({
-          effect: iam.Effect.ALLOW,
-          actions: ["batch:SubmitJob"],
-          resources: [nextflowJobArn, props.jobQueueArn],
         }),
       ],
     });
