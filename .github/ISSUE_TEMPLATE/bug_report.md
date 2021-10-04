@@ -24,9 +24,14 @@ assignees: ''
 [//]: #  (The logs that where obtained by running the commands here. Please run the command with "-v" so that we can see the verbose logs.)
 
 
-**Expected Bbehavior**
+**Expected Behavior**
 
 [//]: #  (A clear and concise description of what you expected to happen.)
+
+
+**Actual Behavior**
+
+[//]: #  (A clear and concise description of what actually to happened.)
 
 
 **Screenshots**
