@@ -6,7 +6,7 @@ import { NextflowLogsPolicy } from "./policies/nextflow-logs-policy";
 import { NextflowBatchPolicy, NextflowBatchPolicyProps } from "./policies/nextflow-batch-policy";
 import { ManagedPolicy } from "monocdk/aws-iam";
 
-interface NextflowEngineRoleProps extends NextflowBatchPolicyProps{
+interface NextflowEngineRoleProps extends NextflowBatchPolicyProps {
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
   policies: PolicyOptions;
