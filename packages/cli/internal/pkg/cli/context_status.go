@@ -54,7 +54,11 @@ func BuildContextStatusCommand() *cobra.Command {
 			if err != nil {
 				return clierror.New("context status", nil, err)
 			}
-			format.Default.Write(contextInstances)
+			if len(contextInstances) > 0 {
+				format.Default.Write(contextInstances)
+			} else {
+				format.Default.Write("There are no contexts deployed.")
+			}
 			return nil
 		}),
 	}
