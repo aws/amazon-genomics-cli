@@ -33,6 +33,9 @@ export class NextflowEngineStack extends NestedEngineStack {
 
     const adapterRole = new Role(this, "AdapterRole", { assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"), ...props.policyOptions });
     const engineRole = new NextflowEngineRole(this, "NextflowEngineRole", {
+      account: props.env?.account ?? "",
+      region: props.env?.region ?? "",
+      jobQueueArn: props.headQueue.jobQueueArn,
       readOnlyBucketArns: (params.readBucketArns ?? []).concat(artifactBucket.bucketArn),
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
       policies: props.policyOptions,

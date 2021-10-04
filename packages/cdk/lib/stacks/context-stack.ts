@@ -34,6 +34,7 @@ export class ContextStack extends Stack {
           ManagedPolicy.fromAwsManagedPolicyName("AWSBatchFullAccess"),
         ],
       },
+      env: props.env,
     };
     const engineName = props.contextParameters.engineName;
     switch (engineName) {

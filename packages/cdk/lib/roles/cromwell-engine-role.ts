@@ -3,8 +3,9 @@ import * as iam from "monocdk/aws-iam";
 import { PolicyOptions } from "../types/engine-options";
 import { BucketOperations } from "../../common/BucketOperations";
 import { S3ListAllBucketsPolicy } from "./policies/s3-list-all-buckets-policy";
+import { CromwellBatchPolicy, CromwellBatchPolicyProps } from "./policies/cromwell-batch-policy";
 
-interface CromwellEngineRoleProps {
+interface CromwellEngineRoleProps extends CromwellBatchPolicyProps {
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
   policies: PolicyOptions;
@@ -16,6 +17,7 @@ export class CromwellEngineRole extends iam.Role {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {
         EngineS3Policy: new S3ListAllBucketsPolicy(),
+        EngineBatchPolicy: new CromwellBatchPolicy(props),
       },
       ...props.policies,
     });

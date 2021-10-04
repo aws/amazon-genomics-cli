@@ -2,6 +2,7 @@ import { RoleProps } from "monocdk/aws-iam";
 import { IJobQueue } from "monocdk/aws-batch";
 import { IVpc } from "monocdk/aws-ec2";
 import { ContextAppParameters } from "../env";
+import {Environment} from "monocdk";
 
 export type PolicyOptions = Pick<RoleProps, "inlinePolicies" | "managedPolicies">;
 
@@ -24,4 +25,8 @@ export interface EngineOptions {
    * Parameters determined by the context.
    */
   readonly contextParameters: ContextAppParameters;
+  /**
+   * Deployment enviroment
+   */
+  readonly env?: Environment;
 }

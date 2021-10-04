@@ -34,6 +34,9 @@ export class CromwellEngineStack extends NestedEngineStack {
     const artifactBucket = Bucket.fromBucketName(this, "ArtifactBucket", params.artifactBucketName);
     const outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
     this.engineRole = new CromwellEngineRole(this, "CromwellEngineRole", {
+      account: props.env?.account ?? "",
+      region: props.env?.region ?? "",
+      jobQueueArn: props.jobQueue.jobQueueArn,
       readOnlyBucketArns: (params.readBucketArns ?? []).concat(artifactBucket.bucketArn),
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
       policies: props.policyOptions,
