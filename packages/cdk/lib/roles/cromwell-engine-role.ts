@@ -18,6 +18,7 @@ export class CromwellEngineRole extends iam.Role {
       inlinePolicies: {
         EngineS3Policy: new S3ListAllBucketsPolicy(),
         EngineBatchPolicy: new CromwellBatchPolicy(props),
+        CromwellListAllBucketsPolicy: new S3ListAllBucketsPolicy(),
       },
       ...props.policies,
     });
