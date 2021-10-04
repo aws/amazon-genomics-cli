@@ -11,7 +11,7 @@ assignees: ''
 
 **Describe the Bug**
 
-[//]: #  (Please describe the behavior that you are seeing with as many details as possible including logs from AGC, Cloudwatch snippets and Cloudformation errors if relevant.)
+[//]: #  (Please describe the behavior that you are seeing with as many details as possible including logs from AGC, CloudWatch snippets and CloudFormation errors if relevant.)
 
 
 **Steps to Reproduce**
