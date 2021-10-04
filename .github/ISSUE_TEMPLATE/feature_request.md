@@ -10,8 +10,21 @@ assignees: ''
 [//]: #  (Before raising the feature request, please check to see if an existing feature request already exists.)
 
 
-**Is your feature request related to a problem? Please describe.**
+**Description**
 
-[//]: #  (A clear and concise description of what the problem is. Ex. I would like to run Nextflow workflows using AGC as I use that workflow language when running my genomics workflows.)
+[//]: #  (A short description of the feature you are proposing.)
 
 
+**Use Case**
+
+[//]: #  (Why do you need this feature?)
+
+
+**Proposed Solution**
+
+[//]: #  (Please include prototype/workaround/sketch/reference implementation.)
+
+
+**Other information**
+
+[//]: #  (detailed explanation, stacktraces, related issues, suggestions how to fix, links for us to have context, eg. associated pull-request, stackoverflow, slack, etc)
