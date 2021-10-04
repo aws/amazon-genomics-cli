@@ -7,6 +7,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -57,7 +58,7 @@ func BuildContextStatusCommand() *cobra.Command {
 			if len(contextInstances) > 0 {
 				format.Default.Write(contextInstances)
 			} else {
-				format.Default.Write("There are no contexts deployed.")
+				log.Info().Msg("There are no contexts deployed.")
 			}
 			return nil
 		}),
