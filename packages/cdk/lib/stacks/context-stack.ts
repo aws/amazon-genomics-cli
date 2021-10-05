@@ -77,18 +77,12 @@ export class ContextStack extends Stack {
 
   private getCromwellBatchProps(props: ContextStackProps) {
     const commonBatchProps = this.getCommonBatchProps(props);
-    if (props.contextParameters.requestSpotInstances) {
-      return {
-        ...commonBatchProps,
-        createSpotBatch: true,
-        createOnDemandBatch: false,
-      };
-    }
+    const { requestSpotInstances } = props.contextParameters;
 
     return {
       ...commonBatchProps,
-      createSpotBatch: false,
-      createOnDemandBatch: true,
+      createSpotBatch: requestSpotInstances,
+      createOnDemandBatch: !requestSpotInstances,
     };
   }
 
@@ -102,17 +96,10 @@ export class ContextStack extends Stack {
 
   private getNextflowBatchProps(props: ContextStackProps) {
     const commonBatchProps = this.getCommonBatchProps(props);
-    if (props.contextParameters.requestSpotInstances) {
-      return {
-        ...commonBatchProps,
-        createSpotBatch: true,
-        createOnDemandBatch: true,
-      };
-    }
-
+    const { requestSpotInstances } = props.contextParameters;
     return {
       ...commonBatchProps,
-      createSpotBatch: false,
+      createSpotBatch: requestSpotInstances,
       createOnDemandBatch: true,
     };
   }
