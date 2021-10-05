@@ -3,7 +3,6 @@ import { Construct } from "constructs";
 import { NextflowEngine } from "../../constructs/engines/nextflow/nextflow-engine";
 import { renderServiceWithContainer } from "../../util";
 import { EngineOptions } from "../../types";
-import { Role, ServicePrincipal } from "monocdk/aws-iam";
 import { Bucket } from "monocdk/aws-s3";
 import { ApiProxy } from "../../constructs";
 import { LogGroup } from "monocdk/aws-logs";
@@ -11,6 +10,7 @@ import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { IJobQueue } from "monocdk/aws-batch";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
+import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
 
 export interface NextflowEngineStackProps extends EngineOptions, NestedStackProps {
   /**
@@ -31,14 +31,11 @@ export class NextflowEngineStack extends NestedEngineStack {
     const outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
     const artifactBucket = Bucket.fromBucketName(this, "ArtifactBucket", params.artifactBucketName);
 
-    const adapterRole = new Role(this, "AdapterRole", { assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"), ...props.policyOptions });
     const engineRole = new NextflowEngineRole(this, "NextflowEngineRole", {
       readOnlyBucketArns: (params.readBucketArns ?? []).concat(artifactBucket.bucketArn),
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
       policies: props.policyOptions,
     });
-
-    outputBucket.grantReadWrite(adapterRole);
 
     this.nextflowEngine = new NextflowEngine(this, "NextflowEngine", {
       vpc: props.vpc,
@@ -46,6 +43,13 @@ export class NextflowEngineStack extends NestedEngineStack {
       jobQueueArn: props.jobQueue.jobQueueArn,
       rootDir: params.getEngineBucketPath(),
       taskRole: engineRole,
+    });
+
+    const adapterRole = new NextflowAdapterRole(this, "NextflowAdapterRole", {
+      headJobDefinitionArn: this.nextflowEngine.headJobDefinition.jobDefinitionArn,
+      jobQueueArn: props.jobQueue.jobQueueArn,
+      readOnlyBucketArns: [],
+      readWriteBucketArns: [outputBucket.bucketArn],
     });
 
     const engineLogGroup = this.nextflowEngine.logGroup;
