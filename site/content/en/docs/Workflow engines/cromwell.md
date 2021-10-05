@@ -11,7 +11,7 @@ description: >
 [Cromwell](https://cromwell.readthedocs.io/en/stable/) is a workflow engine developed by the [Broad Institute](https://www.broadinstitute.org/). 
 In Amazon Genomics CLI Cromwell is an engine that can be
 deployed in a [context]( {{< relref "../Concepts/contexts" >}} ) as an [engine]( {{< relref "../Concepts/engines" >}} ) 
-to run workflows based on the [GA4GH](https://www.ga4gh.org/) [WDL](https://openwdl.org/) specification.
+to run workflows based on the [WDL](https://openwdl.org/) specification.
 
 Cromwell is an open source project distributed by the Broad Institute under the [Apache 2 license](https://github.com/broadinstitute/cromwell/blob/develop/LICENSE-ASL-2.0) and available on [GitHub](https://github.com/broadinstitute/cromwell).
 

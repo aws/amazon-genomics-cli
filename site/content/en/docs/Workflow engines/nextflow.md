@@ -2,7 +2,8 @@
 title: "Nextflow"
 date: 2021-10-01T17:27:31-04:00
 draft: false
-Details on the Cromwell engine deployed by Amazon Genomics CLI
+description: >
+    Details on the Cromwell engine deployed by Amazon Genomics CLI
 ---
 
 ## Description
@@ -20,12 +21,12 @@ There are four components of a Nextflow engine as deployed in an Amazon Genomics
 ### WES Adapter
 
 Amazon Genomics CLI communicates with the Nextflow engine via a GA4GH [WES](https://github.com/ga4gh/workflow-execution-service-schemas) REST service. The WES Adapter implements
-the WES standard and translates WES calls into calls to the Nextflow Batch Job.
+the WES standard and translates WES calls into calls to the Nextflow head process.
 
 ### Engine Batch Job
 
 For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the Nextflow process responsible
-for running that job. These Nextflow "head" jobs are run in an "On-demand" compute environment even when the actual workflow
+for running that workflow. These Nextflow "head" jobs are run in an "On-demand" compute environment even when the actual workflow
 tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.
 
 ### Compute Environment
