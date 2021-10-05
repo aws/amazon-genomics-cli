@@ -41,6 +41,10 @@ assignees: ''
 
 **Additional Context**
 
-[//]: #  (Add any other context about the problem here.)
+[//]: #  (Add any other context about the problem here. The minimum required information is below)
 
+Operating System:
+AGC Version:
+Was AGC setup with a custom bucket:
+Was AGC setup with a custom VPC:
 
