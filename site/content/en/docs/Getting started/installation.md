@@ -7,7 +7,7 @@ weight: 20
 
 ## Download and install Amazon Genomics CLI
 
-Download the Amazon Genomics CLI zip from [releases page](https://github.com/aws/amazon-genomics-cli/releases) of our Github repo.
+Download the Amazon Genomics CLI zip from [releases page](https://github.com/aws/amazon-genomics-cli/releases) of our Github repo. A reminder that the zip file from releases is different from the source code available at the amazon-genomics-cli github page.
 
 Next, unzip its contents, and run the `install.sh` script:
 
