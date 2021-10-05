@@ -31,7 +31,7 @@ assignees: ''
 
 **Actual Behavior**
 
-[//]: #  (A clear and concise description of what actually to happened.)
+[//]: #  (A clear and concise description of what actually happened.)
 
 
 **Screenshots**
