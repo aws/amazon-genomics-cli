@@ -32,8 +32,8 @@ export class NextflowEngineStack extends NestedEngineStack {
     const artifactBucket = Bucket.fromBucketName(this, "ArtifactBucket", params.artifactBucketName);
 
     const engineRole = new NextflowEngineRole(this, "NextflowEngineRole", {
-      account: props.env?.account ?? "",
-      region: props.env?.region ?? "",
+      account: this.account,
+      region: this.region,
       submitJobPolicyArns: [props.headQueue.jobQueueArn],
       readOnlyBucketArns: (params.readBucketArns ?? []).concat(artifactBucket.bucketArn),
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
