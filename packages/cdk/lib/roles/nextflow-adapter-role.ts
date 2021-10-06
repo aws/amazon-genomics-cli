@@ -1,6 +1,5 @@
 import * as cdk from "monocdk";
 import * as iam from "monocdk/aws-iam";
-import { NextflowDescribeJobsBatchPolicy } from "./policies/nextflow-describe-jobs-batch-policy";
 import { NextflowSubmitJobBatchPolicy, NextflowSubmitJobBatchPolicyProps } from "./policies/nextflow-submit-job-batch-policy";
 import { BucketOperations } from "../../common/BucketOperations";
 
@@ -14,7 +13,16 @@ export class NextflowAdapterRole extends iam.Role {
     super(scope, id, {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {
-        NextflowDescribeJobsPolicy: new NextflowDescribeJobsBatchPolicy(),
+        NextflowDescribeJobsPolicy: new iam.PolicyDocument({
+          assignSids: true,
+          statements: [
+            new iam.PolicyStatement({
+              effect: iam.Effect.ALLOW,
+              actions: ["batch:DescribeJobs", "logs:GetQueryResults", "batch:TerminateJob"],
+              resources: ["*"],
+            }),
+          ],
+        }),
         NextflowSubmitJobsPolicy: new NextflowSubmitJobBatchPolicy(props),
       },
     });

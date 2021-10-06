@@ -8,7 +8,7 @@ export interface NextflowSubmitJobBatchPolicyProps {
 
 export class NextflowSubmitJobBatchPolicy extends iam.PolicyDocument {
   constructor(props: NextflowSubmitJobBatchPolicyProps) {
-    const nextflowJobArn = `arn:aws:batch:${props.region}:${props.account}:job-definition/nf-ubuntu:*`;
+    const nextflowJobArn = `arn:aws:batch:${props.region}:${props.account}:job-definition/nf-*:*`;
 
     super({
       assignSids: true,

@@ -27,11 +27,7 @@ export class ContextStack extends Stack {
       contextParameters: props.contextParameters,
       jobQueue: batchStack.batchWorkers.jobQueue,
       policyOptions: {
-        managedPolicies: [
-          // TODO: Can these be scoped down?
-          ManagedPolicy.fromAwsManagedPolicyName("AmazonEC2ContainerRegistryReadOnly"),
-          ManagedPolicy.fromAwsManagedPolicyName("AmazonECS_FullAccess"),
-        ],
+        managedPolicies: [],
       },
       env: props.env,
     };
