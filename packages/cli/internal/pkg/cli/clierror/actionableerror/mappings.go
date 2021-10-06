@@ -7,4 +7,5 @@ var AwsErrorMessageToSuggestedActionMap = map[string]string{
 	"an AWS region is required, but was not found":             "Please either set the region to use with an AWS_REGION variable or run aws configure",
 	"failed to retrieve credentials:":                          "Please check that you have set some aws credentials and try again",
 	"The security token included in the request is invalid":    "Please validate that the credentials you have set are valid",
+	"ParameterNotFound": "Please ensure your account is activated by running 'agc account activate'",
 }
