@@ -16,7 +16,7 @@ export class NextflowSubmitJobBatchPolicy extends iam.PolicyDocument {
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
           actions: ["batch:SubmitJob"],
-          resources: props.submitJobPolicyArns.concat(nextflowJobArn),
+          resources: [...props.submitJobPolicyArns, nextflowJobArn],
         }),
       ],
     });
