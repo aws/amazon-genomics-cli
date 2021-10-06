@@ -29,7 +29,6 @@ export class ContextStack extends Stack {
       policyOptions: {
         managedPolicies: [],
       },
-      env: props.env,
     };
     const engineName = props.contextParameters.engineName;
     switch (engineName) {

@@ -25,8 +25,4 @@ export interface EngineOptions {
    * Parameters determined by the context.
    */
   readonly contextParameters: ContextAppParameters;
-  /**
-   * Deployment enviroment
-   */
-  readonly env?: Environment;
 }
