@@ -66,6 +66,7 @@ func (o *deployContextOpts) Execute() ([]context.Detail, error) {
 		}
 	}
 
+	o.contexts = slices.DeDuplicateStrings(o.contexts)
 	results := o.deployContexts(o.contexts)
 	contextDetails := make([]context.Detail, len(results))
 	hasErrors := false
