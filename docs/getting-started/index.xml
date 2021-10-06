@@ -33,7 +33,7 @@
 &lt;/li&gt;
 &lt;li&gt;Internet access&lt;/li&gt;
 &lt;li&gt;An AWS Account&lt;/li&gt;
-&lt;li&gt;An AWS role with sufficient access. TODO add IAM details.&lt;/li&gt;
+&lt;li&gt;An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/tree/main/extras/agc-minimal-permissions&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Running Amazon Genomics CLI on Windows has not been tested, but it should run in WSL 2 with Ubuntu 20.04&lt;/p&gt;
 &lt;h2 id=&#34;prerequisite-installation&#34;&gt;Prerequisite installation&lt;/h2&gt;

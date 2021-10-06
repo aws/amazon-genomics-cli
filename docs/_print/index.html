@@ -37,8 +37,8 @@
 
 
 
-<link rel="preload" href="/amazon-genomics-cli/scss/main.min.650bdee92aa16b3ae39822dd8dfd62356c714a590c397f4abe76572440c62901.css" as="style">
-<link href="/amazon-genomics-cli/scss/main.min.650bdee92aa16b3ae39822dd8dfd62356c714a590c397f4abe76572440c62901.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/amazon-genomics-cli/scss/main.min.bd5285b713d3061549a6bfd34e5f4ec6775ede36672a3088260f0d420050647f.css" as="style">
+<link href="/amazon-genomics-cli/scss/main.min.bd5285b713d3061549a6bfd34e5f4ec6775ede36672a3088260f0d420050647f.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -126,7 +126,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.42ca9319135d57badd1069b41f1aba4f.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.e3ce8f1591bbed2b7c5f73a1dc00c5e8.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -661,7 +661,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>8.27: <a href="#pg-205996a1d61ad8d105a34cdc900f092f">agc version</a></li>
+<li>8.27: <a href="#pg-d9846ccd8da83167daa068e396d2e4e3">agc workflow</a></li>
 
 
     
@@ -669,7 +669,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>8.28: <a href="#pg-d9846ccd8da83167daa068e396d2e4e3">agc workflow</a></li>
+<li>8.28: <a href="#pg-aa3ea87fa151b468426bd3845a948b1b">agc workflow describe</a></li>
 
 
     
@@ -677,7 +677,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>8.29: <a href="#pg-aa3ea87fa151b468426bd3845a948b1b">agc workflow describe</a></li>
+<li>8.29: <a href="#pg-071929043a3613ca496d42da4a38977b">agc workflow list</a></li>
 
 
     
@@ -685,7 +685,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>8.30: <a href="#pg-071929043a3613ca496d42da4a38977b">agc workflow list</a></li>
+<li>8.30: <a href="#pg-372e46846966d919f8e8175575c2f226">agc workflow run</a></li>
 
 
     
@@ -693,7 +693,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>8.31: <a href="#pg-372e46846966d919f8e8175575c2f226">agc workflow run</a></li>
+<li>8.31: <a href="#pg-b7723a381adbd21c1f44bcc9e1f7afbe">agc workflow status</a></li>
 
 
     
@@ -701,15 +701,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>8.32: <a href="#pg-b7723a381adbd21c1f44bcc9e1f7afbe">agc workflow status</a></li>
-
-
-    
-  
-    
-    
-	
-<li>8.33: <a href="#pg-72925bfe8c279fdea76d6c785ec8c1dd">agc workflow stop</a></li>
+<li>8.32: <a href="#pg-72925bfe8c279fdea76d6c785ec8c1dd">agc workflow stop</a></li>
 
 
     
@@ -847,7 +839,7 @@ for you.</p>
 </li>
 <li>Internet access</li>
 <li>An AWS Account</li>
-<li>An AWS role with sufficient access. TODO add IAM details.</li>
+<li>An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions <a href="https://github.com/aws/amazon-genomics-cli/tree/main/extras/agc-minimal-permissions">here</a>.</li>
 </ul>
 <p>Running Amazon Genomics CLI on Windows has not been tested, but it should run in WSL 2 with Ubuntu 20.04</p>
 <h2 id="prerequisite-installation">Prerequisite installation</h2>
@@ -2595,7 +2587,6 @@ Configuration is stored per user.</li>
 Contexts specify workflow engines and computational fleets to use when running a workflow.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_logs/">agc logs</a>	 - Commands for various logs.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_project/">agc project</a>	 - Commands to interact with projects.</li>
-<li><a href="/amazon-genomics-cli/docs/reference/agc_version/">agc version</a>	 - Print the version number.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_workflow/">agc workflow</a>	 - Commands for workflows.
 Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
 </ul>
@@ -3581,35 +3572,7 @@ Initialize a new project named &quot;myProject&quot;.
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-205996a1d61ad8d105a34cdc900f092f">8.27 - agc version</h1>
-    
-	<h2 id="agc-version">agc version</h2>
-<p>Print the version number.</p>
-<pre><code>agc version [flags]
-</code></pre><h3 id="options">Options</h3>
-<pre><code>  -h, --help   help for version
-</code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
-</code></pre><h3 id="see-also">SEE ALSO</h3>
-<ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
-</ul>
-
-</div>
-
-
-
-    
-	
-  
-    
-    
-	
-    
-
-<div class="td-content" style="page-break-before: always">
-    
-	<h1 id="pg-d9846ccd8da83167daa068e396d2e4e3">8.28 - agc workflow</h1>
+	<h1 id="pg-d9846ccd8da83167daa068e396d2e4e3">8.27 - agc workflow</h1>
     
 	<h2 id="agc-workflow">agc workflow</h2>
 <p>Commands for workflows.
@@ -3649,7 +3612,7 @@ typed according to which workflow definition language they use (e.g. WDL).</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-aa3ea87fa151b468426bd3845a948b1b">8.29 - agc workflow describe</h1>
+	<h1 id="pg-aa3ea87fa151b468426bd3845a948b1b">8.28 - agc workflow describe</h1>
     
 	<h2 id="agc-workflow-describe">agc workflow describe</h2>
 <p>Show the information for a specific workflow in the current project</p>
@@ -3685,7 +3648,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-071929043a3613ca496d42da4a38977b">8.30 - agc workflow list</h1>
+	<h1 id="pg-071929043a3613ca496d42da4a38977b">8.29 - agc workflow list</h1>
     
 	<h2 id="agc-workflow-list">agc workflow list</h2>
 <p>Show a list of workflows related to the current project</p>
@@ -3720,7 +3683,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-372e46846966d919f8e8175575c2f226">8.31 - agc workflow run</h1>
+	<h1 id="pg-372e46846966d919f8e8175575c2f226">8.30 - agc workflow run</h1>
     
 	<h2 id="agc-workflow-run">agc workflow run</h2>
 <p>Run a workflow</p>
@@ -3760,7 +3723,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-b7723a381adbd21c1f44bcc9e1f7afbe">8.32 - agc workflow status</h1>
+	<h1 id="pg-b7723a381adbd21c1f44bcc9e1f7afbe">8.31 - agc workflow status</h1>
     
 	<h2 id="agc-workflow-status">agc workflow status</h2>
 <p>Show the status for workflow run(s) in the current project.</p>
@@ -3794,7 +3757,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-72925bfe8c279fdea76d6c785ec8c1dd">8.33 - agc workflow stop</h1>
+	<h1 id="pg-72925bfe8c279fdea76d6c785ec8c1dd">8.32 - agc workflow stop</h1>
     
 	<h2 id="agc-workflow-stop">agc workflow stop</h2>
 <p>Stop the workflow with the specified workflow instance id.</p>
