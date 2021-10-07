@@ -3,19 +3,28 @@ import * as iam from "monocdk/aws-iam";
 import { PolicyOptions } from "../types/engine-options";
 import { BucketOperations } from "../../common/BucketOperations";
 import { CromwellBatchPolicy } from "./policies/cromwell-batch-policy";
-import { Arn, ArnComponents, Stack} from "monocdk";
+import { Arn, ArnComponents, Stack } from "monocdk";
 
 interface CromwellEngineRoleProps {
+  account: string;
+  region: string;
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
   policies: PolicyOptions;
-  components: ArnComponents;
   jobQueueArn: string;
 }
 
 export class CromwellEngineRole extends iam.Role {
   constructor(scope: cdk.Construct, id: string, props: CromwellEngineRoleProps) {
-    const cromwellJobArn = Arn.format(props.components, scope as Stack);
+    const cromwellJobArn = Arn.format(
+      {
+        account: props.account,
+        region: props.region,
+        resource: "job-definition/*",
+        service: "batch",
+      },
+      scope as Stack
+    );
     super(scope, id, {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {

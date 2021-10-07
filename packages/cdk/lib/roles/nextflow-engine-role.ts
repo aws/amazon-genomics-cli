@@ -7,16 +7,25 @@ import { NextflowAdapterBatchPolicy, NextflowSubmitJobBatchPolicyProps } from ".
 import { Arn, ArnComponents, Stack } from "monocdk";
 
 interface NextflowEngineRoleProps {
+  account: string;
+  region: string;
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
   policies: PolicyOptions;
-  components: ArnComponents;
   batchJobPolicyArns: string[];
 }
 
 export class NextflowEngineRole extends iam.Role {
   constructor(scope: cdk.Construct, id: string, props: NextflowEngineRoleProps) {
-    const nextflowJobDefinitionArn = Arn.format(props.components, scope as Stack);
+    const nextflowJobDefinitionArn = Arn.format(
+      {
+        account: props.account,
+        region: props.region,
+        resource: "job-definition/*",
+        service: "batch",
+      },
+      scope as Stack
+    );
     super(scope, id, {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {
