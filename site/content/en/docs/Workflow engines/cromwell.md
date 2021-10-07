@@ -9,7 +9,7 @@ description: >
 ## Description
 
 [Cromwell](https://cromwell.readthedocs.io/en/stable/) is a workflow engine developed by the [Broad Institute](https://www.broadinstitute.org/). 
-In Amazon Genomics CLI Cromwell is an engine that can be
+In Amazon Genomics CLI, Cromwell is an engine that can be
 deployed in a [context]( {{< relref "../Concepts/contexts" >}} ) as an [engine]( {{< relref "../Concepts/engines" >}} ) 
 to run workflows based on the [WDL](https://openwdl.org/) specification.
 
@@ -34,7 +34,7 @@ the WES standard and translates WES calls into calls to the [Cromwell REST API](
 ### Engine Service
 
 The Cromwell engine is run in "server mode" as a container service in ECS and receives instructions from the WES Adapter. The 
-engine can run multiple workflows asynchronously. Workflow tasks are run in an elastic computer engine (see below) and
+engine can run multiple workflows asynchronously. Workflow tasks are run in an elastic [compute environment]( #compute-environment ) and
 monitored by Cromwell.
 
 ### Metadata Storage
