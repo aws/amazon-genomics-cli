@@ -5,6 +5,7 @@ import { LAUNCH_TEMPLATE } from "../../constants";
 import { Batch, ComputeType } from "../../constructs";
 import { ContextAppParameters } from "../../env";
 import { BucketOperations } from "../../../common/BucketOperations";
+import { IRole } from "monocdk/aws-iam";
 
 export interface BatchStackProps extends NestedStackProps {
   /**
@@ -15,35 +16,44 @@ export interface BatchStackProps extends NestedStackProps {
    * Parameters determined by the context.
    */
   readonly contextParameters: ContextAppParameters;
+  /**
+   * Request Spot capacity to be created
+   */
+  readonly createSpotBatch: boolean;
+  /**
+   * Request On-Demand capacity to be created
+   */
+  readonly createOnDemandBatch: boolean;
 }
 
 export class BatchStack extends NestedStack {
-  public readonly batchWorkers: Batch;
-  public readonly batchHead: Batch;
+  public readonly batchSpot: Batch;
+  public readonly batchOnDemand: Batch;
 
   constructor(scope: Construct, id: string, props: BatchStackProps) {
     super(scope, id, props);
 
-    const { vpc, contextParameters } = props;
+    const { vpc, contextParameters, createSpotBatch, createOnDemandBatch } = props;
 
-    this.batchWorkers = this.batchHead = this.renderBatch("TaskBatch", vpc, contextParameters.instanceTypes, ComputeType.ON_DEMAND);
-    if (contextParameters.requestSpotInstances) {
-      this.batchWorkers = this.renderBatch("TaskBatchSpot", vpc, contextParameters.instanceTypes, ComputeType.SPOT);
+    if (createSpotBatch) {
+      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, contextParameters.instanceTypes, ComputeType.SPOT);
+    }
+    if (createOnDemandBatch) {
+      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, contextParameters.instanceTypes, ComputeType.ON_DEMAND);
     }
 
     const artifactBucket = BucketOperations.importBucket(this, "ArtifactBucket", contextParameters.artifactBucketName);
     const outputBucket = BucketOperations.importBucket(this, "OutputBucket", contextParameters.outputBucketName);
 
-    BucketOperations.grantBucketAccess(this, this.batchWorkers.role, (contextParameters.readBucketArns ?? []).concat(artifactBucket.bucketArn), true);
-    BucketOperations.grantBucketAccess(this, this.batchHead.role, (contextParameters.readBucketArns ?? []).concat(artifactBucket.bucketArn), true);
+    const { readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
+    readBucketArns.push(artifactBucket.bucketArn);
+    readWriteBucketArns.push(outputBucket.bucketArn);
 
-    BucketOperations.grantBucketAccess(this, this.batchWorkers.role, (contextParameters.readWriteBucketArns ?? []).concat(outputBucket.bucketArn));
-    BucketOperations.grantBucketAccess(this, this.batchHead.role, (contextParameters.readWriteBucketArns ?? []).concat(outputBucket.bucketArn));
-
-    artifactBucket.grantRead(this.batchWorkers.role);
-    artifactBucket.grantRead(this.batchHead.role);
-    outputBucket.grantReadWrite(this.batchWorkers.role);
-    outputBucket.grantReadWrite(this.batchHead.role);
+    const batchRoles = this.getBatchRoles();
+    for (const role of batchRoles) {
+      BucketOperations.grantBucketAccess(this, role, readBucketArns, true);
+      BucketOperations.grantBucketAccess(this, role, readWriteBucketArns, false);
+    }
   }
 
   private renderBatch(id: string, vpc: IVpc, instanceTypes?: InstanceType[], computeType?: ComputeType): Batch {
@@ -55,5 +65,16 @@ export class BatchStack extends NestedStack {
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: this.nestedStackParent?.tags.tagValues(),
     });
+  }
+
+  private getBatchRoles(): IRole[] {
+    const roles = [];
+    if (this.batchOnDemand) {
+      roles.push(this.batchOnDemand.role);
+    }
+    if (this.batchSpot) {
+      roles.push(this.batchSpot.role);
+    }
+    return roles;
   }
 }
