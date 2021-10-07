@@ -2,10 +2,12 @@ import { NestedStack, NestedStackProps } from "monocdk";
 import { InstanceType, IVpc } from "monocdk/aws-ec2";
 import { Construct } from "constructs";
 import { LAUNCH_TEMPLATE } from "../../constants";
-import { Batch, ComputeType } from "../../constructs";
+
+import { Batch } from "../../constructs";
 import { ContextAppParameters } from "../../env";
 import { BucketOperations } from "../../../common/BucketOperations";
 import { IRole } from "monocdk/aws-iam";
+import { ComputeResourceType } from "monocdk/aws-batch";
 
 export interface BatchStackProps extends NestedStackProps {
   /**
@@ -36,10 +38,10 @@ export class BatchStack extends NestedStack {
     const { vpc, contextParameters, createSpotBatch, createOnDemandBatch } = props;
 
     if (createSpotBatch) {
-      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, contextParameters.instanceTypes, ComputeType.SPOT);
+      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, contextParameters.instanceTypes, ComputeResourceType.SPOT);
     }
     if (createOnDemandBatch) {
-      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, contextParameters.instanceTypes, ComputeType.ON_DEMAND);
+      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, contextParameters.instanceTypes, ComputeResourceType.ON_DEMAND);
     }
 
     const artifactBucket = BucketOperations.importBucket(this, "ArtifactBucket", contextParameters.artifactBucketName);
@@ -56,7 +58,7 @@ export class BatchStack extends NestedStack {
     }
   }
 
-  private renderBatch(id: string, vpc: IVpc, instanceTypes?: InstanceType[], computeType?: ComputeType): Batch {
+  private renderBatch(id: string, vpc: IVpc, instanceTypes?: InstanceType[], computeType?: ComputeResourceType): Batch {
     return new Batch(this, id, {
       vpc,
       instanceTypes,

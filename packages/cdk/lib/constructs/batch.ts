@@ -1,9 +1,8 @@
 import { Construct, Fn, Names, Stack } from "monocdk";
-import { CfnComputeEnvironment, ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "monocdk/aws-batch";
+import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "monocdk/aws-batch";
 import { CfnLaunchTemplate, InstanceType, IVpc } from "monocdk/aws-ec2";
 import { CfnInstanceProfile, IManagedPolicy, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "monocdk/aws-iam";
 import { getInstanceTypesForBatch } from "../util/instance-types";
-import { ComputeType } from "../types";
 
 export interface ComputeOptions {
   /**
@@ -21,7 +20,7 @@ export interface ComputeOptions {
    *
    * @default ON_DEMAND
    */
-  computeType?: ComputeType;
+  computeType?: ComputeResourceType;
   /**
    * The types of EC2 instances that may be launched in the compute environment.
    *
@@ -51,7 +50,7 @@ export interface BatchProps extends ComputeOptions {
   awsPolicyNames?: string[];
 }
 
-const defaultComputeType = ComputeType.ON_DEMAND;
+const defaultComputeType = ComputeResourceType.ON_DEMAND;
 
 export class Batch extends Construct {
   public readonly role: IRole;
@@ -64,13 +63,6 @@ export class Batch extends Construct {
     this.role = this.renderRole(props.computeType, props.awsPolicyNames);
     this.computeEnvironment = this.renderComputeEnvironment(props);
 
-    // TODO: Remove once https://github.com/aws/aws-cdk/pull/13591 is merged
-    if (props.computeType == ComputeType.FARGATE || props.computeType == ComputeType.FARGATE_SPOT) {
-      ["AllocationStrategy", "InstanceTypes", "MinvCpus", "InstanceRole"].forEach((property) => {
-        (this.computeEnvironment.node.defaultChild as CfnComputeEnvironment).addPropertyDeletionOverride(`ComputeResources.${property}`);
-      });
-    }
-
     this.jobQueue = new JobQueue(this, "JobQueue", {
       computeEnvironments: [
         {
@@ -81,9 +73,9 @@ export class Batch extends Construct {
     });
   }
 
-  private renderRole(computeType?: ComputeType, awsPolicyNames?: string[]): IRole {
+  private renderRole(computeType?: ComputeResourceType, awsPolicyNames?: string[]): IRole {
     const awsPolicies = awsPolicyNames?.map((policyName) => ManagedPolicy.fromAwsManagedPolicyName(policyName));
-    if (computeType == ComputeType.FARGATE || computeType == ComputeType.FARGATE_SPOT) {
+    if (computeType == ComputeResourceType.FARGATE || computeType == ComputeResourceType.FARGATE_SPOT) {
       return this.renderEcsRole(awsPolicies);
     }
     return this.renderEc2Role(awsPolicies);
@@ -114,12 +106,12 @@ export class Batch extends Construct {
   }
 
   private renderComputeEnvironment(options: ComputeOptions): IComputeEnvironment {
-    options.computeType = options.computeType || defaultComputeType;
-    if (options.computeType == ComputeType.FARGATE || options.computeType == ComputeType.FARGATE_SPOT) {
+    const computeType = options.computeType || defaultComputeType;
+    if (computeType == ComputeResourceType.FARGATE || computeType == ComputeResourceType.FARGATE_SPOT) {
       return new ComputeEnvironment(this, "ComputeEnvironment", {
         computeResources: {
           vpc: options.vpc,
-          type: options.computeType as any as ComputeResourceType,
+          type: computeType,
         },
       });
     }
@@ -136,13 +128,12 @@ export class Batch extends Construct {
     const instanceProfile = new CfnInstanceProfile(this, "ComputeProfile", {
       roles: [this.role.roleName],
     });
-
     return new ComputeEnvironment(this, "ComputeEnvironment", {
       computeResources: {
         vpc: options.vpc,
-        type: options.computeType as any as ComputeResourceType,
+        type: computeType,
         instanceRole: instanceProfile.attrArn,
-        instanceTypes: getInstanceTypesForBatch(options.instanceTypes, options.computeType, Stack.of(this).region),
+        instanceTypes: getInstanceTypesForBatch(options.instanceTypes, computeType, Stack.of(this).region),
         launchTemplate: launchTemplate && {
           launchTemplateName: launchTemplate.launchTemplateName!,
         },
