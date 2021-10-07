@@ -2,6 +2,7 @@ package format
 
 import (
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"io"
 	"reflect"
 	"sort"
@@ -12,6 +13,24 @@ const delimiter = "\t"
 
 type Text struct {
 	writer io.Writer
+}
+
+type indentedPair struct {
+	key    string
+	value  interface{}
+	indent int
+}
+
+type valueSlice []reflect.Value
+
+func (k valueSlice) Len() int {
+	return len(k)
+}
+func (k valueSlice) Swap(i, j int) {
+	k[i], k[j] = k[j], k[i]
+}
+func (k valueSlice) Less(i, j int) bool {
+	return k[i].String() < k[j].String()
 }
 
 func (f *Text) Write(o interface{}) {
@@ -26,9 +45,41 @@ func (f *Text) writeValue(value reflect.Value) {
 		f.writeValue(value.Elem())
 	case reflect.Slice:
 		f.writeSliceValue(value)
+	case reflect.Map:
+		f.writeMap(value, 0)
 	default:
 		f.writeOther(value)
 	}
+}
+
+func (f *Text) writeMap(value reflect.Value, indent int) {
+	keys := value.MapKeys()
+	sort.Sort(valueSlice(keys))
+	for _, key := range keys {
+		if key.Kind() != reflect.String {
+			log.Warn().Msg("currently only able to format maps with string keys, using default formatting")
+			f.writeOther(value)
+		}
+		i := value.MapIndex(key).Interface()
+		f.writeIndentedPair(
+			indentedPair{
+				key:    key.String(),
+				value:  i,
+				indent: indent,
+			})
+	}
+}
+
+func (f *Text) writeIndentedPair(pair indentedPair) {
+	indentStr := strings.Repeat(delimiter, pair.indent)
+	f.write(fmt.Sprintf("%s%s:%s", indentStr, pair.key, delimiter))
+	if reflect.TypeOf(pair.value).Kind() == reflect.Map {
+		f.newLine()
+		f.writeMap(reflect.ValueOf(pair.value), pair.indent+1)
+	} else {
+		f.write(fmt.Sprintf("%s", pair.value))
+	}
+	f.newLine()
 }
 
 func (f *Text) writeOther(value reflect.Value) {
