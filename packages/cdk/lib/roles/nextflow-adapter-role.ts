@@ -34,7 +34,7 @@ export class NextflowAdapterRole extends iam.Role {
           statements: [
             new iam.PolicyStatement({
               effect: iam.Effect.ALLOW,
-              actions: ["batch:DescribeJobs", "logs:GetQueryResults"],
+              actions: ["batch:DescribeJobs", "batch:ListJobs", "logs:GetQueryResults"],
               resources: ["*"],
             }),
           ],
