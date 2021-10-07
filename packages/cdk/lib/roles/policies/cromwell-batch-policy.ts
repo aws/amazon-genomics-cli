@@ -1,14 +1,12 @@
 import * as iam from "monocdk/aws-iam";
 
 export interface CromwellBatchPolicyProps {
-  account: string;
-  region: string;
   jobQueueArn: string;
+  cromwellJobArn: string;
 }
 
 export class CromwellBatchPolicy extends iam.PolicyDocument {
   constructor(props: CromwellBatchPolicyProps) {
-    const cromwellJobArn = `arn:aws:batch:${props.region}:${props.account}:job-definition/cromwell_*`;
     super({
       assignSids: true,
       statements: [
@@ -20,12 +18,12 @@ export class CromwellBatchPolicy extends iam.PolicyDocument {
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
           actions: ["batch:RegisterJobDefinition"],
-          resources: [cromwellJobArn],
+          resources: [props.cromwellJobArn],
         }),
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
           actions: ["batch:SubmitJob"],
-          resources: [`${cromwellJobArn}:*`, props.jobQueueArn],
+          resources: [props.cromwellJobArn, props.jobQueueArn],
         }),
       ],
     });

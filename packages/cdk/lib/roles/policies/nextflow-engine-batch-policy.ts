@@ -1,14 +1,11 @@
 import * as iam from "monocdk/aws-iam";
 
 export interface NextflowBatchPolicyProps {
-  account: string;
-  region: string;
+  nextflowJobArn: string;
 }
 
-export class NextflowBatchPolicy extends iam.PolicyDocument {
+export class NextflowEngineBatchPolicy extends iam.PolicyDocument {
   constructor(props: NextflowBatchPolicyProps) {
-    const nextflowJobArn = `arn:aws:batch:${props.region}:${props.account}:job-definition/nf-*`;
-
     super({
       assignSids: true,
       statements: [
@@ -20,7 +17,7 @@ export class NextflowBatchPolicy extends iam.PolicyDocument {
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
           actions: ["batch:RegisterJobDefinition"],
-          resources: [nextflowJobArn],
+          resources: [props.nextflowJobArn],
         }),
       ],
     });

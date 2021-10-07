@@ -30,11 +30,16 @@ export class NextflowEngineStack extends NestedEngineStack {
     const params = props.contextParameters;
     const outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
     const artifactBucket = Bucket.fromBucketName(this, "ArtifactBucket", params.artifactBucketName);
-
-    const engineRole = new NextflowEngineRole(this, "NextflowEngineRole", {
+    const jobDefinitionComponents = {
+      service: "batch",
       account: this.account,
       region: this.region,
-      submitJobPolicyArns: [props.jobQueue.jobQueueArn],
+      resource: "job-definition/*",
+    };
+
+    const engineRole = new NextflowEngineRole(this, "NextflowEngineRole", {
+      components: jobDefinitionComponents,
+      batchJobPolicyArns: [props.jobQueue.jobQueueArn],
       readOnlyBucketArns: (params.readBucketArns ?? []).concat(artifactBucket.bucketArn),
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
       policies: props.policyOptions,
@@ -49,9 +54,8 @@ export class NextflowEngineStack extends NestedEngineStack {
     });
 
     const adapterRole = new NextflowAdapterRole(this, "NextflowAdapterRole", {
-      account: this.account,
-      region: this.region,
-      submitJobPolicyArns: [this.nextflowEngine.headJobDefinition.jobDefinitionArn, props.headQueue.jobQueueArn],
+      components: jobDefinitionComponents,
+      batchJobPolicyArns: [this.nextflowEngine.headJobDefinition.jobDefinitionArn, props.headQueue.jobQueueArn],
       readOnlyBucketArns: [],
       readWriteBucketArns: [outputBucket.bucketArn],
     });
