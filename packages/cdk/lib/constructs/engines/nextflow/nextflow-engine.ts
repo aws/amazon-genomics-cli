@@ -34,6 +34,8 @@ export class NextflowEngine extends Construct {
           NF_JOB_QUEUE: props.jobQueueArn,
           NF_WORKDIR: `${props.rootDir}/runs`,
           NF_LOGSDIR: `${props.rootDir}/logs`,
+          AWS_METADATA_SERVICE_TIMEOUT: "10",
+          AWS_METADATA_SERVICE_NUM_ATTEMPTS: "10",
         },
         volumes: [],
       },
