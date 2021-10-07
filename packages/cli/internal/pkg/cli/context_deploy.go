@@ -13,7 +13,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/slices"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/slices"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -87,11 +87,7 @@ func (o *deployContextOpts) Execute() ([]context.Detail, error) {
 	}
 	if hasErrors {
 		aggregateSuggestions = slices.DeDuplicateStrings(aggregateSuggestions)
-		return nil, clierror.New(
-			"agc context deploy",
-			o.deployContextVars,
-			actionableerror.New(fmt.Errorf("one or more contexts failed to deploy"), strings.Join(aggregateSuggestions, ", ")),
-		)
+		return nil, actionableerror.New(fmt.Errorf("one or more contexts failed to deploy"), strings.Join(aggregateSuggestions, ", "))
 	}
 	sortContextDetails(contextDetails)
 	return contextDetails, nil

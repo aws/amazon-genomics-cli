@@ -132,9 +132,7 @@ func (m *Manager) setArtifactUrl() {
 	}
 	m.artifactUrl, m.err = m.Ssm.GetCommonParameter(artifactParameter)
 	if m.err != nil {
-		if maybeActionableErr := actionableerror.FindSuggestionForError(m.err, actionableerror.AwsErrorMessageToSuggestedActionMap); maybeActionableErr != nil {
-			m.err = maybeActionableErr
-		}
+		m.err = actionableerror.FindSuggestionForError(m.err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 }
 
@@ -156,9 +154,7 @@ func (m *Manager) setOutputBucket() {
 	}
 	m.outputBucket, m.err = m.Ssm.GetOutputBucket()
 	if m.err != nil {
-		if maybeActionableErr := actionableerror.FindSuggestionForError(m.err, actionableerror.AwsErrorMessageToSuggestedActionMap); maybeActionableErr != nil {
-			m.err = maybeActionableErr
-		}
+		m.err = actionableerror.FindSuggestionForError(m.err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 }
 
