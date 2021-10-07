@@ -6,8 +6,6 @@ import { Arn, ArnComponents } from "monocdk";
 import { Stack } from "monocdk";
 
 export interface NextflowAdapterRoleProps extends NextflowSubmitJobBatchPolicyProps {
-  account: string;
-  region: string;
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
 }
@@ -16,8 +14,6 @@ export class NextflowAdapterRole extends iam.Role {
   constructor(scope: cdk.Construct, id: string, props: NextflowAdapterRoleProps) {
     const nextflowJobDefinitionArn = Arn.format(
       {
-        account: props.account,
-        region: props.region,
         resource: "job-definition/*",
         service: "batch",
       },
@@ -25,8 +21,6 @@ export class NextflowAdapterRole extends iam.Role {
     );
     const nextflowJobArn = Arn.format(
       {
-        account: props.account,
-        region: props.region,
         resource: "job/*",
         service: "batch",
       },

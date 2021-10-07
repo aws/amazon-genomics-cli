@@ -6,8 +6,6 @@ import { CromwellBatchPolicy } from "./policies/cromwell-batch-policy";
 import { Arn, ArnComponents, Stack } from "monocdk";
 
 interface CromwellEngineRoleProps {
-  account: string;
-  region: string;
   readOnlyBucketArns: string[];
   readWriteBucketArns: string[];
   policies: PolicyOptions;
@@ -18,8 +16,6 @@ export class CromwellEngineRole extends iam.Role {
   constructor(scope: cdk.Construct, id: string, props: CromwellEngineRoleProps) {
     const cromwellJobArn = Arn.format(
       {
-        account: props.account,
-        region: props.region,
         resource: "job-definition/*",
         service: "batch",
       },
