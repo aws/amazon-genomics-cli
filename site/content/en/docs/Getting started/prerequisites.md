@@ -11,6 +11,7 @@ To run Amazon Genomics CLI the following prerequisites must be met:
   * macOS 10.14+
   * Amazon Linux 2
   * Ubuntu 20.04
+  * Windows 10 with a Windows subsystem running Ubuntu which runs the commands
 * Internet access
 * An AWS Account
 * An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions [here](https://github.com/aws/amazon-genomics-cli/tree/main/extras/agc-minimal-permissions).
