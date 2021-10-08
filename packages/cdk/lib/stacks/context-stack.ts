@@ -112,12 +112,7 @@ export class ContextStack extends Stack {
       vpc: this.vpc,
       contextParameters: props.contextParameters,
       policyOptions: {
-        managedPolicies: [
-          // TODO: Can these be scoped down?
-          ManagedPolicy.fromAwsManagedPolicyName("AmazonEC2ContainerRegistryReadOnly"),
-          ManagedPolicy.fromAwsManagedPolicyName("AmazonECS_FullAccess"),
-          ManagedPolicy.fromAwsManagedPolicyName("AWSBatchFullAccess"),
-        ],
+        managedPolicies: [],
       },
     };
   }

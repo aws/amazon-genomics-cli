@@ -32,6 +32,7 @@ export class NextflowEngineStack extends NestedEngineStack {
     const artifactBucket = Bucket.fromBucketName(this, "ArtifactBucket", params.artifactBucketName);
 
     const engineRole = new NextflowEngineRole(this, "NextflowEngineRole", {
+      batchJobPolicyArns: [props.jobQueue.jobQueueArn],
       readOnlyBucketArns: (params.readBucketArns ?? []).concat(artifactBucket.bucketArn),
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
       policies: props.policyOptions,
@@ -46,8 +47,7 @@ export class NextflowEngineStack extends NestedEngineStack {
     });
 
     const adapterRole = new NextflowAdapterRole(this, "NextflowAdapterRole", {
-      headJobDefinitionArn: this.nextflowEngine.headJobDefinition.jobDefinitionArn,
-      jobQueueArn: props.jobQueue.jobQueueArn,
+      batchJobPolicyArns: [this.nextflowEngine.headJobDefinition.jobDefinitionArn, props.headQueue.jobQueueArn],
       readOnlyBucketArns: [],
       readWriteBucketArns: [outputBucket.bucketArn],
     });
@@ -60,7 +60,10 @@ export class NextflowEngineStack extends NestedEngineStack {
 
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
     const adapter = renderServiceWithContainer(this, "Adapter", adapterContainer, props.vpc, adapterRole, this.adapterLogGroup);
+
     engineLogGroup.grant(engineRole, "logs:StartQuery");
+    engineLogGroup.grant(adapterRole, "logs:StartQuery");
+    this.adapterLogGroup.grant(adapterRole, "logs:StartQuery");
 
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}NextflowApiProxy`,
