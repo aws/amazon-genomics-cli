@@ -2,7 +2,7 @@ package workflow
 
 import (
 	"context"
-	"fmt"
+
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 )
 
@@ -14,8 +14,8 @@ func (m *Manager) OutputByInstanceId(instanceId string) (map[string]interface{},
 	m.readProjectSpec()
 	m.readConfig()
 	m.loadInstance(instanceId)
-	if len(m.instances) < 1 {
-		return nil, actionableerror.New(fmt.Errorf("no workflow run found for workflow run '%s'", instanceId), "check the workflow run id and check the workflow was run from the current project")
+	if m.err != nil {
+		return nil, actionableerror.New(m.err, "check the workflow run id and check the workflow was run from the current project")
 	}
 	instanceSummary := m.instances[0]
 	m.setContext(instanceSummary.ContextName)

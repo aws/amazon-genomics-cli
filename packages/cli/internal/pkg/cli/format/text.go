@@ -2,11 +2,12 @@ package format
 
 import (
 	"fmt"
-	"github.com/rs/zerolog/log"
 	"io"
 	"reflect"
 	"sort"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 )
 
 const delimiter = "\t"
@@ -32,7 +33,6 @@ func (k valueSlice) Swap(i, j int) {
 func (k valueSlice) Less(i, j int) bool {
 	return k[i].String() < k[j].String()
 }
-
 func (f *Text) Write(o interface{}) {
 	f.writeValue(reflect.ValueOf(o))
 }
@@ -78,8 +78,8 @@ func (f *Text) writeIndentedPair(pair indentedPair) {
 		f.writeMap(reflect.ValueOf(pair.value), pair.indent+1)
 	} else {
 		f.write(fmt.Sprintf("%s", pair.value))
+		f.newLine()
 	}
-	f.newLine()
 }
 
 func (f *Text) writeOther(value reflect.Value) {
