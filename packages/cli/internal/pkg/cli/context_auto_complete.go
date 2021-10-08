@@ -32,5 +32,4 @@ func (c *ContextAutoComplete) GetContextAutoComplete() func(command *cobra.Comma
 		}
 		return contextNames, cobra.ShellCompDirectiveNoFileComp
 	}
-
 }
