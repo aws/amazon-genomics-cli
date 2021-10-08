@@ -515,7 +515,9 @@ agc logs engine --context myContext --filter ERROR
 
 ### Additional workflow examples
 
-The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on GATK Best Practices. You can find these in:
+The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on [GATK Best Practices](https://gatk.broadinstitute.org/hc/en-us), developed by the [Broad Institute](https://www.broadinstitute.org/). More information on how these workflows work is available in the [GATK Workflows Github repository](https://github.com/gatk-workflows).
+
+You can find these in:
 
 ```shell
 ~/agc/examples/gatk-best-practices-project

@@ -112,7 +112,6 @@ func buildRootCmd() *cobra.Command {
 	cmd.AddCommand(cli.BuildContextCommand())
 	cmd.AddCommand(cli.BuildLogsCommand())
 	cmd.AddCommand(cli.BuildWorkflowCommand())
-	cmd.AddCommand(cli.BuildVersionCmd())
 	cmd.AddCommand(cli.BuildConfigureCommand())
 
 	cmd.SetUsageTemplate(template.RootUsage)

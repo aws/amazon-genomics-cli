@@ -7,11 +7,13 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/slices"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -64,15 +66,18 @@ func (o *deployContextOpts) Execute() ([]context.Detail, error) {
 		}
 	}
 
+	o.contexts = slices.DeDuplicateStrings(o.contexts)
 	results := o.deployContexts(o.contexts)
 	contextDetails := make([]context.Detail, len(results))
 	hasErrors := false
+	aggregateSuggestions := make([]string, 0)
 	for i, result := range results {
 		if result.err != nil {
 			var actionableError *actionableerror.Error
 			ok := errors.As(result.err, &actionableError)
 			if ok {
 				log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
+				aggregateSuggestions = append(aggregateSuggestions, actionableError.SuggestedAction)
 			} else {
 				log.Error().Err(result.err).Msgf("failed to deploy context '%s'", result.contextName)
 			}
@@ -81,7 +86,8 @@ func (o *deployContextOpts) Execute() ([]context.Detail, error) {
 		contextDetails[i] = result.info
 	}
 	if hasErrors {
-		return nil, fmt.Errorf("one or more contexts failed to deploy")
+		aggregateSuggestions = slices.DeDuplicateStrings(aggregateSuggestions)
+		return nil, actionableerror.New(fmt.Errorf("one or more contexts failed to deploy"), strings.Join(aggregateSuggestions, ", "))
 	}
 	sortContextDetails(contextDetails)
 	return contextDetails, nil
