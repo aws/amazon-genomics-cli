@@ -148,6 +148,6 @@ It destroys AGC resources in AWS.`,
 	}
 	cmd.Flags().BoolVar(&vars.destroyAll, destroyContextAllFlag, false, destroyContextAllDescription)
 	cmd.Flags().StringSliceVarP(&vars.contexts, contextFlag, contextFlagShort, nil, destroyContextDescription)
-	cmd.RegisterFlagCompletionFunc(contextFlag, ContextAutoComplete)
+	_ = cmd.RegisterFlagCompletionFunc(contextFlag, ContextAutoComplete)
 	return cmd
 }
