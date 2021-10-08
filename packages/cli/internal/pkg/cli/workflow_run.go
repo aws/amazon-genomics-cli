@@ -77,5 +77,6 @@ using input parameters contained in file "file:///Users/ec2-user/myproj/test-arg
 	cmd.Flags().StringVarP(&vars.Arguments, argsFlag, argsFlagShort, "", argsFlagDescription)
 	cmd.Flags().StringVarP(&vars.ContextName, contextFlag, contextFlagShort, "", contextFlagDescription)
 	_ = cmd.MarkFlagRequired(contextFlag)
+	cmd.RegisterFlagCompletionFunc(contextFlag, ContextAutoComplete)
 	return cmd
 }
