@@ -56,6 +56,7 @@ func (m *Manager) buildContextInfo(contextName string) (Detail, error) {
 		Summary: Summary{
 			Name:          contextName,
 			IsSpot:        m.projectSpec.Contexts[contextName].RequestSpotInstances,
+			MaxVCpus:      m.projectSpec.Contexts[contextName].MaxVCpus,
 			InstanceTypes: m.projectSpec.Contexts[contextName].InstanceTypes,
 		},
 		Status:             m.contextStatus,

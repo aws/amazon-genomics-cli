@@ -1,4 +1,4 @@
-import { getEnvBoolOrDefault, getEnvString, getEnvStringListOrDefault, getEnvStringOrDefault } from "./";
+import { getEnvNumber, getEnvBoolOrDefault, getEnvString, getEnvStringListOrDefault, getEnvStringOrDefault } from "./";
 import { InstanceType } from "monocdk/aws-ec2";
 import { ConstructNode } from "monocdk";
 import { ServiceContainer } from "../types";
@@ -68,6 +68,10 @@ export class ContextAppParameters {
   public readonly adapterDesignation: string;
 
   /**
+   * The maximum number of Amazon EC2 vCPUs that an environment can reach.
+   */
+  public readonly maxVCpus?: number;
+  /**
    * Property to specify if the compute environment uses On-Demand or Spot compute resources.
    */
   public readonly requestSpotInstances: boolean;
@@ -97,6 +101,7 @@ export class ContextAppParameters {
     this.adapterName = getEnvStringOrDefault(node, "ADAPTER_NAME", "wesAdapter")!;
     this.adapterDesignation = getEnvStringOrDefault(node, "ADAPTER_DESIGNATION", "wes")!;
 
+    this.maxVCpus = getEnvNumber(node, "MAX_V_CPUS");
     this.requestSpotInstances = getEnvBoolOrDefault(node, "REQUEST_SPOT_INSTANCES", false)!;
     this.instanceTypes = instanceTypeStrings ? instanceTypeStrings.map((instanceType) => new InstanceType(instanceType.trim())) : undefined;
   }

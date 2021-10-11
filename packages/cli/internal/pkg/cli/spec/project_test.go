@@ -27,6 +27,7 @@ func TestProjectYaml(t *testing.T) {
 				},
 				Contexts: map[string]Context{
 					"testContext": {
+						MaxVCpus: 256,
 						Engines: []Engine{
 							{Type: "wdl", Engine: "cromwell"},
 						},
@@ -56,6 +57,7 @@ data:
       readOnly: true
 contexts:
     testContext:
+        maxVCpus: 256
         engines:
             - type: wdl
               engine: cromwell
@@ -82,11 +84,13 @@ schemaVersion: 0
 				},
 				Contexts: map[string]Context{
 					"ctx1": {
+						MaxVCpus: 256,
 						Engines: []Engine{
 							{Type: "wdl", Engine: "miniwdl"},
 						},
 					},
 					"ctx2": {
+						MaxVCpus: 256,
 						Engines: []Engine{
 							{Type: "nextflow", Engine: "nextflow"},
 						},
@@ -114,10 +118,12 @@ data:
     - location: s3://myotherbucket
 contexts:
     ctx1:
+        maxVCpus: 256
         engines:
             - type: wdl
               engine: miniwdl
     ctx2:
+        maxVCpus: 256
         engines:
             - type: nextflow
               engine: nextflow

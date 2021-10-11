@@ -36,18 +36,17 @@ export class BatchStack extends NestedStack {
     super(scope, id, props);
 
     const { vpc, contextParameters, createSpotBatch, createOnDemandBatch } = props;
-
+    const { artifactBucketName, outputBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
     if (createSpotBatch) {
-      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, contextParameters.instanceTypes, ComputeResourceType.SPOT);
+      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, contextParameters, ComputeResourceType.SPOT);
     }
     if (createOnDemandBatch) {
-      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, contextParameters.instanceTypes, ComputeResourceType.ON_DEMAND);
+      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, contextParameters, ComputeResourceType.ON_DEMAND);
     }
 
-    const artifactBucket = BucketOperations.importBucket(this, "ArtifactBucket", contextParameters.artifactBucketName);
-    const outputBucket = BucketOperations.importBucket(this, "OutputBucket", contextParameters.outputBucketName);
+    const artifactBucket = BucketOperations.importBucket(this, "ArtifactBucket", artifactBucketName);
+    const outputBucket = BucketOperations.importBucket(this, "OutputBucket", outputBucketName);
 
-    const { readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
     readBucketArns.push(artifactBucket.bucketArn);
     readWriteBucketArns.push(outputBucket.bucketArn);
 
@@ -58,11 +57,12 @@ export class BatchStack extends NestedStack {
     }
   }
 
-  private renderBatch(id: string, vpc: IVpc, instanceTypes?: InstanceType[], computeType?: ComputeResourceType): Batch {
+  private renderBatch(id: string, vpc: IVpc, appParams: ContextAppParameters, computeType?: ComputeResourceType): Batch {
     return new Batch(this, id, {
       vpc,
-      instanceTypes,
       computeType,
+      instanceTypes: appParams.instanceTypes,
+      maxVCpus: appParams.maxVCpus,
       launchTemplateData: LAUNCH_TEMPLATE,
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: this.nestedStackParent?.tags.tagValues(),

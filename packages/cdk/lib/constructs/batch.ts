@@ -31,6 +31,15 @@ export interface ComputeOptions {
   instanceTypes?: InstanceType[];
 
   /**
+   * The maximum number of EC2 vCPUs that a compute environment can reach.
+   *
+   * Each vCPU is equivalent to 1,024 CPU shares.
+   *
+   * @default aws-batch:{@link ComputeResources#maxvCpus}
+   */
+  maxVCpus?: number;
+
+  /**
    * The tags to apply to any compute resources
    * @default none
    */
@@ -112,6 +121,7 @@ export class Batch extends Construct {
         computeResources: {
           vpc: options.vpc,
           type: computeType,
+          maxvCpus: options.maxVCpus,
         },
       });
     }
@@ -132,6 +142,7 @@ export class Batch extends Construct {
       computeResources: {
         vpc: options.vpc,
         type: computeType,
+        maxvCpus: options.maxVCpus,
         instanceRole: instanceProfile.attrArn,
         instanceTypes: getInstanceTypesForBatch(options.instanceTypes, computeType, Stack.of(this).region),
         launchTemplate: launchTemplate && {

@@ -27,6 +27,7 @@ type contextEnvironment struct {
 	ReadWriteBucketArns  string
 	InstanceTypes        string
 	ResourceType         string
+	MaxVCpus             int
 	RequestSpotInstances bool
 }
 
@@ -51,6 +52,7 @@ func (input contextEnvironment) ToEnvironmentList() []string {
 		"READ_BUCKET_ARNS":             input.ReadBucketArns,
 		"READ_WRITE_BUCKET_ARNS":       input.ReadWriteBucketArns,
 		"BATCH_COMPUTE_INSTANCE_TYPES": input.InstanceTypes,
+		"MAX_V_CPUS":                   strconv.Itoa(input.MaxVCpus),
 		"REQUEST_SPOT_INSTANCES":       strconv.FormatBool(input.RequestSpotInstances),
 	})
 }

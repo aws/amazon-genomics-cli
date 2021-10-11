@@ -22,6 +22,11 @@ export const getEnvBoolOrDefault = (node: ConstructNode, key: string, defaultVal
   return value ? valueToBoolean(value) : defaultValue;
 };
 
+export const getEnvNumber = (node: ConstructNode, key: string): Maybe<number> => {
+  const value = node.tryGetContext(key);
+  return value ? Number(value) : undefined;
+};
+
 export const getEnvStringList = (node: ConstructNode, key: string): string[] => {
   return valueToList(getValue(node, key));
 };
