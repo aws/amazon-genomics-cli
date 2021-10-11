@@ -11,7 +11,7 @@ workflows:
     type:
       language: wdl
       version: 1.0
-    sourceURL: workflows/read
+    sourceURL: workflows/read/read.wdl
   haplotype:
     type:
       language: wdl
