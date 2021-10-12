@@ -108,7 +108,7 @@ will be updated to allow access to the new data.
 
 All contexts defined in the project YAML can be deployed or updated using the `--all` flag.
 
-Individually named contexts can be deployed or updated as positional arguments. For example: `acg context deploy -c ctx1 -c ctx2`
+Individually named contexts can be deployed or updated as positional arguments. For example: `agc context deploy -c ctx1 -c ctx2`
 will deploy the contexts `ctx1` and `ctx2`.
 
 The inclusion of the `--verbose` flag will show the full CloudFormation output of the context deployment.
@@ -121,7 +121,7 @@ and workflow outputs on S3 are retained when a context is destroyed.
 
 All deployed contexts can be destroyed using the `--all` flag.
 
-Multiple contexts can be destroyed in a single command using positional arguments. For example: `acg context destroy -c ctx1 -c ctx2`
+Multiple contexts can be destroyed in a single command using positional arguments. For example: `agc context destroy -c ctx1 -c ctx2`
 will destroy the contexts `ctx1` and `ctx2`.
 
 ### `status`
