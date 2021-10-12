@@ -2,12 +2,14 @@ package cli
 
 import (
 	"errors"
+	"sort"
 	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
+	"github.com/jeremywohl/flatten"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -19,6 +21,11 @@ type workflowOutputVars struct {
 type workflowOutputOpts struct {
 	vars      workflowOutputVars
 	wfManager workflow.OutputManager
+}
+
+type Output struct {
+	path  string
+	value interface{}
 }
 
 func newWorkflowOutputOpts(vars workflowOutputVars) (*workflowOutputOpts, error) {
@@ -35,8 +42,12 @@ func (o *workflowOutputOpts) Validate() error {
 	return nil
 }
 
-func (o *workflowOutputOpts) Execute() (map[string]interface{}, error) {
-	return o.wfManager.OutputByInstanceId(o.vars.runId)
+func (o *workflowOutputOpts) Execute() ([]Output, error) {
+	instanceOutput, err := o.wfManager.OutputByInstanceId(o.vars.runId)
+	if err != nil {
+		return nil, err
+	}
+	return processOutput(instanceOutput)
 }
 
 // BuildWorkflowOutputCommand builds the command to show the output for a workflow instance.
@@ -66,4 +77,23 @@ func BuildWorkflowOutputCommand() *cobra.Command {
 	}
 
 	return cmd
+}
+
+func processOutput(raw map[string]interface{}) ([]Output, error) {
+	flatOutput, err := flatten.Flatten(raw, "", flatten.DotStyle)
+	if err != nil {
+		return nil, err
+	}
+
+	var output []Output
+	for key, element := range flatOutput {
+		output = append(output, Output{
+			path:  key,
+			value: element,
+		})
+	}
+	sort.Slice(output, func(i, j int) bool {
+		return output[i].path < output[j].path
+	})
+	return output, nil
 }

@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
@@ -50,7 +51,7 @@ func TestWorkflowOutputOpts_Execute(t *testing.T) {
 
 	tests := map[string]struct {
 		setupOpts      func(opts *workflowOutputOpts)
-		expectedOutput map[string]interface{}
+		expectedOutput []Output
 		expectedErr    error
 	}{
 		"instanceIdFound": {
@@ -60,8 +61,11 @@ func TestWorkflowOutputOpts_Execute(t *testing.T) {
 					Times(1).
 					Return(map[string]interface{}{"foo": "baa"}, nil)
 			},
-			expectedOutput: map[string]interface{}{"foo": "baa"},
-			expectedErr:    nil,
+			expectedOutput: []Output{{
+				path:  "foo",
+				value: "baa",
+			}},
+			expectedErr: nil,
 		},
 		"instanceIdNotFound": {
 			setupOpts: func(opts *workflowOutputOpts) {
@@ -91,6 +95,62 @@ func TestWorkflowOutputOpts_Execute(t *testing.T) {
 				assert.Equal(t, tt.expectedOutput, actualOutput)
 			} else {
 				assert.EqualErrorf(t, err, tt.expectedErr.Error(), "expected error message '%v', but got '%v'", tt.expectedErr.Error(), err)
+			}
+		})
+	}
+}
+
+func Test_processOutput(t *testing.T) {
+
+	var simpleMap = map[string]interface{}{
+		"A": "FOO",
+		"B": "BAA",
+	}
+
+	var nestedMap = map[string]interface{}{
+		"A": "AAA",
+		"B": simpleMap,
+		"C": "CCC",
+	}
+
+	var mapWithArray = map[string]interface{}{
+		"A": []string{"A", "B", "C"},
+	}
+
+	tests := []struct {
+		name    string
+		raw     map[string]interface{}
+		want    []Output
+		wantErr bool
+	}{
+		{
+			name:    "Simple Map",
+			raw:     simpleMap,
+			want:    []Output{{path: "A", value: "FOO"}, {path: "B", value: "BAA"}},
+			wantErr: false,
+		},
+		{
+			name:    "Nested Map",
+			raw:     nestedMap,
+			want:    []Output{{path: "A", value: "AAA"}, {path: "B.A", value: "FOO"}, {path: "B.B", value: "BAA"}, {path: "C", value: "CCC"}},
+			wantErr: false,
+		},
+		{
+			name:    "Map With Array",
+			raw:     mapWithArray,
+			want:    []Output{{path: "A", value: []string{"A", "B", "C"}}},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := processOutput(tt.raw)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("processOutput() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("processOutput() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
