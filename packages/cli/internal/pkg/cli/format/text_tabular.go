@@ -71,15 +71,15 @@ func (f *TextTabular) writeHeader(value reflect.Value) {
 }
 
 func (f *TextTabular) getHeader(prefix string, value reflect.Type) []string {
-	headers := make([]string, 0)
 	if f.isStruct(value) {
-		headers = f.getStructHeaders(prefix, value)
+		headers := f.getStructHeaders(prefix, value)
+		return headers
 	} else if f.isSlice(value) {
-		headers = f.getHeader(prefix, value.Elem())
+		headers := f.getHeader(prefix, value.Elem())
+		return headers
 	} else {
 		return []string{prefix + value.Name()}
 	}
-	return headers
 }
 
 func (f *TextTabular) getStructHeaders(prefix string, val reflect.Type) []string {
