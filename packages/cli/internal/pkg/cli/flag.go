@@ -16,6 +16,11 @@ const (
 )
 
 const (
+	FormatFlag            = "format"
+	FormatFlagDescription = "Format option for output. Valid options are: text, tabular"
+)
+
+const (
 	AWSProfileFlag            = "awsProfile"
 	AWSProfileFlagShort       = "p"
 	AWSProfileFlagDescription = "Use the provided AWS CLI profile."

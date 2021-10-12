@@ -15,6 +15,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/cmd/application/template"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/term/color"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
@@ -88,6 +89,7 @@ func buildRootCmd() *cobra.Command {
 				// global level is trace by default so if not verbose we want info level
 				zerolog.SetGlobalLevel(zerolog.InfoLevel)
 			}
+			format.SetDefaultWriter()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if vars.docPath != "" {
@@ -117,6 +119,7 @@ func buildRootCmd() *cobra.Command {
 	cmd.SetUsageTemplate(template.RootUsage)
 
 	cmd.PersistentFlags().BoolVarP(&logging.Verbose, cli.VerboseFlag, cli.VerboseFlagShort, false, cli.VerboseFlagDescription)
+	cmd.PersistentFlags().StringVar(&format.Format, cli.FormatFlag, "", cli.FormatFlagDescription)
 	cmd.Flags().StringVar(&vars.docPath, "docs", "", "generate markdown documenting the CLI to the specified path")
 	cmd.Flag("docs").Hidden = true
 
