@@ -193,6 +193,7 @@ If the --run flag is omitted then the latest workflow run is used.`,
 			}
 			return nil
 		}),
+		ValidArgsFunction: NewWorkflowAutoComplete().GetWorkflowAutoComplete(),
 	}
 	vars.setFilterFlags(cmd)
 	cmd.Flags().StringVarP(&vars.runId, logWorkflowRunFlag, logWorkflowRunFlagShort, "", logWorkflowRunFlagDescription)

@@ -81,6 +81,7 @@ func (v *logsSharedVars) setFilterFlags(cmd *cobra.Command) {
 func (v *logsSharedVars) setContextFlag(cmd *cobra.Command) {
 	cmd.Flags().StringVarP(&v.contextName, contextFlag, contextFlagShort, "", contextFlagDescription)
 	_ = cmd.MarkFlagRequired(contextFlag)
+	_ = cmd.RegisterFlagCompletionFunc(contextFlag, NewContextAutoComplete().GetContextAutoComplete())
 }
 
 func (o *logsSharedOpts) setDefaultEndTimeIfEmpty() {
