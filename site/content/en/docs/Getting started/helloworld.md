@@ -37,6 +37,19 @@ and then use `aws s3` commands to explore and retrieve data from the bucket. Wor
 path. The rest of the path depends on the engine used to run the workflow. For Cromwell it will continue with:
 `.../cromwell-execution/<wdl-wf-name>/<workflow-run-id>/<task-name>`
 
+If a workflow declares outputs then you may obtain these using the command:
+
+```shell
+agc workflow output <workflow_run_id>
+```
+
+You should see a response similar to:
+
+```shell
+OUTPUT	id	6cc6f742-dc87-4649-b319-1af45c4c09c6
+OUTPUT	outputs.hello_agc.hello.out	Hello Amazon Genomics CLI!
+```
+
 You can also obtain task logs for a workflow using the following form `agc logs workflow <workflow-name> -r <instance-id>`.
 >Note, if the workflow did not actually run any tasks due to call caching then there will be no output from this command.
 

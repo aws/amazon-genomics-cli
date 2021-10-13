@@ -159,6 +159,27 @@ stop the workflow. What happens next depends on the actual workflow engine. For 
 engine, any currently executing tasks will halt, any pending tasks will be removed from the work queue and no further
 tasks will be started for that workflow instance.
 
+### `output`
+
+You can obtain the output (if any) of a completed workflow run using the output command and supplying the workflow run
+id. Typically, this is useful for locating the files produced by a workflow, although the actual output generated depends on the workflow
+specification and engine.
+
+If the workflow declares outputs you may also obtain these using the command:
+
+```shell
+agc workflow output <workflow_run_id>
+```
+
+The following is an example of output from the "CramToBam" workflow run in a context using the Cromwell engine.
+
+```shell
+OUTPUT	id	aaba95e8-7512-48c3-9a61-1fd837ff6099
+OUTPUT	outputs.CramToBamFlow.outputBai	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-CramToBamTask/NA12878.bai
+OUTPUT	outputs.CramToBamFlow.outputBam	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-CramToBamTask/NA12878.bam
+OUTPUT	outputs.CramToBamFlow.validation_report	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-ValidateSamFile/NA12878.validation_report
+```
+
 ## Cost
 
 Your account will be charged based on actual resource usage including compute time, storage, data transfer charges etc.

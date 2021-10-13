@@ -23,6 +23,7 @@ require (
 	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/fatih/color v1.12.0
 	github.com/golang/mock v1.6.0
+	github.com/jeremywohl/flatten v1.0.1
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/kr/pty v1.1.5 // indirect
 	github.com/rs/zerolog v1.22.0
