@@ -7,7 +7,6 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ddb"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
@@ -116,7 +115,7 @@ func (s *WorkflowOutputTestSuite) TestOutputByInstanceId_InstanceFound() {
 
 func (s *WorkflowOutputTestSuite) TestOutputByInstanceId_NoInstanceFound() {
 
-	expectedErr := actionableerror.New(fmt.Errorf("workflow instance with id '%s' does not exist", testRun2Id), "check the workflow run id and check the workflow was run from the current project")
+	expectedErr := fmt.Errorf("workflow instance with id '%s' does not exist", testRun2Id)
 
 	defer s.ctrl.Finish()
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)

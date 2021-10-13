@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/types"
 	managermocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/manager"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -51,7 +52,7 @@ func TestWorkflowOutputOpts_Execute(t *testing.T) {
 
 	tests := map[string]struct {
 		setupOpts      func(opts *workflowOutputOpts)
-		expectedOutput []Output
+		expectedOutput []types.Output
 		expectedErr    error
 	}{
 		"instanceIdFound": {
@@ -61,9 +62,9 @@ func TestWorkflowOutputOpts_Execute(t *testing.T) {
 					Times(1).
 					Return(map[string]interface{}{"foo": "baa"}, nil)
 			},
-			expectedOutput: []Output{{
-				path:  "foo",
-				value: "baa",
+			expectedOutput: []types.Output{{
+				Path:  "foo",
+				Value: "baa",
 			}},
 			expectedErr: nil,
 		},
@@ -120,25 +121,25 @@ func Test_processOutput(t *testing.T) {
 	tests := []struct {
 		name    string
 		raw     map[string]interface{}
-		want    []Output
+		want    []types.Output
 		wantErr bool
 	}{
 		{
 			name:    "Simple Map",
 			raw:     simpleMap,
-			want:    []Output{{path: "A", value: "FOO"}, {path: "B", value: "BAA"}},
+			want:    []types.Output{{Path: "A", Value: "FOO"}, {Path: "B", Value: "BAA"}},
 			wantErr: false,
 		},
 		{
 			name:    "Nested Map",
 			raw:     nestedMap,
-			want:    []Output{{path: "A", value: "AAA"}, {path: "B.A", value: "FOO"}, {path: "B.B", value: "BAA"}, {path: "C", value: "CCC"}},
+			want:    []types.Output{{Path: "A", Value: "AAA"}, {Path: "B.A", Value: "FOO"}, {Path: "B.B", Value: "BAA"}, {Path: "C", Value: "CCC"}},
 			wantErr: false,
 		},
 		{
 			name:    "Map With Array",
 			raw:     mapWithArray,
-			want:    []Output{{path: "A", value: []string{"A", "B", "C"}}},
+			want:    []types.Output{{Path: "A", Value: "A B C"}},
 			wantErr: false,
 		},
 	}

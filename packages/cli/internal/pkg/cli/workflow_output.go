@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"bytes"
 	"errors"
 	"sort"
 	"strings"
@@ -8,6 +9,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/types"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	"github.com/jeremywohl/flatten"
 	"github.com/rs/zerolog/log"
@@ -21,11 +23,6 @@ type workflowOutputVars struct {
 type workflowOutputOpts struct {
 	vars      workflowOutputVars
 	wfManager workflow.OutputManager
-}
-
-type Output struct {
-	path  string
-	value interface{}
 }
 
 func newWorkflowOutputOpts(vars workflowOutputVars) (*workflowOutputOpts, error) {
@@ -42,7 +39,7 @@ func (o *workflowOutputOpts) Validate() error {
 	return nil
 }
 
-func (o *workflowOutputOpts) Execute() ([]Output, error) {
+func (o *workflowOutputOpts) Execute() ([]types.Output, error) {
 	instanceOutput, err := o.wfManager.OutputByInstanceId(o.vars.runId)
 	if err != nil {
 		return nil, err
@@ -79,21 +76,24 @@ func BuildWorkflowOutputCommand() *cobra.Command {
 	return cmd
 }
 
-func processOutput(raw map[string]interface{}) ([]Output, error) {
+func processOutput(raw map[string]interface{}) ([]types.Output, error) {
 	flatOutput, err := flatten.Flatten(raw, "", flatten.DotStyle)
 	if err != nil {
 		return nil, err
 	}
 
-	var output []Output
+	var output []types.Output
 	for key, element := range flatOutput {
-		output = append(output, Output{
-			path:  key,
-			value: element,
+		b := bytes.NewBufferString("")
+		format.NewStringFormatter(b).Write(element)
+
+		output = append(output, types.Output{
+			Path:  key,
+			Value: strings.TrimSpace(strings.ReplaceAll(b.String(), "\n", " ")),
 		})
 	}
 	sort.Slice(output, func(i, j int) bool {
-		return output[i].path < output[j].path
+		return output[i].Path < output[j].Path
 	})
 	return output, nil
 }
