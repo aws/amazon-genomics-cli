@@ -1,8 +1,7 @@
 import { NestedStack, NestedStackProps } from "monocdk";
-import { InstanceType, IVpc } from "monocdk/aws-ec2";
+import { IVpc } from "monocdk/aws-ec2";
 import { Construct } from "constructs";
 import { LAUNCH_TEMPLATE } from "../../constants";
-
 import { Batch } from "../../constructs";
 import { ContextAppParameters } from "../../env";
 import { BucketOperations } from "../../../common/BucketOperations";

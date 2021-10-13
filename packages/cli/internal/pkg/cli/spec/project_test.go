@@ -149,6 +149,26 @@ contexts:
 	}
 }
 
+
+func TestProjectDefaults(t *testing.T) {
+	const yamlStr = `
+name: DefaultTest
+schemaVersion: 1
+contexts:
+    context:
+        engines:
+            - type: wdl
+              engine: cromwell
+`
+
+	t.Run("ContextDefaults", func(t *testing.T) {
+		result := Project{}
+		err := yaml.Unmarshal([]byte(yamlStr), &result)
+		require.NoError(t, err)
+		assert.Equal(t, result.Contexts["context"].MaxVCpus, DefaultMaxVCpus)
+	})
+}
+
 func TestGetContext(t *testing.T) {
 	type args struct {
 		projectSpec Project

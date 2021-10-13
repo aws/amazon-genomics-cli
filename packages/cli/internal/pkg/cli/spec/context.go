@@ -1,5 +1,7 @@
 package spec
 
+const DefaultMaxVCpus = 256
+
 type Engine struct {
 	Type   string `yaml:"type"`
 	Engine string `yaml:"engine"`
@@ -15,7 +17,7 @@ type Context struct {
 func (context *Context) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	type defValContext Context
-	defaults := defValContext{MaxVCpus: 256}
+	defaults := defValContext{MaxVCpus: DefaultMaxVCpus}
 	if err := unmarshal(&defaults); err != nil {
 		return err
 	}
