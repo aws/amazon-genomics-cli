@@ -85,8 +85,8 @@ func (f *TextTabular) getHeader(prefix string, value reflect.Type) []string {
 func (f *TextTabular) getStructHeaders(prefix string, val reflect.Type) []string {
 	headers := make([]string, 0)
 	for i := 0; i < val.NumField(); i++ {
-		structFieldType := val.Field(i).Type.Kind()
-		if structFieldType == reflect.Slice {
+		structFieldType := val.Field(i).Type
+		if f.isSlice(structFieldType) {
 			headers = append(headers, f.getHeader(prefix+val.Field(i).Name+prefixNameDivider, val.Field(i).Type.Elem())...)
 		} else {
 			headers = append(headers, prefix+val.Field(i).Name)
@@ -143,13 +143,9 @@ func (f *TextTabular) getSliceOutput(maxCollectionSize int, value reflect.Value)
 		for structIndex := 0; structIndex < val.Type().NumField(); structIndex++ {
 			structField := val.Field(structIndex)
 			if f.isSimpleType(structField.Type()) {
-				if rowIndex > 0 {
-					outputRowList = append(outputRowList, emptyVal)
-				} else {
-					outputRowList = append(outputRowList, fmt.Sprint(structField))
-				}
+				outputRowList = f.appendSimpleValue(structField, outputRowList, rowIndex)
 			} else if f.isStruct(structField.Type().Elem()) {
-				outputRowList = f.appendCollectionStructRow(structField, outputRowList, rowIndex)
+				outputRowList = f.appendSliceStructRow(structField, outputRowList, rowIndex)
 			} else if f.isSlice(structField.Type()) {
 				outputRowList = f.appendSimpleSlice(structField, outputRowList, rowIndex)
 			} else {
@@ -163,7 +159,7 @@ func (f *TextTabular) getSliceOutput(maxCollectionSize int, value reflect.Value)
 	return output
 }
 
-func (f *TextTabular) appendCollectionStructRow(field reflect.Value, outputList []string, row int) []string {
+func (f *TextTabular) appendSliceStructRow(field reflect.Value, outputList []string, row int) []string {
 	for k := 0; k < field.Type().Elem().NumField(); k++ {
 		if row >= field.Len() {
 			outputList = append(outputList, emptyVal)
@@ -179,6 +175,15 @@ func (f *TextTabular) appendSimpleSlice(field reflect.Value, outputList []string
 		outputList = append(outputList, emptyVal)
 	} else {
 		outputList = append(outputList, fmt.Sprint(field.Index(row)))
+	}
+	return outputList
+}
+
+func (f *TextTabular) appendSimpleValue(field reflect.Value, outputList[]string, row int) []string {
+	if row > 0 {
+		outputList = append(outputList, emptyVal)
+	} else {
+		outputList = append(outputList, fmt.Sprint(field))
 	}
 	return outputList
 }
