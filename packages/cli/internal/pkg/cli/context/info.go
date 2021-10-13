@@ -4,6 +4,7 @@ import "reflect"
 
 type Summary struct {
 	Name          string
+	MaxVCpus      int
 	IsSpot        bool
 	InstanceTypes []string
 }

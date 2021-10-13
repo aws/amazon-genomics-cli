@@ -4,6 +4,7 @@ type Context struct {
 	Name                 string
 	Status               string
 	StatusReason         string
+	MaxVCpus             int
 	RequestSpotInstances bool
 	InstanceTypes        []InstanceType
 	Output               OutputLocation

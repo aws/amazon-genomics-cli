@@ -173,6 +173,7 @@ func (m *Manager) setTaskContext(contextName string) {
 		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
 		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
 		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
+		MaxVCpus:             m.contextSpec.MaxVCpus,
 		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
 	}
 }
@@ -198,6 +199,7 @@ func (m *Manager) setContextEnv(contextName string) {
 		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
 		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
 		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
+		MaxVCpus:             m.contextSpec.MaxVCpus,
 		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
 		// TODO: we default to a single engine in a context for now
 		// need to allow for multiple engines in the same context

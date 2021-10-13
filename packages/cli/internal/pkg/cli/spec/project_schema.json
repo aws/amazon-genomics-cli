@@ -67,6 +67,10 @@
             "requestSpotInstances":{
               "type":"boolean"
             },
+            "maxVCpus":{
+              "type":"integer",
+              "minimum": 1
+            },
             "instanceTypes":{
               "type":[
                 "array",
