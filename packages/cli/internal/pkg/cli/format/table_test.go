@@ -94,7 +94,7 @@ func TestTextTabular_Write(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			buf := new(strings.Builder)
-			textFormat := &TextTabular{*tabwriter.NewWriter(buf, 0, 8, 0, '\t', 0)}
+			textFormat := &Table{*tabwriter.NewWriter(buf, 0, 8, 0, '\t', 0)}
 			textFormat.Write(tt.object)
 			actual := buf.String()
 			assert.Equal(t, tt.expected, actual)
@@ -122,7 +122,7 @@ func TestTextTabular_Validate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			buf := new(strings.Builder)
-			textFormat := &TextTabular{*tabwriter.NewWriter(buf, 0, 8, 0, '\t', 0)}
+			textFormat := &Table{*tabwriter.NewWriter(buf, 0, 8, 0, '\t', 0)}
 			actual := textFormat.validate(tt.object)
 			assert.Equal(t, tt.expected, actual)
 		})

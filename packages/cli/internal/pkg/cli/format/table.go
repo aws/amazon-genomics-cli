@@ -7,7 +7,7 @@ import (
 	"text/tabwriter"
 )
 
-type TextTabular struct {
+type Table struct {
 	writer tabwriter.Writer
 }
 
@@ -15,10 +15,10 @@ const (
 	noPrefix          = ""
 	emptyVal          = "-"
 	prefixNameDivider = "-"
-	tabularDelimiter  = "\t"
+	tableDelimiter    = "\t"
 )
 
-func (f *TextTabular) Write(o interface{}) {
+func (f *Table) Write(o interface{}) {
 	val := reflect.ValueOf(o)
 	if !f.validate(val.Type()) {
 		SetFormatter(DefaultFormat)
@@ -30,7 +30,7 @@ func (f *TextTabular) Write(o interface{}) {
 	}
 }
 
-func (f *TextTabular) validate(val reflect.Type) bool {
+func (f *Table) validate(val reflect.Type) bool {
 	if f.isSlice(val) {
 		return f.validateStruct(val.Elem())
 	} else if f.isStruct(val) {
@@ -40,7 +40,7 @@ func (f *TextTabular) validate(val reflect.Type) bool {
 	}
 }
 
-func (f *TextTabular) validateStruct(val reflect.Type) bool {
+func (f *Table) validateStruct(val reflect.Type) bool {
 	for i := 0; i < val.NumField(); i++ {
 		structFieldType := val.Field(i).Type
 		if f.isStruct(structFieldType) {
@@ -52,7 +52,7 @@ func (f *TextTabular) validateStruct(val reflect.Type) bool {
 	return true
 }
 
-func (f *TextTabular) validateSlice(val reflect.Type) bool {
+func (f *Table) validateSlice(val reflect.Type) bool {
 	if f.isSimpleType(val) {
 		return true
 	} else if f.isStruct(val) {
@@ -66,12 +66,12 @@ func (f *TextTabular) validateSlice(val reflect.Type) bool {
 	return true
 }
 
-func (f *TextTabular) writeHeader(value reflect.Value) {
-	f.write(strings.Join(f.getHeader(noPrefix, value.Type()), tabularDelimiter))
+func (f *Table) writeHeader(value reflect.Value) {
+	f.write(strings.Join(f.getHeader(noPrefix, value.Type()), tableDelimiter))
 	f.newLine()
 }
 
-func (f *TextTabular) getHeader(prefix string, value reflect.Type) []string {
+func (f *Table) getHeader(prefix string, value reflect.Type) []string {
 	if f.isStruct(value) {
 		headers := f.getStructHeaders(prefix, value)
 		return headers
@@ -83,8 +83,8 @@ func (f *TextTabular) getHeader(prefix string, value reflect.Type) []string {
 	}
 }
 
-func (f *TextTabular) getStructHeaders(prefix string, val reflect.Type) []string {
-	headers := make([]string, 0)
+func (f *Table) getStructHeaders(prefix string, val reflect.Type) []string {
+	var headers []string
 	for i := 0; i < val.NumField(); i++ {
 		structFieldType := val.Field(i).Type
 		if f.isSlice(structFieldType) {
@@ -96,7 +96,7 @@ func (f *TextTabular) getStructHeaders(prefix string, val reflect.Type) []string
 	return headers
 }
 
-func (f *TextTabular) writeValue(value reflect.Value) {
+func (f *Table) writeValue(value reflect.Value) {
 	val := reflect.Indirect(value)
 	if f.isSimpleType(value.Type()) {
 		f.write(fmt.Sprint(value))
@@ -112,7 +112,7 @@ func (f *TextTabular) writeValue(value reflect.Value) {
 	}
 }
 
-func (f *TextTabular) writeCollection(value reflect.Value) {
+func (f *Table) writeCollection(value reflect.Value) {
 	for i := 0; i < value.Len(); i++ {
 		maxCollectionSize := f.getMaxSliceSize(value.Index(i))
 		if maxCollectionSize == 0 {
@@ -124,7 +124,7 @@ func (f *TextTabular) writeCollection(value reflect.Value) {
 	}
 }
 
-func (f *TextTabular) getMaxSliceSize(value reflect.Value) int {
+func (f *Table) getMaxSliceSize(value reflect.Value) int {
 	maxSize := 0
 	for i := 0; i < value.Type().NumField(); i++ {
 		field := value.Field(i)
@@ -135,9 +135,9 @@ func (f *TextTabular) getMaxSliceSize(value reflect.Value) int {
 	return maxSize
 }
 
-func (f *TextTabular) getSliceOutput(maxCollectionSize int, value reflect.Value) string {
+func (f *Table) getSliceOutput(maxCollectionSize int, value reflect.Value) string {
 	val := reflect.Indirect(value)
-	outputRowList := make([]string, 0)
+	var outputRowList []string
 	output := ""
 
 	for rowIndex := 0; rowIndex < maxCollectionSize; rowIndex++ {
@@ -153,14 +153,14 @@ func (f *TextTabular) getSliceOutput(maxCollectionSize int, value reflect.Value)
 				outputRowList = append(outputRowList, fmt.Sprint(structField))
 			}
 		}
-		output += strings.Join(outputRowList, tabularDelimiter) + "\n"
+		output += strings.Join(outputRowList, tableDelimiter) + "\n"
 		outputRowList = outputRowList[:0]
 	}
 
 	return output
 }
 
-func (f *TextTabular) appendSliceStructRow(field reflect.Value, outputList []string, row int) []string {
+func (f *Table) appendSliceStructRow(field reflect.Value, outputList []string, row int) []string {
 	for k := 0; k < field.Type().Elem().NumField(); k++ {
 		if row >= field.Len() {
 			outputList = append(outputList, emptyVal)
@@ -171,7 +171,7 @@ func (f *TextTabular) appendSliceStructRow(field reflect.Value, outputList []str
 	return outputList
 }
 
-func (f *TextTabular) appendSimpleSlice(field reflect.Value, outputList []string, row int) []string {
+func (f *Table) appendSimpleSlice(field reflect.Value, outputList []string, row int) []string {
 	if row >= field.Len() {
 		outputList = append(outputList, emptyVal)
 	} else {
@@ -180,7 +180,7 @@ func (f *TextTabular) appendSimpleSlice(field reflect.Value, outputList []string
 	return outputList
 }
 
-func (f *TextTabular) appendSimpleValue(field reflect.Value, outputList[]string, row int) []string {
+func (f *Table) appendSimpleValue(field reflect.Value, outputList[]string, row int) []string {
 	if row > 0 {
 		outputList = append(outputList, emptyVal)
 	} else {
@@ -189,30 +189,30 @@ func (f *TextTabular) appendSimpleValue(field reflect.Value, outputList[]string,
 	return outputList
 }
 
-func (f *TextTabular) getSimpleStructOutput(val reflect.Value) string {
-	outputList := make([]string, 0)
+func (f *Table) getSimpleStructOutput(val reflect.Value) string {
+	var outputList []string
 	for i := 0; i < val.Type().NumField(); i++ {
 		outputList = append(outputList, fmt.Sprint(val.Field(i)))
 	}
-	return strings.Join(outputList, tabularDelimiter)
+	return strings.Join(outputList, tableDelimiter)
 }
 
-func (f *TextTabular) isSimpleType(value reflect.Type) bool {
+func (f *Table) isSimpleType(value reflect.Type) bool {
 	return !(value.Kind() == reflect.Slice || value.Kind() == reflect.Struct)
 }
 
-func (f *TextTabular) isSlice(value reflect.Type) bool {
+func (f *Table) isSlice(value reflect.Type) bool {
 	return value.Kind() == reflect.Slice
 }
 
-func (f *TextTabular) isStruct(value reflect.Type) bool {
+func (f *Table) isStruct(value reflect.Type) bool {
 	return value.Kind() == reflect.Struct
 }
 
-func (f *TextTabular) write(v interface{}) {
+func (f *Table) write(v interface{}) {
 	_, _ = fmt.Fprint(&f.writer, v)
 }
 
-func (f *TextTabular) newLine() {
+func (f *Table) newLine() {
 	_, _ = fmt.Fprintln(&f.writer)
 }
