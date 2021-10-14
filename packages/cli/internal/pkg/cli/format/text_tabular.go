@@ -21,7 +21,8 @@ const (
 func (f *TextTabular) Write(o interface{}) {
 	val := reflect.ValueOf(o)
 	if !f.validate(val.Type()) {
-		textWriter.Write(o)
+		SetFormatter(DefaultFormat)
+		Default.Write(o)
 	} else {
 		f.writeHeader(val)
 		f.writeValue(val)

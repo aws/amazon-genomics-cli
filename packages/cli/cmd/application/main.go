@@ -34,6 +34,7 @@ slug: %s
 
 type mainVars struct {
 	docPath string
+	format string
 }
 
 func init() {
@@ -89,7 +90,7 @@ func buildRootCmd() *cobra.Command {
 				// global level is trace by default so if not verbose we want info level
 				zerolog.SetGlobalLevel(zerolog.InfoLevel)
 			}
-			format.SetDefaultWriter()
+			format.SetFormatter(format.FormatterType(vars.format))
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if vars.docPath != "" {
@@ -119,7 +120,7 @@ func buildRootCmd() *cobra.Command {
 	cmd.SetUsageTemplate(template.RootUsage)
 
 	cmd.PersistentFlags().BoolVarP(&logging.Verbose, cli.VerboseFlag, cli.VerboseFlagShort, false, cli.VerboseFlagDescription)
-	cmd.PersistentFlags().StringVar(&format.Format, cli.FormatFlag, "", cli.FormatFlagDescription)
+	cmd.PersistentFlags().StringVar(&vars.format, cli.FormatFlag, cli.FormatFlagDefault, cli.FormatFlagDescription)
 	cmd.Flags().StringVar(&vars.docPath, "docs", "", "generate markdown documenting the CLI to the specified path")
 	cmd.Flag("docs").Hidden = true
 
