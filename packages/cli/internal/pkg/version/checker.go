@@ -19,30 +19,24 @@ func (ch *checker) Check(versionFullString string) (Result, error) {
 	}
 	finalizeVersion(&currentSemVersion)
 	currentVersion := currentSemVersion.String()
-	result := Result{CurrentVersion: currentVersion}
 	infos, err := ch.store.ReadVersions(currentVersion, ch.currentTime)
 	if err != nil {
 		return Result{}, err
 	}
-	if len(infos) == 0 {
-		return Result{}, nil
+	result := Result{
+		CurrentVersion: currentVersion,
+		LatestVersion:  currentVersion,
 	}
-	if infos[0].Name == currentVersion {
-		currentInfo := infos[0]
-		infos = infos[1:]
-		result.CurrentVersionDeprecated = currentInfo.Deprecated
-		result.CurrentVersionDeprecationMessage = currentInfo.DeprecationMessage
-	}
-	if len(infos) == 0 {
-		result.LatestVersion = result.CurrentVersion
-		return result, nil
-	}
-
-	result.LatestVersion = infos[len(infos)-1].Name
-	for _, info := range infos {
+	for i, info := range infos {
+		if i == 0 && currentVersion == info.Name {
+			result.CurrentVersionDeprecated = info.Deprecated
+			result.CurrentVersionDeprecationMessage = info.DeprecationMessage
+			continue
+		}
 		if len(info.Highlight) > 0 {
 			result.NewerVersionHighlights = append(result.NewerVersionHighlights, info.Highlight)
 		}
+		result.LatestVersion = info.Name
 	}
 	return result, nil
 }

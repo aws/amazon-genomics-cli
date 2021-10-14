@@ -58,7 +58,7 @@ func (s *CheckerCheckTestSuite) TestCheckNoVersions() {
 	s.mockStore.EXPECT().ReadVersions(s.currentVersion, s.testTime).
 		Return([]Info{}, nil)
 	checker := &checker{s.mockStore, s.testTime}
-	expected := Result{}
+	expected := Result{CurrentVersion: s.currentVersion, LatestVersion: s.currentVersion}
 	actual, err := checker.Check(s.currentVersion)
 	if s.Assert().NoError(err) {
 		s.Assert().Equal(expected, actual)
