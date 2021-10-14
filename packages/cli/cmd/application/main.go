@@ -82,12 +82,8 @@ func buildRootCmd() *cobra.Command {
   Displays the help menu for the specified sub-command.
   /code $ agc account --help`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			// If we don't set a Run() function the help menu doesn't show up.
-			// See https://github.com/spf13/cobra/issues/790
-			if !logging.Verbose {
-				// global level is trace by default so if not verbose we want info level
-				zerolog.SetGlobalLevel(zerolog.InfoLevel)
-			}
+			setLoggingLevel()
+			checkCliVersion()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if vars.docPath != "" {
@@ -121,4 +117,32 @@ func buildRootCmd() *cobra.Command {
 	cmd.Flag("docs").Hidden = true
 
 	return cmd
+}
+
+func checkCliVersion() {
+	log.Debug().Msg("Checking AGC version...")
+	result, err := version.Check()
+	if err != nil {
+		log.Debug().Msgf("version check failed: %v", err)
+		return
+	}
+	if result.LatestVersion != result.CurrentVersion {
+		log.Info().Msgf("New version of agc available. Current version is '%s'. The latest version is '%s'", result.CurrentVersion, result.LatestVersion)
+	}
+	if result.CurrentVersionDeprecated {
+		log.Warn().Msgf("The current version was deprecated with message: %s. Please consider upgrading Amazon Genomics CLI.", strings.TrimSpace(result.CurrentVersionDeprecationMessage))
+	}
+	if len(result.NewerVersionHighlights) > 0 {
+		log.Info().Msgf("Highlights from newer versions:")
+		for _, msg := range result.NewerVersionHighlights {
+			log.Info().Msgf("\t%s", strings.TrimSpace(msg))
+		}
+	}
+}
+
+func setLoggingLevel() {
+	if !logging.Verbose {
+		// global level is trace by default so if not verbose we want info level
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	}
 }
