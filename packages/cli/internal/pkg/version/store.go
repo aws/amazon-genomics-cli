@@ -18,7 +18,7 @@ func (s *cachedStore) ReadVersions(version string, currentTime time.Time) ([]Inf
 		if err != nil {
 			return nil, err
 		}
-		err = writeToCache(infos, currentTime)
+		err = writeToCache(version, infos, currentTime)
 		if err != nil {
 			log.Debug().Msgf("failed to write local cache %v", err)
 		}

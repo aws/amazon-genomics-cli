@@ -16,7 +16,7 @@ type StoreTestSuite struct {
 	infos     []Info
 
 	origReadFromCache func(version string, currentTime time.Time) ([]Info, error)
-	origWriteToCache  func(infos []Info, currentTime time.Time) error
+	origWriteToCache  func(version string, infos []Info, currentTime time.Time) error
 }
 
 func (s *StoreTestSuite) SetupTest() {
@@ -46,7 +46,7 @@ func (s *StoreTestSuite) TestStoreReadFromCache() {
 		},
 	}
 
-	writeToCache = func(_ []Info, _ time.Time) error {
+	writeToCache = func(_ string, _ []Info, _ time.Time) error {
 		s.Fail("should overwrite the cache")
 		return nil
 	}
@@ -69,7 +69,8 @@ func (s *StoreTestSuite) TestStoreExpiredCache() {
 		},
 	}
 
-	writeToCache = func(infos []Info, timestamp time.Time) error {
+	writeToCache = func(version string, infos []Info, timestamp time.Time) error {
+		s.Assert().Equal(s.version, version)
 		s.Assert().Equal(s.infos, infos)
 		s.Assert().Equal(s.timestamp, timestamp)
 		return nil
@@ -93,7 +94,7 @@ func (s *StoreTestSuite) TestStoreReplenishFails() {
 		},
 	}
 
-	writeToCache = func(_ []Info, _ time.Time) error {
+	writeToCache = func(_ string, _ []Info, _ time.Time) error {
 		s.Fail("should not write to cache")
 		return nil
 	}
@@ -117,7 +118,7 @@ func (s *StoreTestSuite) TestStoreCacheUpdateFails() {
 		},
 	}
 
-	writeToCache = func(_ []Info, _ time.Time) error {
+	writeToCache = func(_ string, _ []Info, _ time.Time) error {
 		return errors.New(errorMessage)
 	}
 

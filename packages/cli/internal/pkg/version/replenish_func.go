@@ -12,6 +12,11 @@ import (
 	"github.com/blang/semver/v4"
 )
 
+const (
+	deprecationMessageObjectName = "deprecated"
+	highlightMessageObjectName   = "highlight"
+)
+
 type semanticVersion struct {
 	Version semver.Version
 	Info
@@ -33,7 +38,7 @@ func newReplenishFromS3Func(s3Client S3Api, channel string) func(string) ([]Info
 			Prefix: aws.String(prefix),
 		}
 		index := make(map[string]*semanticVersion)
-		var list []*semanticVersion
+		var semanticVersions []*semanticVersion
 		paginator := s3.NewListObjectsV2Paginator(s3Client, input)
 		for paginator.HasMorePages() {
 			output, err := paginator.NextPage(context.Background())
@@ -49,7 +54,7 @@ func newReplenishFromS3Func(s3Client S3Api, channel string) func(string) ([]Info
 				// - <prefix>/<semantic version>/highlight
 
 				key := aws.ToString(s3Object.Key)
-				if len(key) < len(prefix) {
+				if !strings.HasPrefix(key, prefix) {
 					continue
 				}
 				versionAndObjectName := strings.Split(key[len(prefix):], "/")
@@ -65,28 +70,28 @@ func newReplenishFromS3Func(s3Client S3Api, channel string) func(string) ([]Info
 					}
 					versionMeta = &semanticVersion{Version: semVersion}
 					versionMeta.Name = versionString
-					list = append(list, versionMeta)
+					semanticVersions = append(semanticVersions, versionMeta)
 					index[versionString] = versionMeta
 				}
 				objectName := versionAndObjectName[1]
-				if currentSemVersion.EQ(versionMeta.Version) && objectName == "deprecated" {
+				if currentSemVersion.EQ(versionMeta.Version) && objectName == deprecationMessageObjectName {
 					versionMeta.Deprecated = true
 					versionMeta.DeprecationMessage, _ = readS3Object(s3Client, bucket, key)
 					continue
 				}
-				if currentSemVersion.LT(versionMeta.Version) && objectName == "highlight" {
+				if currentSemVersion.LT(versionMeta.Version) && objectName == highlightMessageObjectName {
 					versionMeta.Highlight, _ = readS3Object(s3Client, bucket, key)
 					continue
 				}
 			}
 		}
-		sort.Slice(list, func(i, j int) bool {
-			return list[i].Version.LT(list[j].Version)
+		sort.Slice(semanticVersions, func(i, j int) bool {
+			return semanticVersions[i].Version.LT(semanticVersions[j].Version)
 		})
-		currentVersionIndex := sort.Search(len(list), func(i int) bool {
-			return list[i].Version.GTE(currentSemVersion)
+		currentVersionIndex := sort.Search(len(semanticVersions), func(i int) bool {
+			return semanticVersions[i].Version.GTE(currentSemVersion)
 		})
-		currentAndNewer := list[currentVersionIndex:]
+		currentAndNewer := semanticVersions[currentVersionIndex:]
 
 		result := make([]Info, len(currentAndNewer))
 		for i, ver := range currentAndNewer {

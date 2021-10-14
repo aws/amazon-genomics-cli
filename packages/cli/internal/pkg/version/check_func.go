@@ -40,7 +40,7 @@ var (
 func Check() (Result, error) {
 	updateCheckCtrl := environment.LookUpEnvOrDefault(UpdateCheckCtrlVarName, DefaultUpdateCheckCtrl)
 	if shouldSkipUpdateCheck(updateCheckCtrl) {
-		log.Warn().Msgf("AGC version check is disabled. To re-enable version check - unset environment variable '%s'", UpdateCheckCtrlVarName)
+		log.Warn().Msgf("AGC version check is disabled. To re-enable version check unset environment variable '%s'", UpdateCheckCtrlVarName)
 		return Result{
 			CurrentVersion: Version,
 			LatestVersion:  Version,

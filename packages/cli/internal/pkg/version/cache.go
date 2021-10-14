@@ -23,42 +23,43 @@ var (
 )
 
 type CacheRecord struct {
-	Versions  []Info
-	Timestamp time.Time
+	CurrentVersion string
+	Versions       []Info
+	Timestamp      time.Time
 }
 
-var readFromCache = func(_ string, currentTime time.Time) ([]Info, error) {
+var readFromCache = func(currentVersion string, currentTime time.Time) ([]Info, error) {
 	path, err := userHomeDir()
 	if err != nil {
 		return nil, err
 	}
 	cacheFileNameAbs := filepath.Join(path, cacheFileNameRel)
-	cacheBites, err := readFile(cacheFileNameAbs)
+	cacheBytes, err := readFile(cacheFileNameAbs)
 	if err != nil {
 		return nil, err
 	}
 	var record CacheRecord
-	err = json.Unmarshal(cacheBites, &record)
+	err = json.Unmarshal(cacheBytes, &record)
 	if err != nil {
 		return nil, err
 	}
 	cacheAge := currentTime.Sub(record.Timestamp)
-	if cacheAge > expirationTime {
+	if cacheAge > expirationTime || record.CurrentVersion != currentVersion {
 		return nil, CacheExpiredError
 	}
 	return record.Versions, nil
 }
 
-var writeToCache = func(infos []Info, currentTime time.Time) error {
+var writeToCache = func(currentVersion string, infos []Info, currentTime time.Time) error {
 	path, err := userHomeDir()
 	if err != nil {
 		return err
 	}
 	cacheFileNameAbs := filepath.Join(path, cacheFileNameRel)
 
-	cacheBites, err := json.Marshal(CacheRecord{infos, currentTime})
+	cacheBytes, err := json.Marshal(CacheRecord{currentVersion, infos, currentTime})
 	if err != nil {
 		return err
 	}
-	return writeFile(cacheFileNameAbs, cacheBites, 0644)
+	return writeFile(cacheFileNameAbs, cacheBytes, 0644)
 }

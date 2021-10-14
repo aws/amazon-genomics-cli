@@ -17,17 +17,18 @@ type CacheTestSuite struct {
 	dataJson          string
 	dataStruct        []Info
 	expectedCachePath string
+	version           string
 
 	origUserHomeDir func() (string, error)
 	origReadFile    func(filename string) ([]byte, error)
 	origWriteFile   func(filename string, data []byte, perm fs.FileMode) error
 }
 
-func (suite *CacheTestSuite) SetupTest() {
-	suite.cacheTimestamp, _ = time.Parse(time.RFC3339, "2021-10-11T23:50:50.104404138-07:00")
-	suite.homeDir = "/my/home/dir"
-	suite.expectedCachePath = "/my/home/dir/.agc/.version_cache"
-	suite.dataJson = `{
+func (s *CacheTestSuite) SetupTest() {
+	s.cacheTimestamp, _ = time.Parse(time.RFC3339, "2021-10-11T23:50:50.104404138-07:00")
+	s.homeDir = "/my/home/dir"
+	s.expectedCachePath = "/my/home/dir/.agc/.version_cache"
+	s.dataJson = `{
   "Versions": [
     {
       "Name": "1.0.1",
@@ -36,9 +37,10 @@ func (suite *CacheTestSuite) SetupTest() {
       "Highlight": "Highlight test"
     }
   ],
+  "CurrentVersion": "1.0.1",
   "Timestamp": "2021-10-11T23:50:50.104404138-07:00"
 }`
-	suite.dataStruct = []Info{
+	s.dataStruct = []Info{
 		{
 			Name:               "1.0.1",
 			Deprecated:         true,
@@ -46,120 +48,121 @@ func (suite *CacheTestSuite) SetupTest() {
 			Highlight:          "Highlight test",
 		},
 	}
+	s.version = "1.0.1"
 
-	suite.origUserHomeDir = userHomeDir
-	suite.origReadFile = readFile
-	suite.origWriteFile = writeFile
+	s.origUserHomeDir = userHomeDir
+	s.origReadFile = readFile
+	s.origWriteFile = writeFile
 
 	userHomeDir = func() (string, error) {
-		return suite.homeDir, nil
+		return s.homeDir, nil
 	}
 
 	readFile = func(filename string) ([]byte, error) {
-		suite.Assert().Equal(suite.expectedCachePath, filename)
-		return []byte(suite.dataJson), nil
+		s.Assert().Equal(s.expectedCachePath, filename)
+		return []byte(s.dataJson), nil
 	}
 }
 
-func (suite *CacheTestSuite) TearDownTest() {
-	userHomeDir = suite.origUserHomeDir
-	readFile = suite.origReadFile
-	writeFile = suite.origWriteFile
+func (s *CacheTestSuite) TearDownTest() {
+	userHomeDir = s.origUserHomeDir
+	readFile = s.origReadFile
+	writeFile = s.origWriteFile
 }
 
-func (suite *CacheTestSuite) TestReadFromCacheNominal() {
-	expected := suite.dataStruct
-	now := suite.cacheTimestamp.Add(1 * time.Hour)
+func (s *CacheTestSuite) TestReadFromCacheNominal() {
+	expected := s.dataStruct
+	now := s.cacheTimestamp.Add(1 * time.Hour)
 
-	actual, err := readFromCache("", now)
-	if suite.Assert().NoError(err) {
-		suite.Assert().Equal(expected, actual)
+	actual, err := readFromCache(s.version, now)
+	if s.Assert().NoError(err) {
+		s.Assert().Equal(expected, actual)
 	}
 }
 
-func (suite *CacheTestSuite) TestReadFromCacheExpired() {
-	now := suite.cacheTimestamp.Add(25 * time.Hour)
-	_, err := readFromCache("", now)
-	if suite.Assert().Error(err) {
-		suite.Assert().Equal(CacheExpiredError, err)
+func (s *CacheTestSuite) TestReadFromCacheExpired() {
+	now := s.cacheTimestamp.Add(25 * time.Hour)
+	_, err := readFromCache(s.version, now)
+	if s.Assert().Error(err) {
+		s.Assert().Equal(CacheExpiredError, err)
 	}
 }
 
-func (suite *CacheTestSuite) TestReadFromCacheNoUserHome() {
+func (s *CacheTestSuite) TestReadFromCacheNoUserHome() {
 	errorMessage := "no user home available"
 	userHomeDir = func() (string, error) {
 		return "", errors.New(errorMessage)
 	}
 	readFile = func(filename string) ([]byte, error) {
-		suite.Fail("should not call 'readFile'")
+		s.Fail("should not call 'readFile'")
 		return nil, nil
 	}
-	_, err := readFromCache("", suite.cacheTimestamp)
-	if suite.Assert().Error(err) {
-		suite.Assert().EqualError(err, errorMessage)
+	_, err := readFromCache(s.version, s.cacheTimestamp)
+	if s.Assert().Error(err) {
+		s.Assert().EqualError(err, errorMessage)
 	}
 }
 
-func (suite *CacheTestSuite) TestReadFromCacheNoFile() {
+func (s *CacheTestSuite) TestReadFromCacheNoFile() {
 	errorMessage := "file not found"
 	readFile = func(filename string) ([]byte, error) {
 		return nil, errors.New(errorMessage)
 	}
-	_, err := readFromCache("", suite.cacheTimestamp)
-	if suite.Assert().Error(err) {
-		suite.Assert().EqualError(err, errorMessage)
+	_, err := readFromCache(s.version, s.cacheTimestamp)
+	if s.Assert().Error(err) {
+		s.Assert().EqualError(err, errorMessage)
 	}
 }
 
-func (suite *CacheTestSuite) TestReadFromCacheInvalidFormat() {
+func (s *CacheTestSuite) TestReadFromCacheInvalidFormat() {
 	readFile = func(filename string) ([]byte, error) {
-		suite.Assert().Equal(suite.expectedCachePath, filename)
+		s.Assert().Equal(s.expectedCachePath, filename)
 		return []byte("<XML/>"), nil
 	}
-	_, err := readFromCache("", suite.cacheTimestamp)
-	if suite.Assert().Error(err) {
-		suite.Assert().EqualError(err, "invalid character '<' looking for beginning of value")
+	_, err := readFromCache(s.version, s.cacheTimestamp)
+	if s.Assert().Error(err) {
+		s.Assert().EqualError(err, "invalid character '<' looking for beginning of value")
 	}
 }
 
-func (suite *CacheTestSuite) TestWriteToCacheNominal() {
+func (s *CacheTestSuite) TestWriteToCacheNominal() {
 	var actuallyWritten string
 	writeFile = func(filename string, data []byte, perm fs.FileMode) error {
-		suite.Assert().Equal(suite.expectedCachePath, filename)
-		suite.Assert().Equal(fs.FileMode(0644), perm)
+		s.Assert().Equal(s.expectedCachePath, filename)
+		s.Assert().Equal(fs.FileMode(0644), perm)
 		actuallyWritten = string(data)
 		return nil
 	}
-	expected := `{"Versions":[{"Name":"1.0.1","Deprecated":true,"DeprecationMessage":"Deprecation message test","Highlight":"Highlight test"}],"Timestamp":"2021-10-11T23:50:50.104404138-07:00"}`
-	err := writeToCache(suite.dataStruct, suite.cacheTimestamp)
-	if suite.NoError(err) {
-		suite.Assert().Equal(expected, actuallyWritten)
+	expected := `{"CurrentVersion":"1.0.1","Versions":[{"Name":"1.0.1","Deprecated":true,"DeprecationMessage":"Deprecation message test","Highlight":"Highlight test"}],"Timestamp":"2021-10-11T23:50:50.104404138-07:00"}`
+	err := writeToCache(s.version, s.dataStruct, s.cacheTimestamp)
+	if s.NoError(err) {
+		s.Assert().Equal(expected, actuallyWritten)
 	}
 }
 
-func (suite *CacheTestSuite) TestWriteToCacheNoUserHome() {
+func (s *CacheTestSuite) TestWriteToCacheNoUserHome() {
 	errorMessage := "no user home available"
 	userHomeDir = func() (string, error) {
 		return "", errors.New(errorMessage)
 	}
 	writeFile = func(filename string, data []byte, perm fs.FileMode) error {
-		suite.Fail("should not call 'readFile'")
+		s.Fail("should not call 'readFile'")
 		return nil
 	}
-	err := writeToCache(suite.dataStruct, suite.cacheTimestamp)
-	if suite.Assert().Error(err) {
-		suite.Assert().EqualError(err, errorMessage)
+	err := writeToCache(s.version, s.dataStruct, s.cacheTimestamp)
+	if s.Assert().Error(err) {
+		s.Assert().EqualError(err, errorMessage)
 	}
 }
 
-func (suite *CacheTestSuite) TestWriteToCacheWriteFailure() {
+func (s *CacheTestSuite) TestWriteToCacheWriteFailure() {
 	errorMessage := "cannot write file"
 	writeFile = func(filename string, data []byte, perm fs.FileMode) error {
 		return errors.New(errorMessage)
 	}
-	err := writeToCache(suite.dataStruct, suite.cacheTimestamp)
-	if suite.Assert().Error(err) {
-		suite.Assert().EqualError(err, errorMessage)
+	err := writeToCache(s.version, s.dataStruct, s.cacheTimestamp)
+	if s.Assert().Error(err) {
+		s.Assert().EqualError(err, errorMessage)
 	}
 }
 
