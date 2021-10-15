@@ -15,6 +15,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/cmd/application/template"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/term/color"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
@@ -33,6 +34,7 @@ slug: %s
 
 type mainVars struct {
 	docPath string
+	format string
 }
 
 func init() {
@@ -82,6 +84,7 @@ func buildRootCmd() *cobra.Command {
   Displays the help menu for the specified sub-command.
   /code $ agc account --help`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			format.SetFormatter(format.FormatterType(vars.format))
 			setLoggingLevel()
 			checkCliVersion()
 		},
@@ -113,6 +116,7 @@ func buildRootCmd() *cobra.Command {
 	cmd.SetUsageTemplate(template.RootUsage)
 
 	cmd.PersistentFlags().BoolVarP(&logging.Verbose, cli.VerboseFlag, cli.VerboseFlagShort, false, cli.VerboseFlagDescription)
+	cmd.PersistentFlags().StringVar(&vars.format, cli.FormatFlag, cli.FormatFlagDefault, cli.FormatFlagDescription)
 	cmd.Flags().StringVar(&vars.docPath, "docs", "", "generate markdown documenting the CLI to the specified path")
 	cmd.Flag("docs").Hidden = true
 
