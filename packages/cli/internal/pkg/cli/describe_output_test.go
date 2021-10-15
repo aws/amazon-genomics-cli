@@ -30,7 +30,8 @@ func TestDescribeOutput(t *testing.T) {
 		},
 		"Context": {
 			output:              types.Context{},
-			expectedDescription: "Output of the command has following format:\nCONTEXT: Name RequestSpotInstances Status StatusReason\nINSTANCETYPE: Value\nOUTPUTLOCATION: Url\n",
+			expectedDescription: "Output of the command has following format:\nCONTEXT: MaxVCpus Name RequestSpotInstances Status" +
+				" StatusReason\nINSTANCETYPE: Value\nOUTPUTLOCATION: Url\n",
 		},
 	}
 

@@ -103,6 +103,12 @@ type taskProps struct {
 	runLog         wes_client.RunLog
 }
 
+//nolint:structcheck
+type workflowOutputProps struct {
+	instanceSummary       InstanceSummary
+	workflowRunLogOutputs map[string]interface{}
+}
+
 type Manager struct {
 	Project    storage.ProjectClient
 	Config     storage.ConfigClient
@@ -122,6 +128,7 @@ type Manager struct {
 	instanceProps
 	instanceStopProps
 	taskProps
+	workflowOutputProps
 	err error
 }
 
@@ -618,4 +625,29 @@ func (m *Manager) setInstanceToStop(runId string) {
 	}
 
 	m.instanceToStop = workflowInstance
+}
+
+func (m *Manager) setInstanceSummary() {
+	if m.err != nil {
+		return
+	}
+
+	if len(m.instances) == 0 {
+		m.err = fmt.Errorf("no instance summary found, check the workflow run id and check the workflow was run from the current project")
+		log.Error().Err(m.err).Send()
+		return
+	}
+	m.instanceSummary = m.instances[0]
+}
+
+func (m *Manager) setWorkflowRunLogOutputs() {
+	if m.err != nil {
+		return
+	}
+	runLog, err := m.wes.GetRunLog(context.Background(), m.instanceSummary.Id)
+	if err != nil {
+		m.err = err
+		return
+	}
+	m.workflowRunLogOutputs = runLog.Outputs
 }

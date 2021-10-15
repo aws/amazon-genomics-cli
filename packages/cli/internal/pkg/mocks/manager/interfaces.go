@@ -7,4 +7,5 @@ import (
 type WorkflowManager interface {
 	workflow.TasksManager
 	workflow.StatusManager
+	workflow.OutputManager
 }

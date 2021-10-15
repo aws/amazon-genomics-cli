@@ -3,6 +3,7 @@ package format
 import (
 	"os"
 	"text/tabwriter"
+  "bytes"
 )
 var Default Formatter = NewText()
 
@@ -32,4 +33,8 @@ func SetFormatter(format FormatterType) {
 
 type Formatter interface {
 	Write(interface{})
+}
+
+func NewStringFormatter(buffer *bytes.Buffer) Formatter {
+	return &Text{buffer}
 }

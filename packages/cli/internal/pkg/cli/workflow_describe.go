@@ -77,6 +77,7 @@ An instance is created every time we run a workflow.
 			format.Default.Write(workflow)
 			return nil
 		}),
+		ValidArgsFunction: NewWorkflowAutoComplete().GetWorkflowAutoComplete(),
 	}
 	return cmd
 }
