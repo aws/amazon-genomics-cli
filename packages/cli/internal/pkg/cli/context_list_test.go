@@ -20,7 +20,7 @@ const (
 func TestListContextOpts_Execute(t *testing.T) {
 	tests := map[string]struct {
 		setExpectations func(manager *contextmocks.MockContextManager)
-		expected        []types.ContextName
+		expected        []types.ContextSummary
 		expectedErr     error
 	}{
 		"no contexts": {
@@ -35,7 +35,7 @@ func TestListContextOpts_Execute(t *testing.T) {
 					testContextName: {Name: testContextName, Engines: []spec.Engine{{Type: "type", Engine: "engine"}}},
 				}, nil)
 			},
-			expected: []types.ContextName{{Name: testContextName, EngineName: "engine"}},
+			expected: []types.ContextSummary{{Name: testContextName, EngineName: "engine"}},
 		},
 		"list error": {
 			setExpectations: func(ctxManager *contextmocks.MockContextManager) {

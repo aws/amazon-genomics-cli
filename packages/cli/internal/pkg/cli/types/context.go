@@ -20,7 +20,7 @@ type ContextInstance struct {
 	Info        string
 }
 
-type ContextName struct {
+type ContextSummary struct {
 	Name       string
 	EngineName string
 }
