@@ -2,9 +2,9 @@ import * as cdk from "monocdk";
 import * as iam from "monocdk/aws-iam";
 import { PolicyOptions } from "../types/engine-options";
 import { BucketOperations } from "../../common/BucketOperations";
-import { NextflowEngineBatchPolicy, NextflowBatchPolicyProps } from "./policies/nextflow-engine-batch-policy";
-import { NextflowAdapterBatchPolicy, NextflowSubmitJobBatchPolicyProps } from "./policies/nextflow-adapter-batch-policy";
-import { Arn, ArnComponents, Stack } from "monocdk";
+import { NextflowEngineBatchPolicy } from "./policies/nextflow-engine-batch-policy";
+import { NextflowAdapterBatchPolicy } from "./policies/nextflow-adapter-batch-policy";
+import { Arn, Stack } from "monocdk";
 
 interface NextflowEngineRoleProps {
   readOnlyBucketArns: string[];

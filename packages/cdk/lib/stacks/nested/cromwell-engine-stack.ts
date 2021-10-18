@@ -4,7 +4,7 @@ import { CloudMapOptions, FargateTaskDefinition, LogDriver } from "monocdk/aws-e
 import { Construct } from "constructs";
 import { ApiProxy, SecureService } from "../../constructs";
 import { PrivateDnsNamespace } from "monocdk/aws-servicediscovery";
-import { IRole, Role, ServicePrincipal } from "monocdk/aws-iam";
+import { IRole } from "monocdk/aws-iam";
 import { createEcrImage, renderServiceWithContainer, renderServiceWithTaskDefinition } from "../../util";
 import { APP_NAME } from "../../constants";
 import { Bucket } from "monocdk/aws-s3";

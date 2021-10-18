@@ -7,7 +7,6 @@ import { ContextAppParameters } from "../env";
 import { BatchStack, BatchStackProps } from "./nested/batch-stack";
 import { CromwellEngineStack } from "./nested/cromwell-engine-stack";
 import { NextflowEngineStack } from "./nested/nextflow-engine-stack";
-import { ManagedPolicy } from "monocdk/aws-iam";
 
 export interface ContextStackProps extends StackProps {
   readonly contextParameters: ContextAppParameters;
