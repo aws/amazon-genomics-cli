@@ -66,8 +66,8 @@ You should see something like:
 
 ```
 2021-09-22T01:15:41Z 𝒊  Listing contexts.
-CONTEXTNAME    myContext
-CONTEXTNAME    spotCtx
+CONTEXTNAME    cromwell    myContext
+CONTEXTNAME    cromwell    spotCtx
 ```
 
 In this project there are two contexts, one configured to run with On-Demand instances (myContext), and one configured to use SPOT instances (spotCtx).

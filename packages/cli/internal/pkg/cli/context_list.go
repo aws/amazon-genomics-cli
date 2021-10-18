@@ -4,9 +4,11 @@
 package cli
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/types"
@@ -41,8 +43,12 @@ func (o *listContextOpts) Execute() ([]types.ContextName, error) {
 
 	var contextNames []types.ContextName
 	for name := range contexts {
+		if len(contexts[name].Engines) != 1 {
+			return nil, actionableerror.New(fmt.Errorf("context '%s' does not have a valid engine declaration", name), "please validate your project yaml with 'agc project validate'")
+		}
 		contextNames = append(contextNames, types.ContextName{
-			Name: name,
+			Name:       name,
+			EngineName: contexts[name].Engines[0].Engine,
 		})
 	}
 

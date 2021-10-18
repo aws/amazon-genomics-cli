@@ -16,9 +16,34 @@ func TestManager_List(t *testing.T) {
 	}{
 		"contexts": {
 			expectedContexts: map[string]Summary{
-				testContextName1: {Name: testContextName1},
-				testContextName2: {Name: testContextName2},
-				testContextName3: {Name: testContextName3}},
+				testContextName1: {
+					Name: testContextName1,
+					Engines: []spec.Engine{
+						{
+							Type:   "wdl",
+							Engine: "cromwell",
+						},
+					},
+				},
+				testContextName2: {
+					Name: testContextName2,
+					Engines: []spec.Engine{
+						{
+							Type:   "wdl",
+							Engine: "cromwell",
+						},
+					},
+				},
+				testContextName3: {
+					Name: testContextName3,
+					Engines: []spec.Engine{
+						{
+							Type:   "wdl",
+							Engine: "cromwell",
+						},
+					},
+				},
+			},
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)

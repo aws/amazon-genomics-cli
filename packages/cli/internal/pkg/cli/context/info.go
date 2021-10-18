@@ -1,12 +1,17 @@
 package context
 
-import "reflect"
+import (
+	"reflect"
+
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+)
 
 type Summary struct {
 	Name          string
 	MaxVCpus      int
 	IsSpot        bool
 	InstanceTypes []string
+	Engines       []spec.Engine
 }
 
 func (i Summary) IsEmpty() bool {

@@ -21,7 +21,8 @@ type ContextInstance struct {
 }
 
 type ContextName struct {
-	Name string
+	Name       string
+	EngineName string
 }
 
 type OutputLocation struct {
