@@ -117,7 +117,7 @@ as well as other relevant account information.
 
 ### `list`
 
-The command `agc context list [flags]` will list the names of all contexts defined in the project YAML file
+The command `agc context list [flags]` will list the names of all contexts defined in the project YAML file along with the name of the engine used by the context.
 
 ### `deploy`
 

@@ -20,8 +20,9 @@ type ContextInstance struct {
 	Info        string
 }
 
-type ContextName struct {
-	Name string
+type ContextSummary struct {
+	Name       string
+	EngineName string
 }
 
 type OutputLocation struct {
