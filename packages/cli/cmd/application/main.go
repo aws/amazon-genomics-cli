@@ -34,7 +34,7 @@ slug: %s
 
 type mainVars struct {
 	docPath string
-	format string
+	format  string
 }
 
 func init() {

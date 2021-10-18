@@ -180,7 +180,7 @@ func (f *Table) appendSimpleSlice(field reflect.Value, outputList []string, row 
 	return outputList
 }
 
-func (f *Table) appendSimpleValue(field reflect.Value, outputList[]string, row int) []string {
+func (f *Table) appendSimpleValue(field reflect.Value, outputList []string, row int) []string {
 	if row > 0 {
 		outputList = append(outputList, emptyVal)
 	} else {

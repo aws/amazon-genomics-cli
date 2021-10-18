@@ -149,7 +149,6 @@ contexts:
 	}
 }
 
-
 func TestProjectDefaults(t *testing.T) {
 	const yamlStr = `
 name: DefaultTest
