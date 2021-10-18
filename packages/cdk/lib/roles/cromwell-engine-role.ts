@@ -3,7 +3,7 @@ import * as iam from "monocdk/aws-iam";
 import { PolicyOptions } from "../types/engine-options";
 import { BucketOperations } from "../../common/BucketOperations";
 import { CromwellBatchPolicy } from "./policies/cromwell-batch-policy";
-import { Arn, ArnComponents, Stack } from "monocdk";
+import { Arn, Stack } from "monocdk";
 
 interface CromwellEngineRoleProps {
   readOnlyBucketArns: string[];

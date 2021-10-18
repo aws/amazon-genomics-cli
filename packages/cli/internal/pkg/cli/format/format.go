@@ -1,17 +1,19 @@
 package format
 
 import (
+	"bytes"
 	"os"
 	"text/tabwriter"
-  "bytes"
 )
+
 var Default Formatter = NewText()
 
 type FormatterType string
+
 const (
-	textFormat FormatterType = "text"
-	tableFormat FormatterType = "table"
-	DefaultFormat = textFormat
+	textFormat    FormatterType = "text"
+	tableFormat   FormatterType = "table"
+	DefaultFormat               = textFormat
 )
 
 func NewText() *Text {
@@ -26,8 +28,10 @@ func NewTable() *Table {
 
 func SetFormatter(format FormatterType) {
 	switch format {
-	case textFormat: Default = NewText()
-	case tableFormat: Default = NewTable()
+	case textFormat:
+		Default = NewText()
+	case tableFormat:
+		Default = NewTable()
 	}
 }
 
