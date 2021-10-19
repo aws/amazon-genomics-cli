@@ -101,7 +101,7 @@ func (o *logsWorkflowOpts) Execute() error {
 	if o.tail {
 		_ = o.followLogGroup(logGroupName, streams...)
 	} else {
-		_ = o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter, streams...)
+		return o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter, streams...)
 	}
 
 	return nil
