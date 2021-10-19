@@ -29,7 +29,6 @@ release-cdk:
 
 init:
 	go env -w GOPROXY=direct
-	goenv install --skip-existing
 	target=init $(MAKE) $(PACKAGES)
 
 docs: build-cli
