@@ -6,12 +6,12 @@ workflows:
     type:
       language: wdl
       version: 1.0
-    sourceURL: workflows/hello
+    sourceURL: workflows/hello/hello.wdl
   read:
     type:
       language: wdl
       version: 1.0
-    sourceURL: workflows/read/read.wdl
+    sourceURL: workflows/read
   haplotype:
     type:
       language: wdl
