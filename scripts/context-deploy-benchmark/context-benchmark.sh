@@ -22,7 +22,7 @@ get_average_runtime() {
 validate_and_run() {
   if [ $1 != "1" ] && [[ $2 != "cromwell" || $2 != "nextflow" ]]
   then
-    echo "Please specify engine type to time (cromwell | nextflow)"
+    echo "Please specify engine type to benchmark (cromwell | nextflow)"
   else
     get_average_runtime $2
   fi
