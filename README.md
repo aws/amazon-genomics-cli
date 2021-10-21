@@ -42,6 +42,7 @@ instructions [here](https://github.com/syndbg/goenv/blob/master/INSTALL.md).
 Amazon Genomics CLI makes use of the AWS CDK to deploy infrastructure into an AWS account. Our CDK code is written in TypeScript.
 You'll need Node to ensure the appropriate dependencies are installed at build time.
 
+
 To manage and install Node versions, we use [nvm](https://github.com/nvm-sh/nvm).
 
 ```bash
