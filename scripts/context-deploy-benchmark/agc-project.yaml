@@ -1,0 +1,50 @@
+---
+name: Demo
+schemaVersion: 1
+workflows:
+  hello:
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: workflows/hello
+contexts:
+  cromwell1:
+    engines:
+      - type: wdl
+        engine: cromwell
+  cromwell2:
+    engines:
+      - type: wdl
+        engine: cromwell
+  cromwell3:
+    engines:
+      - type: wdl
+        engine: cromwell
+  cromwell4:
+    engines:
+      - type: wdl
+        engine: cromwell
+  cromwell5:
+    engines:
+      - type: wdl
+        engine: cromwell
+  nextflow1:
+    engines:
+      - type: nextflow
+        engine: nextflow
+  nextflow2:
+    engines:
+      - type: nextflow
+        engine: nextflow
+  nextflow3:
+    engines:
+      - type: nextflow
+        engine: nextflow
+  nextflow4:
+    engines:
+      - type: nextflow
+        engine: nextflow
+  nextflow5:
+    engines:
+      - type: nextflow
+        engine: nextflow
