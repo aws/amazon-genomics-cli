@@ -2,7 +2,6 @@ package cli
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
@@ -65,21 +64,14 @@ var (
 )
 
 func TestAccountActivateOpts_Execute(t *testing.T) {
-	defer func() { _ = os.Unsetenv("ECR_WES_ACCOUNT_ID") }()
-	_ = os.Setenv("ECR_WES_REGION", testAccountRegion)
-	defer func() { _ = os.Unsetenv("ECR_WES_REGION") }()
-	_ = os.Setenv("ECR_WES_TAG", testImageTag)
-	defer func() { _ = os.Unsetenv("ECR_WES_TAG") }()
-	_ = os.Setenv("ECR_WES_REPOSITORY", testWesRepository)
-	defer func() { _ = os.Unsetenv("ECR_WES_REPOSITORY") }()
-	_ = os.Setenv("ECR_CROMWELL_ACCOUNT_ID", testAccountId)
-	defer func() { _ = os.Unsetenv("ECR_CROMWELL_ACCOUNT_ID") }()
-	_ = os.Setenv("ECR_CROMWELL_REGION", testAccountRegion)
-	defer func() { _ = os.Unsetenv("ECR_CROMWELL_REGION") }()
-	_ = os.Setenv("ECR_CROMWELL_TAG", testImageTag)
-	defer func() { _ = os.Unsetenv("ECR_CROMWELL_TAG") }()
-	_ = os.Setenv("ECR_CROMWELL_REPOSITORY", testCromwellRepository)
-	defer func() { _ = os.Unsetenv("ECR_CROMWELL_REPOSITORY") }()
+	t.Setenv("ECR_WES_REGION", testAccountRegion)
+	t.Setenv("ECR_WES_TAG", testImageTag)
+	t.Setenv("ECR_WES_REPOSITORY", testWesRepository)
+	t.Setenv("ECR_CROMWELL_ACCOUNT_ID", testAccountId)
+	t.Setenv("ECR_CROMWELL_REGION", testAccountRegion)
+	t.Setenv("ECR_CROMWELL_TAG", testImageTag)
+	t.Setenv("ECR_CROMWELL_REPOSITORY", testCromwellRepository)
+
 	origVerbose := logging.Verbose
 	defer func() { logging.Verbose = origVerbose }()
 	logging.Verbose = true

@@ -1,7 +1,6 @@
 package version
 
 import (
-	"os"
 	"testing"
 	"time"
 
@@ -66,8 +65,7 @@ func (suite *CheckTestSuite) TestCheckDefaultCustomChannel() {
 	testResult := Result{CurrentVersion: Version}
 
 	const customChannel = "s3://custom"
-	os.Setenv(ChannelVarName, customChannel)
-	defer func() { os.Unsetenv(ChannelVarName) }()
+	suite.T().Setenv(ChannelVarName, customChannel)
 
 	checkVersion = func(s3Reader S3Api, channel string, currentTime time.Time) (Result, error) {
 		suite.Assert().Equal(channel, customChannel)
@@ -91,8 +89,7 @@ func (suite *CheckTestSuite) TestCheckSkip() {
 		return suite.now
 	}
 
-	os.Setenv(UpdateCheckCtrlVarName, "false")
-	defer func() { os.Unsetenv(UpdateCheckCtrlVarName) }()
+	suite.T().Setenv(UpdateCheckCtrlVarName, "false")
 
 	checkVersion = func(s3Reader S3Api, channel string, currentTime time.Time) (Result, error) {
 		suite.Fail("Should not call 'checkVersion'")
