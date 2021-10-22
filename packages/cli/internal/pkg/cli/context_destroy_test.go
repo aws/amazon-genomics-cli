@@ -25,7 +25,7 @@ func TestDestroyContextOpts_Validate_ValidContexts(t *testing.T) {
 	wfMock := workflowmocks.NewMockWorkflowManager(ctrl)
 	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, workflowMaxAllowedInstance).Return([]workflow.InstanceSummary{}, nil)
 	opts := &destroyContextOpts{
-		destroyContextVars: destroyContextVars{contexts: []string{testContextName1}},
+		destroyContextVars: destroyContextVars{},
 		wfsManager: func() workflow.Interface {
 			return wfMock
 		},
@@ -33,7 +33,7 @@ func TestDestroyContextOpts_Validate_ValidContexts(t *testing.T) {
 			return ctxMock
 		},
 	}
-	assert.NoError(t, opts.Validate())
+	assert.NoError(t, opts.Validate([]string{testContextName1}))
 }
 
 func TestDestroyContextOpts_Validate_ValidAll(t *testing.T) {
@@ -54,7 +54,7 @@ func TestDestroyContextOpts_Validate_ValidAll(t *testing.T) {
 		ctxManagerFactory: func() context.Interface {
 			return ctxMock
 		}}
-	assert.NoError(t, opts.Validate())
+	assert.NoError(t, opts.Validate([]string{}))
 }
 
 func TestDestroyContextOpts_Validate_InvalidNone(t *testing.T) {
@@ -72,7 +72,7 @@ func TestDestroyContextOpts_Validate_InvalidNone(t *testing.T) {
 		ctxManagerFactory: func() context.Interface {
 			return ctxMock
 		}}
-	assert.Error(t, opts.Validate())
+	assert.Error(t, opts.Validate([]string{}))
 }
 
 func TestDestroyContextOpts_Validate_InvalidBoth(t *testing.T) {
@@ -80,11 +80,11 @@ func TestDestroyContextOpts_Validate_InvalidBoth(t *testing.T) {
 	defer workflowCtrl.Finish()
 	wfMock := workflowmocks.NewMockWorkflowManager(workflowCtrl)
 	opts := &destroyContextOpts{
-		destroyContextVars: destroyContextVars{destroyAll: true, contexts: []string{testContextName1}},
+		destroyContextVars: destroyContextVars{destroyAll: true},
 		wfsManager: func() workflow.Interface {
 			return wfMock
 		}}
-	assert.Error(t, opts.Validate())
+	assert.Error(t, opts.Validate([]string{testContextName1}))
 }
 
 func TestDestroyContextOpts_Validate_NonExistingContexts(t *testing.T) {
@@ -94,12 +94,12 @@ func TestDestroyContextOpts_Validate_NonExistingContexts(t *testing.T) {
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName2: {}}, nil)
 
 	opts := &destroyContextOpts{
-		destroyContextVars: destroyContextVars{contexts: []string{testContextName1}},
+		destroyContextVars: destroyContextVars{},
 		ctxManagerFactory: func() context.Interface {
 			return ctxMock
 		},
 	}
-	assert.Error(t, opts.Validate())
+	assert.Error(t, opts.Validate([]string{testContextName1}))
 }
 
 func TestDestroyContextOpts_Validate_ContextRetrievalFails(t *testing.T) {
@@ -109,12 +109,12 @@ func TestDestroyContextOpts_Validate_ContextRetrievalFails(t *testing.T) {
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{}, fmt.Errorf("some error"))
 
 	opts := &destroyContextOpts{
-		destroyContextVars: destroyContextVars{contexts: []string{testContextName1}},
+		destroyContextVars: destroyContextVars{},
 		ctxManagerFactory: func() context.Interface {
 			return ctxMock
 		},
 	}
-	assert.Error(t, opts.Validate())
+	assert.Error(t, opts.Validate([]string{testContextName1}))
 }
 
 func TestDestroyContextOpts_Validate_ContainsRunningContext(t *testing.T) {
@@ -124,20 +124,19 @@ func TestDestroyContextOpts_Validate_ContainsRunningContext(t *testing.T) {
 	defer workflowCtrl.Finish()
 	wfMock := workflowmocks.NewMockWorkflowManager(workflowCtrl)
 	ctxMock := contextmocks.NewMockContextManager(contextCtrl)
-	contexts := []string{testContextName1}
 	failedSummary := []workflow.InstanceSummary{{State: "RUNNING"}}
 	expectedError := fmt.Sprintf("context '%s' contains running workflows. Please stop all workflows before destroying context", testContextName1)
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
 	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, workflowMaxAllowedInstance).Return(failedSummary, nil)
 	opts := &destroyContextOpts{
-		destroyContextVars: destroyContextVars{contexts: contexts},
+		destroyContextVars: destroyContextVars{},
 		wfsManager: func() workflow.Interface {
 			return wfMock
 		},
 		ctxManagerFactory: func() context.Interface {
 			return ctxMock
 		}}
-	err := opts.Validate()
+	err := opts.Validate([]string{testContextName1})
 	assert.Equal(t, expectedError, err.Error())
 }
 
@@ -162,7 +161,7 @@ func TestDestroyContextOpts_ValidateForce_ContainsRunningContext(t *testing.T) {
 		ctxManagerFactory: func() context.Interface {
 			return ctxMock
 		}}
-	assert.NoError(t, opts.Validate())
+	assert.NoError(t, opts.Validate([]string{}))
 }
 
 func TestDestroyContextOpts_GetContexts_DontGetAll(t *testing.T) {
@@ -175,8 +174,7 @@ func TestDestroyContextOpts_GetContexts_DontGetAll(t *testing.T) {
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}}, nil)
 	opts := &destroyContextOpts{
 		destroyContextVars: destroyContextVars{
-			destroyAll: false,
-			contexts:   []string{testContextName1}},
+			destroyAll: false},
 		ctxManagerFactory: func() context.Interface {
 			return ctxMock
 		},
@@ -184,7 +182,7 @@ func TestDestroyContextOpts_GetContexts_DontGetAll(t *testing.T) {
 			return wfMock
 		},
 	}
-	require.NoError(t, opts.getContexts())
+	require.NoError(t, opts.setContexts([]string{testContextName1}))
 }
 
 func TestDestroyContextOpts_GetContexts_ListSuccess(t *testing.T) {
@@ -205,7 +203,7 @@ func TestDestroyContextOpts_GetContexts_ListSuccess(t *testing.T) {
 			return wfMock
 		},
 	}
-	require.NoError(t, opts.getContexts())
+	require.NoError(t, opts.setContexts([]string{}))
 }
 
 func TestDestroyContextOpts_GetContexts_ListError(t *testing.T) {
@@ -226,7 +224,7 @@ func TestDestroyContextOpts_GetContexts_ListError(t *testing.T) {
 			return wfMock
 		},
 	}
-	err := opts.getContexts()
+	err := opts.setContexts([]string{})
 	require.Equal(t, expectedErr, err)
 }
 

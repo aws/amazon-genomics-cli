@@ -15,10 +15,9 @@ import (
 
 const (
 	destroyContextAllFlag          = "all"
+	destroyContextAllDescription   = `Destroy all contexts in the project`
 	destroyContextForceFlag        = "force"
 	destroyContextForceDescription = "Destroy context and stop running workflows within context"
-	destroyContextAllDescription   = `Destroy all contexts in the project`
-	destroyContextDescription      = `Names of one or more contexts to destroy`
 )
 
 type destroyResult struct {
@@ -48,12 +47,12 @@ func newDestroyContextOpts(vars destroyContextVars) (*destroyContextOpts, error)
 	return contextOpts, nil
 }
 
-func (o *destroyContextOpts) Validate() error {
-	if (!o.destroyAll && len(o.contexts) == 0) || (o.destroyAll && len(o.contexts) > 0) {
+func (o *destroyContextOpts) Validate(contexts []string) error {
+	if (!o.destroyAll && len(contexts) == 0) || (o.destroyAll && len(contexts) > 0) {
 		return fmt.Errorf("one of either the 'context' or 'all' flag is required")
 	}
 
-	err := o.getContexts()
+	err := o.setContexts(contexts)
 	if err != nil {
 		return err
 	}
@@ -95,7 +94,7 @@ func (o *destroyContextOpts) Execute() error {
 	return nil
 }
 
-func (o *destroyContextOpts) getContexts() error {
+func (o *destroyContextOpts) setContexts(contexts []string) error {
 	ctxList, err := o.ctxManagerFactory().List()
 	if err != nil {
 		return err
@@ -111,6 +110,8 @@ func (o *destroyContextOpts) getContexts() error {
 			return fmt.Errorf("the provided context '%s' is not defined in the agc-project.yaml file", context)
 		}
 	}
+
+	o.contexts = contexts
 	return nil
 }
 
@@ -131,19 +132,19 @@ func (o *destroyContextOpts) destroyContexts(contexts []string) []destroyResult 
 func BuildContextDestroyCommand() *cobra.Command {
 	vars := destroyContextVars{}
 	cmd := &cobra.Command{
-		Use:   "destroy {-c context_name ... | --all}",
+		Use:   "destroy {context_name ... | --all}",
 		Short: "Destroy contexts in the current project.",
 		Long: `destroy is for destroying one or more contexts. 
 It destroys AGC resources in AWS.`,
 		Example: `
-/code agc context destroy -c context1 -c context2`,
-		Args: cobra.NoArgs,
+/code agc context destroy context1 context2`,
+		Args: cobra.ArbitraryArgs,
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
 			opts, err := newDestroyContextOpts(vars)
 			if err != nil {
 				return err
 			}
-			if err := opts.Validate(); err != nil {
+			if err := opts.Validate(args); err != nil {
 				return err
 			}
 			log.Info().Msgf("Destroying context(s)'")
@@ -155,7 +156,6 @@ It destroys AGC resources in AWS.`,
 		}),
 	}
 	cmd.Flags().BoolVar(&vars.destroyAll, destroyContextAllFlag, false, destroyContextAllDescription)
-	cmd.Flags().StringSliceVarP(&vars.contexts, contextFlag, contextFlagShort, nil, destroyContextDescription)
 	cmd.Flags().BoolVar(&vars.destroyForce, destroyContextForceFlag, false, destroyContextForceDescription)
 	_ = cmd.RegisterFlagCompletionFunc(contextFlag, NewContextAutoComplete().GetContextAutoComplete())
 	return cmd
