@@ -92,19 +92,17 @@ func (o *logsWorkflowOpts) Execute() error {
 		return nil
 	}
 
-	streams, err := o.getStreamsForJobs(notCachedJobIds)
+	streamNames, err := o.getStreamsForJobs(notCachedJobIds)
 	if err != nil {
 		return err
 	}
 
 	logGroupName := "/aws/batch/job"
 	if o.tail {
-		_ = o.followLogGroup(logGroupName, streams...)
+		return o.followLogStreams(logGroupName, streamNames...)
 	} else {
-		return o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter, streams...)
+		return o.displayLogStreams(logGroupName, o.startTime, o.endTime, o.filter, streamNames...)
 	}
-
-	return nil
 }
 
 func filterCachedJobIds(ids []string) []string {
@@ -153,19 +151,23 @@ func (o *logsWorkflowOpts) getJobIds() ([]string, error) {
 }
 
 func (o *logsWorkflowOpts) getStreamsForJobs(jobIds []string) ([]string, error) {
-	jobs, err := o.batchClient.GetJobs(jobIds)
-	if err != nil {
-		return nil, err
-	}
-	streams := make([]string, len(jobs))
-	for i, job := range jobs {
-		if job.LogStreamName == "" {
-			log.Debug().Msgf("No log stream found for job '%s' ('%s')", job.JobName, job.JobId)
-			continue
+	const maxBatchJobs = 100
+	idsBatches := splitToBatchesBy(maxBatchJobs, jobIds)
+	var streams []string
+	for _, idsBatch := range idsBatches {
+		jobs, err := o.batchClient.GetJobs(idsBatch)
+		if err != nil {
+			return nil, err
 		}
-		streams[i] = job.LogStreamName
+		for _, job := range jobs {
+			if job.LogStreamName == "" {
+				log.Debug().Msgf("No log stream found for job '%s' ('%s')", job.JobName, job.JobId)
+				continue
+			}
+			streams = append(streams, job.LogStreamName)
+		}
 	}
-	return streams, err
+	return streams, nil
 }
 
 // BuildLogsWorkflowCommand builds the command to output the content of Cloudwatch log streams
