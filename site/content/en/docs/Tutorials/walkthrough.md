@@ -75,7 +75,7 @@ In this project there are two contexts, one configured to run with On-Demand ins
 You need to have a context running to be able to run workflows. To deploy the context `myContext` in the demo-wdl-project, run:
 
 ```shell
-agc context deploy -c myContext
+agc context deploy myContext
 ```
 
 This will take 10-15min to complete.
@@ -116,7 +116,7 @@ data:
 Note, you need to redeploy any running contexts to update their access to data locations. Do this by simply (re)running.
 
 ```shell
-agc context deploy -c myContext
+agc context deploy myContext
 ```
 
 Contexts also define what types of compute your workflow will run on - i.e. if you want to run workflows using SPOT or On-demand instances. 
@@ -542,7 +542,7 @@ When you are done running workflows, it is recommended you stop all cloud resour
 Stop a context with:
 
 ```shell
-agc context destroy -c <context-name>
+agc context destroy <context-name>
 ```
 
 This will destroy all compute resources in a context, but retain any data in S3. If you want to destroy all your running contexts at once, you can use:

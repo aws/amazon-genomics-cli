@@ -58,7 +58,7 @@ You can also obtain task logs for a workflow using the following form `agc logs 
 Once you are done with `myContext` you can destroy it with:
 
 ```shell
-agc context destroy -c myContext
+agc context destroy myContext
 ```
 
 This will remove the cloud resources associated with the named context, but will keep any S3 outputs and CloudWatch logs.
