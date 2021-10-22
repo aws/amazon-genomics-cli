@@ -24,6 +24,7 @@ type workflowStatusOpts struct {
 }
 
 const workflowMaxInstanceDefault = 20
+const workflowMaxAllowedInstance = 1000
 
 func newWorkflowStatusOpts(vars workflowStatusVars) (*workflowStatusOpts, error) {
 	return &workflowStatusOpts{
@@ -37,7 +38,7 @@ func (o *workflowStatusOpts) Validate() error {
 	if o.MaxInstances <= 0 {
 		return fmt.Errorf("max number of workflow instances should be grater than 0, provided value: %d", o.MaxInstances)
 	}
-	if o.MaxInstances > 1000 {
+	if o.MaxInstances > workflowMaxAllowedInstance {
 		return fmt.Errorf("max number of workflow instances should not be greater than 1000, provided value: %d", o.MaxInstances)
 	}
 	return nil

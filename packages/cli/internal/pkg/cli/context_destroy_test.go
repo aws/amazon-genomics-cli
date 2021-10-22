@@ -23,7 +23,7 @@ func TestDestroyContextOpts_Validate_ValidContexts(t *testing.T) {
 	ctxMock := contextmocks.NewMockContextManager(ctrl)
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
 	wfMock := workflowmocks.NewMockWorkflowManager(ctrl)
-	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, 20).Return([]workflow.InstanceSummary{}, nil)
+	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, workflowMaxAllowedInstance).Return([]workflow.InstanceSummary{}, nil)
 	opts := &destroyContextOpts{
 		destroyContextVars: destroyContextVars{contexts: []string{testContextName1}},
 		wfsManager: func() workflow.Interface {
@@ -44,8 +44,8 @@ func TestDestroyContextOpts_Validate_ValidAll(t *testing.T) {
 	workflowCtrl := gomock.NewController(t)
 	defer workflowCtrl.Finish()
 	wfMock := workflowmocks.NewMockWorkflowManager(workflowCtrl)
-	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, workflowMaxInstanceDefault).Return([]workflow.InstanceSummary{}, nil)
-	wfMock.EXPECT().StatusWorkflowByContext(testContextName2, workflowMaxInstanceDefault).Return([]workflow.InstanceSummary{}, nil)
+	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, workflowMaxAllowedInstance).Return([]workflow.InstanceSummary{}, nil)
+	wfMock.EXPECT().StatusWorkflowByContext(testContextName2, workflowMaxAllowedInstance).Return([]workflow.InstanceSummary{}, nil)
 	opts := &destroyContextOpts{
 		destroyContextVars: destroyContextVars{destroyAll: true},
 		wfsManager: func() workflow.Interface {
@@ -128,7 +128,7 @@ func TestDestroyContextOpts_Validate_ContainsRunningContext(t *testing.T) {
 	failedSummary := []workflow.InstanceSummary{{State: "RUNNING"}}
 	expectedError := fmt.Sprintf("context '%s' contains running workflows. Please stop all workflows before destroying context", testContextName1)
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
-	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, workflowMaxInstanceDefault).Return(failedSummary, nil)
+	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, workflowMaxAllowedInstance).Return(failedSummary, nil)
 	opts := &destroyContextOpts{
 		destroyContextVars: destroyContextVars{contexts: contexts},
 		wfsManager: func() workflow.Interface {
@@ -152,7 +152,7 @@ func TestDestroyContextOpts_ValidateForce_ContainsRunningContext(t *testing.T) {
 	runId := "testId"
 	runningSummary := []workflow.InstanceSummary{{State: "RUNNING", Id: runId}}
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
-	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, workflowMaxInstanceDefault).Return(runningSummary, nil)
+	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, workflowMaxAllowedInstance).Return(runningSummary, nil)
 	wfMock.EXPECT().StopWorkflowInstance(runId)
 	opts := &destroyContextOpts{
 		destroyContextVars: destroyContextVars{contexts: contexts, destroyForce: true},

@@ -60,7 +60,7 @@ func (o *destroyContextOpts) Validate() error {
 
 	wfsManager := o.wfsManager()
 	for _, ctx := range o.contexts {
-		workflows, err := wfsManager.StatusWorkflowByContext(ctx, workflowMaxInstanceDefault)
+		workflows, err := wfsManager.StatusWorkflowByContext(ctx, workflowMaxAllowedInstance)
 		if err != nil {
 			return err
 		}
