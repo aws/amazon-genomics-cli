@@ -49,7 +49,7 @@ func newDestroyContextOpts(vars destroyContextVars) (*destroyContextOpts, error)
 
 func (o *destroyContextOpts) Validate(contexts []string) error {
 	if (!o.destroyAll && len(contexts) == 0) || (o.destroyAll && len(contexts) > 0) {
-		return fmt.Errorf("one of either the 'context' or 'all' flag is required")
+		return fmt.Errorf("either an 'all' flag or a list of contexts must be provided, but not both")
 	}
 
 	err := o.setContexts(contexts)

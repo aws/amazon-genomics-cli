@@ -48,7 +48,7 @@ func newDeployContextOpts(vars deployContextVars) (*deployContextOpts, error) {
 
 func (o *deployContextOpts) Validate(contexts []string) error {
 	if (!o.deployAll && len(contexts) == 0) || (o.deployAll && len(contexts) > 0) {
-		return fmt.Errorf("one of either the 'context' or 'all' flag is required")
+		return fmt.Errorf("either an 'all' flag or a list of contexts must be provided, but not both")
 	}
 
 	if len(contexts) > 0 {
