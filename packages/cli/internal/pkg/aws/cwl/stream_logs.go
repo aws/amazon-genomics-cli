@@ -18,7 +18,7 @@ type StreamEvent struct {
 	Err  error
 }
 
-func (c Client) StreamLogs(ctx context.Context, logGroupName string, streams ...string) chan StreamEvent {
+func (c Client) StreamLogs(ctx context.Context, logGroupName string, streams ...string) <-chan StreamEvent {
 	stream := make(chan StreamEvent)
 	go func() {
 		defer func() { close(stream) }()

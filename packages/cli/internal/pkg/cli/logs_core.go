@@ -3,6 +3,7 @@ package cli
 import (
 	ctx "context"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/araddon/dateparse"
@@ -42,7 +43,7 @@ Use a question mark for OR, such as "?ERROR ?WARN". Filter out terms with a minu
 )
 
 var printLn = func(args ...interface{}) {
-	_, _ = fmt.Println(args)
+	_, _ = fmt.Println(args...)
 }
 
 type logsSharedVars struct {
@@ -117,9 +118,13 @@ func (o *logsSharedOpts) parseTime(vars logsSharedVars) error {
 	return nil
 }
 
-func (o *logsSharedOpts) followLogGroup(logGroupName string, streams ...string) error {
-	stream := o.cwlClient.StreamLogs(ctx.Background(), logGroupName, streams...)
-	for event := range stream {
+func (o *logsSharedOpts) followLogGroup(logGroupName string) error {
+	channel := o.cwlClient.StreamLogs(ctx.Background(), logGroupName)
+	return o.displayEventFromChannel(channel)
+}
+
+func (o *logsSharedOpts) displayEventFromChannel(channel <-chan cwl.StreamEvent) error {
+	for event := range channel {
 		if event.Err != nil {
 			return event.Err
 		}
@@ -132,6 +137,64 @@ func (o *logsSharedOpts) followLogGroup(logGroupName string, streams ...string) 
 		}
 	}
 	return nil
+}
+
+func (o *logsSharedOpts) followLogStreams(logGroupName string, streams ...string) error {
+	const maxLogStreams = 100
+	streamingCtx, cancelFunc := ctx.WithCancel(ctx.Background())
+	defer cancelFunc()
+	streamBatches := splitToBatchesBy(maxLogStreams, streams)
+	var eventChannels []<-chan cwl.StreamEvent
+
+	for _, batch := range streamBatches {
+		eventChannel := o.cwlClient.StreamLogs(streamingCtx, logGroupName, batch...)
+		eventChannels = append(eventChannels, eventChannel)
+	}
+
+	return o.displayEventFromChannel(fanInChannels(streamingCtx, eventChannels...))
+}
+
+func fanInChannels(commonCtx ctx.Context, channels ...<-chan cwl.StreamEvent) <-chan cwl.StreamEvent {
+	var waitGroup sync.WaitGroup
+	multiplexedChannel := make(chan cwl.StreamEvent)
+
+	multiplexFunc := func(events <-chan cwl.StreamEvent) {
+		defer waitGroup.Done()
+		for event := range events {
+			select {
+			case <-commonCtx.Done():
+				return
+			case multiplexedChannel <- event:
+			}
+		}
+	}
+
+	waitGroup.Add(len(channels))
+	for _, c := range channels {
+		go multiplexFunc(c)
+	}
+
+	go func() {
+		waitGroup.Wait()
+		close(multiplexedChannel)
+	}()
+
+	return multiplexedChannel
+}
+
+func splitToBatchesBy(batchSize int, strs []string) [][]string {
+	var batches [][]string
+	totalStrings := len(strs)
+	batchStart := 0
+	for batchStart < totalStrings {
+		batchEnd := batchStart + batchSize
+		if batchEnd > totalStrings {
+			batchEnd = totalStrings
+		}
+		batches = append(batches, strs[batchStart:batchEnd])
+		batchStart = batchEnd
+	}
+	return batches
 }
 
 func (o *logsSharedOpts) displayLogGroup(logGroupName string, startTime, endTime *time.Time, filter string, streams ...string) error {
@@ -149,6 +212,16 @@ func (o *logsSharedOpts) displayLogGroup(logGroupName string, startTime, endTime
 		}
 		for _, line := range logs {
 			printLn(line)
+		}
+	}
+	return nil
+}
+
+func (o *logsSharedOpts) displayLogStreams(logGroupName string, startTime, endTime *time.Time, filter string, streams ...string) error {
+	for _, stream := range streams {
+		err := o.displayLogGroup(logGroupName, startTime, endTime, filter, stream)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
