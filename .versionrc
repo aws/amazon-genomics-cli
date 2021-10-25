@@ -1,4 +1,14 @@
 {
+  "infile": "CHANGELOG.md",
+  "skip": {
+    "tag": true
+  },
+  "packageFiles": [
+    {
+      "filename": "version.json",
+      "type": "json"
+    }
+  ],
   "bumpFiles": [
     {
       "filename": "version.json",
