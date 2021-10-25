@@ -1,0 +1,8 @@
+{
+  "bumpFiles": [
+    {
+      "filename": "version.json",
+      "type": "json"
+    }
+  ]
+}
