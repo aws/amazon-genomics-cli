@@ -13,4 +13,5 @@ if [ "${releaseAs}" != "minor" ] && [ "${releaseAs}" != "patch" ]; then
   exit 1
 fi
 
+echo "Releasing a $releaseAs version bump..."
 npx standard-version --release-as "$releaseAs"
