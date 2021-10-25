@@ -7,6 +7,7 @@ RELEASE_DIR="dist"
 mkdir -p ${RELEASE_DIR}
 cp ./{LICENSE,THIRD-PARTY,CHANGELOG.md} ${RELEASE_DIR}
 cp packages/cdk/cdk.tgz ${RELEASE_DIR}
+cp -a scripts/cli/. ${RELEASE_DIR}
 cp -a examples ${RELEASE_DIR}
 cp -a packages/cli/bin/local/. ${RELEASE_DIR}
 version=$(jq .version -r < version.json)
