@@ -7,6 +7,7 @@ import { ContextAppParameters } from "../env";
 import { BatchStack, BatchStackProps } from "./nested/batch-stack";
 import { CromwellEngineStack } from "./nested/cromwell-engine-stack";
 import { NextflowEngineStack } from "./nested/nextflow-engine-stack";
+import { MiniWdlEngineStack } from "./nested/miniwdl-engine-stack";
 
 export interface ContextStackProps extends StackProps {
   readonly contextParameters: ContextAppParameters;
@@ -30,6 +31,9 @@ export class ContextStack extends Stack {
         break;
       case "nextflow":
         this.renderNextflowStack(props);
+        break;
+      case "miniwdl":
+        this.renderMiniwdlStack(props);
         break;
       default:
         throw Error(`Engine '${engineName}' is not supported`);
@@ -71,6 +75,13 @@ export class ContextStack extends Stack {
       ...commonEngineProps,
       jobQueue,
       headQueue,
+    }).outputToParent(this);
+  }
+
+  private renderMiniwdlStack(props: ContextStackProps) {
+    const commonEngineProps = this.getCommonEngineProps(props);
+    new MiniWdlEngineStack(this, "miniwdl", {
+      ...commonEngineProps,
     }).outputToParent(this);
   }
 
