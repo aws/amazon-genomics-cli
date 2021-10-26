@@ -174,7 +174,9 @@ func TestDestroyContextOpts_GetContexts_DontGetAll(t *testing.T) {
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}}, nil)
 	opts := &destroyContextOpts{
 		destroyContextVars: destroyContextVars{
-			destroyAll: false},
+			contexts:   []string{testContextName1},
+			destroyAll: false,
+		},
 		ctxManagerFactory: func() context.Interface {
 			return ctxMock
 		},
@@ -182,7 +184,7 @@ func TestDestroyContextOpts_GetContexts_DontGetAll(t *testing.T) {
 			return wfMock
 		},
 	}
-	require.NoError(t, opts.setContexts([]string{testContextName1}))
+	require.NoError(t, opts.validateContexts())
 }
 
 func TestDestroyContextOpts_GetContexts_ListSuccess(t *testing.T) {
@@ -203,7 +205,7 @@ func TestDestroyContextOpts_GetContexts_ListSuccess(t *testing.T) {
 			return wfMock
 		},
 	}
-	require.NoError(t, opts.setContexts([]string{}))
+	require.NoError(t, opts.validateContexts())
 }
 
 func TestDestroyContextOpts_GetContexts_ListError(t *testing.T) {
@@ -224,7 +226,7 @@ func TestDestroyContextOpts_GetContexts_ListError(t *testing.T) {
 			return wfMock
 		},
 	}
-	err := opts.setContexts([]string{})
+	err := opts.validateContexts()
 	require.Equal(t, expectedErr, err)
 }
 

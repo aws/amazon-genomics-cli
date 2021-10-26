@@ -21,6 +21,7 @@ import (
 const (
 	deployContextAllFlag        = "all"
 	deployContextAllDescription = `Deploy all contexts in the project`
+	deployContextDescription    = `Names of one or more contexts to deploy`
 )
 
 type deployResult struct {
@@ -47,15 +48,16 @@ func newDeployContextOpts(vars deployContextVars) (*deployContextOpts, error) {
 }
 
 func (o *deployContextOpts) Validate(contexts []string) error {
-	if (!o.deployAll && len(contexts) == 0) || (o.deployAll && len(contexts) > 0) {
+	o.contexts = append(o.contexts, contexts...)
+
+	if (!o.deployAll && len(o.contexts) == 0) || (o.deployAll && len(o.contexts) > 0) {
 		return fmt.Errorf("either an 'all' flag or a list of contexts must be provided, but not both")
 	}
 
-	if len(contexts) > 0 {
-		if err := o.validateSuppliedContexts(contexts); err != nil {
+	if len(o.contexts) > 0 {
+		if err := o.validateSuppliedContexts(o.contexts); err != nil {
 			return err
 		}
-		o.contexts = contexts
 	} else {
 		ctxList, err := o.ctxManagerFactory().List()
 		if err != nil {
@@ -165,6 +167,7 @@ It creates AGC resources in AWS.
 		}),
 	}
 	cmd.Flags().BoolVar(&vars.deployAll, deployContextAllFlag, false, deployContextAllDescription)
+	cmd.Flags().StringSliceVarP(&vars.contexts, contextFlag, contextFlagShort, nil, deployContextDescription)
 	_ = cmd.RegisterFlagCompletionFunc(contextFlag, NewContextAutoComplete().GetContextAutoComplete())
 	return cmd
 }

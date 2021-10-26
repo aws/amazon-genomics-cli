@@ -18,6 +18,7 @@ const (
 	destroyContextAllDescription   = `Destroy all contexts in the project`
 	destroyContextForceFlag        = "force"
 	destroyContextForceDescription = "Destroy context and stop running workflows within context"
+	destroyContextDescription    = `Names of one or more contexts to destroy`
 )
 
 type destroyResult struct {
@@ -48,11 +49,13 @@ func newDestroyContextOpts(vars destroyContextVars) (*destroyContextOpts, error)
 }
 
 func (o *destroyContextOpts) Validate(contexts []string) error {
-	if (!o.destroyAll && len(contexts) == 0) || (o.destroyAll && len(contexts) > 0) {
+	o.contexts = append(o.contexts, contexts...)
+
+	if (!o.destroyAll && len(o.contexts) == 0) || (o.destroyAll && len(o.contexts) > 0) {
 		return fmt.Errorf("either an 'all' flag or a list of contexts must be provided, but not both")
 	}
 
-	err := o.setContexts(contexts)
+	err := o.validateContexts()
 	if err != nil {
 		return err
 	}
@@ -94,7 +97,7 @@ func (o *destroyContextOpts) Execute() error {
 	return nil
 }
 
-func (o *destroyContextOpts) setContexts(contexts []string) error {
+func (o *destroyContextOpts) validateContexts() error {
 	ctxList, err := o.ctxManagerFactory().List()
 	if err != nil {
 		return err
@@ -111,7 +114,6 @@ func (o *destroyContextOpts) setContexts(contexts []string) error {
 		}
 	}
 
-	o.contexts = contexts
 	return nil
 }
 
@@ -156,6 +158,7 @@ It destroys AGC resources in AWS.`,
 		}),
 	}
 	cmd.Flags().BoolVar(&vars.destroyAll, destroyContextAllFlag, false, destroyContextAllDescription)
+	cmd.Flags().StringSliceVarP(&vars.contexts, contextFlag, contextFlagShort, nil, destroyContextDescription)
 	cmd.Flags().BoolVar(&vars.destroyForce, destroyContextForceFlag, false, destroyContextForceDescription)
 	_ = cmd.RegisterFlagCompletionFunc(contextFlag, NewContextAutoComplete().GetContextAutoComplete())
 	return cmd
