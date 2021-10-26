@@ -1,6 +1,7 @@
 # Amazon Genomics CLI
 
 [![Join the chat at https://gitter.im/aws/amazon-genomics-cli](https://badges.gitter.im/aws/amazon-genomics-cli.svg)](https://gitter.im/aws/amazon-genomics-cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 ## Overview
 
