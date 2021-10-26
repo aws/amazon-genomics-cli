@@ -82,13 +82,11 @@ export const renderServiceWithTaskDefinition = (
   id: string,
   serviceContainer: ServiceContainer,
   taskDefinition: TaskDefinition,
-  vpc: IVpc,
-  cloudMapOptions?: CloudMapOptions
+  vpc: IVpc
 ): SecureService => {
   return new SecureService(scope, id, {
     vpc,
     serviceName: serviceContainer.serviceName,
-    cloudMapOptions,
     taskDefinition: taskDefinition,
     healthCheck: {
       path: serviceContainer.healthCheckPath ?? defaultHealthCheckPath,
