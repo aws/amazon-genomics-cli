@@ -8,6 +8,7 @@ import (
 
 const DefaultEcrRegistry = "555741984805"
 const DefaultEcrRegion = "us-east-1"
+
 // TODO: Implement better tag versioning system
 const DefaultCromwellTag = "2021-10-01T21-33-26Z"
 const DefaultNextflowTag = "2021-10-01T21-33-26Z"
