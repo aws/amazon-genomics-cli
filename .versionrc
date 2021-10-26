@@ -1,8 +1,5 @@
 {
   "infile": "CHANGELOG.md",
-  "skip": {
-    "tag": true
-  },
   "packageFiles": [
     {
       "filename": "version.json",
