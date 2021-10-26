@@ -8,6 +8,7 @@
     "release": "standard-version"
   },
   "devDependencies": {
+    "commitizen": "v4.2.4",
     "conventional-changelog-cli": "^2.1.1",
     "cz-conventional-changelog": "^3.3.0",
     "lerna": "^4.0.0",
