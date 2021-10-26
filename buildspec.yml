@@ -6,6 +6,7 @@ env:
 phases:
   install:
     commands:
+      - (cd ~/.goenv; git pull)
       - goenv install
       - go env -w GOPROXY=direct
       - make init
