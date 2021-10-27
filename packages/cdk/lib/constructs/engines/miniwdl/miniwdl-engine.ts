@@ -1,11 +1,11 @@
 import { Construct, RemovalPolicy } from "monocdk";
 import { CfnJobDefinition, JobDefinition, PlatformCapabilities } from "monocdk/aws-batch";
 import { IVpc } from "monocdk/aws-ec2";
-import { renderBatchLogConfiguration } from "../../../util";
+import { createEcrImage, renderBatchLogConfiguration } from "../../../util";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { LogGroup } from "monocdk/aws-logs";
 import { AccessPoint, FileSystem } from "monocdk/aws-efs";
-import { ContainerImage, FargatePlatformVersion } from "monocdk/aws-ecs";
+import { FargatePlatformVersion } from "monocdk/aws-ecs";
 import { Batch } from "../../batch";
 
 export interface MiniWdlEngineProps {
@@ -49,14 +49,14 @@ export class MiniWdlEngine extends Construct {
         logConfiguration: renderBatchLogConfiguration(this, this.logGroup),
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
-        image: ContainerImage.fromAsset(__dirname),
+        image: createEcrImage(this, MINIWDL_IMAGE_DESIGNATION),
         platformVersion: FargatePlatformVersion.VERSION1_4,
         command: [],
         environment: {
           MINIWDL__AWS__FS: fileSystem.fileSystemId,
           MINIWDL__AWS__FSAP: accessPoint.accessPointId,
           MINIWDL__AWS__TASK_QUEUE: workerBatch.jobQueue.jobQueueArn,
-          MINIWDL__AWS__S3_UPLOAD_FOLDER: `s3://${outputBucketName}`,
+          MINIWDL_S3_OUTPUT_URI: `s3://${outputBucketName}/miniwdl`,
         },
         volumes: [
           {
