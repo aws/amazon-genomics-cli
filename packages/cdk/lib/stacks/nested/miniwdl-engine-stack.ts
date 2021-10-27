@@ -82,23 +82,14 @@ export class MiniWdlEngineStack extends NestedEngineStack {
     adapterContainer.environment!["ENGINE_LOG_GROUP"] = engineLogGroup.logGroupName;
 
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
-    /*
-    const adapter = renderServiceWithContainer(this, "Adapter", adapterContainer, props.vpc, taskRole, this.adapterLogGroup);
-
-    this.apiProxy = new ApiProxy(this, {
-      apiName: `${params.projectName}${params.userId}${params.contextName}NextflowApiProxy`,
-      loadBalancer: adapter.loadBalancer,
-      allowedAccountIds: [this.account],
-    });
-    */
   }
 
   protected getOutputs(): EngineOutputs {
     return {
-      accessLogGroup: this.adapterLogGroup, //this.apiProxy.accessLogGroup,
+      accessLogGroup: this.adapterLogGroup, //TODO add WES Adapter access logs
       adapterLogGroup: this.adapterLogGroup,
       engineLogGroup: this.miniwdlEngine.logGroup,
-      wesUrl: "blah", //this.apiProxy.restApi.url,
+      wesUrl: "TODO", //TODO add WES Adapter URL
     };
   }
 

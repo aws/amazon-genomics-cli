@@ -39,8 +39,8 @@ export class MiniWdlEngine extends Construct {
     });
 
     fileSystem.connections.allowDefaultPortFromAnyIpv4();
-    fileSystem.grant(engineBatch, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
-    fileSystem.grant(workerBatch, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
+    fileSystem.grant(engineBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
+    fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
 
     const volumeName = "efs";
     this.headJobDefinition = new JobDefinition(this, "MiniwdlHeadJobDef", {
