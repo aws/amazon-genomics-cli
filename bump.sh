@@ -2,23 +2,14 @@
 
 #--------------------------------------------------------------------------------------------------
 #
-# This script is intended to be used to bump the version of the AGC modules
+# This script is intended to be used to bump up the version of the AGC modules for major, minor, and patch releases
 # --------------------------------------------------------------------------------------------------
 
 set -euo pipefail
-ver=${1:-}
-if [ -z "${ver}" ]; then
-  echo "usage: ./bump.sh <version>"
+releaseAs=${1:-}
+if [ -z "${releaseAs}" ] || [ "${releaseAs}" == "major" ]; then
+  echo "usage: ./bump.sh <version> or minor or patch. For major release, please specify the exact version number expected after bumping up the version."
   exit 1
 fi
 
-lerna publish --force-publish=* --skip-npm --skip-git --repo-version ${ver}
-
-# Update CHANGELOG.md only at the root
-cat > /tmp/context.json <<HERE
-{
-  "version": "${ver}"
-}
-HERE
-
-conventional-changelog -p angular -i CHANGELOG.md -s --context /tmp/context.json
+npx standard-version --release-as "$releaseAs"
