@@ -14,9 +14,11 @@ import (
 )
 
 const (
-	destroyContextAllFlag        = "all"
-	destroyContextAllDescription = `Destroy all contexts in the project`
-	destroyContextDescription    = `Names of one or more contexts to destroy`
+	destroyContextAllFlag          = "all"
+	destroyContextForceFlag        = "force"
+	destroyContextForceDescription = "Destroy context and stop running workflows within context"
+	destroyContextAllDescription   = `Destroy all contexts in the project`
+	destroyContextDescription      = `Names of one or more contexts to destroy`
 )
 
 type destroyResult struct {
@@ -25,21 +27,22 @@ type destroyResult struct {
 }
 
 type destroyContextVars struct {
-	contexts   []string
-	destroyAll bool
+	contexts     []string
+	destroyAll   bool
+	destroyForce bool
 }
 
 type destroyContextOpts struct {
 	destroyContextVars
 	ctxManagerFactory func() context.Interface
-	wfsManager        workflow.StatusManager
+	wfsManager        func() workflow.Interface
 }
 
 func newDestroyContextOpts(vars destroyContextVars) (*destroyContextOpts, error) {
 	contextOpts := &destroyContextOpts{
 		destroyContextVars: vars,
 		ctxManagerFactory:  func() context.Interface { return context.NewManager(profile) },
-		wfsManager:         workflow.NewManager(profile),
+		wfsManager:         func() workflow.Interface { return workflow.NewManager(profile) },
 	}
 
 	return contextOpts, nil
@@ -55,15 +58,20 @@ func (o *destroyContextOpts) Validate() error {
 		return err
 	}
 
+	wfsManager := o.wfsManager()
 	for _, ctx := range o.contexts {
-		workflows, err := o.wfsManager.StatusWorkflowByContext(ctx, workflowMaxInstanceDefault)
+		workflows, err := wfsManager.StatusWorkflowByContext(ctx, workflowMaxAllowedInstance)
 		if err != nil {
 			return err
 		}
 		for _, wf := range workflows {
 			if wf.IsInstanceRunning() {
-				return fmt.Errorf("Context '%s' contains running workflows. "+
-					"Please stop all workflows before destroying context.", ctx)
+				if !o.destroyForce {
+					return fmt.Errorf("context '%s' contains running workflows. "+
+						"Please stop all workflows before destroying context", ctx)
+				} else {
+					wfsManager.StopWorkflowInstance(wf.Id)
+				}
 			}
 		}
 	}
@@ -148,6 +156,7 @@ It destroys AGC resources in AWS.`,
 	}
 	cmd.Flags().BoolVar(&vars.destroyAll, destroyContextAllFlag, false, destroyContextAllDescription)
 	cmd.Flags().StringSliceVarP(&vars.contexts, contextFlag, contextFlagShort, nil, destroyContextDescription)
+	cmd.Flags().BoolVar(&vars.destroyForce, destroyContextForceFlag, false, destroyContextForceDescription)
 	_ = cmd.RegisterFlagCompletionFunc(contextFlag, NewContextAutoComplete().GetContextAutoComplete())
 	return cmd
 }
