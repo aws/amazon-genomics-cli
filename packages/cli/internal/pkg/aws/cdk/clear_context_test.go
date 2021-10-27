@@ -9,7 +9,7 @@ import (
 func TestClearContext(t *testing.T) {
 	client := NewClient(testDeployProfile)
 	realExecuteCdkCommand := ExecuteCdkCommand
-	ExecuteCdkCommand = func(appDir string, cmdArgs []string) (ProgressStream, error) {
+	ExecuteCdkCommand = func(appDir string, cmdArgs []string, uniqueKey string) (ProgressStream, error) {
 		stream := make(ProgressStream)
 		assert.Equal(t, testDeployAppPath, appDir)
 		assert.Equal(t, []string{

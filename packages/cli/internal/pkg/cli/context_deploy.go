@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"sync"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
@@ -23,12 +24,6 @@ const (
 	deployContextAllDescription = `Deploy all contexts in the project`
 	deployContextDescription    = `Names of one or more contexts to deploy`
 )
-
-type deployResult struct {
-	contextName string
-	info        context.Detail
-	err         error
-}
 
 type deployContextVars struct {
 	contexts  []string
@@ -89,45 +84,94 @@ func (o *deployContextOpts) validateSuppliedContexts(contextList []string) error
 // Execute causes the specified context(s) to be deployed.
 func (o *deployContextOpts) Execute() ([]context.Detail, error) {
 	o.contexts = slices.DeDuplicateStrings(o.contexts)
-	results := o.deployContexts(o.contexts)
-	contextDetails := make([]context.Detail, len(results))
-	hasErrors := false
-	aggregateSuggestions := make([]string, 0)
-	for i, result := range results {
-		if result.err != nil {
-			var actionableError *actionableerror.Error
-			ok := errors.As(result.err, &actionableError)
-			if ok {
-				log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
-				aggregateSuggestions = append(aggregateSuggestions, actionableError.SuggestedAction)
-			} else {
-				log.Error().Err(result.err).Msgf("failed to deploy context '%s'", result.contextName)
-			}
-			hasErrors = true
-		}
-		contextDetails[i] = result.info
+
+	err := o.deployContexts()
+	if err != nil {
+		return nil, err
 	}
-	if hasErrors {
-		aggregateSuggestions = slices.DeDuplicateStrings(aggregateSuggestions)
-		return nil, actionableerror.New(fmt.Errorf("one or more contexts failed to deploy"), strings.Join(aggregateSuggestions, ", "))
+
+	contextDetails, err := o.validateDeploymentResults()
+	if err != nil {
+		return nil, err
 	}
+
 	sortContextDetails(contextDetails)
 	return contextDetails, nil
 }
 
-func (o *deployContextOpts) deployContexts(contexts []string) []deployResult {
-	results := make([]deployResult, len(contexts))
-	for i, contextName := range contexts {
-		log.Debug().Msgf("Deploying context '%s'", contextName)
-		// TODO: Run in parallel once CDK resolves race condition causing context bleed
-		//       https://github.com/aws/aws-cdk/issues/14350
-		func(ctxManager context.Interface, i int, contextName string) {
-			_ = ctxManager.Deploy(contextName, true)
+func (o *deployContextOpts) deployContexts() error {
+	progressResults := o.ctxManagerFactory().Deploy(o.contexts)
+	aggregateSuggestions := make([]string, 0)
+
+	failedDeployments := make([]context.ProgressResult, 0)
+	for _, progressResult := range progressResults {
+		if progressResult.Err != nil {
+			failedDeployments = append(failedDeployments, progressResult)
+		}
+	}
+
+	failedDeploymentsLength := len(failedDeployments)
+	if failedDeploymentsLength > 0 {
+		for i, failedDeployment := range failedDeployments {
+			log.Error().Msgf("Failed to deploy context '%s'. Below is the log for that deployment", failedDeployment.Context)
+
+			outputsLength := len(failedDeployment.Outputs)
+			for i := 0; i < outputsLength-1; i++ {
+				log.Error().Msg(failedDeployment.Outputs[i])
+			}
+
+			if i < failedDeploymentsLength-1 {
+				log.Error().Msgf("%s \n\n\n", failedDeployment.Outputs[outputsLength-1])
+			} else {
+				log.Error().Msg(failedDeployment.Outputs[outputsLength-1])
+			}
+
+			var actionableError *actionableerror.Error
+			ok := errors.As(failedDeployment.Err, &actionableError)
+			if ok {
+				log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
+				aggregateSuggestions = append(aggregateSuggestions, actionableError.SuggestedAction)
+			}
+		}
+
+		return actionableerror.New(fmt.Errorf("one or more contexts failed to deploy"), strings.Join(aggregateSuggestions, ", "))
+	}
+
+	return nil
+}
+
+func (o *deployContextOpts) validateDeploymentResults() ([]context.Detail, error) {
+	contextDetails, deploymentHasErrors := make([]context.Detail, len(o.contexts)), false
+	aggregateSuggestions := make([]string, 0)
+	var wait sync.WaitGroup
+	wait.Add(len(o.contexts))
+
+	for i, contextName := range o.contexts {
+		go func(ctxManager context.Interface, i int, contextName string) {
 			info, err := ctxManager.Info(contextName)
-			results[i] = deployResult{contextName: contextName, info: info, err: err}
+			contextDetails[i] = info
+			if err != nil {
+				var actionableError *actionableerror.Error
+				ok := errors.As(err, &actionableError)
+				if ok {
+					log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
+					aggregateSuggestions = append(aggregateSuggestions, actionableError.SuggestedAction)
+				} else {
+					log.Error().Err(err).Msgf("failed to deploy context '%s'", contextName)
+				}
+				deploymentHasErrors = true
+			}
+			wait.Done()
 		}(o.ctxManagerFactory(), i, contextName)
 	}
-	return results
+
+	wait.Wait()
+	if deploymentHasErrors {
+		aggregateSuggestions = slices.DeDuplicateStrings(aggregateSuggestions)
+		return nil, actionableerror.New(fmt.Errorf("one or more contexts failed to deploy"), strings.Join(aggregateSuggestions, ", "))
+	}
+
+	return contextDetails, nil
 }
 
 func sortContextDetails(contextDetails []context.Detail) {
