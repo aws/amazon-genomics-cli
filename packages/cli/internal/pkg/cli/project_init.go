@@ -5,6 +5,7 @@ package cli
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/aws/amazon-genomics-cli/cmd/application/template"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
@@ -21,6 +22,23 @@ const (
 	projectInitWorkflowTypeNameShort = "w"
 )
 
+var (
+	workflowTypeToEngineMap = map[string]string{
+		"nextflow": "nextflow",
+		"wdl":      "cromwell",
+	}
+	supportedWorkflowTypes []string
+)
+
+func init() {
+	var workflowTypes []string
+	for name := range workflowTypeToEngineMap {
+		workflowTypes = append(workflowTypes, name)
+	}
+	sort.Strings(workflowTypes)
+	supportedWorkflowTypes = workflowTypes
+}
+
 type initProjectVars struct {
 	ProjectName  string
 	workflowType string
@@ -31,42 +49,23 @@ type initProjectOpts struct {
 	projectClient storage.ProjectClient
 }
 
+func (o *initProjectOpts) validateWorkflowType() error {
+	if _, ok := workflowTypeToEngineMap[o.workflowType]; !ok {
+		return fmt.Errorf("invalid workflow type supplied: '%s'. Supported workflow types are: %v", o.workflowType, supportedWorkflowTypes)
+	}
+	return nil
+}
+
 func (o *initProjectOpts) generateEngine() []spec.Engine {
-	workflowEngine, err := getWorkflowEngine(o.workflowType)
-
-	if err != nil {
-		return nil
-	}
-	return []spec.Engine{{Type: o.workflowType, Engine: workflowEngine}}
+	return []spec.Engine{{Type: o.workflowType, Engine: getEngineForWorkflowType(o.workflowType)}}
 }
 
-func getWorkflowEngine(workflowType string) (string, error) {
-	switch workflowType {
-	case "nextflow":
-		return "nextflow", nil
-	case "wdl":
-		return "cromwell", nil
-	}
-	return "", fmt.Errorf("invalid workflow type supplied")
-}
-
-func supportedWorkflowTypes() []string {
-	return []string{"nextflow", "wdl"}
-}
-
-func getSupportedWorkflowTypes() string {
-	supportedWorkflowTypes := supportedWorkflowTypes()
-	returnString := ""
-
-	for i := 0; i < len(supportedWorkflowTypes)-1; i++ {
-		returnString += supportedWorkflowTypes[i] + ", "
-	}
-	returnString += "and " + supportedWorkflowTypes[len(supportedWorkflowTypes)-1]
-	return returnString
+func getEngineForWorkflowType(workflowType string) string {
+	return workflowTypeToEngineMap[workflowType]
 }
 
 func getProjectInitWorkflowTypeNameDescription() string {
-	return "uses the specified workflow type for the default context. Valid values include " + getSupportedWorkflowTypes()
+	return fmt.Sprintf("uses the specified workflow type for the default context. Valid values include %v", supportedWorkflowTypes)
 }
 
 func newInitProjectOpts(vars initProjectVars) (*initProjectOpts, error) {
@@ -109,8 +108,8 @@ func (o *initProjectOpts) validateProject() error {
 	if o.workflowType == "" {
 		return fmt.Errorf("please specify a workflow type with the --%s flag", projectInitWorkflowTypeName)
 	}
-	if o.generateEngine() == nil {
-		return fmt.Errorf("the workflow type specified '%s' does not match the valid values which are %s", o.workflowType, getSupportedWorkflowTypes())
+	if err := o.validateWorkflowType(); err != nil {
+		return err
 	}
 	isInitialized, err := o.projectClient.IsInitialized()
 	if err != nil {

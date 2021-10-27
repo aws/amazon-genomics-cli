@@ -14,13 +14,14 @@ import (
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestProjectInit_Validate(t *testing.T) {
 	testCases := map[string]struct {
 		projectName  string
-		expectedErr  error
+		expectedErr  string
 		workflowType string
 	}{
 		"valid project name": {
@@ -29,25 +30,25 @@ func TestProjectInit_Validate(t *testing.T) {
 		},
 		"illegal project name": {
 			projectName:  testBadProjectName,
-			expectedErr:  fmt.Errorf("%s has non-alpha-numeric characters in it", testBadProjectName),
+			expectedErr:  fmt.Sprintf("%s has non-alpha-numeric characters in it", testBadProjectName),
 			workflowType: "wdl",
 		},
 		"illegal project name 2": {
 			projectName:  testBadProjectName2,
-			expectedErr:  fmt.Errorf("%s has non-alpha-numeric characters in it", testBadProjectName2),
+			expectedErr:  fmt.Sprintf("%s has non-alpha-numeric characters in it", testBadProjectName2),
 			workflowType: "wdl",
 		},
 		"missing project name": {
-			expectedErr:  fmt.Errorf("missing project name"),
+			expectedErr:  "missing project name",
 			workflowType: "nextflow",
 		},
 		"invalid workflow type": {
-			expectedErr:  fmt.Errorf("the workflow type specified 'aBadEngineName' does not match the valid values which are nextflow, and wdl"),
+			expectedErr:  "invalid workflow type supplied: 'aBadEngineName'. Supported workflow types are: [nextflow wdl]",
 			workflowType: "aBadEngineName",
 			projectName:  testProjectName,
 		},
 		"missing workflow type": {
-			expectedErr:  fmt.Errorf("please specify a workflow type with the --workflow-type flag"),
+			expectedErr:  "please specify a workflow type with the --workflow-type flag",
 			workflowType: "",
 			projectName:  testProjectName,
 		},
@@ -65,10 +66,10 @@ func TestProjectInit_Validate(t *testing.T) {
 			mockProj.EXPECT().IsInitialized().AnyTimes().Return(false, nil)
 			err := opts.Validate()
 
-			if tc.expectedErr == nil {
-				require.NoError(t, err)
+			if tc.expectedErr == "" {
+				assert.NoError(t, err)
 			} else {
-				require.EqualError(t, err, tc.expectedErr.Error())
+				assert.EqualError(t, err, tc.expectedErr)
 			}
 		})
 	}
