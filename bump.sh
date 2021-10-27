@@ -1,15 +1,14 @@
 #!/bin/bash
 
-#--------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------
 #
-# This script is intended to be used to bump up the version of the AGC modules for major, minor, and patch releases
-# --------------------------------------------------------------------------------------------------
+# This script is intended to be used to bump up the version of the AGC modules for minor and patch releases
+# ----------------------------------------------------------------------------------------------------------
 
-set -euo pipefail
 releaseAs=${1:-}
-if [ -z "${releaseAs}" ] || [ "${releaseAs}" == "major" ]; then
-  echo "usage: ./bump.sh <version> or minor or patch. For major release, please specify the exact version number expected after bumping up the version."
-  exit 1
+if [ "${releaseAs}" != "minor" ] || [ "${releaseAs}" != "patch" ]; then
+  echo "usage: ./bump.sh minor or patch. Defaulting to a minor release"
+  releaseAs="${1:-minor}"
 fi
 
 npx standard-version --release-as "$releaseAs"
