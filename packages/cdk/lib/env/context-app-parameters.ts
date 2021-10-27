@@ -130,7 +130,7 @@ export class ContextAppParameters {
     };
   }
 
-  public getAdapterContainer(): ServiceContainer {
+  public getAdapterContainer(additionalEnvVars?: { [key: string]: string }): ServiceContainer {
     return {
       serviceName: this.adapterName,
       imageConfig: { designation: this.adapterDesignation },
@@ -141,6 +141,7 @@ export class ContextAppParameters {
         CONTEXT_NAME: this.contextName,
         USER_ID: this.userId,
         ENGINE_NAME: this.engineName,
+        ...additionalEnvVars,
       },
     };
   }
