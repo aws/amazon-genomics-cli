@@ -5,23 +5,63 @@ import (
 	"path/filepath"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
-	"github.com/rs/zerolog/log"
 )
 
-func (m *Manager) Deploy(contextName string, showProgress bool) error {
-	m.readProjectSpec()
-	m.readConfig()
-	m.readContextSpec(contextName)
+func (m *Manager) Deploy(contexts []string) []ProgressResult {
+	m.readProjectInformation()
+	m.deployAllContexts(contexts)
+	return m.progressResults
+}
+
+func (m *Manager) deployAllContexts(contexts []string) {
+	if m.err != nil {
+		var results []ProgressResult
+		for _, context := range contexts {
+			results = append(results, ProgressResult{Err: m.err, Context: context})
+		}
+
+		m.progressResults = results
+		return
+	}
+
+	progressStreams, contextsWithStreams := m.getStreamsForCdkDeployments(contexts)
+
+	description := fmt.Sprintf("Deploying resources for context(s) %s", contextsWithStreams)
+	m.executeCdkHelper(progressStreams, description)
+}
+
+func (m *Manager) getStreamsForCdkDeployments(contexts []string) ([]cdk.ProgressStream, []string) {
+	var progressStreams []cdk.ProgressStream
+	var contextsWithStreams []string
+	for _, contextName := range contexts {
+		m.readContextSpec(contextName)
+		m.setCdkConfigurationForDeployment(contextName)
+		m.clearCdkContext(contextDir)
+		m.setContextEnv(contextName)
+
+		if m.err == nil {
+			progressStream := m.deployContext(contextName)
+			if progressStream != nil {
+				progressStreams = append(progressStreams, progressStream)
+				contextsWithStreams = append(contextsWithStreams, contextName)
+			}
+		}
+
+		if m.err != nil {
+			m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: m.err})
+		}
+		m.err = nil
+	}
+
+	return progressStreams, contextsWithStreams
+}
+
+func (m *Manager) setCdkConfigurationForDeployment(contextName string) {
 	m.setDataBuckets()
 	m.setOutputBucket()
 	m.setArtifactUrl()
 	m.setArtifactBucket()
 	m.setTaskContext(contextName)
-	m.clearCdkContext(contextDir)
-	m.setContextEnv(contextName)
-	m.deployContext(contextName, showProgress)
-	return m.err
 }
 
 func (m *Manager) clearCdkContext(appDir string) {
@@ -31,36 +71,13 @@ func (m *Manager) clearCdkContext(appDir string) {
 	m.err = m.Cdk.ClearContext(filepath.Join(m.homeDir, cdkAppsDirBase, appDir))
 }
 
-func (m *Manager) deployContext(contextName string, showProgress bool) {
+func (m *Manager) deployContext(contextName string) cdk.ProgressStream {
 	contextCmd := func() (cdk.ProgressStream, error) {
-		return m.Cdk.DeployApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), m.contextEnv.ToEnvironmentList())
+		return m.Cdk.DeployApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), m.contextEnv.ToEnvironmentList(), contextName)
 	}
-	description := fmt.Sprintf("Deploying resources for context '%s'...", contextName)
-	m.executeCdkHelper(contextCmd, description, showProgress)
-}
-
-func (m *Manager) executeCdkHelper(cmd func() (cdk.ProgressStream, error), description string, showProgress bool) {
-	if m.err != nil {
-		return
-	}
-	progressStream, err := cmd()
+	progressStream, err := contextCmd()
 	if err != nil {
-		m.err = err
-		return
+		m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: err})
 	}
-	if !showProgress || logging.Verbose {
-		var lastEvent cdk.ProgressEvent
-		for event := range progressStream {
-			if event.Err != nil {
-				for _, line := range lastEvent.Outputs {
-					log.Error().Msg(line)
-				}
-				m.err = event.Err
-				return
-			}
-			lastEvent = event
-		}
-	} else {
-		m.err = progressStream.DisplayProgress(description)
-	}
+	return progressStream
 }

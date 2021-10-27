@@ -5,17 +5,28 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestManager_Destroy(t *testing.T) {
+	contextList := []string{testContextName1}
+	origVerbose := logging.Verbose
+	defer func() { logging.Verbose = origVerbose }()
+	logging.Verbose = false
 	testCases := map[string]struct {
-		setupMocks  func(*testing.T) mockClients
-		expectedErr error
+		setupMocks                 func(*testing.T) mockClients
+		expectedProgressResultList []ProgressResult
+		contextList                []string
 	}{
 		"destroy success": {
+			contextList: contextList,
+			expectedProgressResultList: []ProgressResult{
+				{Outputs: []string{"some message"}, Context: testContextName1},
+			},
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				defer close(mockClients.progressStream1)
@@ -23,12 +34,16 @@ func TestManager_Destroy(t *testing.T) {
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
 				mockClients.configMock.EXPECT().GetUserId().Return(testUserId, nil)
 				mockClients.projMock.EXPECT().Read().Return(testValidProjectSpec, nil)
-				mockClients.cdkMock.EXPECT().DestroyApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Any()).Return(mockClients.progressStream1, nil)
+				mockClients.cdkMock.EXPECT().DestroyApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Any(), testContextName1).Return(mockClients.progressStream1, nil)
+				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Destroying resources for context(s) %s", contextList), []cdk.ProgressStream{mockClients.progressStream1}).Return([]cdk.Result{{Outputs: []string{"some message"}, UniqueKey: testContextName1}})
 				return mockClients
 			},
 		},
 		"read error": {
-			expectedErr: fmt.Errorf("some read error"),
+			contextList: contextList,
+			expectedProgressResultList: []ProgressResult{
+				{Err: fmt.Errorf("some read error"), Context: testContextName1},
+			},
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.projMock.EXPECT().Read().Return(spec.Project{}, fmt.Errorf("some read error"))
@@ -36,13 +51,16 @@ func TestManager_Destroy(t *testing.T) {
 			},
 		},
 		"destroy error": {
-			expectedErr: fmt.Errorf("some context error"),
+			contextList: contextList,
+			expectedProgressResultList: []ProgressResult{
+				{Err: fmt.Errorf("some context error"), Context: testContextName1},
+			},
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
 				mockClients.configMock.EXPECT().GetUserId().Return(testUserId, nil)
 				mockClients.projMock.EXPECT().Read().Return(testValidProjectSpec, nil)
-				mockClients.cdkMock.EXPECT().DestroyApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Any()).Return(nil, fmt.Errorf("some context error"))
+				mockClients.cdkMock.EXPECT().DestroyApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Any(), testContextName1).Return(nil, fmt.Errorf("some context error"))
 				return mockClients
 			},
 		},
@@ -59,12 +77,20 @@ func TestManager_Destroy(t *testing.T) {
 				Config:    mockClients.configMock,
 			}
 
-			err := manager.Destroy(testContextName1, false)
+			progressResultList := manager.Destroy(tc.contextList)
 
-			if tc.expectedErr != nil {
-				assert.Equal(t, tc.expectedErr, err)
-			} else {
-				assert.NoError(t, err)
+			if len(progressResultList) != len(tc.expectedProgressResultList) {
+				assert.Equal(t, tc.expectedProgressResultList, progressResultList)
+			}
+
+			for i, progressResult := range progressResultList {
+				expectedProgressResult := tc.expectedProgressResultList[i]
+				assert.Equal(t, expectedProgressResult.Context, progressResult.Context)
+				if expectedProgressResult.Err != nil {
+					assert.Error(t, progressResult.Err, expectedProgressResult)
+				} else {
+					assert.NoError(t, progressResult.Err)
+				}
 			}
 		})
 	}
