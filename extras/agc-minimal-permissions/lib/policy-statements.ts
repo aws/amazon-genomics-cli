@@ -211,6 +211,23 @@ export class AgcPermissions {
           })]
     }
 
+    s3CDK() : PolicyStatement[] {
+        const svc = "s3";
+        return [new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: actions(svc,
+                "ListBucket",
+                "GetObject",
+                "GetBucketLocation",
+                "PutObject",
+                "DeleteObject",
+            ),
+            resources: [
+              this.arn({service: svc, region: "", account: "", resource: "cdktoolkit-*"}),
+            ],
+        })]
+    }
+
     dynamodbCreate() : PolicyStatement[] {
         const svc = "dynamodb";
         return [new PolicyStatement({
