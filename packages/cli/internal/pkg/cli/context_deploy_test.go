@@ -31,6 +31,19 @@ func TestDeployContextOpts_Validate_ValidContexts(t *testing.T) {
 	}
 	assert.NoError(t, opts.Validate([]string{testContextName1}))
 }
+func TestDeployContextOpts_Validate_ValidContexts_DeprecatedArgs(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctxMock := contextmocks.NewMockContextManager(ctrl)
+	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
+	opts := &deployContextOpts{
+		deployContextVars: deployContextVars{contexts: []string{testContextName1, testContextName2}},
+		ctxManagerFactory: func() context.Interface {
+			return ctxMock
+		},
+	}
+	assert.NoError(t, opts.Validate([]string{}))
+}
 
 func TestDeployContextOpts_Validate_ValidAll(t *testing.T) {
 	ctrl := gomock.NewController(t)

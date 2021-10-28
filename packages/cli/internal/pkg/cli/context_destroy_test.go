@@ -36,6 +36,23 @@ func TestDestroyContextOpts_Validate_ValidContexts(t *testing.T) {
 	assert.NoError(t, opts.Validate([]string{testContextName1}))
 }
 
+func TestDestroyContextOpts_Validate_ValidContexts_DeprecatedArgs(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctxMock := contextmocks.NewMockContextManager(ctrl)
+	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
+	wfMock := managermocks.NewMockWorkflowManager(ctrl)
+	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, 20).Return([]workflow.InstanceSummary{}, nil)
+	opts := &destroyContextOpts{
+		destroyContextVars: destroyContextVars{contexts: []string{testContextName1}},
+		wfsManager:         wfMock,
+		ctxManagerFactory: func() context.Interface {
+			return ctxMock
+		},
+	}
+	assert.NoError(t, opts.Validate([]string{}))
+}
+
 func TestDestroyContextOpts_Validate_ValidAll(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
