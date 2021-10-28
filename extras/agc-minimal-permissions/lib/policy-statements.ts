@@ -672,14 +672,14 @@ export class AgcPermissions {
                     "ManageConnections",
                 ),
                 resources: [
-                    this.arn({service: "execute-api", resource: "*"}),
+                    this.arn({service: "execute-api", region: "*", resource: "*"}),
                 ]
             }),
             new PolicyStatement({
                 effect: Effect.ALLOW,
                 actions: actions("apigateway", "*"),
                 resources: [
-                    this.arn({service: "apigateway", account: "", resource: "*"}),
+                    this.arn({service: "apigateway", region: "*", account: "", resource: "*"}),
                 ]
             })
         ]
