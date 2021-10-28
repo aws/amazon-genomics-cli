@@ -18,7 +18,7 @@ const (
 	destroyContextAllDescription   = `Destroy all contexts in the project`
 	destroyContextForceFlag        = "force"
 	destroyContextForceDescription = "Destroy context and stop running workflows within context"
-	destroyContextDescription    = `Names of one or more contexts to destroy`
+	destroyContextDescription      = `Names of one or more contexts to destroy`
 )
 
 type destroyResult struct {

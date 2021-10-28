@@ -41,11 +41,15 @@ func TestDestroyContextOpts_Validate_ValidContexts_DeprecatedArgs(t *testing.T) 
 	defer ctrl.Finish()
 	ctxMock := contextmocks.NewMockContextManager(ctrl)
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
-	wfMock := managermocks.NewMockWorkflowManager(ctrl)
-	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, 20).Return([]workflow.InstanceSummary{}, nil)
+	workflowCtrl := gomock.NewController(t)
+	defer workflowCtrl.Finish()
+	wfMock := workflowmocks.NewMockWorkflowManager(workflowCtrl)
+	wfMock.EXPECT().StatusWorkflowByContext(testContextName1, workflowMaxAllowedInstance).Return([]workflow.InstanceSummary{}, nil)
 	opts := &destroyContextOpts{
 		destroyContextVars: destroyContextVars{contexts: []string{testContextName1}},
-		wfsManager:         wfMock,
+		wfsManager: func() workflow.Interface {
+			return wfMock
+		},
 		ctxManagerFactory: func() context.Interface {
 			return ctxMock
 		},
