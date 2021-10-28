@@ -4,6 +4,8 @@ name: github pages
 
 on:
   workflow_dispatch:      # Allow manual triggering of the action
+  release:
+    types: [published]
 
 
 jobs:
@@ -13,6 +15,8 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: 'release'
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2   # see https://github.com/peaceiris/actions-hugo for details
