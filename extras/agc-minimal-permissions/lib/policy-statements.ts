@@ -842,6 +842,7 @@ export class AgcPermissions {
                 effect: Effect.ALLOW,
                 actions: actions(svc,
                     "CreateHostedZone",
+                    "ListHostedZonesByName",
                 ),
                 resources: [
                     "*",
