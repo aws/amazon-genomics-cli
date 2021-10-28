@@ -44,6 +44,7 @@ func (o *describeContextOpts) Execute() (types.Context, error) {
 		Status:               info.Status.ToString(),
 		StatusReason:         info.StatusReason,
 		InstanceTypes:        buildInstanceTypes(info.InstanceTypes),
+		MaxVCpus:             info.MaxVCpus,
 		RequestSpotInstances: info.IsSpot,
 		Output:               types.OutputLocation{Url: info.BucketLocation},
 	}, nil

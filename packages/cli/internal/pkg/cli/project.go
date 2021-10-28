@@ -42,6 +42,7 @@ and contexts you are working with.`,
 
 	cmd.AddCommand(BuildProjectInitCommand())
 	cmd.AddCommand(buildProjectDescribeCommand())
+	cmd.AddCommand(buildProjectValidateCommand())
 
 	cmd.SetUsageTemplate(template.Usage)
 	cmd.Annotations = map[string]string{

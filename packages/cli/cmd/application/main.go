@@ -15,6 +15,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/cmd/application/template"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/term/color"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
@@ -33,6 +34,7 @@ slug: %s
 
 type mainVars struct {
 	docPath string
+	format  string
 }
 
 func init() {
@@ -82,12 +84,9 @@ func buildRootCmd() *cobra.Command {
   Displays the help menu for the specified sub-command.
   /code $ agc account --help`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			// If we don't set a Run() function the help menu doesn't show up.
-			// See https://github.com/spf13/cobra/issues/790
-			if !logging.Verbose {
-				// global level is trace by default so if not verbose we want info level
-				zerolog.SetGlobalLevel(zerolog.InfoLevel)
-			}
+			format.SetFormatter(format.FormatterType(vars.format))
+			setLoggingLevel()
+			checkCliVersion()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if vars.docPath != "" {
@@ -112,14 +111,42 @@ func buildRootCmd() *cobra.Command {
 	cmd.AddCommand(cli.BuildContextCommand())
 	cmd.AddCommand(cli.BuildLogsCommand())
 	cmd.AddCommand(cli.BuildWorkflowCommand())
-	cmd.AddCommand(cli.BuildVersionCmd())
 	cmd.AddCommand(cli.BuildConfigureCommand())
 
 	cmd.SetUsageTemplate(template.RootUsage)
 
 	cmd.PersistentFlags().BoolVarP(&logging.Verbose, cli.VerboseFlag, cli.VerboseFlagShort, false, cli.VerboseFlagDescription)
+	cmd.PersistentFlags().StringVar(&vars.format, cli.FormatFlag, cli.FormatFlagDefault, cli.FormatFlagDescription)
 	cmd.Flags().StringVar(&vars.docPath, "docs", "", "generate markdown documenting the CLI to the specified path")
 	cmd.Flag("docs").Hidden = true
 
 	return cmd
+}
+
+func checkCliVersion() {
+	log.Debug().Msg("Checking AGC version...")
+	result, err := version.Check()
+	if err != nil {
+		log.Debug().Msgf("version check failed: %v", err)
+		return
+	}
+	if result.LatestVersion != result.CurrentVersion {
+		log.Info().Msgf("New version of agc available. Current version is '%s'. The latest version is '%s'", result.CurrentVersion, result.LatestVersion)
+	}
+	if result.CurrentVersionDeprecated {
+		log.Warn().Msgf("The current version was deprecated with message: %s. Please consider upgrading Amazon Genomics CLI.", strings.TrimSpace(result.CurrentVersionDeprecationMessage))
+	}
+	if len(result.NewerVersionHighlights) > 0 {
+		log.Info().Msgf("Highlights from newer versions:")
+		for _, msg := range result.NewerVersionHighlights {
+			log.Info().Msgf("\t%s", strings.TrimSpace(msg))
+		}
+	}
+}
+
+func setLoggingLevel() {
+	if !logging.Verbose {
+		// global level is trace by default so if not verbose we want info level
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	}
 }

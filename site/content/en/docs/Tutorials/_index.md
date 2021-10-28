@@ -9,5 +9,5 @@ description: >
 ---
 
 
-The following are **complete worked examples** made up of **multiple tasks** that guide the you through a relatively simple but realistic scenarios using Amazon Genomics CLI.
+The following are **complete worked examples** made up of **multiple tasks** that guide you through a relatively simple but realistic scenarios using Amazon Genomics CLI.
 

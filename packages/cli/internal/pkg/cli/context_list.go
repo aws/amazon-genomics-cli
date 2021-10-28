@@ -4,9 +4,11 @@
 package cli
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/types"
@@ -33,16 +35,20 @@ func (o *listContextOpts) Validate() error {
 }
 
 // Execute returns a collection of contexts defined in project specification
-func (o *listContextOpts) Execute() ([]types.ContextName, error) {
+func (o *listContextOpts) Execute() ([]types.ContextSummary, error) {
 	contexts, err := o.ctxManager.List()
 	if err != nil {
 		return nil, err
 	}
 
-	var contextNames []types.ContextName
+	var contextNames []types.ContextSummary
 	for name := range contexts {
-		contextNames = append(contextNames, types.ContextName{
-			Name: name,
+		if len(contexts[name].Engines) != 1 {
+			return nil, actionableerror.New(fmt.Errorf("context '%s' does not have a valid engine declaration", name), "please validate your project yaml with 'agc project validate'")
+		}
+		contextNames = append(contextNames, types.ContextSummary{
+			Name:       name,
+			EngineName: contexts[name].Engines[0].Engine,
 		})
 	}
 
@@ -50,7 +56,7 @@ func (o *listContextOpts) Execute() ([]types.ContextName, error) {
 	return contextNames, nil
 }
 
-func sortContextNames(contextNames []types.ContextName) {
+func sortContextNames(contextNames []types.ContextSummary) {
 	sort.Slice(contextNames, func(i, j int) bool {
 		return contextNames[i].Name < contextNames[j].Name
 	})
@@ -64,7 +70,7 @@ func BuildContextListCommand() *cobra.Command {
 		Long: `list is for showing a combined list of contexts specified in
 the project specification.
 
-` + DescribeOutput([]types.ContextName{}),
+` + DescribeOutput([]types.ContextSummary{}),
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
 			opts, err := newListContextOpts(vars)
 			if err != nil {

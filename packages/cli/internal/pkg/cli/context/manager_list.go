@@ -20,6 +20,7 @@ func (m *Manager) getLocalContexts() {
 		return
 	}
 	for contextName := range m.projectSpec.Contexts {
-		m.contexts[contextName] = Summary{Name: contextName}
+		engines := m.projectSpec.Contexts[contextName].Engines
+		m.contexts[contextName] = Summary{Name: contextName, Engines: engines}
 	}
 }

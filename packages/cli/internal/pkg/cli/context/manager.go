@@ -9,6 +9,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ssm"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
@@ -130,6 +131,9 @@ func (m *Manager) setArtifactUrl() {
 		return
 	}
 	m.artifactUrl, m.err = m.Ssm.GetCommonParameter(artifactParameter)
+	if m.err != nil {
+		m.err = actionableerror.FindSuggestionForError(m.err, actionableerror.AwsErrorMessageToSuggestedActionMap)
+	}
 }
 
 func (m *Manager) setArtifactBucket() {
@@ -149,6 +153,9 @@ func (m *Manager) setOutputBucket() {
 		return
 	}
 	m.outputBucket, m.err = m.Ssm.GetOutputBucket()
+	if m.err != nil {
+		m.err = actionableerror.FindSuggestionForError(m.err, actionableerror.AwsErrorMessageToSuggestedActionMap)
+	}
 }
 
 func (m *Manager) setTaskContext(contextName string) {
@@ -166,6 +173,7 @@ func (m *Manager) setTaskContext(contextName string) {
 		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
 		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
 		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
+		MaxVCpus:             m.contextSpec.MaxVCpus,
 		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
 	}
 }
@@ -191,6 +199,7 @@ func (m *Manager) setContextEnv(contextName string) {
 		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
 		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
 		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
+		MaxVCpus:             m.contextSpec.MaxVCpus,
 		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
 		// TODO: we default to a single engine in a context for now
 		// need to allow for multiple engines in the same context

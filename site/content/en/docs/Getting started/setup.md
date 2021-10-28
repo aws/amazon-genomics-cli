@@ -11,6 +11,18 @@ Amazon Genomics CLI uses AWS CDK to deploy infrastructure. If you have not alrea
 CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defined infrastructure. Full details are available
 [here](https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html).
 
+Amazon Genomics CLI will install its own local copy of of the AWS CDK. If you do not have the AWS CDK installed globally on your machine use can also use this local copy by changing to the Amazon Genomics CLI CDK installation location:
+
+```
+cd $HOME/.agc/cdk
+```
+
+and using `npx` to invoke the CDK:
+
+```
+npx cdk ...
+```
+
 To bootstrap a single region:
 
 `cdk bootstrap aws://ACCOUNT-NUMBER-1/REGION-1`

@@ -15,7 +15,7 @@ with some demo projects including a simple "hello world" workflow.
 3. `cd ~/agc/examples/demo-wdl-project`
 4. `agc context deploy --context myContext`, this step takes approximately 5 minutes to deploy the infrastructure
 5. `agc workflow run hello --context myContext`, take note of the returned workflow instance ID.
-6. Check on the status of the workflow `agc workflow status <workflow-instance-id>`. Initially you will see status like `SUBMITTED` but after the elastic compute resources have been spun up and the workflow runs you should see something like the following: `WORKFLOWINSTANCE    ctx1    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z`
+6. Check on the status of the workflow `agc workflow status -r <workflow-instance-id>`. Initially you will see status like `SUBMITTED` but after the elastic compute resources have been spun up and the workflow runs you should see something like the following: `WORKFLOWINSTANCE    ctx1    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z`
 
 Congratulations! You have just run your first workflow in the cloud using Amazon Genomics CLI! At this point you can run additional workflows, including submitting several instances of the "hello world" workflow.
 The elastic compute resources will expand and contract as necessary to accommodate the backlog of submitted workflows.
@@ -36,6 +36,19 @@ and then use `aws s3` commands to explore and retrieve data from the bucket. Wor
 `s3://agc-<account-num>-<region>/project/<project-name>/userid/<user-id>/context/<context-name>/workflow/<workflow-name>/`
 path. The rest of the path depends on the engine used to run the workflow. For Cromwell it will continue with:
 `.../cromwell-execution/<wdl-wf-name>/<workflow-run-id>/<task-name>`
+
+If a workflow declares outputs then you may obtain these using the command:
+
+```shell
+agc workflow output <workflow_run_id>
+```
+
+You should see a response similar to:
+
+```shell
+OUTPUT	id	6cc6f742-dc87-4649-b319-1af45c4c09c6
+OUTPUT	outputs.hello_agc.hello.out	Hello Amazon Genomics CLI!
+```
 
 You can also obtain task logs for a workflow using the following form `agc logs workflow <workflow-name> -r <instance-id>`.
 >Note, if the workflow did not actually run any tasks due to call caching then there will be no output from this command.

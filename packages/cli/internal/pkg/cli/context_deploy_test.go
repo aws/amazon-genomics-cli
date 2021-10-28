@@ -7,6 +7,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"
 	"github.com/golang/mock/gomock"
@@ -96,7 +97,7 @@ func TestDeployContextOpts_Execute_InfoError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 	ctxMock := contextmocks.NewMockContextManager(ctrl)
-	expectedErr := errors.New("one or more contexts failed to deploy")
+	expectedErr := actionableerror.New(errors.New("one or more contexts failed to deploy"), "")
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
 	ctxMock.EXPECT().Deploy(testContextName1, true).Return(nil)
 	ctxMock.EXPECT().Deploy(testContextName2, true).Return(nil)

@@ -106,6 +106,10 @@ directory. Alternatively project yaml files can be created with any text editor.
 The `agc project describe <project-name>` command will provide basic metadata about the 'local' project file. See 
 [above](#project-file-location) for details on how project files are located.
 
+### `validate`
+
+Using `agc project validate` you can quickly identify any syntax errors in your local project file.
+
 ## Versioning and Sharing
 
 We recommend placing a project under source version control using a tool like [Git](https://git-scm.com). The folder containing the `agc-project.yaml`

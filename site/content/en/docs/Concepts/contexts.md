@@ -32,7 +32,9 @@ A context must define an array of one or more `engines`. Each engine definition 
 will interpret. For each language Amazon Genomics CLI has a default engine however, users may specify the exact engine in the `engine`
 parameter.
 
-## Instance Types
+## Context Properties
+
+### Instance Types
 
 You may optionally specify the instance types to be used in a context. This can be a specific type such as `r5.2xlarge`
 or it can be an instance family such as `c5` or a combination. By default, a context will use instance types up to `4xlarge`
@@ -48,7 +50,8 @@ aws ec2 describe-instance-type-offerings \
     --region <region_name>
 ```
 
-### Examples
+
+#### Examples
 
 The following snippet defines two contexts, one that uses spot resources and one that uses on demand. Both contain a
 WDL engine.
@@ -86,6 +89,23 @@ contexts:
         engine: nextflow
 ```
 
+### Max vCpus
+
+*default:* 256
+
+You may optionally specify the maximum number of vCpus used in a context. This is the max total amount of vCpus of all the jobs currently 
+running within a context. When the max has been reached, additional jobs will be queued.
+
+*note:* if your vCPU limit is lower than maxVCpus then you won't get as many as requested and would need to make a limit increase.
+```yaml
+contexts:
+  largeCtx:
+    maxVCpus: 2000
+    engines:
+      - type: nextflow
+        engine: nextflow
+```
+
 ## Context Commands
 
 A full reference of context commands is [here]( {{< relref "../Reference/agc_context" >}} )
@@ -97,7 +117,7 @@ as well as other relevant account information.
 
 ### `list`
 
-The command `agc context list [flags]` will list the names of all contexts defined in the project YAML file
+The command `agc context list [flags]` will list the names of all contexts defined in the project YAML file along with the name of the engine used by the context.
 
 ### `deploy`
 
@@ -108,7 +128,7 @@ will be updated to allow access to the new data.
 
 All contexts defined in the project YAML can be deployed or updated using the `--all` flag.
 
-Individually named contexts can be deployed or updated as positional arguments. For example: `acg context deploy -c ctx1 -c ctx2`
+Individually named contexts can be deployed or updated as positional arguments. For example: `agc context deploy -c ctx1 -c ctx2`
 will deploy the contexts `ctx1` and `ctx2`.
 
 The inclusion of the `--verbose` flag will show the full CloudFormation output of the context deployment.
@@ -121,7 +141,7 @@ and workflow outputs on S3 are retained when a context is destroyed.
 
 All deployed contexts can be destroyed using the `--all` flag.
 
-Multiple contexts can be destroyed in a single command using positional arguments. For example: `acg context destroy -c ctx1 -c ctx2`
+Multiple contexts can be destroyed in a single command using positional arguments. For example: `agc context destroy -c ctx1 -c ctx2`
 will destroy the contexts `ctx1` and `ctx2`.
 
 ### `status`

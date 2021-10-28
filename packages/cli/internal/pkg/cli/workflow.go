@@ -29,6 +29,7 @@ typed according to which workflow definition language they use (e.g. WDL).
 	cmd.AddCommand(BuildWorkflowStatusCommand())
 	cmd.AddCommand(BuildWorkflowDescribeCommand())
 	cmd.AddCommand(BuildWorkflowStopCommand())
+	cmd.AddCommand(BuildWorkflowOutputCommand())
 
 	cmd.SetUsageTemplate(template.Usage)
 	cmd.Annotations = map[string]string{

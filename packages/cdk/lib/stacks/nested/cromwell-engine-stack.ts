@@ -1,12 +1,10 @@
 import { NestedStackProps, RemovalPolicy } from "monocdk";
 import { IVpc } from "monocdk/aws-ec2";
-import { CloudMapOptions, FargateTaskDefinition, LogDriver } from "monocdk/aws-ecs";
+import { FargateTaskDefinition, LogDriver } from "monocdk/aws-ecs";
 import { Construct } from "constructs";
 import { ApiProxy, SecureService } from "../../constructs";
-import { PrivateDnsNamespace } from "monocdk/aws-servicediscovery";
-import { IRole, Role, ServicePrincipal } from "monocdk/aws-iam";
+import { IRole } from "monocdk/aws-iam";
 import { createEcrImage, renderServiceWithContainer, renderServiceWithTaskDefinition } from "../../util";
-import { APP_NAME } from "../../constants";
 import { Bucket } from "monocdk/aws-s3";
 import { FileSystem } from "monocdk/aws-efs";
 import { EngineOptions, ServiceContainer } from "../../types";
@@ -14,6 +12,7 @@ import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { LogGroup } from "monocdk/aws-logs";
 import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
 import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
+import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
 
 export interface CromwellEngineStackProps extends EngineOptions, NestedStackProps {}
 
@@ -22,6 +21,7 @@ export class CromwellEngineStack extends NestedEngineStack {
   public readonly adapter: SecureService;
   public readonly adapterRole: IRole;
   public readonly apiProxy: ApiProxy;
+  public readonly engineApiProxy: ApiProxy;
   public readonly adapterLogGroup: ILogGroup;
   public readonly engineLogGroup: ILogGroup;
   public readonly engineRole: IRole;
@@ -33,33 +33,31 @@ export class CromwellEngineStack extends NestedEngineStack {
     const engineContainer = params.getEngineContainer(props.jobQueue.jobQueueArn);
     const artifactBucket = Bucket.fromBucketName(this, "ArtifactBucket", params.artifactBucketName);
     const outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
+
     this.engineRole = new CromwellEngineRole(this, "CromwellEngineRole", {
+      jobQueueArn: props.jobQueue.jobQueueArn,
       readOnlyBucketArns: (params.readBucketArns ?? []).concat(artifactBucket.bucketArn),
       readWriteBucketArns: (params.readWriteBucketArns ?? []).concat(outputBucket.bucketArn),
       policies: props.policyOptions,
     });
-    this.adapterRole = new Role(this, "TaskRole", { assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"), ...props.policyOptions });
-    const namespace = new PrivateDnsNamespace(this, "EngineNamespace", {
-      name: `${params.projectName}-${params.contextName}-${params.userId}.${APP_NAME}.amazon.com`,
-      vpc: props.vpc,
+    this.adapterRole = new CromwellAdapterRole(this, "CromwellAdapterRole", {
+      readOnlyBucketArns: [],
+      readWriteBucketArns: [outputBucket.bucketArn],
     });
-    const cloudMapOptions: CloudMapOptions = {
-      name: engineContainer.serviceName,
-      cloudMapNamespace: namespace,
-    };
 
     // TODO: Move log group creation into service construct and make it a property
-    this.engine = this.getEngineServiceDefinition(props.vpc, engineContainer, cloudMapOptions, this.engineLogGroup);
+    this.engine = this.getEngineServiceDefinition(props.vpc, engineContainer, this.engineLogGroup);
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
-    this.adapter = renderServiceWithContainer(this, "Adapter", params.getAdapterContainer(), props.vpc, this.adapterRole, this.adapterLogGroup);
+    const adapterContainer = params.getAdapterContainer({
+      ENGINE_ENDPOINT: this.engine.loadBalancer.loadBalancerDnsName,
+    });
+    this.adapter = renderServiceWithContainer(this, "Adapter", adapterContainer, props.vpc, this.adapterRole, this.adapterLogGroup);
 
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.contextName}${engineContainer.serviceName}ApiProxy`,
       loadBalancer: this.adapter.loadBalancer,
       allowedAccountIds: [this.account],
     });
-
-    outputBucket.grantReadWrite(this.adapterRole);
   }
 
   protected getOutputs(): EngineOutputs {
@@ -71,7 +69,7 @@ export class CromwellEngineStack extends NestedEngineStack {
     };
   }
 
-  private getEngineServiceDefinition(vpc: IVpc, serviceContainer: ServiceContainer, cloudMapOptions: CloudMapOptions, logGroup: ILogGroup) {
+  private getEngineServiceDefinition(vpc: IVpc, serviceContainer: ServiceContainer, logGroup: ILogGroup) {
     const id = "Engine";
     const fileSystem = new FileSystem(this, "EngineFileSystem", {
       vpc,
@@ -108,8 +106,7 @@ export class CromwellEngineStack extends NestedEngineStack {
       sourceVolume: volumeName,
     });
 
-    const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc, cloudMapOptions);
-
+    const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc);
     fileSystem.connections.allowDefaultPortFrom(engine.service);
     return engine;
   }

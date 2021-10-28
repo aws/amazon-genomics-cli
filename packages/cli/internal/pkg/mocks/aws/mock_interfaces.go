@@ -432,14 +432,14 @@ func (mr *MockCwlClientMockRecorder) GetLogsPaginated(input interface{}) *gomock
 }
 
 // StreamLogs mocks base method.
-func (m *MockCwlClient) StreamLogs(ctx context.Context, logGroupName string, streams ...string) chan cwl.StreamEvent {
+func (m *MockCwlClient) StreamLogs(ctx context.Context, logGroupName string, streams ...string) <-chan cwl.StreamEvent {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{ctx, logGroupName}
 	for _, a := range streams {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "StreamLogs", varargs...)
-	ret0, _ := ret[0].(chan cwl.StreamEvent)
+	ret0, _ := ret[0].(<-chan cwl.StreamEvent)
 	return ret0
 }
 

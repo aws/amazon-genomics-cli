@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/types"
 	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"
 	"github.com/golang/mock/gomock"
@@ -19,7 +20,7 @@ const (
 func TestListContextOpts_Execute(t *testing.T) {
 	tests := map[string]struct {
 		setExpectations func(manager *contextmocks.MockContextManager)
-		expected        []types.ContextName
+		expected        []types.ContextSummary
 		expectedErr     error
 	}{
 		"no contexts": {
@@ -31,10 +32,10 @@ func TestListContextOpts_Execute(t *testing.T) {
 		"initial context": {
 			setExpectations: func(ctxManager *contextmocks.MockContextManager) {
 				ctxManager.EXPECT().List().Return(map[string]context.Summary{
-					testContextName: {Name: testContextName},
+					testContextName: {Name: testContextName, Engines: []spec.Engine{{Type: "type", Engine: "engine"}}},
 				}, nil)
 			},
-			expected: []types.ContextName{{Name: testContextName}},
+			expected: []types.ContextSummary{{Name: testContextName, EngineName: "engine"}},
 		},
 		"list error": {
 			setExpectations: func(ctxManager *contextmocks.MockContextManager) {

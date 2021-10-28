@@ -73,9 +73,11 @@ using input parameters contained in file "file:///Users/ec2-user/myproj/test-arg
 			format.Default.Write(instanceId)
 			return nil
 		}),
+		ValidArgsFunction: NewWorkflowAutoComplete().GetWorkflowAutoComplete(),
 	}
 	cmd.Flags().StringVarP(&vars.Arguments, argsFlag, argsFlagShort, "", argsFlagDescription)
 	cmd.Flags().StringVarP(&vars.ContextName, contextFlag, contextFlagShort, "", contextFlagDescription)
 	_ = cmd.MarkFlagRequired(contextFlag)
+	_ = cmd.RegisterFlagCompletionFunc(contextFlag, NewContextAutoComplete().GetContextAutoComplete())
 	return cmd
 }

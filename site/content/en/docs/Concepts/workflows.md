@@ -63,7 +63,7 @@ the main workflow file and any supporting files:
         3. Any variables not defined in the workflows must be provided in an inputs file named with the prefix inputs and the conventional suffix for the workflow engine (e.g `inputs.json`). For workflow engines that support multiple input files an index suffix must be provided (e.g. inputs_a.json or inputs_1.json) if there is more than one inputs file.
         4. A workflow options file may be included and must be named with the options prefix followed by the conventional suffix of the workflow. The WesAdapter may chose to make use of this depending on the context of the workflow engine. It may also choose to pass this to the workflow engine or pass a modified copy to the workflow engine.
     2. If the zip file *does* contain a manifest:
-        1. The manifest must contain a parameter called mainWorkflowURL. If it does then the value of the parameter must either be a URL or the name of a file present in the zip archive. Any subworkflows or tasks imported by the main workflow must either be referenced as URLs in the workflow or be present in the archive as described above.
+        1. The manifest must contain a parameter called mainWorkflowURL. If it does then the value of the parameter must either be a URL, including the relevant protocol, or the name of a file present in the zip archive. Any subworkflows or tasks imported by the main workflow must either be referenced as URLs in the workflow or be present in the archive as described above.
         2. The manifest may contain an array of URLs to inputs files called inputFileURLs. The WesAdapter must decide if it should resolve these or let the workflow engine resolve them.
         3. The manifest may contain a URL reference to an options files name optionFileURL. The WesAdapter may chose to make use of this depending on the context of the workflow engine. It may also choose to pass this to the workflow engine or pass a modified copy to the workflow engine.
 
@@ -158,6 +158,27 @@ Amazon Genomics CLI will look up the appropriate context and engine using the `i
 stop the workflow. What happens next depends on the actual workflow engine. For example, in the case of the Cromwell WDL
 engine, any currently executing tasks will halt, any pending tasks will be removed from the work queue and no further
 tasks will be started for that workflow instance.
+
+### `output`
+
+You can obtain the output (if any) of a completed workflow run using the output command and supplying the workflow run
+id. Typically, this is useful for locating the files produced by a workflow, although the actual output generated depends on the workflow
+specification and engine.
+
+If the workflow declares outputs you may also obtain these using the command:
+
+```shell
+agc workflow output <workflow_run_id>
+```
+
+The following is an example of output from the "CramToBam" workflow run in a context using the Cromwell engine.
+
+```shell
+OUTPUT	id	aaba95e8-7512-48c3-9a61-1fd837ff6099
+OUTPUT	outputs.CramToBamFlow.outputBai	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-CramToBamTask/NA12878.bai
+OUTPUT	outputs.CramToBamFlow.outputBam	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-CramToBamTask/NA12878.bam
+OUTPUT	outputs.CramToBamFlow.validation_report	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-ValidateSamFile/NA12878.validation_report
+```
 
 ## Cost
 
