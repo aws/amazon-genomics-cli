@@ -1,94 +1,92 @@
 import { Construct, RemovalPolicy } from "monocdk";
-import { CfnJobDefinition, JobDefinition, PlatformCapabilities } from "monocdk/aws-batch";
+import { JobDefinition, PlatformCapabilities } from "monocdk/aws-batch";
 import { IVpc } from "monocdk/aws-ec2";
-import { createEcrImage, renderBatchLogConfiguration } from "../../../util";
-import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
-import { LogGroup } from "monocdk/aws-logs";
-import { AccessPoint, FileSystem } from "monocdk/aws-efs";
-import { FargatePlatformVersion } from "monocdk/aws-ecs";
+import { AccessPoint, FileSystem, PerformanceMode } from "monocdk/aws-efs";
+import { ContainerImage, FargatePlatformVersion } from "monocdk/aws-ecs";
 import { Batch } from "../../batch";
+import { Engine, EngineProps } from "../engine";
+import { EngineJobDefinition } from "../engine-job-definition";
 
-export interface MiniWdlEngineProps {
-  readonly vpc: IVpc;
-  readonly outputBucketName: string;
+export interface MiniWdlEngineProps extends EngineProps {
   readonly engineBatch: Batch;
   readonly workerBatch: Batch;
 }
 
 const MINIWDL_IMAGE_DESIGNATION = "miniwdl";
 
-export class MiniWdlEngine extends Construct {
+export class MiniWdlEngine extends Engine {
   readonly headJobDefinition: JobDefinition;
-  readonly logGroup: ILogGroup;
+  private readonly volumeName = "efs";
 
   constructor(scope: Construct, id: string, props: MiniWdlEngineProps) {
     super(scope, id);
 
     const { vpc, outputBucketName, engineBatch, workerBatch } = props;
-
-    this.logGroup = new LogGroup(this, "EngineLogGroup");
-
-    const fileSystem = new FileSystem(this, "FileSystem", {
-      vpc: vpc,
-      encrypted: true,
-      removalPolicy: RemovalPolicy.DESTROY,
-    });
-
-    const accessPoint = new AccessPoint(this, "AccessPoint", {
-      fileSystem: fileSystem,
-    });
+    const fileSystem = this.createFileSystem(vpc);
+    const accessPoint = this.createAccessPoint(fileSystem);
 
     fileSystem.connections.allowDefaultPortFromAnyIpv4();
     fileSystem.grant(engineBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
     fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
 
-    const volumeName = "efs";
-    this.headJobDefinition = new JobDefinition(this, "MiniwdlHeadJobDef", {
+    this.headJobDefinition = new EngineJobDefinition(this, "MiniwdlHeadJobDef", {
+      logGroup: this.logGroup,
       platformCapabilities: [PlatformCapabilities.FARGATE],
       container: {
-        logConfiguration: renderBatchLogConfiguration(this, this.logGroup),
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
-        image: createEcrImage(this, MINIWDL_IMAGE_DESIGNATION),
+        image: ContainerImage.fromAsset("/home/braidn/workspace/phosphate/src/MiniWdlAwsMirror"),
         platformVersion: FargatePlatformVersion.VERSION1_4,
-        command: [],
         environment: {
           MINIWDL__AWS__FS: fileSystem.fileSystemId,
           MINIWDL__AWS__FSAP: accessPoint.accessPointId,
           MINIWDL__AWS__TASK_QUEUE: workerBatch.jobQueue.jobQueueArn,
           MINIWDL_S3_OUTPUT_URI: `s3://${outputBucketName}/miniwdl`,
         },
-        volumes: [
-          {
-            name: volumeName,
-            efsVolumeConfiguration: {
-              fileSystemId: fileSystem.fileSystemId,
-              transitEncryption: "ENABLED",
-              authorizationConfig: {
-                accessPointId: accessPoint.accessPointId,
-                iam: "ENABLED",
-              },
-            },
-          },
-        ],
-        mountPoints: [
-          {
-            sourceVolume: volumeName,
-            containerPath: "/mnt/efs",
-            readOnly: false,
-          },
-        ],
+        volumes: [this.toVolume(fileSystem, accessPoint)],
+        mountPoints: [this.toMountPoint("/mnt/efs")],
       },
     });
+  }
 
-    const cfnJobDef = this.headJobDefinition.node.defaultChild as CfnJobDefinition;
+  private toMountPoint(containerPath: string) {
+    return {
+      sourceVolume: this.volumeName,
+      containerPath: containerPath,
+      readOnly: false,
+    };
+  }
 
-    //Removing old method for specifying resources. Using newer ResourceRequirements.
-    cfnJobDef.addPropertyDeletionOverride("ContainerProperties.Vcpus");
-    cfnJobDef.addPropertyDeletionOverride("ContainerProperties.Memory");
-    cfnJobDef.addPropertyOverride("ContainerProperties.ResourceRequirements", [
-      { Type: "VCPU", Value: "1" },
-      { Type: "MEMORY", Value: "2048" },
-    ]);
+  private toVolume(fileSystem: FileSystem, accessPoint: AccessPoint) {
+    return {
+      name: this.volumeName,
+      efsVolumeConfiguration: {
+        fileSystemId: fileSystem.fileSystemId,
+        transitEncryption: "ENABLED",
+        authorizationConfig: {
+          accessPointId: accessPoint.accessPointId,
+          iam: "ENABLED",
+        },
+      },
+    };
+  }
+
+  private createAccessPoint(fileSystem: FileSystem) {
+    return new AccessPoint(this, "AccessPoint", {
+      fileSystem: fileSystem,
+      posixUser: {
+        uid: "0",
+        gid: "0",
+      },
+    });
+  }
+
+  private createFileSystem(vpc: IVpc) {
+    return new FileSystem(this, "FileSystem", {
+      vpc: vpc,
+      encrypted: true,
+      performanceMode: PerformanceMode.MAX_IO,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
   }
 }
