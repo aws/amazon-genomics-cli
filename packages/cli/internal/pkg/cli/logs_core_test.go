@@ -6,6 +6,9 @@ import (
 	"time"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
+	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
+	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -94,4 +97,44 @@ func Test_fanInChannels_nominal(t *testing.T) {
 	}
 	expected := []string{"foo1", "bar1", "foo2", "bar2", "something else", "singleton3"}
 	assert.ElementsMatch(t, actual, expected)
+}
+
+func Test_displayEventFromChannel_noLogs_showsWaitingMessage(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	cwlMock := awsmocks.NewMockCwlClient(ctrl)
+	mockFmt := iomocks.NewMockFormat(ctrl)
+	printLn = mockFmt.LogsPrintLn
+
+	mockFmt.EXPECT().LogsPrintLn("There are no new logs. Please wait for new logs to show...").Times(1)
+
+	opts := logsAccessOpts{
+		logsSharedOpts: logsSharedOpts{cwlClient: cwlMock},
+		logsAccessVars: logsAccessVars{logsSharedVars{contextName: testContextName1}},
+	}
+	channel := make(chan cwl.StreamEvent)
+	go func() {
+		channel <- cwl.StreamEvent{Logs: []string{}}
+		close(channel)
+	}()
+	opts.displayEventFromChannel(channel)
+}
+
+func Test_displayEventFromChannel_oneLog_OnlyShowsMessageFromChannel(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	cwlMock := awsmocks.NewMockCwlClient(ctrl)
+	mockFmt := iomocks.NewMockFormat(ctrl)
+	printLn = mockFmt.LogsPrintLn
+
+	mockFmt.EXPECT().LogsPrintLn("hi").Return().Times(1)
+
+	opts := logsAccessOpts{
+		logsSharedOpts: logsSharedOpts{cwlClient: cwlMock},
+		logsAccessVars: logsAccessVars{logsSharedVars{contextName: testContextName1}},
+	}
+	channel := make(chan cwl.StreamEvent)
+	go func() {
+		channel <- cwl.StreamEvent{Logs: []string{"hi"}}
+		defer close(channel)
+	}()
+	opts.displayEventFromChannel(channel)
 }

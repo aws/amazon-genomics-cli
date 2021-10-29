@@ -124,6 +124,19 @@ func (o *logsSharedOpts) followLogGroup(logGroupName string) error {
 }
 
 func (o *logsSharedOpts) displayEventFromChannel(channel <-chan cwl.StreamEvent) error {
+	firstEvent := <-channel
+
+	if firstEvent.Err != nil {
+		return firstEvent.Err
+	}
+	if len(firstEvent.Logs) > 0 {
+		for _, line := range firstEvent.Logs {
+			printLn(line)
+		}
+	} else {
+		printLn("There are no new logs. Please wait for new logs to show...")
+	}
+
 	for event := range channel {
 		if event.Err != nil {
 			return event.Err

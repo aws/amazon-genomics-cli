@@ -256,3 +256,42 @@ func (mr *MockFileWriterMockRecorder) WriteFile(filename, data, perm interface{}
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteFile", reflect.TypeOf((*MockFileWriter)(nil).WriteFile), filename, data, perm)
 }
+
+// MockFormat is a mock of Format interface.
+type MockFormat struct {
+	ctrl     *gomock.Controller
+	recorder *MockFormatMockRecorder
+}
+
+// MockFormatMockRecorder is the mock recorder for MockFormat.
+type MockFormatMockRecorder struct {
+	mock *MockFormat
+}
+
+// NewMockFormat creates a new mock instance.
+func NewMockFormat(ctrl *gomock.Controller) *MockFormat {
+	mock := &MockFormat{ctrl: ctrl}
+	mock.recorder = &MockFormatMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockFormat) EXPECT() *MockFormatMockRecorder {
+	return m.recorder
+}
+
+// LogsPrintLn mocks base method.
+func (m *MockFormat) LogsPrintLn(args ...interface{}) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "LogsPrintLn", varargs...)
+}
+
+// LogsPrintLn indicates an expected call of LogsPrintLn.
+func (mr *MockFormatMockRecorder) LogsPrintLn(args ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LogsPrintLn", reflect.TypeOf((*MockFormat)(nil).LogsPrintLn), args...)
+}
