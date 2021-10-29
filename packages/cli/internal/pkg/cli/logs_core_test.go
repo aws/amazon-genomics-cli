@@ -116,7 +116,7 @@ func Test_displayEventFromChannel_noLogs_showsWaitingMessage(t *testing.T) {
 		channel <- cwl.StreamEvent{Logs: []string{}}
 		close(channel)
 	}()
-	opts.displayEventFromChannel(channel)
+	_ = opts.displayEventFromChannel(channel)
 }
 
 func Test_displayEventFromChannel_oneLog_OnlyShowsMessageFromChannel(t *testing.T) {
@@ -136,5 +136,5 @@ func Test_displayEventFromChannel_oneLog_OnlyShowsMessageFromChannel(t *testing.
 		channel <- cwl.StreamEvent{Logs: []string{"hi"}}
 		defer close(channel)
 	}()
-	opts.displayEventFromChannel(channel)
+	_ = opts.displayEventFromChannel(channel)
 }
