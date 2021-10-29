@@ -103,6 +103,7 @@ func Test_displayEventFromChannel_noLogs_showsWaitingMessage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	cwlMock := awsmocks.NewMockCwlClient(ctrl)
 	mockFmt := iomocks.NewMockFormat(ctrl)
+	orig := printLn
 	printLn = mockFmt.LogsPrintLn
 
 	mockFmt.EXPECT().LogsPrintLn("There are no new logs. Please wait for new logs to show...").Times(1)
@@ -116,13 +117,15 @@ func Test_displayEventFromChannel_noLogs_showsWaitingMessage(t *testing.T) {
 		channel <- cwl.StreamEvent{Logs: []string{}}
 		close(channel)
 	}()
-	opts.displayEventFromChannel(channel)
+	_ = opts.displayEventFromChannel(channel)
+	printLn = orig
 }
 
 func Test_displayEventFromChannel_oneLog_OnlyShowsMessageFromChannel(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	cwlMock := awsmocks.NewMockCwlClient(ctrl)
 	mockFmt := iomocks.NewMockFormat(ctrl)
+	orig := printLn
 	printLn = mockFmt.LogsPrintLn
 
 	mockFmt.EXPECT().LogsPrintLn("hi").Return().Times(1)
@@ -136,5 +139,6 @@ func Test_displayEventFromChannel_oneLog_OnlyShowsMessageFromChannel(t *testing.
 		channel <- cwl.StreamEvent{Logs: []string{"hi"}}
 		defer close(channel)
 	}()
-	opts.displayEventFromChannel(channel)
+	_ = opts.displayEventFromChannel(channel)
+	printLn = orig
 }
