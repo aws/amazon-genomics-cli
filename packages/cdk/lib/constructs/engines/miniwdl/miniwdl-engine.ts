@@ -2,10 +2,11 @@ import { Construct, RemovalPolicy } from "monocdk";
 import { JobDefinition, PlatformCapabilities } from "monocdk/aws-batch";
 import { IVpc } from "monocdk/aws-ec2";
 import { AccessPoint, FileSystem, PerformanceMode } from "monocdk/aws-efs";
-import { ContainerImage, FargatePlatformVersion } from "monocdk/aws-ecs";
+import { FargatePlatformVersion } from "monocdk/aws-ecs";
 import { Batch } from "../../batch";
 import { Engine, EngineProps } from "../engine";
 import { EngineJobDefinition } from "../engine-job-definition";
+import { createEcrImage } from "../../../util";
 
 export interface MiniWdlEngineProps extends EngineProps {
   readonly engineBatch: Batch;
@@ -35,7 +36,7 @@ export class MiniWdlEngine extends Engine {
       container: {
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
-        image: ContainerImage.fromAsset("/home/braidn/workspace/phosphate/src/MiniWdlAwsMirror"),
+        image: createEcrImage(this, MINIWDL_IMAGE_DESIGNATION),
         platformVersion: FargatePlatformVersion.VERSION1_4,
         environment: {
           MINIWDL__AWS__FS: fileSystem.fileSystemId,
