@@ -9,3 +9,4 @@ coverage.out
 vendor
 /docs/
 /site/content/en/docs/Reference/agc*
+/dist/
