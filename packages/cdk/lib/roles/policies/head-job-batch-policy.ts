@@ -10,7 +10,7 @@ export class HeadJobBatchPolicy extends iam.Policy {
         BatchPolicies.listAndDescribe,
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
-          actions: ["batch:RegisterJobDefinition, batch:DeregisterJobDefinition"],
+          actions: ["batch:RegisterJobDefinition", "batch:DeregisterJobDefinition"],
           resources: [batchArn(scope, "job-definition")],
         }),
       ],

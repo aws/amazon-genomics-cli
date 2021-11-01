@@ -9,6 +9,8 @@ import (
 const DefaultEcrRegistry = "555741984805"
 const DefaultEcrRegion = "us-east-1"
 
+const DefaultMiniwdlTag = "v0.1.6"
+
 const WesImageKey = "WES"
 const CromwellImageKey = "CROMWELL"
 const NextflowImageKey = "NEXTFLOW"
@@ -36,8 +38,8 @@ var CommonImages = map[string]ecr.ImageReference{
 	MiniwdlImageKey: {
 		RegistryId:     LookUpEnvOrDefault("ECR_MINIWDL_ACCOUNT_ID", DefaultEcrRegistry),
 		Region:         LookUpEnvOrDefault("ECR_MINIWDL_REGION", DefaultEcrRegion),
-		RepositoryName: "miniwdl",
-		ImageTag:       LookUpEnvOrDefault("ECR_MINIWDL_TAG", "MINIWDL_ECR_TAG_PLACEHOLDER"),
+		RepositoryName: "aws/miniwdl-mirror",
+		ImageTag:       LookUpEnvOrDefault("ECR_MINIWDL_TAG", DefaultMiniwdlTag),
 	},
 }
 
