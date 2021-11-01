@@ -20,6 +20,7 @@ build-cli:
 	(cd packages/cli; $(MAKE) build)
 
 release: release-cli release-cdk
+	./scripts/package-release.sh
 
 release-cli:
 	(cd packages/cli; $(MAKE) release)

@@ -2,42 +2,23 @@ version: 0.2
 
 env:
   shell: bash
-  variables:
-    # These variables should be over-ridden as appropriate by the CI/CD pipeline
-    BUCKET_NAME: "healthai-public-assets-us-east-1"
-    WES_ECR_TAG: ""
-    CROMWELL_ECR_TAG: ""
-    NEXTFLOW_ECR_TAG: ""
 
 phases:
   install:
     commands:
+      - (cd ~/.goenv; git pull)
       - goenv install
       - go env -w GOPROXY=direct
       - make init
   pre_build:
     commands:
       - make test
-      - SEMANTIC_VERSION=$(./scripts/version.sh "$BUCKET_NAME")
-      - echo "Using semantic version '${SEMANTIC_VERSION}'"
-      - ./scripts/update-tags.sh
   build:
     on-failure: ABORT
     commands:
       - make release
-  post_build:
-    commands:
-      # Package Amazon Genomics CLI
-      - mkdir -p tmp
-      - cp -a scripts/cli/. tmp
-      - cp -a examples tmp
-      - cp -a packages/cli/bin/local/. tmp
-      - cp packages/cdk/cdk.tgz tmp
-      - cp LICENSE tmp
-      - cp THIRD-PARTY tmp
-      - mkdir -p amazon-genomics-cli amazon-genomics-cli/$SEMANTIC_VERSION
-      - (cd tmp && zip -r ../amazon-genomics-cli/$SEMANTIC_VERSION/amazon-genomics-cli.zip ./*)
 
 artifacts:
   files:
-    - "amazon-genomics-cli/**/*"
+    - '**/*'
+  base-directory: dist

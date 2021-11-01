@@ -1,4 +1,5 @@
 {
+  "infile": "CHANGELOG.md",
   "packageFiles": [
     {
       "filename": "version.json",
