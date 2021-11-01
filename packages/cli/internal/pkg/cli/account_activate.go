@@ -98,6 +98,11 @@ func (o *accountActivateOpts) Execute() error {
 		fmt.Sprintf("ECR_NEXTFLOW_REGION=%s", o.imageRefs[environment.NextflowImageKey].Region),
 		fmt.Sprintf("ECR_NEXTFLOW_TAG=%s", o.imageRefs[environment.NextflowImageKey].ImageTag),
 		fmt.Sprintf("ECR_NEXTFLOW_REPOSITORY=%s", o.imageRefs[environment.NextflowImageKey].RepositoryName),
+
+		fmt.Sprintf("ECR_MINIWDL_ACCOUNT_ID=%s", o.imageRefs[environment.MiniwdlImageKey].RegistryId),
+		fmt.Sprintf("ECR_MINIWDL_REGION=%s", o.imageRefs[environment.MiniwdlImageKey].Region),
+		fmt.Sprintf("ECR_MINIWDL_TAG=%s", o.imageRefs[environment.MiniwdlImageKey].ImageTag),
+		fmt.Sprintf("ECR_MINIWDL_REPOSITORY=%s", o.imageRefs[environment.MiniwdlImageKey].RepositoryName),
 	}
 	if o.vpcId != "" {
 		environmentVars = append(environmentVars, fmt.Sprintf("VPC_ID=%s", o.vpcId))
