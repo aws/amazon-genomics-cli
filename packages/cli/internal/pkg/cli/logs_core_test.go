@@ -106,7 +106,7 @@ func Test_displayEventFromChannel_noLogs_showsWaitingMessage(t *testing.T) {
 	orig := printLn
 	printLn = mockFmt.LogsPrintLn
 
-	mockFmt.EXPECT().LogsPrintLn("There are no new logs. Please wait for new logs to show...").Times(1)
+	mockFmt.EXPECT().LogsPrintLn("There are no new logs. Please wait for the first logs to appear...").Times(1)
 
 	opts := logsAccessOpts{
 		logsSharedOpts: logsSharedOpts{cwlClient: cwlMock},
