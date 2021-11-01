@@ -1,6 +1,10 @@
 package iomocks
 
-import "io/fs"
+import (
+	"io/fs"
+
+	"github.com/rs/zerolog"
+)
 
 type OS interface {
 	Remove(name string) error
@@ -28,4 +32,8 @@ type FileWriter interface {
 
 type Format interface {
 	LogsPrintLn(args ...interface{})
+}
+
+type Log interface {
+	Info() *zerolog.Event
 }

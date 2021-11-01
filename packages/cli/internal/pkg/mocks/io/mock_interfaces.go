@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	zerolog "github.com/rs/zerolog"
 )
 
 // MockOS is a mock of OS interface.
@@ -294,4 +295,41 @@ func (m *MockFormat) LogsPrintLn(args ...interface{}) {
 func (mr *MockFormatMockRecorder) LogsPrintLn(args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LogsPrintLn", reflect.TypeOf((*MockFormat)(nil).LogsPrintLn), args...)
+}
+
+// MockLog is a mock of Log interface.
+type MockLog struct {
+	ctrl     *gomock.Controller
+	recorder *MockLogMockRecorder
+}
+
+// MockLogMockRecorder is the mock recorder for MockLog.
+type MockLogMockRecorder struct {
+	mock *MockLog
+}
+
+// NewMockLog creates a new mock instance.
+func NewMockLog(ctrl *gomock.Controller) *MockLog {
+	mock := &MockLog{ctrl: ctrl}
+	mock.recorder = &MockLogMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockLog) EXPECT() *MockLogMockRecorder {
+	return m.recorder
+}
+
+// Info mocks base method.
+func (m *MockLog) Info() *zerolog.Event {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Info")
+	ret0, _ := ret[0].(*zerolog.Event)
+	return ret0
+}
+
+// Info indicates an expected call of Info.
+func (mr *MockLogMockRecorder) Info() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Info", reflect.TypeOf((*MockLog)(nil).Info))
 }

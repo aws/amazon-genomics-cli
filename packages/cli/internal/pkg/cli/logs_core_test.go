@@ -102,11 +102,11 @@ func Test_fanInChannels_nominal(t *testing.T) {
 func Test_displayEventFromChannel_noLogs_showsWaitingMessage(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	cwlMock := awsmocks.NewMockCwlClient(ctrl)
-	mockFmt := iomocks.NewMockFormat(ctrl)
-	orig := printLn
-	printLn = mockFmt.LogsPrintLn
+	mockLogs := iomocks.NewMockLog(ctrl)
+	orig := logInfo
+	logInfo = mockLogs.Info
 
-	mockFmt.EXPECT().LogsPrintLn("There are no new logs. Please wait for the first logs to appear...").Times(1)
+	mockLogs.EXPECT().Info().Times(1)
 
 	opts := logsAccessOpts{
 		logsSharedOpts: logsSharedOpts{cwlClient: cwlMock},
@@ -118,7 +118,7 @@ func Test_displayEventFromChannel_noLogs_showsWaitingMessage(t *testing.T) {
 		close(channel)
 	}()
 	_ = opts.displayEventFromChannel(channel)
-	printLn = orig
+	logInfo = orig
 }
 
 func Test_displayEventFromChannel_oneLog_OnlyShowsMessageFromChannel(t *testing.T) {
