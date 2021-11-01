@@ -13,10 +13,12 @@ const DefaultEcrRegion = "us-east-1"
 const DefaultCromwellTag = "64"
 const DefaultNextflowTag = "21.04.3"
 const DefaultWesTag = "0.1.0"
+const DefaultMiniwdlTag = "v0.1.6"
 
 const WesImageKey = "WES"
 const CromwellImageKey = "CROMWELL"
 const NextflowImageKey = "NEXTFLOW"
+const MiniwdlImageKey = "MINIWDL"
 
 var CommonImages = map[string]ecr.ImageReference{
 	WesImageKey: {
@@ -36,6 +38,12 @@ var CommonImages = map[string]ecr.ImageReference{
 		Region:         LookUpEnvOrDefault("ECR_NEXTFLOW_REGION", DefaultEcrRegion),
 		RepositoryName: "aws/nextflow-mirror",
 		ImageTag:       LookUpEnvOrDefault("ECR_NEXTFLOW_TAG", DefaultNextflowTag),
+	},
+	MiniwdlImageKey: {
+		RegistryId:     LookUpEnvOrDefault("ECR_MINIWDL_ACCOUNT_ID", DefaultEcrRegistry),
+		Region:         LookUpEnvOrDefault("ECR_MINIWDL_REGION", DefaultEcrRegion),
+		RepositoryName: "aws/miniwdl-mirror",
+		ImageTag:       LookUpEnvOrDefault("ECR_MINIWDL_TAG", DefaultMiniwdlTag),
 	},
 }
 

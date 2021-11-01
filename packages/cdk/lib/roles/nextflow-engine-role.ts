@@ -2,9 +2,9 @@ import * as cdk from "monocdk";
 import * as iam from "monocdk/aws-iam";
 import { PolicyOptions } from "../types/engine-options";
 import { BucketOperations } from "../../common/BucketOperations";
-import { NextflowEngineBatchPolicy } from "./policies/nextflow-engine-batch-policy";
+import { HeadJobBatchPolicy } from "./policies/head-job-batch-policy";
 import { NextflowAdapterBatchPolicy } from "./policies/nextflow-adapter-batch-policy";
-import { Arn, Stack } from "monocdk";
+import { batchArn } from "../util";
 
 interface NextflowEngineRoleProps {
   readOnlyBucketArns: string[];
@@ -15,21 +15,11 @@ interface NextflowEngineRoleProps {
 
 export class NextflowEngineRole extends iam.Role {
   constructor(scope: cdk.Construct, id: string, props: NextflowEngineRoleProps) {
-    const nextflowJobDefinitionArn = Arn.format(
-      {
-        resource: "job-definition/*",
-        service: "batch",
-      },
-      scope as Stack
-    );
     super(scope, id, {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {
-        NextflowBatchPolicy: new NextflowEngineBatchPolicy({
-          nextflowJobArn: nextflowJobDefinitionArn,
-        }),
         NextflowBatchSubmitPolicy: new NextflowAdapterBatchPolicy({
-          batchJobPolicyArns: [...props.batchJobPolicyArns, nextflowJobDefinitionArn],
+          batchJobPolicyArns: [...props.batchJobPolicyArns, batchArn(scope, "job-definition")],
         }),
         NextflowLogsPolicy: new iam.PolicyDocument({
           assignSids: true,
@@ -44,6 +34,8 @@ export class NextflowEngineRole extends iam.Role {
       },
       ...props.policies,
     });
+
+    this.attachInlinePolicy(new HeadJobBatchPolicy(this, "NextflowHeadJobBatchPolicy"));
 
     BucketOperations.grantBucketAccess(this, this, props.readOnlyBucketArns, true);
     BucketOperations.grantBucketAccess(this, this, props.readWriteBucketArns);

@@ -1,8 +1,20 @@
 import { Construct, Fn, Names, Stack } from "monocdk";
 import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "monocdk/aws-batch";
 import { CfnLaunchTemplate, InstanceType, IVpc } from "monocdk/aws-ec2";
-import { CfnInstanceProfile, IManagedPolicy, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "monocdk/aws-iam";
+import {
+  CfnInstanceProfile,
+  Grant,
+  IGrantable,
+  IManagedPolicy,
+  IRole,
+  ManagedPolicy,
+  PolicyDocument,
+  PolicyStatement,
+  Role,
+  ServicePrincipal,
+} from "monocdk/aws-iam";
 import { getInstanceTypesForBatch } from "../util/instance-types";
+import { batchArn } from "../util";
 
 export interface ComputeOptions {
   /**
@@ -79,6 +91,14 @@ export class Batch extends Construct {
           computeEnvironment: this.computeEnvironment,
         },
       ],
+    });
+  }
+
+  public grantJobAdministration(grantee: IGrantable, jobDefinitionName = "*"): Grant {
+    return Grant.addToPrincipal({
+      grantee: grantee,
+      actions: ["batch:SubmitJob", "batch:TerminateJob"],
+      resourceArns: [this.jobQueue.jobQueueArn, batchArn(this, "job-definition", jobDefinitionName)],
     });
   }
 

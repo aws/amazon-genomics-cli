@@ -96,5 +96,25 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
       value: getContext(app.node, "ECR_NEXTFLOW_REPOSITORY"),
       description: "ECR repository for the Nextflow image",
     },
+    {
+      name: "miniwdl/ecr-repo/account",
+      value: getContext(app.node, "ECR_MINIWDL_ACCOUNT_ID"),
+      description: "Account ID of ECR that contains the MiniWDL docker image",
+    },
+    {
+      name: "miniwdl/ecr-repo/region",
+      value: getContext(app.node, "ECR_MINIWDL_REGION"),
+      description: "Region of ECR that contains the MiniWDL docker image",
+    },
+    {
+      name: "miniwdl/ecr-repo/tag",
+      value: getContext(app.node, "ECR_MINIWDL_TAG"),
+      description: "Docker tag for the MiniWDL image",
+    },
+    {
+      name: "miniwdl/ecr-repo/repository",
+      value: getContext(app.node, "ECR_MINIWDL_REPOSITORY"),
+      description: "ECR repository for the MiniWDL image",
+    },
   ],
 });

@@ -19,6 +19,7 @@ const (
 	testWesRepository      = "test-wes-repo"
 	testCromwellRepository = "test-cromwell-repo"
 	testNextflowRepository = "test-nextflow-repo"
+	testMiniwdlRepository  = "test-miniwdl-repo"
 )
 
 var (
@@ -37,6 +38,11 @@ var (
 		fmt.Sprintf("ECR_NEXTFLOW_REGION=%s", testAccountRegion),
 		fmt.Sprintf("ECR_NEXTFLOW_TAG=%s", testImageTag),
 		fmt.Sprintf("ECR_NEXTFLOW_REPOSITORY=%s", testNextflowRepository),
+
+		fmt.Sprintf("ECR_MINIWDL_ACCOUNT_ID=%s", testAccountId),
+		fmt.Sprintf("ECR_MINIWDL_REGION=%s", testAccountRegion),
+		fmt.Sprintf("ECR_MINIWDL_TAG=%s", testImageTag),
+		fmt.Sprintf("ECR_MINIWDL_REPOSITORY=%s", testMiniwdlRepository),
 	}
 )
 
@@ -58,6 +64,12 @@ var (
 			RegistryId:     testAccountId,
 			Region:         testAccountRegion,
 			RepositoryName: testNextflowRepository,
+			ImageTag:       testImageTag,
+		},
+		"MINIWDL": {
+			RegistryId:     testAccountId,
+			Region:         testAccountRegion,
+			RepositoryName: testMiniwdlRepository,
 			ImageTag:       testImageTag,
 		},
 	}
@@ -95,7 +107,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 						fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
 					}, testAccountBaseEnvVars...)).Return(mocks.progressStream, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(3)
+				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				return mocks
 			},
 			vpcId: "",
@@ -116,7 +128,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(3)
+				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				mocks.cdkMock.EXPECT().DeployApp(
 					gomock.Any(),
 					append([]string{
@@ -133,7 +145,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(3)
+				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				mocks.cdkMock.EXPECT().DeployApp(
 					gomock.Any(),
 					append([]string{
@@ -150,7 +162,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(3)
+				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				baseVars := append([]string{
 					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
@@ -186,7 +198,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 			setupMocks: func(t *testing.T) mockClients {
 				mocks := createMocks(t)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(3)
+				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				mocks.cdkMock.EXPECT().DeployApp(
 					gomock.Any(),
 					append([]string{

@@ -2,7 +2,7 @@ import { Repository } from "monocdk/aws-ecr";
 import { CloudMapOptions, ContainerImage, LogDriver, TaskDefinition } from "monocdk/aws-ecs";
 import { StringParameter } from "monocdk/aws-ssm";
 import { Maybe, ServiceContainer } from "../types";
-import { Construct, ConstructNode } from "monocdk";
+import { Arn, Construct, ConstructNode, Stack } from "monocdk";
 import { APP_NAME } from "../constants";
 import { SecureService } from "../constructs";
 import { Protocol } from "monocdk/aws-elasticloadbalancingv2";
@@ -102,4 +102,8 @@ export function renderBatchLogConfiguration(scope: Construct, logGroup: ILogGrou
       "awslogs-group": logGroup.logGroupName,
     },
   };
+}
+
+export function batchArn(scope: Construct, resource: string, resourcePrefix = "*"): string {
+  return Arn.format({ resource: `${resource}/${resourcePrefix}`, service: "batch" }, Stack.of(scope));
 }
