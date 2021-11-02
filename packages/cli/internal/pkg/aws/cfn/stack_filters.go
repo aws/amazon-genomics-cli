@@ -24,7 +24,6 @@ var ActiveStacksFilter = []types.StackStatus{
 	types.StackStatusImportRollbackFailed,
 	types.StackStatusImportRollbackComplete,
 }
-
 var QueryableStacksMap = map[types.StackStatus]bool{
 	types.StackStatusCreateComplete:                          true,
 	types.StackStatusUpdateInProgress:                        true,
