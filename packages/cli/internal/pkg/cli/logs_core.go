@@ -136,13 +136,13 @@ func (o *logsSharedOpts) displayEventFromChannel(channel <-chan cwl.StreamEvent)
 			for _, line := range event.Logs {
 				printLn(line)
 			}
-			firstEvent = false
 		} else if firstEvent {
-			firstEvent = false
 			logInfo().Msg("There are no new logs. Please wait for the first logs to appear...")
 		} else {
 			log.Debug().Msg("No new logs")
 		}
+
+		firstEvent = false
 	}
 
 	return nil
