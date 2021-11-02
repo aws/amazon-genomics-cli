@@ -349,7 +349,7 @@ func (s *WorkflowStatusTestSuite) TestStatusWorkflow_AllUnknownInstance() {
 	}
 }
 
-func (s *WorkflowStatusTestSuite) TestStatusWorkflow_NonActiveContext() {
+func (s *WorkflowStatusTestSuite) TestStatusWorkflow_ErrorStatusContexts() {
 	defer s.ctrl.Finish()
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
 	s.mockConfigClient.EXPECT().GetUserId().Return(testUserId, nil)
@@ -374,6 +374,52 @@ func (s *WorkflowStatusTestSuite) TestStatusWorkflow_NonActiveContext() {
 	s.mockDdb.EXPECT().ListWorkflowInstances(ctx.Background(), testProjectName, testUserId, testWorkflowInstancesLimit).Return(instances, nil)
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	s.mockCfn.EXPECT().GetStackStatus(testContext2Stack).Return(types.StackStatus(""), cfn.StackDoesNotExistError)
+	s.mockCfn.EXPECT().GetStackInfo(testContext1Stack).Return(cfn.StackInfo{
+		Outputs: map[string]string{"WesUrl": testWes1Url},
+	}, nil)
+	s.mockWes1.EXPECT().GetRunStatus(context.Background(), testRun1Id).Return(testRunStatus1, nil)
+
+	actualStatuses, err := s.manager.StatusWorkflowAll(testWorkflowInstancesLimit)
+	if s.Assert().NoError(err) {
+		expectedStatuses := []InstanceSummary{
+			{
+				Id:           testRun1Id,
+				WorkflowName: testWorkflow1,
+				ContextName:  testContext1Name,
+				SubmitTime:   testWorkflowSubmitTime1,
+				InProject:    true,
+				State:        testRunStatus1,
+			},
+		}
+		s.Assert().Equal(expectedStatuses, actualStatuses)
+	}
+}
+
+func (s *WorkflowStatusTestSuite) TestStatusWorkflow_NonActiveContexts() {
+	defer s.ctrl.Finish()
+	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
+	s.mockConfigClient.EXPECT().GetUserId().Return(testUserId, nil)
+	instances := []ddb.WorkflowInstance{
+		{
+			RunId:        testRun1Id,
+			WorkflowName: testWorkflow1,
+			ContextName:  testContext1Name,
+			ProjectName:  testProjectName,
+			UserId:       testUserId,
+			CreatedTime:  testWorkflowSubmitTime1,
+		},
+		{
+			RunId:        testRun2Id,
+			WorkflowName: testWorkflow1,
+			ContextName:  testContext2Name,
+			ProjectName:  testProjectName,
+			UserId:       testUserId,
+			CreatedTime:  testWorkflowSubmitTime2,
+		},
+	}
+	s.mockDdb.EXPECT().ListWorkflowInstances(ctx.Background(), testProjectName, testUserId, testWorkflowInstancesLimit).Return(instances, nil)
+	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
+	s.mockCfn.EXPECT().GetStackStatus(testContext2Stack).Return(types.StackStatusDeleteInProgress, nil)
 	s.mockCfn.EXPECT().GetStackInfo(testContext1Stack).Return(cfn.StackInfo{
 		Outputs: map[string]string{"WesUrl": testWes1Url},
 	}, nil)

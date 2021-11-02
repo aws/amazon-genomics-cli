@@ -24,3 +24,20 @@ var ActiveStacksFilter = []types.StackStatus{
 	types.StackStatusImportRollbackFailed,
 	types.StackStatusImportRollbackComplete,
 }
+
+var QueryableStacksMap = map[types.StackStatus]bool{
+	types.StackStatusCreateComplete:                          true,
+	types.StackStatusUpdateInProgress:                        true,
+	types.StackStatusUpdateCompleteCleanupInProgress:         true,
+	types.StackStatusUpdateComplete:                          true,
+	types.StackStatusUpdateRollbackInProgress:                true,
+	types.StackStatusUpdateRollbackFailed:                    true,
+	types.StackStatusUpdateRollbackCompleteCleanupInProgress: true,
+	types.StackStatusUpdateRollbackComplete:                  true,
+	types.StackStatusReviewInProgress:                        true,
+	types.StackStatusImportInProgress:                        true,
+	types.StackStatusImportComplete:                          true,
+	types.StackStatusImportRollbackInProgress:                true,
+	types.StackStatusImportRollbackFailed:                    true,
+	types.StackStatusImportRollbackComplete:                  true,
+}
