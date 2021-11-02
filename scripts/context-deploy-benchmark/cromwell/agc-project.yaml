@@ -1,0 +1,24 @@
+---
+name: CromwellContextBenchmarkTest
+schemaVersion: 1
+contexts:
+  cromwell1:
+    engines:
+      - type: wdl
+        engine: cromwell
+  cromwell2:
+    engines:
+      - type: wdl
+        engine: cromwell
+  cromwell3:
+    engines:
+      - type: wdl
+        engine: cromwell
+  cromwell4:
+    engines:
+      - type: wdl
+        engine: cromwell
+  cromwell5:
+    engines:
+      - type: wdl
+        engine: cromwell
