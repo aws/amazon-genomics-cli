@@ -40,7 +40,7 @@ func NewConfigClient() (*Client, error) {
 	return &Client{configFilePath: configFilePath}, nil
 }
 
-// DetermineHomeDir returns the file system directory where the AGC files live.
+// DetermineHomeDir returns the current user's home directory. In case of error an actionable error will be returned.
 func DetermineHomeDir() (string, error) {
 	dir, err := osUserHomeDir()
 	if err != nil {
