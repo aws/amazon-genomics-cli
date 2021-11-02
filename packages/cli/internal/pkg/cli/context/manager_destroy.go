@@ -21,23 +21,6 @@ func (m *Manager) Destroy(contexts []string) []ProgressResult {
 	return m.progressResults
 }
 
-func (m *Manager) destroyAllContexts(contexts []string) {
-	if m.err != nil {
-		var results []ProgressResult
-		for _, context := range contexts {
-			results = append(results, ProgressResult{Err: m.err, Context: context})
-		}
-
-		m.progressResults = results
-		return
-	}
-
-	progressStreams, contextsWithStreams := m.getStreamsForCdkDestroys(contexts)
-
-	description := fmt.Sprintf("Deploying resources for context(s) %s", contextsWithStreams)
-	m.executeCdkHelper(progressStreams, description)
-}
-
 func (m *Manager) getStreamsForCdkDestroys(contexts []string) ([]cdk.ProgressStream, []string) {
 	var progressStreams []cdk.ProgressStream
 	var contextsWithStreams []string
@@ -53,6 +36,7 @@ func (m *Manager) getStreamsForCdkDestroys(contexts []string) ([]cdk.ProgressStr
 		}
 		if m.err != nil {
 			m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: m.err})
+			m.err = nil
 		}
 	}
 
