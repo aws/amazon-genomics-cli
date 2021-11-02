@@ -46,9 +46,9 @@ func Test_SendDataToReceiverAndUpdateResult_Error(t *testing.T) {
 	sentEvent := ProgressEvent{UniqueKey: "someKey", Outputs: []string{"hi"}}
 	sentErrorEvent := ProgressEvent{Err: errors.New("some error"), UniqueKey: "someKey"}
 	testChannel <- sentEvent
-	channelOutput := <-receivingChannel
+	<-receivingChannel
 	testChannel <- sentErrorEvent
-	channelOutput = <-receivingChannel
+	channelOutput := <-receivingChannel
 	close(testChannel)
 
 	waitGroup.Wait()
