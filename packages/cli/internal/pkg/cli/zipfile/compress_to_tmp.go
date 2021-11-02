@@ -7,7 +7,9 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"os"
+	"os/user"
 	"path/filepath"
+	"strings"
 )
 
 func CompressToTmp(srcPath string) (string, error) {
@@ -25,6 +27,14 @@ func CompressToTmp(srcPath string) (string, error) {
 }
 
 func writeToZipRecursive(writer *zip.Writer, rootPath string) error {
+	// Expand home directory path
+	usr, _ := user.Current()
+	dir := usr.HomeDir
+	if rootPath == "~" {
+		rootPath = dir
+	} else if strings.HasPrefix(rootPath, "~/") {
+		rootPath = filepath.Join(dir, rootPath[2:])
+	}
 	return filepath.WalkDir(rootPath, func(currentPath string, dirEntry fs.DirEntry, err error) error {
 		if dirEntry == nil {
 			// There are several use cases when it can happen:
