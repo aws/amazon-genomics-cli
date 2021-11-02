@@ -38,6 +38,22 @@ func TestClient_StreamLogs(t *testing.T) {
 	_, isOpen := <-stream
 	assert.False(t, isOpen)
 }
+func TestClient_StreamLogs_EmptyLog(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	client := NewMockClient()
+	client.cwl.(*CwlMock).On("FilterLogEvents", ctx, mock.Anything).
+		Return(&cloudwatchlogs.FilterLogEventsOutput{
+			NextToken: aws.String("Token"),
+			Events:    []types.FilteredLogEvent{}}, nil)
+	cancel()
+	stream := client.StreamLogs(ctx, testLogGroupName)
+	event := <-stream
+	assert.Equal(t, []string{}, event.Logs)
+	assert.NoError(t, event.Err)
+	cancel()
+	_, isOpen := <-stream
+	assert.False(t, isOpen)
+}
 
 func TestClient_StreamLogs_Error(t *testing.T) {
 	ctx := context.Background()

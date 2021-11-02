@@ -38,6 +38,8 @@ func (c Client) StreamLogs(ctx context.Context, logGroupName string, streams ...
 			if aws.ToString(lastToken) != aws.ToString(output.NextToken) {
 				stream <- StreamEvent{Logs: parseEventLogs(output.Events, startTime)}
 				lastToken = output.NextToken
+			} else {
+				stream <- StreamEvent{}
 			}
 
 			select {
