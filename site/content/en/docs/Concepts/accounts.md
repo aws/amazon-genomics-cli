@@ -121,5 +121,5 @@ large S3 objects and/ or large container images.
 ## Technical Details.
 
 Amazon Genomics CLI core infrastructure is defined in code and deployed by [AWS CDK](https://aws.amazon.com/cdk/). The CDK app responsible for creating the core
-infrastructure can be found in [`packages/cdk/core/`](https://github.com/aws/amazon-genomics-cli/packages/cdk/core).
+infrastructure can be found in [`packages/cdk/apps/core/`](https://github.com/aws/amazon-genomics-cli/tree/main/packages/cdk/apps/core).
 
