@@ -76,7 +76,7 @@ func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommand_Success() {
 	s.Assert().Equal(testExecuteCommandProgressLine, event1.Outputs[0])
 	event2 := <-progressStream
 	s.Assert().NoError(event2.Err)
-	waitForChanToClos(progressStream)
+	waitForChanToClose(progressStream)
 }
 
 func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Success() {
@@ -90,7 +90,7 @@ func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Su
 	s.Assert().Equal(testExecuteCommandProgressLine, event1.Outputs[0])
 	event2 := <-progressStream
 	s.Assert().NoError(event2.Err)
-	waitForChanToClos(progressStream)
+	waitForChanToClose(progressStream)
 }
 
 func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Failure() {
@@ -102,7 +102,7 @@ func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Fa
 	s.Assert().Equal(testExecuteCommandFailureArg, event1.Outputs[0])
 	event2 := <-progressStream
 	s.Assert().Error(event2.Err)
-	waitForChanToClos(progressStream)
+	waitForChanToClose(progressStream)
 }
 
 func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_FailToExecute() {
@@ -122,7 +122,7 @@ func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommand_Failure() {
 	s.Assert().Equal(testExecuteCommandFailureArg, event1.Outputs[0])
 	event2 := <-progressStream
 	s.Assert().Error(event2.Err)
-	waitForChanToClos(progressStream)
+	waitForChanToClose(progressStream)
 }
 
 func TestHelperProcess(t *testing.T) {
@@ -161,9 +161,7 @@ func TestHelperProcess(t *testing.T) {
 	}
 }
 
-func waitForChanToClos(channel ProgressStream) {
-	select {
-	case <-channel:
-		return
+func waitForChanToClose(channel ProgressStream) {
+	for range channel {
 	}
 }
