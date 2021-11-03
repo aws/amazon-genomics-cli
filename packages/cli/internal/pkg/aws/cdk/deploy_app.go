@@ -18,8 +18,6 @@ func (client Client) DeployApp(appDir string, context []string) (ProgressStream,
 		"--output", tmpDir,
 	}
 	cmdArgs = appendContextArguments(cmdArgs, context)
-
 	progressStream, err := executeCdkCommandAndCleanupDirectory(appDir, cmdArgs, tmpDir)
-
 	return progressStream, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 }

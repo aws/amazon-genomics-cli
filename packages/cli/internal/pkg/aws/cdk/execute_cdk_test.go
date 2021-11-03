@@ -10,6 +10,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
 )
 
 const (
@@ -26,57 +27,102 @@ func fakeExecCommand(command string, args ...string) *exec.Cmd {
 	return cmd
 }
 
-func TestExecuteCdkCommand_Success(t *testing.T) {
-	execCommand = fakeExecCommand
-	defer func() { execCommand = exec.Command }()
+type ExecuteCdkCommandTestSuite struct {
+	suite.Suite
 
-	ctrl := gomock.NewController(t)
-	mockOs := iomocks.NewMockOS(ctrl)
-	osRemoveAll = mockOs.RemoveAll
-	mockOs.EXPECT().RemoveAll(gomock.Any()).Return(nil).Times(0)
+	osRemoveAllOrig func(string) error
+	execCommandOrig func(command string, args ...string) *exec.Cmd
 
-	progressStream, _ := executeCdkCommand(t.TempDir(), []string{testExecuteCommandSuccessArg})
-	event1 := <-progressStream
-	assert.Equal(t, 3, event1.CurrentStep)
-	assert.Equal(t, 10, event1.TotalSteps)
-	assert.Equal(t, testExecuteCommandProgressLine, event1.Outputs[0])
-	event2 := <-progressStream
-	assert.NoError(t, event2.Err)
+	ctrl   *gomock.Controller
+	mockOs *iomocks.MockOS
+	appDir string
+	tmpDir string
 }
 
-func TestExecuteCdkCommandAndCleanupDirectory_Success(t *testing.T) {
-	execCommand = fakeExecCommand
-	defer func() { execCommand = exec.Command }()
-	tempDirectory := "/my/directory"
-
-	ctrl := gomock.NewController(t)
-	mockOs := iomocks.NewMockOS(ctrl)
-	osRemoveAll = mockOs.RemoveAll
-	mockOs.EXPECT().RemoveAll(tempDirectory).Return(nil).Times(1)
-
-	progressStream, _ := executeCdkCommandAndCleanupDirectory(t.TempDir(), []string{testExecuteCommandSuccessArg}, tempDirectory)
-	event1 := <-progressStream
-	assert.Equal(t, 3, event1.CurrentStep)
-	assert.Equal(t, 10, event1.TotalSteps)
-	assert.Equal(t, testExecuteCommandProgressLine, event1.Outputs[0])
-	event2 := <-progressStream
-	assert.NoError(t, event2.Err)
+func TestExecuteCdkCommandTestSuite(t *testing.T) {
+	suite.Run(t, new(ExecuteCdkCommandTestSuite))
 }
 
-func TestExecuteCdkCommand_Failure(t *testing.T) {
+func (s *ExecuteCdkCommandTestSuite) SetupTest() {
+	s.ctrl = gomock.NewController(s.T())
+	s.mockOs = iomocks.NewMockOS(s.ctrl)
+	s.osRemoveAllOrig = osRemoveAll
+	s.execCommandOrig = execCommand
+
+	osRemoveAll = s.mockOs.RemoveAll
 	execCommand = fakeExecCommand
-	defer func() { execCommand = exec.Command }()
 
-	ctrl := gomock.NewController(t)
-	mockOs := iomocks.NewMockOS(ctrl)
-	osRemoveAll = mockOs.RemoveAll
-	mockOs.EXPECT().RemoveAll(gomock.Any()).Return(nil).Times(0)
+	s.appDir = s.T().TempDir()
+	s.tmpDir = "/test/tmp/dir"
+}
 
-	progressStream, _ := executeCdkCommand(t.TempDir(), []string{testExecuteCommandFailureArg})
+func (s *ExecuteCdkCommandTestSuite) AfterTest(_, _ string) {
+	s.ctrl.Finish()
+}
+
+func (s *ExecuteCdkCommandTestSuite) TearDownTest() {
+	osRemoveAll = s.osRemoveAllOrig
+	execCommand = s.execCommandOrig
+}
+
+func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommand_Success() {
+	s.mockOs.EXPECT().RemoveAll(gomock.Any()).Return(nil).Times(0)
+
+	progressStream, err := executeCdkCommand(s.appDir, []string{testExecuteCommandSuccessArg})
+	s.Require().NoError(err)
 	event1 := <-progressStream
-	assert.Equal(t, testExecuteCommandFailureArg, event1.Outputs[0])
+	s.Assert().Equal(3, event1.CurrentStep)
+	s.Assert().Equal(10, event1.TotalSteps)
+	s.Assert().Equal(testExecuteCommandProgressLine, event1.Outputs[0])
 	event2 := <-progressStream
-	assert.Error(t, event2.Err)
+	s.Assert().NoError(event2.Err)
+	waitForChanToClose(progressStream)
+}
+
+func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Success() {
+	s.mockOs.EXPECT().RemoveAll(s.tmpDir).Return(nil).Times(1)
+
+	progressStream, err := executeCdkCommandAndCleanupDirectory(s.appDir, []string{testExecuteCommandSuccessArg}, s.tmpDir)
+	s.Require().NoError(err)
+	event1 := <-progressStream
+	s.Assert().Equal(3, event1.CurrentStep)
+	s.Assert().Equal(10, event1.TotalSteps)
+	s.Assert().Equal(testExecuteCommandProgressLine, event1.Outputs[0])
+	event2 := <-progressStream
+	s.Assert().NoError(event2.Err)
+	waitForChanToClose(progressStream)
+}
+
+func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Failure() {
+	s.mockOs.EXPECT().RemoveAll(s.tmpDir).Return(nil).Times(1)
+
+	progressStream, err := executeCdkCommandAndCleanupDirectory(s.appDir, []string{testExecuteCommandFailureArg}, s.tmpDir)
+	s.Require().NoError(err)
+	event1 := <-progressStream
+	s.Assert().Equal(testExecuteCommandFailureArg, event1.Outputs[0])
+	event2 := <-progressStream
+	s.Assert().Error(event2.Err)
+	waitForChanToClose(progressStream)
+}
+
+func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_FailToExecute() {
+	s.mockOs.EXPECT().RemoveAll(s.tmpDir).Return(nil).Times(1)
+
+	progressStream, err := executeCdkCommandAndCleanupDirectory("foo/bar", []string{testExecuteCommandFailureArg}, s.tmpDir)
+	s.Assert().Error(err)
+	s.Assert().Nil(progressStream)
+}
+
+func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommand_Failure() {
+	s.mockOs.EXPECT().RemoveAll(gomock.Any()).Return(nil).Times(0)
+
+	progressStream, err := executeCdkCommand(s.appDir, []string{testExecuteCommandFailureArg})
+	s.Require().NoError(err)
+	event1 := <-progressStream
+	s.Assert().Equal(testExecuteCommandFailureArg, event1.Outputs[0])
+	event2 := <-progressStream
+	s.Assert().Error(event2.Err)
+	waitForChanToClose(progressStream)
 }
 
 func TestHelperProcess(t *testing.T) {
@@ -112,5 +158,10 @@ func TestHelperProcess(t *testing.T) {
 	default:
 		fmt.Fprint(os.Stderr, "Unknown failure")
 		os.Exit(1)
+	}
+}
+
+func waitForChanToClose(channel ProgressStream) {
+	for range channel {
 	}
 }
