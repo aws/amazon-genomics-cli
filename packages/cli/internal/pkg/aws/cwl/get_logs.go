@@ -51,9 +51,14 @@ func (c Client) GetLogsPaginated(input GetLogsInput) LogPaginator {
 }
 
 func formatEvents(events []types.FilteredLogEvent) []string {
-	logs := make([]string, len(events))
-	for i, event := range events {
-		logs[i] = formatEvent(event)
+	logsByStream := make(map[string][]string)
+	for _, event := range events {
+		logsByStream[*event.LogStreamName] = append(logsByStream[*event.LogStreamName], formatEvent(event))
+	}
+
+	var logs []string
+	for _, retrievedLogs := range logsByStream {
+		logs = append(logs, retrievedLogs...)
 	}
 	return logs
 }

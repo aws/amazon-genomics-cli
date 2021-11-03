@@ -54,12 +54,17 @@ func (c Client) StreamLogs(ctx context.Context, logGroupName string, streams ...
 }
 
 func parseEventLogs(events []types.FilteredLogEvent, latestTimestamp *int64) []string {
-	logs := make([]string, len(events))
-	for i, event := range events {
+	logsByStream := make(map[string][]string)
+	for _, event := range events {
 		if aws.ToInt64(event.Timestamp) > aws.ToInt64(latestTimestamp) {
 			latestTimestamp = event.Timestamp
 		}
-		logs[i] = formatEvent(event)
+		logsByStream[*event.LogStreamName] = append(logsByStream[*event.LogStreamName], formatEvent(event))
+	}
+
+	var logs []string
+	for _, retrievedLogs := range logsByStream {
+		logs = append(logs, retrievedLogs...)
 	}
 	return logs
 }
