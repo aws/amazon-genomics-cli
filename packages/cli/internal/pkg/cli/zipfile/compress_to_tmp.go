@@ -7,9 +7,10 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
 	"strings"
+
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 )
 
 func CompressToTmp(srcPath string) (string, error) {
@@ -26,16 +27,25 @@ func CompressToTmp(srcPath string) (string, error) {
 	return packFile.Name(), nil
 }
 
+func expandHomeDir(rootPath string) (string, error) {
+	homeDir, err := config.DetermineHomeDir()
+	if rootPath == "~" {
+		rootPath = homeDir
+	} else if strings.HasPrefix(rootPath, "~/") {
+		rootPath = filepath.Join(homeDir, rootPath[2:])
+	} else {
+		err = nil
+	}
+	return rootPath, err
+}
+
 func writeToZipRecursive(writer *zip.Writer, rootPath string) error {
 	// Expand home directory path
-	usr, _ := user.Current()
-	dir := usr.HomeDir
-	if rootPath == "~" {
-		rootPath = dir
-	} else if strings.HasPrefix(rootPath, "~/") {
-		rootPath = filepath.Join(dir, rootPath[2:])
+	expandedRootPath, err := expandHomeDir(rootPath)
+	if err != nil {
+		return err
 	}
-	return filepath.WalkDir(rootPath, func(currentPath string, dirEntry fs.DirEntry, err error) error {
+	return filepath.WalkDir(expandedRootPath, func(currentPath string, dirEntry fs.DirEntry, err error) error {
 		if dirEntry == nil {
 			// There are several use cases when it can happen:
 			// 1. provided path doesn't exist
@@ -43,7 +53,7 @@ func writeToZipRecursive(writer *zip.Writer, rootPath string) error {
 			return fmt.Errorf("file '%s' doesn't exist", currentPath)
 		}
 		if !dirEntry.IsDir() {
-			return writeFileToZip(writer, rootPath, currentPath)
+			return writeFileToZip(writer, expandedRootPath, currentPath)
 		}
 		return nil
 	})
