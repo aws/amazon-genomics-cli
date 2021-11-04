@@ -2,11 +2,12 @@ package osutils
 
 import (
 	"errors"
+	"testing"
+
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestDetermineHomeDir_Success(t *testing.T) {
@@ -20,7 +21,6 @@ func TestDetermineHomeDir_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, expectedPath, actualPath)
 }
-
 
 func TestDetermineHomeDir_Failure(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -37,29 +37,22 @@ func TestDetermineHomeDir_Failure(t *testing.T) {
 
 func TestExpandHomeDir_WithExpansion(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockUtils := iomocks.NewMockUtils(ctrl)
-
-	DetermineHomeDir = func() { return "home/user"}
+	mockOs := iomocks.NewMockOS(ctrl)
+	osUserHomeDir = mockOs.UserHomeDir
 
 	expectedHomePath := "home/user"
 	expectedExpandedPath := "home/user/FooBar"
 
-	mockExpandHomeDir.EXPECT().DetermineHomeDir().Return(expectedHomePath, nil).Times(1)
+	mockOs.EXPECT().UserHomeDir().Return(expectedHomePath, nil)
 	actualExpandedPath := ExpandHomeDir("~/FooBar")
 
 	assert.Equal(t, expectedExpandedPath, actualExpandedPath)
 	ctrl.Finish()
 }
-//
-//func TestExpandHomeDir_WithoutExpansion(t *testing.T) {
-//	//ctrl := gomock.NewController(t)
-//	//mockExpandHomeDir := iomocks.NewMockExpandHomeDir(ctrl)
-//
-//	expectedExpandedPath := "some/dir/FooBar"
-//
-//	//mockExpandHomeDir.EXPECT().DetermineHomeDir().Return(expectedHomePath, nil).Times(1)
-//	actualExpandedPath := ExpandHomeDir("some/dir/FooBar")
-//
-//	assert.Equal(t, expectedExpandedPath, actualExpandedPath)
-//	//ctrl.Finish()
-//}
+
+func TestExpandHomeDir_WithoutExpansion(t *testing.T) {
+	expectedExpandedPath := "FooBar"
+	actualExpandedPath := ExpandHomeDir("FooBar")
+
+	assert.Equal(t, expectedExpandedPath, actualExpandedPath)
+}
