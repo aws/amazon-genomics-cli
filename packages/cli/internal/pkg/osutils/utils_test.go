@@ -44,7 +44,7 @@ func TestExpandHomeDir_WithExpansion(t *testing.T) {
 	expectedExpandedPath := "home/user/FooBar"
 
 	mockOs.EXPECT().UserHomeDir().Return(expectedHomePath, nil)
-	actualExpandedPath := ExpandHomeDir("~/FooBar")
+	actualExpandedPath, _ := ExpandHomeDir("~/FooBar")
 
 	assert.Equal(t, expectedExpandedPath, actualExpandedPath)
 	ctrl.Finish()
@@ -52,7 +52,7 @@ func TestExpandHomeDir_WithExpansion(t *testing.T) {
 
 func TestExpandHomeDir_WithoutExpansion(t *testing.T) {
 	expectedExpandedPath := "FooBar"
-	actualExpandedPath := ExpandHomeDir("FooBar")
+	actualExpandedPath, _ := ExpandHomeDir("FooBar")
 
 	assert.Equal(t, expectedExpandedPath, actualExpandedPath)
 }
