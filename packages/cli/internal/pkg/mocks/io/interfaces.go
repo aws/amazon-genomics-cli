@@ -26,6 +26,6 @@ type FileWriter interface {
 	WriteFile(filename string, data []byte, perm fs.FileMode) error
 }
 
-type ExpandHomeDir interface {
+type Utils interface {
 	DetermineHomeDir() (string, error)
 }

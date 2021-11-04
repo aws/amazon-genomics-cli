@@ -9,9 +9,11 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 )
 
+var osUserHomeDir = os.UserHomeDir
+
 // DetermineHomeDir returns the file system directory where the AGC files live.
 func DetermineHomeDir() (string, error) {
-	dir, err := os.UserHomeDir()
+	dir, err := osUserHomeDir()
 	if err != nil {
 		return "", actionableerror.New(err, "Please check that your home or user profile directory is defined within your environment variables")
 	}

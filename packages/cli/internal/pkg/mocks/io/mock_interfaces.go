@@ -257,31 +257,31 @@ func (mr *MockFileWriterMockRecorder) WriteFile(filename, data, perm interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteFile", reflect.TypeOf((*MockFileWriter)(nil).WriteFile), filename, data, perm)
 }
 
-// MockExpandHomeDir is a mock of ExpandHomeDir interface.
-type MockExpandHomeDir struct {
+// MockUtils is a mock of Utils interface.
+type MockUtils struct {
 	ctrl     *gomock.Controller
-	recorder *MockExpandHomeDirMockRecorder
+	recorder *MockUtilsMockRecorder
 }
 
-// MockExpandHomeDirMockRecorder is the mock recorder for MockExpandHomeDir.
-type MockExpandHomeDirMockRecorder struct {
-	mock *MockExpandHomeDir
+// MockUtilsMockRecorder is the mock recorder for MockUtils.
+type MockUtilsMockRecorder struct {
+	mock *MockUtils
 }
 
-// NewMockExpandHomeDir creates a new mock instance.
-func NewMockExpandHomeDir(ctrl *gomock.Controller) *MockExpandHomeDir {
-	mock := &MockExpandHomeDir{ctrl: ctrl}
-	mock.recorder = &MockExpandHomeDirMockRecorder{mock}
+// NewMockUtils creates a new mock instance.
+func NewMockUtils(ctrl *gomock.Controller) *MockUtils {
+	mock := &MockUtils{ctrl: ctrl}
+	mock.recorder = &MockUtilsMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockExpandHomeDir) EXPECT() *MockExpandHomeDirMockRecorder {
+func (m *MockUtils) EXPECT() *MockUtilsMockRecorder {
 	return m.recorder
 }
 
 // DetermineHomeDir mocks base method.
-func (m *MockExpandHomeDir) DetermineHomeDir() (string, error) {
+func (m *MockUtils) DetermineHomeDir() (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DetermineHomeDir")
 	ret0, _ := ret[0].(string)
@@ -290,7 +290,7 @@ func (m *MockExpandHomeDir) DetermineHomeDir() (string, error) {
 }
 
 // DetermineHomeDir indicates an expected call of DetermineHomeDir.
-func (mr *MockExpandHomeDirMockRecorder) DetermineHomeDir() *gomock.Call {
+func (mr *MockUtilsMockRecorder) DetermineHomeDir() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DetermineHomeDir", reflect.TypeOf((*MockExpandHomeDir)(nil).DetermineHomeDir))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DetermineHomeDir", reflect.TypeOf((*MockUtils)(nil).DetermineHomeDir))
 }

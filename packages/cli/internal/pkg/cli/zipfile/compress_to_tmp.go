@@ -3,12 +3,13 @@ package zipfile
 import (
 	"archive/zip"
 	"fmt"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"io"
 	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 )
 
 func CompressToTmp(srcPath string) (string, error) {
@@ -27,7 +28,7 @@ func CompressToTmp(srcPath string) (string, error) {
 
 func writeToZipRecursive(writer *zip.Writer, rootPath string) error {
 	// Expand home directory path
-	expandedRootPath := config.ExpandHomeDir(rootPath)
+	expandedRootPath := osutils.ExpandHomeDir(rootPath)
 	return filepath.WalkDir(expandedRootPath, func(currentPath string, dirEntry fs.DirEntry, err error) error {
 		if dirEntry == nil {
 			// There are several use cases when it can happen:
