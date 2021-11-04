@@ -55,7 +55,7 @@ func (c Client) StreamLogs(ctx context.Context, logGroupName string, streams ...
 
 func parseEventLogs(events []types.FilteredLogEvent, latestTimestamp *int64) []string {
 	logsByStream := make(map[string][]*types.FilteredLogEvent)
-	for index, _ := range events {
+	for index := range events {
 		event := events[index]
 		if aws.ToInt64(event.Timestamp) > aws.ToInt64(latestTimestamp) {
 			latestTimestamp = event.Timestamp
