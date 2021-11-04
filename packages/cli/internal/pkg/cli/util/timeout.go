@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	contextDeploymentTimeout = 30 * time.Minute
+	deploymentTimeout = 30 * time.Minute
 )
 
 func DeployWithTimeout(timeoutFunction func() error) error {
@@ -19,7 +19,7 @@ func DeployWithTimeout(timeoutFunction func() error) error {
 	select {
 	case err := <-completionChannel:
 		return err
-	case <-time.After(contextDeploymentTimeout):
+	case <-time.After(deploymentTimeout):
 		return errors.New("deployment taking longer then expected. please review stack deployment in cloudformation")
 	}
 }
