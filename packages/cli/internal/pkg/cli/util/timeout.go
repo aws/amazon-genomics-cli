@@ -22,5 +22,4 @@ func DeployWithTimeout(timeoutFunction func() error) error {
 	case <-time.After(contextDeploymentTimeout):
 		return errors.New("deployment taking longer then expected. please review stack deployment in cloudformation")
 	}
-	return nil
 }
