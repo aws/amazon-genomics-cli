@@ -10,7 +10,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
 const (
@@ -86,25 +85,6 @@ func TestClient_GetLogs(t *testing.T) {
 		fmt.Sprintf("%s\tHola", eventTime1.Format(time.RFC1123Z)),
 		fmt.Sprintf("%s\tmundo!", eventTime2.Format(time.RFC1123Z)),
 	}, logs)
-}
-
-func TestClient_StreamLogs_EmptyLog(t *testing.T) {
-	ctx, cancel := context.WithCancel(context.Background())
-	client := NewMockClient()
-	client.cwl.(*CwlMock).On("FilterLogEvents", ctx, mock.Anything).
-		Return(&cloudwatchlogs.FilterLogEventsOutput{
-			NextToken: aws.String("Token"),
-			Events:    []types.FilteredLogEvent{}}, nil)
-	cancel()
-	stream := client.StreamLogs(ctx, testLogGroupName)
-	event := <-stream
-
-	var expectedLogs []string
-	assert.Equal(t, expectedLogs, event.Logs)
-	assert.NoError(t, event.Err)
-	cancel()
-	_, isOpen := <-stream
-	assert.False(t, isOpen)
 }
 
 func TestClient_GetLogs_Error(t *testing.T) {
