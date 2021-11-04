@@ -8,9 +8,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 )
 
 func CompressToTmp(srcPath string) (string, error) {
@@ -27,24 +26,9 @@ func CompressToTmp(srcPath string) (string, error) {
 	return packFile.Name(), nil
 }
 
-func expandHomeDir(rootPath string) (string, error) {
-	homeDir, err := config.DetermineHomeDir()
-	if rootPath == "~" {
-		rootPath = homeDir
-	} else if strings.HasPrefix(rootPath, "~/") {
-		rootPath = filepath.Join(homeDir, rootPath[2:])
-	} else {
-		err = nil
-	}
-	return rootPath, err
-}
-
 func writeToZipRecursive(writer *zip.Writer, rootPath string) error {
 	// Expand home directory path
-	expandedRootPath, err := expandHomeDir(rootPath)
-	if err != nil {
-		return err
-	}
+	expandedRootPath := osutils.ExpandHomeDir(rootPath)
 	return filepath.WalkDir(expandedRootPath, func(currentPath string, dirEntry fs.DirEntry, err error) error {
 		if dirEntry == nil {
 			// There are several use cases when it can happen:

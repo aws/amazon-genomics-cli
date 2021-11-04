@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"hash/fnv"
 	"math/big"
-	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 )
 
 const (
@@ -21,46 +20,21 @@ type Client struct {
 	configFilePath string
 }
 
-var osUserHomeDir = os.UserHomeDir
-
 func NewConfigClient() (*Client, error) {
-	homeDir, err := DetermineHomeDir()
+	homeDir, err := osutils.DetermineHomeDir()
 	if err != nil {
 		return nil, err
 	}
 
 	configDirPath := filepath.Join(homeDir, configDirName)
 
-	if err := ensureDirExistence(configDirPath); err != nil {
+	if err := osutils.EnsureDirExistence(configDirPath); err != nil {
 		return nil, err
 	}
 
 	configFilePath := filepath.Join(configDirPath, configFileName)
 
 	return &Client{configFilePath: configFilePath}, nil
-}
-
-// DetermineHomeDir returns the file system directory where the AGC files live.
-func DetermineHomeDir() (string, error) {
-	dir, err := osUserHomeDir()
-	if err != nil {
-		return "", actionableerror.New(err, "Please check that your home or user profile directory is defined within your environment variables")
-	}
-	return dir, nil
-}
-
-func ensureDirExistence(dirPath string) error {
-	dirStat, err := os.Stat(dirPath)
-	if os.IsNotExist(err) {
-		err := os.MkdirAll(dirPath, 0744)
-		return err
-	}
-
-	if !dirStat.IsDir() {
-		return fmt.Errorf("'%s' should be a directory", dirPath)
-	}
-
-	return err
 }
 
 func hash(s string) string {
