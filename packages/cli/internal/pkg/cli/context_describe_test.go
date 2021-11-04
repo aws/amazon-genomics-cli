@@ -92,7 +92,7 @@ func TestDescribeContextOpts_Validate(t *testing.T) {
 		"both context and context arg throws error": {
 			contextName:     testContextName1,
 			contextNameArgs: []string{testContextName2},
-			expectedErr:     fmt.Errorf("either the '-c' flag or a contexts must be provided, but not both"),
+			expectedErr:     fmt.Errorf("either the '-c' flag or a context must be provided, but not both"),
 		},
 		"no contexts supplied": {
 			expectedErr: fmt.Errorf("a context must be provided"),
