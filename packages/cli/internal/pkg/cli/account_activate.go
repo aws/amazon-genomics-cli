@@ -14,6 +14,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/util"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/rs/zerolog/log"
@@ -107,8 +108,7 @@ func (o *accountActivateOpts) Execute() error {
 	if o.vpcId != "" {
 		environmentVars = append(environmentVars, fmt.Sprintf("VPC_ID=%s", o.vpcId))
 	}
-
-	return o.deployCoreInfrastructure(environmentVars)
+	return o.deployCoreInfrastructureWithTimeout(environmentVars)
 }
 
 func (o accountActivateOpts) generateDefaultBucket() (string, error) {
@@ -117,6 +117,12 @@ func (o accountActivateOpts) generateDefaultBucket() (string, error) {
 		return "", err
 	}
 	return generateBucketName(account, o.region), nil
+}
+
+func (o accountActivateOpts) deployCoreInfrastructureWithTimeout(environmentVars []string) error {
+	return util.DeployWithTimeout(func() error {
+		return o.deployCoreInfrastructure(environmentVars)
+	})
 }
 
 func (o accountActivateOpts) deployCoreInfrastructure(environmentVars []string) error {

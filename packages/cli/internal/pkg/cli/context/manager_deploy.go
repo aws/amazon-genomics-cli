@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/util"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/rs/zerolog/log"
 )
@@ -20,8 +21,18 @@ func (m *Manager) Deploy(contextName string, showProgress bool) error {
 	m.setTaskContext(contextName)
 	m.clearCdkContext(contextDir)
 	m.setContextEnv(contextName)
-	m.deployContext(contextName, showProgress)
+	m.deployContextWithTimeout(contextName, showProgress)
 	return m.err
+}
+
+func (m *Manager) deployContextWithTimeout(contextName string, showProgress bool) {
+	err := util.DeployWithTimeout(func() error {
+		m.deployContext(contextName, showProgress)
+		return m.err
+	})
+	if m.err == nil && err != nil {
+		m.err = err
+	}
 }
 
 func (m *Manager) clearCdkContext(appDir string) {
