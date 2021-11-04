@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	zerolog "github.com/rs/zerolog"
 )
 
 // MockOS is a mock of OS interface.
@@ -257,40 +258,78 @@ func (mr *MockFileWriterMockRecorder) WriteFile(filename, data, perm interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteFile", reflect.TypeOf((*MockFileWriter)(nil).WriteFile), filename, data, perm)
 }
 
-// MockUtils is a mock of Utils interface.
-type MockUtils struct {
+// MockFormat is a mock of Format interface.
+type MockFormat struct {
 	ctrl     *gomock.Controller
-	recorder *MockUtilsMockRecorder
+	recorder *MockFormatMockRecorder
 }
 
-// MockUtilsMockRecorder is the mock recorder for MockUtils.
-type MockUtilsMockRecorder struct {
-	mock *MockUtils
+// MockFormatMockRecorder is the mock recorder for MockFormat.
+type MockFormatMockRecorder struct {
+	mock *MockFormat
 }
 
-// NewMockUtils creates a new mock instance.
-func NewMockUtils(ctrl *gomock.Controller) *MockUtils {
-	mock := &MockUtils{ctrl: ctrl}
-	mock.recorder = &MockUtilsMockRecorder{mock}
+// NewMockFormat creates a new mock instance.
+func NewMockFormat(ctrl *gomock.Controller) *MockFormat {
+	mock := &MockFormat{ctrl: ctrl}
+	mock.recorder = &MockFormatMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockUtils) EXPECT() *MockUtilsMockRecorder {
+func (m *MockFormat) EXPECT() *MockFormatMockRecorder {
 	return m.recorder
 }
 
-// DetermineHomeDir mocks base method.
-func (m *MockUtils) DetermineHomeDir() (string, error) {
+// LogsPrintLn mocks base method.
+func (m *MockFormat) LogsPrintLn(args ...interface{}) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DetermineHomeDir")
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	varargs := []interface{}{}
+	for _, a := range args {
+		varargs = append(varargs, a)
+	}
+	m.ctrl.Call(m, "LogsPrintLn", varargs...)
 }
 
-// DetermineHomeDir indicates an expected call of DetermineHomeDir.
-func (mr *MockUtilsMockRecorder) DetermineHomeDir() *gomock.Call {
+// LogsPrintLn indicates an expected call of LogsPrintLn.
+func (mr *MockFormatMockRecorder) LogsPrintLn(args ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DetermineHomeDir", reflect.TypeOf((*MockUtils)(nil).DetermineHomeDir))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LogsPrintLn", reflect.TypeOf((*MockFormat)(nil).LogsPrintLn), args...)
+}
+
+// MockLog is a mock of Log interface.
+type MockLog struct {
+	ctrl     *gomock.Controller
+	recorder *MockLogMockRecorder
+}
+
+// MockLogMockRecorder is the mock recorder for MockLog.
+type MockLogMockRecorder struct {
+	mock *MockLog
+}
+
+// NewMockLog creates a new mock instance.
+func NewMockLog(ctrl *gomock.Controller) *MockLog {
+	mock := &MockLog{ctrl: ctrl}
+	mock.recorder = &MockLogMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockLog) EXPECT() *MockLogMockRecorder {
+	return m.recorder
+}
+
+// Info mocks base method.
+func (m *MockLog) Info() *zerolog.Event {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Info")
+	ret0, _ := ret[0].(*zerolog.Event)
+	return ret0
+}
+
+// Info indicates an expected call of Info.
+func (mr *MockLogMockRecorder) Info() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Info", reflect.TypeOf((*MockLog)(nil).Info))
 }

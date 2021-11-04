@@ -1,0 +1,24 @@
+---
+name: NextflowContextBenchmarkTest
+schemaVersion: 1
+contexts:
+  nextflow1:
+    engines:
+      - type: nextflow
+        engine: nextflow
+  nextflow2:
+    engines:
+      - type: nextflow
+        engine: nextflow
+  nextflow3:
+    engines:
+      - type: nextflow
+        engine: nextflow
+  nextflow4:
+    engines:
+      - type: nextflow
+        engine: nextflow
+  nextflow5:
+    engines:
+      - type: nextflow
+        engine: nextflow

@@ -42,6 +42,8 @@ Use a question mark for OR, such as "?ERROR ?WARN". Filter out terms with a minu
 	tailFlagDescription = "Follow the log output."
 )
 
+var logInfo = log.Info
+
 var printLn = func(args ...interface{}) {
 	_, _ = fmt.Println(args...)
 }
@@ -124,6 +126,8 @@ func (o *logsSharedOpts) followLogGroup(logGroupName string) error {
 }
 
 func (o *logsSharedOpts) displayEventFromChannel(channel <-chan cwl.StreamEvent) error {
+	firstEvent := true
+
 	for event := range channel {
 		if event.Err != nil {
 			return event.Err
@@ -132,10 +136,15 @@ func (o *logsSharedOpts) displayEventFromChannel(channel <-chan cwl.StreamEvent)
 			for _, line := range event.Logs {
 				printLn(line)
 			}
+		} else if firstEvent {
+			logInfo().Msg("There are no new logs. Please wait for the first logs to appear...")
 		} else {
 			log.Debug().Msg("No new logs")
 		}
+
+		firstEvent = false
 	}
+
 	return nil
 }
 

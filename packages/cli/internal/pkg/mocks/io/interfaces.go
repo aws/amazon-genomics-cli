@@ -1,6 +1,10 @@
 package iomocks
 
-import "io/fs"
+import (
+	"io/fs"
+
+	"github.com/rs/zerolog"
+)
 
 type OS interface {
 	Remove(name string) error
@@ -26,6 +30,10 @@ type FileWriter interface {
 	WriteFile(filename string, data []byte, perm fs.FileMode) error
 }
 
-type Utils interface {
-	DetermineHomeDir() (string, error)
+type Format interface {
+	LogsPrintLn(args ...interface{})
+}
+
+type Log interface {
+	Info() *zerolog.Event
 }
