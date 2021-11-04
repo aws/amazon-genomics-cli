@@ -256,3 +256,41 @@ func (mr *MockFileWriterMockRecorder) WriteFile(filename, data, perm interface{}
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteFile", reflect.TypeOf((*MockFileWriter)(nil).WriteFile), filename, data, perm)
 }
+
+// MockExpandHomeDir is a mock of ExpandHomeDir interface.
+type MockExpandHomeDir struct {
+	ctrl     *gomock.Controller
+	recorder *MockExpandHomeDirMockRecorder
+}
+
+// MockExpandHomeDirMockRecorder is the mock recorder for MockExpandHomeDir.
+type MockExpandHomeDirMockRecorder struct {
+	mock *MockExpandHomeDir
+}
+
+// NewMockExpandHomeDir creates a new mock instance.
+func NewMockExpandHomeDir(ctrl *gomock.Controller) *MockExpandHomeDir {
+	mock := &MockExpandHomeDir{ctrl: ctrl}
+	mock.recorder = &MockExpandHomeDirMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockExpandHomeDir) EXPECT() *MockExpandHomeDirMockRecorder {
+	return m.recorder
+}
+
+// DetermineHomeDir mocks base method.
+func (m *MockExpandHomeDir) DetermineHomeDir() (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DetermineHomeDir")
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DetermineHomeDir indicates an expected call of DetermineHomeDir.
+func (mr *MockExpandHomeDirMockRecorder) DetermineHomeDir() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DetermineHomeDir", reflect.TypeOf((*MockExpandHomeDir)(nil).DetermineHomeDir))
+}

@@ -3,13 +3,12 @@ package zipfile
 import (
 	"archive/zip"
 	"fmt"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"io"
 	"io/fs"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
-	"strings"
 )
 
 func CompressToTmp(srcPath string) (string, error) {
@@ -28,14 +27,8 @@ func CompressToTmp(srcPath string) (string, error) {
 
 func writeToZipRecursive(writer *zip.Writer, rootPath string) error {
 	// Expand home directory path
-	usr, _ := user.Current()
-	dir := usr.HomeDir
-	if rootPath == "~" {
-		rootPath = dir
-	} else if strings.HasPrefix(rootPath, "~/") {
-		rootPath = filepath.Join(dir, rootPath[2:])
-	}
-	return filepath.WalkDir(rootPath, func(currentPath string, dirEntry fs.DirEntry, err error) error {
+	expandedRootPath := config.ExpandHomeDir(rootPath)
+	return filepath.WalkDir(expandedRootPath, func(currentPath string, dirEntry fs.DirEntry, err error) error {
 		if dirEntry == nil {
 			// There are several use cases when it can happen:
 			// 1. provided path doesn't exist
