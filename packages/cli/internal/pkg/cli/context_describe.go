@@ -34,7 +34,7 @@ func (o *describeContextOpts) Validate(args []string) error {
 	if len(args) == 0 && o.ContextName == "" {
 		return fmt.Errorf("a context must be provided")
 	} else if len(args) == 1 && o.ContextName != "" {
-		return fmt.Errorf("either the '-c' flag or a contexts must be provided, but not both")
+		return fmt.Errorf("either the '-c' flag or a context must be provided, but not both")
 	}
 
 	if len(args) == 1 {
