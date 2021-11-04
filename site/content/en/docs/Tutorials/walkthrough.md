@@ -89,7 +89,7 @@ agc context deploy --all
 Contexts have read-write access to a context specific prefix in the S3 bucket Amazon Genomics CLI creates during account activation. You can check this for the `myContext` context with:
 
 ```shell
-agc context describe -c myContext
+agc context describe myContext
 ```
 
 You should see something like:
