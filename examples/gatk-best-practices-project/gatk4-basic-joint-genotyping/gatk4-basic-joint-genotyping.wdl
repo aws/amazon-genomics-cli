@@ -139,7 +139,7 @@ task RenameAndIndexFile {
 	command {
 		set -euo pipefail
 
-		mv ~{input_file} ~{new_name}
+		cp ~{input_file} ~{new_name}
 
 		~{gatk_path} --java-options "-Xmx~{command_mem_gb}G ~{java_opt}" \
 		IndexFeatureFile \

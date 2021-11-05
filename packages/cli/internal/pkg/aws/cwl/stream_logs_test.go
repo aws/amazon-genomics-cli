@@ -14,7 +14,8 @@ import (
 )
 
 func TestClient_StreamLogs(t *testing.T) {
-	someTime := time.Unix(0, 773391600000000000)
+	someTime1 := time.Unix(0, 773391600000000000)
+	someTime2 := time.Unix(0, 773391600000000000)
 	ctx, cancel := context.WithCancel(context.Background())
 	client := NewMockClient()
 	client.cwl.(*CwlMock).On("FilterLogEvents", ctx, mock.Anything).
@@ -22,17 +23,43 @@ func TestClient_StreamLogs(t *testing.T) {
 			NextToken: aws.String("Token"),
 			Events: []types.FilteredLogEvent{
 				{
-					EventId:       aws.String("ID"),
-					IngestionTime: aws.Int64(someTime.UnixNano() / 1000000),
+					EventId:       aws.String("some-id"),
+					IngestionTime: aws.Int64(someTime1.UnixNano() / 1000000),
 					LogStreamName: aws.String("log-stream-1"),
-					Message:       aws.String("Hello!"),
-					Timestamp:     aws.Int64(someTime.UnixNano() / 1000000),
+					Message:       aws.String("Hello"),
+					Timestamp:     aws.Int64(someTime1.UnixNano() / 1000000),
+				},
+				{
+					EventId:       aws.String("some-id-2"),
+					IngestionTime: aws.Int64(someTime1.UnixNano() / 1000000),
+					LogStreamName: aws.String("log-stream-2"),
+					Message:       aws.String("Hola"),
+					Timestamp:     aws.Int64(someTime1.UnixNano() / 1000000),
+				},
+				{
+					EventId:       aws.String("some-other-id"),
+					IngestionTime: aws.Int64(someTime2.UnixNano() / 1000000),
+					LogStreamName: aws.String("log-stream-1"),
+					Message:       aws.String("world!"),
+					Timestamp:     aws.Int64(someTime2.UnixNano() / 1000000),
+				},
+				{
+					EventId:       aws.String("some-other-id-2"),
+					IngestionTime: aws.Int64(someTime2.UnixNano() / 1000000),
+					LogStreamName: aws.String("log-stream-2"),
+					Message:       aws.String("mundo!"),
+					Timestamp:     aws.Int64(someTime2.UnixNano() / 1000000),
 				},
 			}}, nil)
 	cancel()
 	stream := client.StreamLogs(ctx, testLogGroupName)
 	event := <-stream
-	assert.Equal(t, []string{fmt.Sprintf("%s\tHello!", someTime.Format(time.RFC1123Z))}, event.Logs)
+	assert.Equal(t, []string{
+		fmt.Sprintf("%s\tHello", someTime1.Format(time.RFC1123Z)),
+		fmt.Sprintf("%s\tworld!", someTime2.Format(time.RFC1123Z)),
+		fmt.Sprintf("%s\tHola", someTime1.Format(time.RFC1123Z)),
+		fmt.Sprintf("%s\tmundo!", someTime2.Format(time.RFC1123Z)),
+	}, event.Logs)
 	assert.NoError(t, event.Err)
 	cancel()
 	_, isOpen := <-stream

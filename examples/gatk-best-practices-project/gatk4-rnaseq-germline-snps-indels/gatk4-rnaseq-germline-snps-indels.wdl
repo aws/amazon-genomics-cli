@@ -378,6 +378,7 @@ task StarAlign {
 		File fastq2
 		String base_name
 		Int? read_length
+		Int length = select_first([read_length, 101])
 		Int? num_threads
 		Int threads = select_first([num_threads, 8])
 		Int? star_mem_max_gb
@@ -408,7 +409,7 @@ task StarAlign {
 		--runThreadN ~{threads} \
 		--readFilesIn ~{fastq1} ~{fastq2} \
 		--readFilesCommand "gunzip -c" \
-		~{"--sjdbOverhang " + (read_length - 1)} \
+		~{"--sjdbOverhang " + (length - 1)} \
 		--outSAMtype BAM SortedByCoordinate \
 		--twopassMode Basic \
 		--limitBAMsortRAM ~{star_mem + "000000000"} \
@@ -752,6 +753,7 @@ task StarGenerateReferences {
 		File ref_fasta_index
 		File annotations_gtf
 		Int? read_length
+		Int length = select_first([read_length, 101])
 		Int? num_threads
 		Int threads = select_first([num_threads, 8])
 		#Int? additional_disk
@@ -778,7 +780,7 @@ task StarGenerateReferences {
 		--genomeDir STAR2_5 \
 		--genomeFastaFiles ~{ref_fasta} \
 		--sjdbGTFfile ~{annotations_gtf} \
-		~{"--sjdbOverhang " + (read_length - 1)} \
+		~{"--sjdbOverhang " + (length - 1)} \
 		--runThreadN ~{threads}
 
 		ls STAR2_5
