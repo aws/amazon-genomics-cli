@@ -11,7 +11,7 @@ workflows please refer to the following links:
 
 These times were recorded using the project's `bigMemCtx` context in `us-east-1` with a maximum of 256 vCPUs. Times include the time from workflow submission
 to completion and for the AWS Batch service to provision compute resources (cold start time). Not included is the time required for the Nextflow headnode startup.
-The results indicative only and runtimes will vary based on the resources allocated by AWS Batch as well as any automated retries
+The results are indicative only and runtimes will vary based on the resources allocated by AWS Batch as well as any automated retries
 of tasks due to task failures. Caching of tasks was not used in this evaluation.
 
 Workflow inputs were those defined in the respective `*inputs.json` files

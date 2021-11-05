@@ -8,7 +8,7 @@ the [GATK Workflows Github repository](https://github.com/gatk-workflows).
 
 These "wall" times were recorded using the project's `spotCtx` context in `us-east-1` with a maximum of 256 vCPUs. Times include the time from workflow submission
 to completion and include any time needed for the AWS Batch service to provision compute (cold start time).
-The results indicative only and runtimes will vary based on the resources allocated by AWS Batch as well as any automated retries
+The results are indicative only and runtimes will vary based on the resources allocated by AWS Batch as well as any automated retries
 of tasks due to network errors or spot instance interruptions. No call caching was used when producing these timings.
 
 The inputs used to run the workflows are those specified in the `inputs.json` files of their respective workflows
