@@ -3,6 +3,7 @@ package context
 import (
 	"fmt"
 	"path/filepath"
+	"time"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/util"
@@ -26,13 +27,13 @@ func (m *Manager) Deploy(contextName string, showProgress bool) error {
 }
 
 func (m *Manager) deployContextWithTimeout(contextName string, showProgress bool) {
-	err := util.DeployWithTimeout(func() error {
+	if m.err != nil {
+		return
+	}
+	m.err = util.DeployWithTimeout(func() error {
 		m.deployContext(contextName, showProgress)
 		return m.err
-	})
-	if m.err == nil && err != nil {
-		m.err = err
-	}
+	}, 30*time.Minute)
 }
 
 func (m *Manager) clearCdkContext(appDir string) {

@@ -6,10 +6,10 @@ import (
 )
 
 const (
-	deploymentTimeout = 30 * time.Minute
+	timeoutError = "the deployment is taking longer than expected. Please review the stack in CloudFormation"
 )
 
-func DeployWithTimeout(timeoutFunction func() error) error {
+func DeployWithTimeout(timeoutFunction func() error, timeoutDuration time.Duration) error {
 	// channel to mark when a deployment successfully completes
 	completionChannel := make(chan error)
 	go func() {
@@ -19,7 +19,7 @@ func DeployWithTimeout(timeoutFunction func() error) error {
 	select {
 	case err := <-completionChannel:
 		return err
-	case <-time.After(deploymentTimeout):
-		return errors.New("deployment taking longer then expected. please review stack deployment in cloudformation")
+	case <-time.After(timeoutDuration):
+		return errors.New(timeoutError)
 	}
 }

@@ -6,6 +6,7 @@ package cli
 import (
 	"fmt"
 	"path/filepath"
+	"time"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
@@ -122,7 +123,7 @@ func (o accountActivateOpts) generateDefaultBucket() (string, error) {
 func (o accountActivateOpts) deployCoreInfrastructureWithTimeout(environmentVars []string) error {
 	return util.DeployWithTimeout(func() error {
 		return o.deployCoreInfrastructure(environmentVars)
-	})
+	}, 30*time.Minute)
 }
 
 func (o accountActivateOpts) deployCoreInfrastructure(environmentVars []string) error {
