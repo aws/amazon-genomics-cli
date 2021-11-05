@@ -40,8 +40,8 @@ func TestExpandHomeDir_WithExpansion(t *testing.T) {
 	mockOs := iomocks.NewMockOS(ctrl)
 	osUserHomeDir = mockOs.UserHomeDir
 
-	expectedHomePath := "home/user"
-	expectedExpandedPath := "home/user/FooBar"
+	expectedHomePath := "/home/user"
+	expectedExpandedPath := "/home/user/FooBar"
 
 	mockOs.EXPECT().UserHomeDir().Return(expectedHomePath, nil)
 	actualExpandedPath, _ := ExpandHomeDir("~/FooBar")
@@ -50,9 +50,93 @@ func TestExpandHomeDir_WithExpansion(t *testing.T) {
 	ctrl.Finish()
 }
 
-func TestExpandHomeDir_WithoutExpansion(t *testing.T) {
-	expectedExpandedPath := "FooBar"
-	actualExpandedPath, _ := ExpandHomeDir("FooBar")
+func TestExpandHomeDir_WithExpansion_HomeDirOnly(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockOs := iomocks.NewMockOS(ctrl)
+	osUserHomeDir = mockOs.UserHomeDir
+
+	expectedHomePath := "/home/user"
+	expectedExpandedPath := "/home/user"
+
+	mockOs.EXPECT().UserHomeDir().Return(expectedHomePath, nil)
+	actualExpandedPath, _ := ExpandHomeDir("~")
 
 	assert.Equal(t, expectedExpandedPath, actualExpandedPath)
+	ctrl.Finish()
+}
+
+func TestExpandHomeDir_WithExpansion_HomeDirOnlyWithSlash(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockOs := iomocks.NewMockOS(ctrl)
+	osUserHomeDir = mockOs.UserHomeDir
+
+	expectedHomePath := "/home/user"
+	expectedExpandedPath := "/home/user"
+
+	mockOs.EXPECT().UserHomeDir().Return(expectedHomePath, nil)
+	actualExpandedPath, _ := ExpandHomeDir("~/")
+
+	assert.Equal(t, expectedExpandedPath, actualExpandedPath)
+	ctrl.Finish()
+}
+
+func TestExpandHomeDir_WithExpansionError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockOs := iomocks.NewMockOS(ctrl)
+	osUserHomeDir = mockOs.UserHomeDir
+	expectedOsError := errors.New("OS Error")
+	mockOs.EXPECT().UserHomeDir().Return("", expectedOsError)
+	_, err := ExpandHomeDir("~/Error/Dir")
+
+	expectedError := actionableerror.New(err, "Please check that your home or user profile directory is defined within your environment variables")
+
+	assert.Error(t, err, expectedError)
+	ctrl.Finish()
+}
+
+func TestExpandHomeDir_WithoutExpansion(t *testing.T) {
+	tests := map[string]struct {
+		pathTobeExpanded string
+		expectedPath     string
+	}{
+		"Tilde at the beginning": {
+			pathTobeExpanded: "~~~",
+			expectedPath:     "~~~",
+		},
+		"Tilde at the beginning with escape and backslash": {
+			pathTobeExpanded: "\\~\\~\\~/",
+			expectedPath:     "\\~\\~\\~/",
+		},
+		"Tilde at the beginning with escape": {
+			pathTobeExpanded: "~\\~\\~",
+			expectedPath:     "~\\~\\~",
+		},
+		"Tilde in the middle": {
+			pathTobeExpanded: "Foo~/~Bar",
+			expectedPath:     "Foo~/~Bar",
+		},
+		"Tilde in the end": {
+			pathTobeExpanded: "~Foo/Bar~",
+			expectedPath:     "~Foo/Bar~",
+		},
+		"Empty string": {
+			pathTobeExpanded: "",
+			expectedPath:     "",
+		},
+		"Relative": {
+			pathTobeExpanded: "FooBar",
+			expectedPath:     "FooBar",
+		},
+		"Absolute": {
+			pathTobeExpanded: "/Foo/Bar",
+			expectedPath:     "/Foo/Bar",
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			actualPath, _ := ExpandHomeDir(tt.pathTobeExpanded)
+			assert.Equal(t, tt.expectedPath, actualPath)
+		})
+	}
 }

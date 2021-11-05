@@ -22,12 +22,15 @@ func DetermineHomeDir() (string, error) {
 
 // ExpandHomeDir returns the expanded home directory path for the current user
 func ExpandHomeDir(rootPath string) (string, error) {
-	if strings.HasPrefix(rootPath, "~") {
+	if rootPath == "~" {
+		homeDir, _ := DetermineHomeDir()
+		rootPath = homeDir
+	} else if strings.HasPrefix(rootPath, "~/") {
 		homeDir, err := DetermineHomeDir()
 		if err != nil {
 			return "", err
 		}
-		rootPath = filepath.Join(homeDir, rootPath[1:])
+		rootPath = filepath.Join(homeDir, rootPath[2:])
 		return rootPath, nil
 	}
 	return rootPath, nil
