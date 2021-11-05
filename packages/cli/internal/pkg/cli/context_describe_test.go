@@ -71,3 +71,52 @@ func TestDescribeContextOpts_Execute(t *testing.T) {
 		})
 	}
 }
+
+func TestDescribeContextOpts_Validate(t *testing.T) {
+	testCases := map[string]struct {
+		contextName     string
+		expectedContext string
+		contextNameArgs []string
+		expectedErr     error
+	}{
+		"valid single context name": {
+			contextName:     testContextName1,
+			expectedContext: testContextName1,
+			expectedErr:     nil,
+		},
+		"valid single context arg": {
+			contextNameArgs: []string{testContextName2},
+			expectedContext: testContextName2,
+			expectedErr:     nil,
+		},
+		"both context and context arg throws error": {
+			contextName:     testContextName1,
+			contextNameArgs: []string{testContextName2},
+			expectedErr:     fmt.Errorf("either the '-c' flag or a context must be provided, but not both"),
+		},
+		"no contexts supplied": {
+			expectedErr: fmt.Errorf("a context must be provided"),
+		},
+	}
+
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			mockCtxManager := contextmocks.NewMockContextManager(ctrl)
+			opts := &describeContextOpts{
+				ctxManager:          mockCtxManager,
+				describeContextVars: describeContextVars{tt.contextName},
+			}
+
+			err := opts.Validate(tt.contextNameArgs)
+
+			if tt.expectedErr != nil {
+				assert.EqualError(t, err, tt.expectedErr.Error())
+			} else {
+				require.NoError(t, err)
+				assert.Equal(t, tt.expectedContext, opts.ContextName)
+			}
+		})
+	}
+}
