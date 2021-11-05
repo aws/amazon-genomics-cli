@@ -1,7 +1,6 @@
 package util
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -30,6 +29,6 @@ func DeployWithTimeout(timeoutFunction func() error, deploymentStackStatus func(
 		if status == types.StackStatusCreateComplete {
 			return nil
 		}
-		return errors.New(fmt.Sprintf(timeoutError, string(status)))
+		return fmt.Errorf(timeoutError, string(status))
 	}
 }
