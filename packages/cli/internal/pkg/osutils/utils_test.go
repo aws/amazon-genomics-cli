@@ -96,46 +96,46 @@ func TestExpandHomeDir_WithExpansionError(t *testing.T) {
 
 func TestExpandHomeDir_WithoutExpansion(t *testing.T) {
 	tests := map[string]struct {
-		pathTobeExpanded string
-		expectedPath     string
+		input        string
+		expectedPath string
 	}{
 		"Tilde at the beginning": {
-			pathTobeExpanded: "~~~",
-			expectedPath:     "~~~",
+			input:        "~~~",
+			expectedPath: "~~~",
 		},
-		"Tilde at the beginning with escape and backslash": {
-			pathTobeExpanded: "\\~\\~\\~/",
-			expectedPath:     "\\~\\~\\~/",
+		"Tilde at the beginning with backslash": {
+			input:        "/~/~/~/",
+			expectedPath: "/~/~/~/",
 		},
-		"Tilde at the beginning with escape": {
-			pathTobeExpanded: "~\\~\\~",
-			expectedPath:     "~\\~\\~",
+		"Tilde at the beginning ": {
+			input:        "/~/~/~",
+			expectedPath: "/~/~/~",
 		},
 		"Tilde in the middle": {
-			pathTobeExpanded: "Foo~/~Bar",
-			expectedPath:     "Foo~/~Bar",
+			input:        "Foo~/~Bar",
+			expectedPath: "Foo~/~Bar",
 		},
 		"Tilde in the end": {
-			pathTobeExpanded: "~Foo/Bar~",
-			expectedPath:     "~Foo/Bar~",
+			input:        "~Foo/Bar~",
+			expectedPath: "~Foo/Bar~",
 		},
 		"Empty string": {
-			pathTobeExpanded: "",
-			expectedPath:     "",
+			input:        "",
+			expectedPath: "",
 		},
 		"Relative": {
-			pathTobeExpanded: "FooBar",
-			expectedPath:     "FooBar",
+			input:        "FooBar",
+			expectedPath: "FooBar",
 		},
 		"Absolute": {
-			pathTobeExpanded: "/Foo/Bar",
-			expectedPath:     "/Foo/Bar",
+			input:        "/Foo/Bar",
+			expectedPath: "/Foo/Bar",
 		},
 	}
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			actualPath, _ := ExpandHomeDir(tt.pathTobeExpanded)
+			actualPath, _ := ExpandHomeDir(tt.input)
 			assert.Equal(t, tt.expectedPath, actualPath)
 		})
 	}
