@@ -35,9 +35,7 @@ var QueryableStacksMap map[types.StackStatus]bool
 func init() {
 	QueryableStacksMap = make(map[types.StackStatus]bool)
 	for stackStatus, stackOptions := range stackDefinitions {
-		if stackOptions.queryableStack {
-			QueryableStacksMap[stackStatus] = true
-		}
+		QueryableStacksMap[stackStatus] = stackOptions.queryableStack
 		if stackOptions.activeStack {
 			ActiveStacksFilter = append(ActiveStacksFilter, stackStatus)
 		}

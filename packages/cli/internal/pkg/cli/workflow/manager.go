@@ -340,8 +340,8 @@ func (m *Manager) isContextDeployed(contextName string) bool {
 		return false
 	}
 
-	_, activeStatusFlag := cfn.QueryableStacksMap[status]
-	return activeStatusFlag
+	ok, activeStatusFlag := cfn.QueryableStacksMap[status]
+	return ok && activeStatusFlag
 }
 
 func (m *Manager) setContext(contextName string) {
