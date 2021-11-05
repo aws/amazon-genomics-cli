@@ -6,8 +6,10 @@ import (
 	"time"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/util"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
+	"github.com/aws/aws-sdk-go-v2/service/cloudformation/types"
 	"github.com/rs/zerolog/log"
 )
 
@@ -33,6 +35,8 @@ func (m *Manager) deployContextWithTimeout(contextName string, showProgress bool
 	m.err = util.DeployWithTimeout(func() error {
 		m.deployContext(contextName, showProgress)
 		return m.err
+	}, func() (types.StackStatus, error) {
+		return awsresources.GetContextStackStatus(m.Cfn, m.projectSpec.Name, m.userId, contextName)
 	}, 30*time.Minute)
 }
 

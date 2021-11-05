@@ -10,14 +10,17 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/util"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
+	"github.com/aws/aws-sdk-go-v2/service/cloudformation/types"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -43,6 +46,7 @@ type accountActivateOpts struct {
 	stsClient sts.Interface
 	s3Client  s3.Interface
 	cdkClient cdk.Interface
+	cfnClient cfn.Interface
 	ecrClient ecr.Interface
 	imageRefs map[string]ecr.ImageReference
 	region    string
@@ -56,6 +60,7 @@ func newAccountActivateOpts(vars accountActivateVars) (*accountActivateOpts, err
 		stsClient:           aws.StsClient(profile),
 		s3Client:            aws.S3Client(profile),
 		cdkClient:           cdk.NewClient(profile),
+		cfnClient:           aws.CfnClient(profile),
 		ecrClient:           aws.EcrClient(profile),
 		region:              aws.Region(profile),
 	}, nil
@@ -123,6 +128,8 @@ func (o accountActivateOpts) generateDefaultBucket() (string, error) {
 func (o accountActivateOpts) deployCoreInfrastructureWithTimeout(environmentVars []string) error {
 	return util.DeployWithTimeout(func() error {
 		return o.deployCoreInfrastructure(environmentVars)
+	}, func() (types.StackStatus, error) {
+		return awsresources.GetCoreStackStatus(o.cfnClient)
 	}, 30*time.Minute)
 }
 
