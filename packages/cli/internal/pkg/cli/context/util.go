@@ -14,7 +14,7 @@ func environmentMapToList(environmentMap map[string]string) []string {
 	return environmentList
 }
 
-func cdkResultToContextResult(cdkResults []cdk.Result) []ProgressResult {
+func cdkResultsToContextResults(cdkResults []cdk.Result) []ProgressResult {
 	var results []ProgressResult
 	for _, cdkResult := range cdkResults {
 		progressResult := ProgressResult{

@@ -32,13 +32,13 @@ type deployContextVars struct {
 
 type deployContextOpts struct {
 	deployContextVars
-	ctxManagerFactory func() context.Interface
+	ctxManager context.Interface
 }
 
 func newDeployContextOpts(vars deployContextVars) (*deployContextOpts, error) {
 	return &deployContextOpts{
 		deployContextVars: vars,
-		ctxManagerFactory: func() context.Interface { return context.NewManager(profile) },
+		ctxManager:        context.NewManager(profile),
 	}, nil
 }
 
@@ -54,7 +54,7 @@ func (o *deployContextOpts) Validate(contexts []string) error {
 			return err
 		}
 	} else {
-		ctxList, err := o.ctxManagerFactory().List()
+		ctxList, err := o.ctxManager.List()
 		if err != nil {
 			return err
 		}
@@ -67,7 +67,7 @@ func (o *deployContextOpts) Validate(contexts []string) error {
 }
 
 func (o *deployContextOpts) validateSuppliedContexts(contextList []string) error {
-	ctxList, err := o.ctxManagerFactory().List()
+	ctxList, err := o.ctxManager.List()
 	if err != nil {
 		return err
 	}
@@ -100,10 +100,10 @@ func (o *deployContextOpts) Execute() ([]context.Detail, error) {
 }
 
 func (o *deployContextOpts) deployContexts() error {
-	progressResults := o.ctxManagerFactory().Deploy(o.contexts)
-	aggregateSuggestions := make([]string, 0)
+	progressResults := o.ctxManager.Deploy(o.contexts)
+	var aggregateSuggestions []string
 
-	failedDeployments := make([]context.ProgressResult, 0)
+	var failedDeployments []context.ProgressResult
 	for _, progressResult := range progressResults {
 		if progressResult.Err != nil {
 			failedDeployments = append(failedDeployments, progressResult)
@@ -115,20 +115,10 @@ func (o *deployContextOpts) deployContexts() error {
 		for i, failedDeployment := range failedDeployments {
 			log.Error().Msgf("Failed to deploy context '%s'. Below is the log for that deployment", failedDeployment.Context)
 
-			outputsLength := len(failedDeployment.Outputs)
-			for i := 0; i < outputsLength-1; i++ {
-				log.Error().Msg(failedDeployment.Outputs[i])
-			}
-
-			if i < failedDeploymentsLength-1 {
-				log.Error().Msgf("%s \n\n\n", failedDeployment.Outputs[outputsLength-1])
-			} else {
-				log.Error().Msg(failedDeployment.Outputs[outputsLength-1])
-			}
+			printErroredLogs(failedDeployment, i, failedDeploymentsLength)
 
 			var actionableError *actionableerror.Error
-			ok := errors.As(failedDeployment.Err, &actionableError)
-			if ok {
+			if errors.As(failedDeployment.Err, &actionableError) {
 				log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
 				aggregateSuggestions = append(aggregateSuggestions, actionableError.SuggestedAction)
 			}
@@ -140,9 +130,26 @@ func (o *deployContextOpts) deployContexts() error {
 	return nil
 }
 
+func printErroredLogs(failedDeployment context.ProgressResult, deploymentNumber int, failedDeploymentsLength int) {
+	outputsLength := len(failedDeployment.Outputs)
+	if outputsLength == 0 {
+		return
+	}
+
+	for j := 0; j < outputsLength-1; j++ {
+		log.Error().Msg(failedDeployment.Outputs[j])
+	}
+
+	if deploymentNumber < failedDeploymentsLength-1 {
+		log.Error().Msgf("%s \n\n\n", failedDeployment.Outputs[outputsLength-1])
+	} else {
+		log.Error().Msg(failedDeployment.Outputs[outputsLength-1])
+	}
+}
+
 func (o *deployContextOpts) validateDeploymentResults() ([]context.Detail, error) {
 	contextDetails, deploymentHasErrors := make([]context.Detail, len(o.contexts)), false
-	aggregateSuggestions := make([]string, 0)
+	var aggregateSuggestions []string
 	var wait sync.WaitGroup
 	wait.Add(len(o.contexts))
 
@@ -152,8 +159,7 @@ func (o *deployContextOpts) validateDeploymentResults() ([]context.Detail, error
 			contextDetails[i] = info
 			if err != nil {
 				var actionableError *actionableerror.Error
-				ok := errors.As(err, &actionableError)
-				if ok {
+				if errors.As(err, &actionableError) {
 					log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
 					aggregateSuggestions = append(aggregateSuggestions, actionableError.SuggestedAction)
 				} else {
@@ -162,7 +168,7 @@ func (o *deployContextOpts) validateDeploymentResults() ([]context.Detail, error
 				deploymentHasErrors = true
 			}
 			wait.Done()
-		}(o.ctxManagerFactory(), i, contextName)
+		}(o.ctxManager, i, contextName)
 	}
 
 	wait.Wait()

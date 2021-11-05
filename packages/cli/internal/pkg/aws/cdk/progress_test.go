@@ -61,7 +61,7 @@ func Test_SendDataToReceiverAndUpdateResult_Error(t *testing.T) {
 
 	assert.Equal(t, expectedProgressResult, progressResult)
 
-	expectedEvent := ProgressEvent{UniqueKey: "someKey", CurrentStep: 0, TotalSteps: 0}
+	expectedEvent := ProgressEvent{UniqueKey: "someKey", CurrentStep: 1, TotalSteps: 1}
 	assert.Equal(t, expectedEvent, channelOutput)
 }
 

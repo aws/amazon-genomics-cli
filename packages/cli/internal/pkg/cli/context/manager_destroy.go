@@ -17,7 +17,7 @@ func (m *Manager) Destroy(contexts []string) []ProgressResult {
 	progressStreams, contextsWithStreams := m.getStreamsForCdkDestroys(contexts)
 
 	description := fmt.Sprintf("Destroying resources for context(s) %s", contextsWithStreams)
-	m.executeCdkHelper(progressStreams, description)
+	m.processExecution(progressStreams, description)
 	return m.progressResults
 }
 
@@ -27,17 +27,13 @@ func (m *Manager) getStreamsForCdkDestroys(contexts []string) ([]cdk.ProgressStr
 	for _, contextName := range contexts {
 		m.setContextEnv(contextName)
 		m.setContextPlaceholders()
-		if m.err == nil {
-			progressStream := m.destroyContext(contextName)
-			if progressStream != nil {
-				progressStreams = append(progressStreams, progressStream)
-				contextsWithStreams = append(contextsWithStreams, contextName)
-			}
+		progressStream := m.destroyContext(contextName)
+		if progressStream != nil {
+			progressStreams = append(progressStreams, progressStream)
+			contextsWithStreams = append(contextsWithStreams, contextName)
 		}
-		if m.err != nil {
-			m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: m.err})
-			m.err = nil
-		}
+
+		m.err = nil
 	}
 
 	return progressStreams, contextsWithStreams
@@ -53,6 +49,10 @@ func (m *Manager) setContextPlaceholders() {
 }
 
 func (m *Manager) destroyContext(contextName string) cdk.ProgressStream {
+	if m.err != nil {
+		m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: m.err})
+		return nil
+	}
 	contextCmd := func() (cdk.ProgressStream, error) {
 		return m.Cdk.DestroyApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), m.contextEnv.ToEnvironmentList(), contextName)
 	}

@@ -25,9 +25,7 @@ func TestDeployContextOpts_Validate_ValidContexts(t *testing.T) {
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
 	opts := &deployContextOpts{
 		deployContextVars: deployContextVars{},
-		ctxManagerFactory: func() context.Interface {
-			return ctxMock
-		},
+		ctxManager:        ctxMock,
 	}
 	assert.NoError(t, opts.Validate([]string{testContextName1}))
 }
@@ -38,9 +36,7 @@ func TestDeployContextOpts_Validate_ValidContexts_DeprecatedArgs(t *testing.T) {
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
 	opts := &deployContextOpts{
 		deployContextVars: deployContextVars{contexts: []string{testContextName1, testContextName2}},
-		ctxManagerFactory: func() context.Interface {
-			return ctxMock
-		},
+		ctxManager:        ctxMock,
 	}
 	assert.NoError(t, opts.Validate([]string{}))
 }
@@ -52,9 +48,7 @@ func TestDeployContextOpts_Validate_ValidAll(t *testing.T) {
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {}, testContextName2: {}}, nil)
 	opts := &deployContextOpts{
 		deployContextVars: deployContextVars{deployAll: true},
-		ctxManagerFactory: func() context.Interface {
-			return ctxMock
-		},
+		ctxManager:        ctxMock,
 	}
 	assert.NoError(t, opts.Validate([]string{}))
 }
@@ -78,9 +72,7 @@ func TestDeployContextOpts_Validate_ListError(t *testing.T) {
 
 	opts := &deployContextOpts{
 		deployContextVars: deployContextVars{deployAll: true},
-		ctxManagerFactory: func() context.Interface {
-			return ctxMock
-		},
+		ctxManager:        ctxMock,
 	}
 	err := opts.Validate([]string{})
 	require.Equal(t, expectedErr, err)
@@ -94,9 +86,7 @@ func TestDeployContextOpts_Execute_One(t *testing.T) {
 	ctxMock.EXPECT().Info(testContextName1).Return(testContextInfoStruct1, nil)
 	opts := &deployContextOpts{
 		deployContextVars: deployContextVars{contexts: []string{testContextName1}},
-		ctxManagerFactory: func() context.Interface {
-			return ctxMock
-		},
+		ctxManager:        ctxMock,
 	}
 	info, err := opts.Execute()
 	require.NoError(t, err)
@@ -113,9 +103,7 @@ func TestDeployContextOpts_Execute_All(t *testing.T) {
 
 	opts := &deployContextOpts{
 		deployContextVars: deployContextVars{deployAll: true, contexts: []string{testContextName1, testContextName2}},
-		ctxManagerFactory: func() context.Interface {
-			return ctxMock
-		},
+		ctxManager:        ctxMock,
 	}
 	info, err := opts.Execute()
 	require.NoError(t, err)
@@ -132,9 +120,7 @@ func TestDeployContextOpts_ExecuteAll_LogsOutErrors(t *testing.T) {
 
 	opts := &deployContextOpts{
 		deployContextVars: deployContextVars{deployAll: true, contexts: []string{testContextName1, testContextName2}},
-		ctxManagerFactory: func() context.Interface {
-			return ctxMock
-		},
+		ctxManager:        ctxMock,
 	}
 	_, err := opts.Execute()
 	require.Error(t, err)
@@ -151,9 +137,7 @@ func TestDeployContextOpts_Execute_InfoError(t *testing.T) {
 
 	opts := &deployContextOpts{
 		deployContextVars: deployContextVars{deployAll: true, contexts: []string{testContextName1, testContextName2}},
-		ctxManagerFactory: func() context.Interface {
-			return ctxMock
-		},
+		ctxManager:        ctxMock,
 	}
 	_, err := opts.Execute()
 	require.Equal(t, expectedErr, err)
