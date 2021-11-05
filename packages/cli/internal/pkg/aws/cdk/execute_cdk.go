@@ -94,7 +94,6 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, uniqueKey stri
 		defer wait.Done()
 		for stderr.Scan() {
 			line := stderr.Text()
-			log.Debug().Msg(line)
 			progressChan <- updateEvent(currentEvent, line)
 		}
 		err := stderr.Err()
@@ -107,6 +106,7 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, uniqueKey stri
 
 func updateEvent(event *ProgressEvent, line string) ProgressEvent {
 	event.Outputs = append(event.Outputs, line)
+	event.LastOutput = line
 	match := progressRegex.FindStringSubmatch(line)
 	if len(match) == 3 {
 		stepParts := strings.Split(match[1], "/")

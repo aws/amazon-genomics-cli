@@ -74,6 +74,8 @@ type ProgressResult struct {
 	Err     error
 }
 
+var displayProgressBar = cdk.DisplayProgressBar
+
 func NewManager(profile string) *Manager {
 	projectClient, err := storage.NewProjectClient()
 	if err != nil {
@@ -235,7 +237,7 @@ func (m *Manager) readProjectInformation() {
 	m.readConfig()
 }
 
-func (m *Manager) executeCdkHelper(allProgressStreams []cdk.ProgressStream, description string) {
+func (m *Manager) processExecution(allProgressStreams []cdk.ProgressStream, description string) {
 	if len(allProgressStreams) == 0 {
 		return
 	}
@@ -244,7 +246,7 @@ func (m *Manager) executeCdkHelper(allProgressStreams []cdk.ProgressStream, desc
 	if logging.Verbose {
 		cdkResults = cdk.ShowExecution(allProgressStreams)
 	} else {
-		cdkResults = m.Cdk.DisplayProgressBar(description, allProgressStreams)
+		cdkResults = displayProgressBar(description, allProgressStreams)
 	}
-	m.progressResults = append(m.progressResults, cdkResultToContextResult(cdkResults)...)
+	m.progressResults = append(m.progressResults, cdkResultsToContextResults(cdkResults)...)
 }

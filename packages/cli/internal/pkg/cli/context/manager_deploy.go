@@ -27,7 +27,7 @@ func (m *Manager) deployAllContexts(contexts []string) {
 	progressStreams, contextsWithStreams := m.getStreamsForCdkDeployments(contexts)
 
 	description := fmt.Sprintf("Deploying resources for context(s) %s", contextsWithStreams)
-	m.executeCdkHelper(progressStreams, description)
+	m.processExecution(progressStreams, description)
 }
 
 func (m *Manager) getStreamsForCdkDeployments(contexts []string) ([]cdk.ProgressStream, []string) {
@@ -39,17 +39,12 @@ func (m *Manager) getStreamsForCdkDeployments(contexts []string) ([]cdk.Progress
 		m.clearCdkContext(contextDir)
 		m.setContextEnv(contextName)
 
-		if m.err == nil {
-			progressStream := m.deployContext(contextName)
-			if progressStream != nil {
-				progressStreams = append(progressStreams, progressStream)
-				contextsWithStreams = append(contextsWithStreams, contextName)
-			}
+		progressStream := m.deployContext(contextName)
+		if progressStream != nil {
+			progressStreams = append(progressStreams, progressStream)
+			contextsWithStreams = append(contextsWithStreams, contextName)
 		}
 
-		if m.err != nil {
-			m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: m.err})
-		}
 		m.err = nil
 	}
 
@@ -72,6 +67,10 @@ func (m *Manager) clearCdkContext(appDir string) {
 }
 
 func (m *Manager) deployContext(contextName string) cdk.ProgressStream {
+	if m.err != nil {
+		m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: m.err})
+		return nil
+	}
 	contextCmd := func() (cdk.ProgressStream, error) {
 		return m.Cdk.DeployApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), m.contextEnv.ToEnvironmentList(), contextName)
 	}

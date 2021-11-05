@@ -23,6 +23,7 @@ type ProgressEvent struct {
 	Outputs         []string
 	Err             error
 	UniqueKey       string
+	LastOutput      string
 }
 
 type Result struct {
@@ -54,13 +55,13 @@ func ShowExecution(progressEvents []ProgressStream) []Result {
 	var waitGroup sync.WaitGroup
 	waitGroup.Add(len(progressEvents))
 
-	for _, progressStream := range progressEvents {
-		progressResult := &Result{}
-		progressResults = append(progressResults, progressResult)
-		go updateResultFromStream(progressStream, progressResult, &waitGroup)
-	}
+	singleStream, progressResults := combineProgressEvents(progressEvents)
 
-	waitGroup.Wait()
+	for event := range singleStream {
+		if event.LastOutput != "" {
+			log.Info().Msg(event.LastOutput)
+		}
+	}
 
 	var results []Result
 	for _, progressResult := range progressResults {
@@ -86,7 +87,7 @@ func updateResultFromStream(stream ProgressStream, progressResult *Result, wait 
 	wait.Done()
 }
 
-func (client Client) DisplayProgressBar(description string, progressEvents []ProgressStream) []Result {
+func DisplayProgressBar(description string, progressEvents []ProgressStream) []Result {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -127,8 +128,8 @@ func sendDataToReceiverAndUpdateResult(channel <-chan ProgressEvent, progressRes
 
 	var lastEvent ProgressEvent
 	var stopProcessingEvent = ProgressEvent{
-		CurrentStep: 0,
-		TotalSteps:  0,
+		CurrentStep: 1,
+		TotalSteps:  1,
 	}
 	for initialChannelOut := range channel {
 		if initialChannelOut.Err != nil {
@@ -162,7 +163,8 @@ func runProgressBar(ctx context.Context, description string, numberOfChannels in
 		Start()
 
 	go func() {
-		var oldProgressEvents = make(map[string]ProgressEvent, numberOfChannels*2)
+		var oldProgressEvents = make(map[string]ProgressEvent, numberOfChannels)
+		var keyWithSteps = make(map[string]bool, numberOfChannels)
 		totalSteps, currentStep := 0, 0
 		for {
 			select {
@@ -173,13 +175,18 @@ func runProgressBar(ctx context.Context, description string, numberOfChannels in
 					totalSteps += progressEvent.TotalSteps - oldEvent.TotalSteps
 					currentStep += progressEvent.CurrentStep - oldEvent.CurrentStep
 					oldProgressEvents[oldEvent.UniqueKey] = progressEvent
+
+					_, keysExist := keyWithSteps[progressEvent.UniqueKey]
+					if !keysExist && progressEvent.TotalSteps > 0 {
+						keyWithSteps[progressEvent.UniqueKey] = true
+					}
 				} else if progressEvent.UniqueKey != "" {
 					totalSteps += progressEvent.TotalSteps
 					currentStep += progressEvent.CurrentStep
 					oldProgressEvents[progressEvent.UniqueKey] = progressEvent
 				}
 
-				if totalSteps > 0 {
+				if len(keyWithSteps) == numberOfChannels {
 					bar.SetTotal(int64(totalSteps))
 					bar.SetCurrent(int64(currentStep))
 				}
