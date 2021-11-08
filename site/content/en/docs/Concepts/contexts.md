@@ -187,7 +187,7 @@ Amazon Genomics CLI version 1.0.1 and earlier used an AWS Fargate based WES serv
 uses 0.5 vCPU, 4 GB memory and 20 GB base instance storage. Fargate pricing varies by region and is detailed [here](https://aws.amazon.com/fargate/pricing/).
 As at November 8, 2021, each WES service costs $0.03802 per hour in the us-east-1 region.
 
-After version 1.0.1 the WES endpoints deployed by Amazon Genomics CLI are implemented with AWS Lambda and therefore use
+After version 1.0.1, except for contexts using the Cromwell engine, the WES endpoints deployed by Amazon Genomics CLI are implemented with AWS Lambda and therefore use
 a [pricing model](https://aws.amazon.com/lambda/pricing/) based on invocations
 
 Contexts using a Cromwell engine run an additional AWS Fargate service for the engine with 2 vCPU, 16 GB RAM and 20 GB of
