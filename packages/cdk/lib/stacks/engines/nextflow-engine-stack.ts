@@ -1,31 +1,34 @@
-import { NestedStackProps } from "monocdk";
-import { Construct } from "constructs";
+import { Aws, Construct } from "monocdk";
 import { NextflowEngine } from "../../constructs/engines/nextflow/nextflow-engine";
 import { renderServiceWithContainer } from "../../util";
 import { EngineOptions } from "../../types";
 import { Bucket } from "monocdk/aws-s3";
 import { ApiProxy } from "../../constructs";
 import { LogGroup } from "monocdk/aws-logs";
-import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
+import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { IJobQueue } from "monocdk/aws-batch";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
 
-export interface NextflowEngineStackProps extends EngineOptions, NestedStackProps {
+export interface NextflowEngineStackProps extends EngineOptions {
+  /**
+   * AWS Batch JobQueue to use for running workflows.
+   */
+  readonly jobQueue: IJobQueue;
   /**
    * AWS Batch JobQueue to use for running workflows.
    */
   readonly headQueue: IJobQueue;
 }
 
-export class NextflowEngineStack extends NestedEngineStack {
+export class NextflowEngineStack extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
   public readonly adapterLogGroup: ILogGroup;
   public readonly nextflowEngine: NextflowEngine;
 
   constructor(scope: Construct, id: string, props: NextflowEngineStackProps) {
-    super(scope, id, props);
+    super(scope, id);
 
     const params = props.contextParameters;
     const outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
@@ -68,7 +71,7 @@ export class NextflowEngineStack extends NestedEngineStack {
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}NextflowApiProxy`,
       loadBalancer: adapter.loadBalancer,
-      allowedAccountIds: [this.account],
+      allowedAccountIds: [Aws.ACCOUNT_ID],
     });
   }
 

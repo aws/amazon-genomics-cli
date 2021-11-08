@@ -1,10 +1,9 @@
-import { NestedStackProps } from "monocdk";
-import { Construct } from "constructs";
+import { Construct, Stack, Aws } from "monocdk";
 import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "monocdk/aws-iam";
 import { Bucket } from "monocdk/aws-s3";
 import { ApiProxy, Batch } from "../../constructs";
 import { LogGroup } from "monocdk/aws-logs";
-import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
+import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
 import { InstanceType, IVpc } from "monocdk/aws-ec2";
@@ -15,19 +14,16 @@ import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
 import { renderServiceWithContainer } from "../../util";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
+import { EngineOptions } from "../../types";
 
-export interface MiniWdlEngineStackProps extends NestedStackProps {
+export interface MiniWdlEngineStackProps extends EngineOptions {
   /**
-   * VPC to run resources in.
+   * Stack deploying MiniWdl construct
    */
-  readonly vpc: IVpc;
-  /**
-   * Parameters determined by the context.
-   */
-  readonly contextParameters: ContextAppParameters;
+  parent: Stack;
 }
 
-export class MiniWdlEngineStack extends NestedEngineStack {
+export class MiniWdlEngineStack extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
   public readonly adapterLogGroup: ILogGroup;
   public readonly miniwdlEngine: MiniWdlEngine;
@@ -35,14 +31,14 @@ export class MiniWdlEngineStack extends NestedEngineStack {
   private readonly batchWorkers: Batch;
 
   constructor(scope: Construct, id: string, props: MiniWdlEngineStackProps) {
-    super(scope, id, props);
+    super(scope, id);
 
     const { vpc, contextParameters } = props;
     const params = props.contextParameters;
 
-    this.batchHead = this.renderBatch("HeadBatch", vpc, contextParameters.instanceTypes, ComputeResourceType.FARGATE);
+    this.batchHead = this.renderBatch("HeadBatch", vpc, props.parent, contextParameters.instanceTypes, ComputeResourceType.FARGATE);
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
-    this.batchWorkers = this.renderBatch("TaskBatch", vpc, contextParameters.instanceTypes, workerComputeType);
+    this.batchWorkers = this.renderBatch("TaskBatch", vpc, props.parent, contextParameters.instanceTypes, workerComputeType);
 
     this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
     this.batchHead.role.addToPrincipalPolicy(
@@ -88,7 +84,7 @@ export class MiniWdlEngineStack extends NestedEngineStack {
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}MiniWdlApiProxy`,
       loadBalancer: adapter.loadBalancer,
-      allowedAccountIds: [this.account],
+      allowedAccountIds: [Aws.ACCOUNT_ID],
     });
   }
 
@@ -117,14 +113,14 @@ export class MiniWdlEngineStack extends NestedEngineStack {
     }
   }
 
-  private renderBatch(id: string, vpc: IVpc, instanceTypes?: InstanceType[], computeType?: ComputeResourceType): Batch {
+  private renderBatch(id: string, vpc: IVpc, parent: Stack, instanceTypes?: InstanceType[], computeType?: ComputeResourceType): Batch {
     return new Batch(this, id, {
       vpc,
       instanceTypes,
       computeType,
       launchTemplateData: LAUNCH_TEMPLATE,
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
-      resourceTags: this.nestedStackParent?.tags.tagValues(),
+      resourceTags: parent.tags.tagValues(),
     });
   }
 

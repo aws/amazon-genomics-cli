@@ -1,5 +1,4 @@
-import { CfnOutput, NestedStack, NestedStackProps, Stack } from "monocdk";
-import { Construct } from "constructs";
+import { CfnOutput, Stack, Construct } from "monocdk";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 
 export interface EngineOutputs {
@@ -9,9 +8,9 @@ export interface EngineOutputs {
   wesUrl: string;
 }
 
-export abstract class NestedEngineStack extends NestedStack {
-  protected constructor(scope: Construct, id: string, props: NestedStackProps) {
-    super(scope, id, props);
+export abstract class EngineConstruct extends Construct {
+  protected constructor(scope: Construct, id: string) {
+    super(scope, id);
   }
 
   public outputToParent(parentStack: Stack): void {

@@ -4,10 +4,10 @@ import { Construct } from "constructs";
 import { getCommonParameter } from "../util";
 import { VPC_PARAMETER_NAME } from "../constants";
 import { ContextAppParameters } from "../env";
-import { BatchStack, BatchStackProps } from "./nested/batch-stack";
-import { CromwellEngineStack } from "./nested/cromwell-engine-stack";
-import { NextflowEngineStack } from "./nested/nextflow-engine-stack";
-import { MiniWdlEngineStack } from "./nested/miniwdl-engine-stack";
+import { BatchStack, BatchStackProps } from "./engines/batch-stack";
+import { CromwellEngineStack } from "./engines/cromwell-engine-stack";
+import { NextflowEngineStack } from "./engines/nextflow-engine-stack";
+import { MiniWdlEngineStack } from "./engines/miniwdl-engine-stack";
 
 export interface ContextStackProps extends StackProps {
   readonly contextParameters: ContextAppParameters;
@@ -82,6 +82,7 @@ export class ContextStack extends Stack {
     const commonEngineProps = this.getCommonEngineProps(props);
     new MiniWdlEngineStack(this, "miniwdl", {
       ...commonEngineProps,
+      parent: this,
     }).outputToParent(this);
   }
 
@@ -93,6 +94,7 @@ export class ContextStack extends Stack {
       ...commonBatchProps,
       createSpotBatch: requestSpotInstances,
       createOnDemandBatch: !requestSpotInstances,
+      parent: this,
     };
   }
 
@@ -111,6 +113,7 @@ export class ContextStack extends Stack {
       ...commonBatchProps,
       createSpotBatch: requestSpotInstances,
       createOnDemandBatch: true,
+      parent: this,
     };
   }
 

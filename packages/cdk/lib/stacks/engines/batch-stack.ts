@@ -1,6 +1,5 @@
-import { NestedStack, NestedStackProps } from "monocdk";
 import { IVpc } from "monocdk/aws-ec2";
-import { Construct } from "constructs";
+import { Construct, Stack } from "monocdk";
 import { LAUNCH_TEMPLATE } from "../../constants";
 import { Batch } from "../../constructs";
 import { ContextAppParameters } from "../../env";
@@ -8,7 +7,11 @@ import { BucketOperations } from "../../../common/BucketOperations";
 import { IRole } from "monocdk/aws-iam";
 import { ComputeResourceType } from "monocdk/aws-batch";
 
-export interface BatchStackProps extends NestedStackProps {
+export interface BatchStackProps {
+  /**
+   * Stack running BatchConstruct
+   */
+  readonly parent: Stack;
   /**
    * VPC to run resources in.
    */
@@ -27,20 +30,20 @@ export interface BatchStackProps extends NestedStackProps {
   readonly createOnDemandBatch: boolean;
 }
 
-export class BatchStack extends NestedStack {
+export class BatchStack extends Construct {
   public readonly batchSpot: Batch;
   public readonly batchOnDemand: Batch;
 
   constructor(scope: Construct, id: string, props: BatchStackProps) {
-    super(scope, id, props);
+    super(scope, id);
 
     const { vpc, contextParameters, createSpotBatch, createOnDemandBatch } = props;
     const { artifactBucketName, outputBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
     if (createSpotBatch) {
-      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, contextParameters, ComputeResourceType.SPOT);
+      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, contextParameters, props.parent, ComputeResourceType.SPOT);
     }
     if (createOnDemandBatch) {
-      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, contextParameters, ComputeResourceType.ON_DEMAND);
+      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, contextParameters, props.parent, ComputeResourceType.ON_DEMAND);
     }
 
     const artifactBucket = BucketOperations.importBucket(this, "ArtifactBucket", artifactBucketName);
@@ -56,7 +59,7 @@ export class BatchStack extends NestedStack {
     }
   }
 
-  private renderBatch(id: string, vpc: IVpc, appParams: ContextAppParameters, computeType?: ComputeResourceType): Batch {
+  private renderBatch(id: string, vpc: IVpc, appParams: ContextAppParameters, parent: Stack, computeType?: ComputeResourceType): Batch {
     return new Batch(this, id, {
       vpc,
       computeType,
@@ -64,7 +67,7 @@ export class BatchStack extends NestedStack {
       maxVCpus: appParams.maxVCpus,
       launchTemplateData: LAUNCH_TEMPLATE,
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
-      resourceTags: this.nestedStackParent?.tags.tagValues(),
+      resourceTags: parent.tags.tagValues(),
     });
   }
 
