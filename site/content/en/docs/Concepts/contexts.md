@@ -178,6 +178,27 @@ can still be interrupted if total demand for on demand instances in an availabil
 full details see [Spot Instance Interruptions](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html) 
 and [EC2 Spot Pricing](https://aws.amazon.com/ec2/spot/pricing/).
 
+### Ongoing Costs
+
+Until a context is destroyed resources that are deployed can incur ongoing costs even if a workflow is not running. The
+exact costs depend on the configuration of the context.
+
+Amazon Genomics CLI version 1.0.1 and earlier used an AWS Fargate based WES service for each deployed context. The service
+uses 0.5 vCPU, 4 GB memory and 20 GB base instance storage. Fargate pricing varies by region and is detailed [here](https://aws.amazon.com/fargate/pricing/).
+As at November 8, 2021, each WES service costs $0.03802 per hour in the us-east-1 region.
+
+After version 1.0.1 the WES endpoints deployed by Amazon Genomics CLI are implemented with AWS Lambda and therefore use
+a [pricing model](https://aws.amazon.com/lambda/pricing/) based on invocations
+
+Contexts using a Cromwell engine run an additional AWS Fargate service for the engine with 2 vCPU, 16 GB RAM and 20 GB of
+base storage for an ongoing cost of $0.15208 per hour in the us-east-1 region (as at November 8, 2021).
+
+Additionally, Cromwell is deployed with a standard EFS volume for storage of metadata. EFS [costs](https://aws.amazon.com/efs/pricing/) are volume based. While
+relatively small the amount of metadata will expand as more workflows are run. The volume is destroyed when the context is destroyed.
+
+Contexts using the "miniwdl" engine use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
+workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use.
+
 ### Tags
 
 All context infrastructure is [tagged]( {{< relref "namespaces#tags" >}} ) with the context name, username and project name. These tags may be used to help
