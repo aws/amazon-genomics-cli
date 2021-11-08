@@ -161,6 +161,21 @@ func (mr *MockConfigClientMockRecorder) GetUserId() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserId", reflect.TypeOf((*MockConfigClient)(nil).GetUserId))
 }
 
+// GetFormat mocks base method.
+func (m *MockConfigClient) GetFormat() (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFormat")
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFormat indicates an expected call of GetFormat.
+func (mr *MockConfigClientMockRecorder) GetFormat() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFormat", reflect.TypeOf((*MockConfigClient)(nil).GetFormat))
+}
+
 // Read mocks base method.
 func (m *MockConfigClient) Read() (config.Config, error) {
 	m.ctrl.T.Helper()
@@ -188,6 +203,21 @@ func (m *MockConfigClient) SetUserEmailAddress(userId string) error {
 func (mr *MockConfigClientMockRecorder) SetUserEmailAddress(userId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUserEmailAddress", reflect.TypeOf((*MockConfigClient)(nil).SetUserEmailAddress), userId)
+}
+
+
+// SetFormat mocks base method.
+func (m *MockConfigClient) SetFormat(format string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetFormat", format)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetFormat indicates an expected call of SetFormat.
+func (mr *MockConfigClientMockRecorder) SetFormat(format interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetFormat", reflect.TypeOf((*MockConfigClient)(nil).SetFormat), format)
 }
 
 // MockStorageClient is a mock of StorageClient interface.
