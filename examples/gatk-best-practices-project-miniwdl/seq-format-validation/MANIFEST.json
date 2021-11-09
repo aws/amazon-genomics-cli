@@ -1,0 +1,7 @@
+{
+  "mainWorkflowURL": "validate-bam.wdl",
+  "inputFileURLs": [
+    "validate-bams.input.json"
+  ],
+  "engineOptions": "--no-cache"
+}

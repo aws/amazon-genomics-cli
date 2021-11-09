@@ -1,0 +1,3 @@
+{
+  "UninterleaveFastqs.input_fastq": "s3://healthai-public-assets-us-east-1/agc-demo-data/interleaved-fastq/H06HDADXX130110.1.ATCACGAT.20k_reads.interleaved.fastq"
+}
