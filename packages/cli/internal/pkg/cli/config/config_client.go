@@ -142,7 +142,10 @@ func (c Client) GetFormat() (string, error) {
 		return "", err
 	}
 	if configData.Format.Format == "" {
-		c.SetFormat(defaultFormat)
+		err:= c.SetFormat(defaultFormat)
+		if err != nil{
+			return "", err
+		}
 	}
 	return configData.Format.Format, nil
 }
