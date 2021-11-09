@@ -6,12 +6,12 @@ package cli
 import (
 	"bytes"
 	"errors"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/batch"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"

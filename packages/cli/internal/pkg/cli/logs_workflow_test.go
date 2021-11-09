@@ -153,9 +153,9 @@ func TestLogsWorkflowOpts_Execute(t *testing.T) {
 				opts.runId = testRunId
 				opts.workflowManager.(*managermocks.MockWorkflowManager).EXPECT().
 					GetRunLog(testRunId).Return(workflow.RunLog{
-						RunId: testRunId,
-						State: "COMPLETE",
-						Tasks: []workflow.Task(nil),
+					RunId: testRunId,
+					State: "COMPLETE",
+					Tasks: []workflow.Task(nil),
 				}, nil)
 			},
 			expectedOutput: "RUNLOG\tTest Workflow Run Id\tCOMPLETE\n\n",
