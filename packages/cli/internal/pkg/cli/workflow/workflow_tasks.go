@@ -17,6 +17,12 @@ type Task struct {
 	ExitCode  int
 }
 
+type RunLog struct {
+	RunId string
+	State string
+	Tasks []Task
+}
+
 func (m *Manager) GetWorkflowTasks(runId string) ([]Task, error) {
 	m.readProjectSpec()
 	m.readConfig()
@@ -30,6 +36,23 @@ func (m *Manager) GetWorkflowTasks(runId string) ([]Task, error) {
 
 	return m.getTasks()
 
+}
+
+func (m *Manager) GetRunLog(runId string) (RunLog, error) {
+
+	tasks, err := m.GetWorkflowTasks(runId)
+	if err != nil {
+		return RunLog{}, err
+	} else if m.err != nil {
+		return RunLog{}, m.err
+	}
+
+	var runLog = m.taskProps.runLog
+	return RunLog{
+		RunId: runLog.RunId,
+		State: string(runLog.State),
+		Tasks: tasks,
+	}, nil
 }
 
 func (m *Manager) setContextForRun(runId string) {
