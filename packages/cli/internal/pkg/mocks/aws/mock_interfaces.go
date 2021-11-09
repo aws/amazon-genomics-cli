@@ -100,6 +100,20 @@ func (mr *MockCdkClientMockRecorder) DisplayProgressBar(description, progressEve
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DisplayProgressBar", reflect.TypeOf((*MockCdkClient)(nil).DisplayProgressBar), description, progressEvents)
 }
 
+// ShowExecution mocks base method.
+func (m *MockCdkClient) ShowExecution(progressEvents []cdk.ProgressStream) []cdk.Result {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShowExecution", progressEvents)
+	ret0, _ := ret[0].([]cdk.Result)
+	return ret0
+}
+
+// ShowExecution indicates an expected call of ShowExecution.
+func (mr *MockCdkClientMockRecorder) ShowExecution(progressEvents interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowExecution", reflect.TypeOf((*MockCdkClient)(nil).ShowExecution), progressEvents)
+}
+
 // MockS3Client is a mock of S3Client interface.
 type MockS3Client struct {
 	ctrl     *gomock.Controller

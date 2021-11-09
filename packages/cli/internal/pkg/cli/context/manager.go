@@ -75,6 +75,7 @@ type ProgressResult struct {
 }
 
 var displayProgressBar = cdk.DisplayProgressBar
+var showExecution = cdk.ShowExecution
 
 func NewManager(profile string) *Manager {
 	projectClient, err := storage.NewProjectClient()
@@ -244,7 +245,7 @@ func (m *Manager) processExecution(allProgressStreams []cdk.ProgressStream, desc
 
 	var cdkResults []cdk.Result
 	if logging.Verbose {
-		cdkResults = cdk.ShowExecution(allProgressStreams)
+		cdkResults = showExecution(allProgressStreams)
 	} else {
 		cdkResults = displayProgressBar(description, allProgressStreams)
 	}
