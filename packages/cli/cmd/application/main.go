@@ -6,9 +6,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"os"
 	"path"
 	"path/filepath"
@@ -18,7 +15,10 @@ import (
 	"github.com/aws/amazon-genomics-cli/cmd/application/template"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/term/color"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
 	"github.com/rs/zerolog"
@@ -38,14 +38,15 @@ type mainVars struct {
 	docPath string
 }
 type formatVars struct {
-	format  string
+	format        string
 	defaultFormat string
 }
 
 type formatOpts struct {
 	configClient storage.ConfigClient
-	formatVars formatVars
+	formatVars   formatVars
 }
+
 func newFormatOpts(formatVars formatVars) (*formatOpts, error) {
 	return &formatOpts{
 		formatVars: formatVars,
@@ -152,7 +153,7 @@ func setFormatter(opts *formatOpts) {
 	formatVars := opts.formatVars
 	if formatVars.format == "" {
 		// read the default format from config
-		formatVars.format,err = configClient.GetFormat()
+		formatVars.format, err = configClient.GetFormat()
 		if err != nil {
 			log.Error().Err(err)
 		}

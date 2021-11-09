@@ -30,6 +30,6 @@ type ConfigClient interface {
 	GetUserEmailAddress() (string, error)
 	SetUserEmailAddress(userId string) error
 	GetUserId() (string, error)
-	GetFormat() (string,error)
+	GetFormat() (string, error)
 	SetFormat(format string) error
 }

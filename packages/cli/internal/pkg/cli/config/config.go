@@ -11,6 +11,6 @@ type Format struct {
 	Format string `yaml:"format"`
 }
 type Config struct {
-	User User `yaml:"user"`
+	User   User `yaml:"user"`
 	Format Format
 }

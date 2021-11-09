@@ -205,7 +205,6 @@ func (mr *MockConfigClientMockRecorder) SetUserEmailAddress(userId interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUserEmailAddress", reflect.TypeOf((*MockConfigClient)(nil).SetUserEmailAddress), userId)
 }
 
-
 // SetFormat mocks base method.
 func (m *MockConfigClient) SetFormat(format string) error {
 	m.ctrl.T.Helper()

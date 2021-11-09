@@ -15,7 +15,7 @@ import (
 const (
 	configDirName  = ".agc"
 	configFileName = "config.yaml"
-	defaultFormat = "text"
+	defaultFormat  = "text"
 )
 
 type Client struct {
@@ -146,7 +146,7 @@ func (c Client) GetFormat() (string, error) {
 	}
 	return configData.Format.Format, nil
 }
-func (c Client) SetFormat (format string) error {
+func (c Client) SetFormat(format string) error {
 	configData, _ := c.loadFromFile()
 	configData.Format.Format = format
 	return c.storeToFile(configData)

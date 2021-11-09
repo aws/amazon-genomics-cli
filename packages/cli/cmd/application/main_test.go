@@ -1,29 +1,30 @@
 package main
 
 import (
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
-	"github.com/golang/mock/gomock"
 	"reflect"
 	"testing"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 )
 
 const (
 	tableFormat = "table"
 )
+
 type mockClients struct {
-	ctrl           *gomock.Controller
-	configMock     *storagemocks.MockConfigClient
+	ctrl       *gomock.Controller
+	configMock *storagemocks.MockConfigClient
 }
 
 func createMocks(t *testing.T) mockClients {
 	ctrl := gomock.NewController(t)
 
 	return mockClients{
-		ctrl:           ctrl,
-		configMock:     storagemocks.NewMockConfigClient(ctrl),
+		ctrl:       ctrl,
+		configMock: storagemocks.NewMockConfigClient(ctrl),
 	}
 }
 func TestSetFormatter(t *testing.T) {
