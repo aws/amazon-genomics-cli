@@ -5,7 +5,7 @@ The code in this package is capturing the Lambda Function source code that's dep
 
 
 # Open source usage
-This package contains the source code  that will be built and packaged before uploading into your AWS account as lambda code; this upload will contain the open source project dependencies shown in the requirement.txt file
+This package contains the source code that will be built and packaged before uploading into your AWS account as lambda code; this upload will contain the open source project dependencies shown in the requirement.txt file
 
 # Local Run
 

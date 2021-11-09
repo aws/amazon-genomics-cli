@@ -89,7 +89,7 @@ export class MiniWdlEngineStack extends NestedEngineStack {
     this.adapterLogGroup = lambda.logGroup;
 
     this.apiProxy = new ApiProxy(this, {
-      apiName: `${params.projectName}${params.userId}${params.contextName}NextflowApiProxy`,
+      apiName: `${params.projectName}${params.userId}${params.contextName}MiniWdlApiProxy`,
       lambda,
       allowedAccountIds: [this.account],
     });
