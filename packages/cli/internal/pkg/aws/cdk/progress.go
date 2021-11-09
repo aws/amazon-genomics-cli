@@ -72,6 +72,7 @@ func ShowExecution(progressEvents []ProgressStream) []Result {
 }
 
 func updateResultFromStream(stream ProgressStream, progressResult *Result, wait *sync.WaitGroup) {
+	defer wait.Done()
 	var lastEvent ProgressEvent
 
 	for event := range stream {
@@ -84,7 +85,6 @@ func updateResultFromStream(stream ProgressStream, progressResult *Result, wait 
 
 	progressResult.Outputs = lastEvent.Outputs
 	progressResult.UniqueKey = lastEvent.UniqueKey
-	wait.Done()
 }
 
 func DisplayProgressBar(description string, progressEvents []ProgressStream) []Result {

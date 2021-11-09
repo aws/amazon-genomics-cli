@@ -115,7 +115,8 @@ func (o *deployContextOpts) deployContexts() error {
 		for i, failedDeployment := range failedDeployments {
 			log.Error().Msgf("Failed to deploy context '%s'. Below is the log for that deployment", failedDeployment.Context)
 
-			printErroredLogs(failedDeployment, i, failedDeploymentsLength)
+			isLastDeployment := i == failedDeploymentsLength-1
+			printErroredLogs(failedDeployment, isLastDeployment)
 
 			var actionableError *actionableerror.Error
 			if errors.As(failedDeployment.Err, &actionableError) {
@@ -130,7 +131,7 @@ func (o *deployContextOpts) deployContexts() error {
 	return nil
 }
 
-func printErroredLogs(failedDeployment context.ProgressResult, deploymentNumber int, failedDeploymentsLength int) {
+func printErroredLogs(failedDeployment context.ProgressResult, isLastDeployment bool) {
 	outputsLength := len(failedDeployment.Outputs)
 	if outputsLength == 0 {
 		return
@@ -140,7 +141,7 @@ func printErroredLogs(failedDeployment context.ProgressResult, deploymentNumber 
 		log.Error().Msg(failedDeployment.Outputs[j])
 	}
 
-	if deploymentNumber < failedDeploymentsLength-1 {
+	if isLastDeployment {
 		log.Error().Msgf("%s \n\n\n", failedDeployment.Outputs[outputsLength-1])
 	} else {
 		log.Error().Msg(failedDeployment.Outputs[outputsLength-1])
@@ -154,21 +155,7 @@ func (o *deployContextOpts) validateDeploymentResults() ([]context.Detail, error
 	wait.Add(len(o.contexts))
 
 	for i, contextName := range o.contexts {
-		go func(ctxManager context.Interface, i int, contextName string) {
-			info, err := ctxManager.Info(contextName)
-			contextDetails[i] = info
-			if err != nil {
-				var actionableError *actionableerror.Error
-				if errors.As(err, &actionableError) {
-					log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
-					aggregateSuggestions = append(aggregateSuggestions, actionableError.SuggestedAction)
-				} else {
-					log.Error().Err(err).Msgf("failed to deploy context '%s'", contextName)
-				}
-				deploymentHasErrors = true
-			}
-			wait.Done()
-		}(o.ctxManager, i, contextName)
+		go getContextStatus(o.ctxManager, contextName, &contextDetails[i], &wait, &aggregateSuggestions, &deploymentHasErrors)
 	}
 
 	wait.Wait()
@@ -178,6 +165,22 @@ func (o *deployContextOpts) validateDeploymentResults() ([]context.Detail, error
 	}
 
 	return contextDetails, nil
+}
+
+func getContextStatus(ctxManager context.Interface, contextName string, contextDetail *context.Detail, wait *sync.WaitGroup, aggregateSuggestions *[]string, deploymentHasErrors *bool) {
+	defer wait.Done()
+	info, err := ctxManager.Info(contextName)
+	*contextDetail = info
+	if err != nil {
+		var actionableError *actionableerror.Error
+		if errors.As(err, &actionableError) {
+			log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
+			*aggregateSuggestions = append(*aggregateSuggestions, actionableError.SuggestedAction)
+		} else {
+			log.Error().Err(err).Msgf("failed to retrieve context status for '%s'", contextName)
+		}
+		*deploymentHasErrors = true
+	}
 }
 
 func sortContextDetails(contextDetails []context.Detail) {

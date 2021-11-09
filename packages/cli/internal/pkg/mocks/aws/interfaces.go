@@ -15,6 +15,7 @@ import (
 type CdkClient interface {
 	cdk.Interface
 	DisplayProgressBar(description string, progressEvents []cdk.ProgressStream) []cdk.Result
+	ShowExecution(progressEvents []cdk.ProgressStream) []cdk.Result
 }
 
 type S3Client interface {

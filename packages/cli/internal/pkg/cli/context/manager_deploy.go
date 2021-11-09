@@ -71,10 +71,9 @@ func (m *Manager) deployContext(contextName string) cdk.ProgressStream {
 		m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: m.err})
 		return nil
 	}
-	contextCmd := func() (cdk.ProgressStream, error) {
-		return m.Cdk.DeployApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), m.contextEnv.ToEnvironmentList(), contextName)
-	}
-	progressStream, err := contextCmd()
+
+	progressStream, err := m.Cdk.DeployApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), m.contextEnv.ToEnvironmentList(), contextName)
+
 	if err != nil {
 		m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: err})
 	}
