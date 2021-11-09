@@ -1,14 +1,15 @@
 ---
-title: "Nextflow"
+title: "miniwdl"
 date: 2021-10-01T17:27:31-04:00
 draft: false
+weight: 30
 description: >
-    Details on the Cromwell engine deployed by Amazon Genomics CLI
+    Details on the miniwdl engine deployed by Amazon Genomics CLI
 ---
 
 ## Description
 
-[Miniwdl](https://miniwdl.readthedocs.io/en/latest/index.html) is free open source software distributed under the MIT licence 
+[miniwdl](https://miniwdl.readthedocs.io/en/latest/index.html) is free open source software distributed under the MIT licence 
 developed by the [Chan Zuckerberg Initiative](https://chanzuckerberg.com/). 
 
 The source code for miniwdl is available on [GitHub](https://github.com/chanzuckerberg/miniwdl). When deployed with
