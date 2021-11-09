@@ -15,8 +15,10 @@ import (
 	"github.com/aws/amazon-genomics-cli/cmd/application/template"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/term/color"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
 	"github.com/rs/zerolog"
@@ -34,7 +36,25 @@ slug: %s
 
 type mainVars struct {
 	docPath string
-	format  string
+}
+type formatVars struct {
+	format string
+}
+
+type formatOpts struct {
+	configClient storage.ConfigClient
+	formatVars   formatVars
+}
+
+func newFormatOpts(formatVars formatVars) (*formatOpts, error) {
+	configClient, err := config.NewConfigClient()
+	if err != nil {
+		return nil, err
+	}
+	return &formatOpts{
+		formatVars:   formatVars,
+		configClient: configClient,
+	}, nil
 }
 
 func init() {
@@ -77,6 +97,7 @@ func BuildCommandDocsForHugo(cmd *cobra.Command, dir string) error {
 
 func buildRootCmd() *cobra.Command {
 	vars := mainVars{}
+	formatVars := formatVars{}
 	cmd := &cobra.Command{
 		Use:   "agc",
 		Short: shortDescription,
@@ -84,8 +105,12 @@ func buildRootCmd() *cobra.Command {
   Displays the help menu for the specified sub-command.
   /code $ agc account --help`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			format.SetFormatter(format.FormatterType(vars.format))
+			opts, err := newFormatOpts(formatVars)
+			if err != nil {
+				log.Error().Err(err)
+			}
 			setLoggingLevel()
+			setFormatter(opts)
 			checkCliVersion()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -116,11 +141,26 @@ func buildRootCmd() *cobra.Command {
 	cmd.SetUsageTemplate(template.RootUsage)
 
 	cmd.PersistentFlags().BoolVarP(&logging.Verbose, cli.VerboseFlag, cli.VerboseFlagShort, false, cli.VerboseFlagDescription)
-	cmd.PersistentFlags().StringVar(&vars.format, cli.FormatFlag, cli.FormatFlagDefault, cli.FormatFlagDescription)
+	cmd.PersistentFlags().StringVar(&formatVars.format, cli.FormatFlag, "", cli.FormatFlagDescription)
 	cmd.Flags().StringVar(&vars.docPath, "docs", "", "generate markdown documenting the CLI to the specified path")
 	cmd.Flag("docs").Hidden = true
 
 	return cmd
+}
+
+func setFormatter(opts *formatOpts) string {
+	configClient := opts.configClient
+	formatVars := opts.formatVars
+	if formatVars.format == "" {
+		// read the default format from config
+		defaultFormat, err := configClient.GetFormat()
+		formatVars.format = defaultFormat
+		if err != nil {
+			log.Error().Err(err)
+		}
+	}
+	format.SetFormatter(format.FormatterType(formatVars.format))
+	return formatVars.format
 }
 
 func checkCliVersion() {

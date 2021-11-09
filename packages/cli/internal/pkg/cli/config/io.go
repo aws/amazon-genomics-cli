@@ -11,6 +11,10 @@ var (
 	readFile  = ioutil.ReadFile
 )
 
+const (
+	defaultFormat = "text"
+)
+
 func toYaml(filePath string, configData Config) error {
 	bytes, err := yaml.Marshal(configData)
 	if err != nil {
@@ -25,9 +29,16 @@ func fromYaml(filePath string) (Config, error) {
 		return Config{}, err
 	}
 	var configData Config
+	setDefault(&configData)
 	if err := yaml.Unmarshal(bytes, &configData); err != nil {
 		return Config{}, err
 	}
-
 	return configData, nil
+}
+func setDefault(configData *Config) Config {
+	format := configData.Format.Format
+	if format == "" {
+		configData.Format.Format = defaultFormat
+	}
+	return *configData
 }

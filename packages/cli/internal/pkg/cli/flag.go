@@ -3,8 +3,6 @@
 
 package cli
 
-import "github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
-
 const (
 	argsFlag            = "args"
 	argsFlagShort       = "a"
@@ -19,7 +17,6 @@ const (
 
 const (
 	FormatFlag            = "format"
-	FormatFlagDefault     = string(format.DefaultFormat)
 	FormatFlagDescription = "Format option for output. Valid options are: text, tabular"
 )
 

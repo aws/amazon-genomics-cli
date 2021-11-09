@@ -6,7 +6,10 @@ type User struct {
 	// so nobody would be tempted to change that in the config file and get inconsistency in between email and userid
 	Id string `yaml:"-"`
 }
-
+type Format struct {
+	Format string `yaml:"format"`
+}
 type Config struct {
-	User User `yaml:"user"`
+	User   User `yaml:"user"`
+	Format Format
 }

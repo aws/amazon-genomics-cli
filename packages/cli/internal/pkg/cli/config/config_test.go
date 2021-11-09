@@ -23,6 +23,9 @@ var (
 		User{
 			Email: "my@email.com",
 		},
+		Format{
+			Format: "text",
+		},
 	}
 )
 
