@@ -331,7 +331,7 @@ func (m *Manager) isContextDeployed(contextName string) bool {
 		return false
 	}
 	engineStackName := awsresources.RenderContextStackName(m.projectSpec.Name, contextName, m.userId)
-	_, err := m.Cfn.GetStackStatus(engineStackName)
+	status, err := m.Cfn.GetStackStatus(engineStackName)
 	if err != nil {
 		if errors.Is(err, cfn.StackDoesNotExistError) {
 			return false
@@ -339,7 +339,9 @@ func (m *Manager) isContextDeployed(contextName string) bool {
 		m.err = err
 		return false
 	}
-	return true
+
+	ok, activeStatusFlag := cfn.QueryableStacksMap[status]
+	return ok && activeStatusFlag
 }
 
 func (m *Manager) setContext(contextName string) {
