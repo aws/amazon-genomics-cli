@@ -24,14 +24,14 @@ func toYaml(filePath string, configData Config) error {
 }
 
 func fromYaml(filePath string) (Config, error) {
-	bytes, err := readFile(filePath)
-	if err != nil {
-		return Config{}, err
-	}
 	var configData Config
 	setDefault(&configData)
+	bytes, err := readFile(filePath)
+	if err != nil {
+		return configData, err
+	}
 	if err := yaml.Unmarshal(bytes, &configData); err != nil {
-		return Config{}, err
+		return configData, err
 	}
 	return configData, nil
 }

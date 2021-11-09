@@ -15,7 +15,9 @@ const (
 	testFileName       = "config.yaml"
 	expectedConfigYaml = `
 user:
-    email: my@email.com`
+    email: my@email.com
+format:
+    format: text`
 )
 
 var (

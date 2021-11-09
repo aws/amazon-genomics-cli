@@ -11,7 +11,6 @@ import (
 )
 
 const (
-	defaultFormat = "text"
 	tableFormat   = "table"
 )
 
@@ -43,7 +42,6 @@ func TestSetFormatter_FormatFlagNotSet(t *testing.T) {
 	}
 	mocks.configMock.EXPECT().GetFormat().Return(mockedConfig.Format.Format, nil)
 	formatOpts.configClient = mocks.configMock
-	// config format should match the default format
 	configFormat := setFormatter(formatOpts)
 	require.True(t, reflect.DeepEqual(configFormat, mockedConfig.Format.Format))
 }
@@ -59,6 +57,5 @@ func TestSetFormatter_FormatFlagSet(t *testing.T) {
 
 	formatOpts.configClient = mocks.configMock
 	configFormat := setFormatter(formatOpts)
-	// config format should match the format flag value
 	require.True(t, reflect.DeepEqual(configFormat, formatOpts.formatVars.format))
 }

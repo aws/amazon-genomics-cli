@@ -40,7 +40,9 @@ type mainVars struct {
 type formatVars struct {
 	format string
 }
-
+const (
+	defaultFormat = "text"
+)
 type formatOpts struct {
 	configClient storage.ConfigClient
 	formatVars   formatVars
@@ -151,12 +153,14 @@ func buildRootCmd() *cobra.Command {
 func setFormatter(opts *formatOpts) string {
 	configClient := opts.configClient
 	formatVars := opts.formatVars
+
 	if formatVars.format == "" {
-		// read the default format from config
-		defaultFormat, err := configClient.GetFormat()
 		formatVars.format = defaultFormat
+		configFormat, err := configClient.GetFormat()
 		if err != nil {
 			log.Error().Err(err)
+		} else {
+		 formatVars.format = configFormat
 		}
 	}
 	format.SetFormatter(format.FormatterType(formatVars.format))

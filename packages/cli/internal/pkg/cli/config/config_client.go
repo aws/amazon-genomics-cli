@@ -137,7 +137,10 @@ func (c Client) GetUserId() (string, error) {
 }
 
 func (c Client) SetFormat(format string) error {
-	configData, _ := c.loadFromFile()
+	configData, err := c.loadFromFile()
+	if err != nil {
+		return err
+	}
 	configData.Format.Format = format
 	return c.storeToFile(configData)
 }
