@@ -1,0 +1,5 @@
+{
+  "mainWorkflowURL": "gatk4-rnaseq-germline-snps-indels.wdl",
+  "inputFileURLs": [ "gatk4-rnaseq-germline-snps-indels.inputs.json" ],
+  "engineOptions": "--no-cache"
+}
