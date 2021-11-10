@@ -109,11 +109,11 @@ func buildRootCmd() *cobra.Command {
   Displays the help menu for the specified sub-command.
   /code $ agc account --help`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			setLoggingLevel()
 			opts, err := newFormatOpts(formatVars)
 			if err != nil {
 				log.Error().Err(err)
 			}
-			setLoggingLevel()
 			setFormatter(opts)
 			checkCliVersion()
 		},
