@@ -24,8 +24,7 @@ func toYaml(filePath string, configData Config) error {
 }
 
 func fromYaml(filePath string) (Config, error) {
-	var configData Config
-	setDefault(&configData)
+	configData := Config{Format: Format{defaultFormat}}
 	bytes, err := readFile(filePath)
 	if err != nil {
 		return configData, err
@@ -34,11 +33,4 @@ func fromYaml(filePath string) (Config, error) {
 		return configData, err
 	}
 	return configData, nil
-}
-func setDefault(configData *Config) Config {
-	format := configData.Format.Format
-	if format == "" {
-		configData.Format.Format = defaultFormat
-	}
-	return *configData
 }
