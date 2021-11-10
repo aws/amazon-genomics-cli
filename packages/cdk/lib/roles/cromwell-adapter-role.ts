@@ -10,7 +10,8 @@ export interface CromwellAdapterRoleProps {
 export class CromwellAdapterRole extends iam.Role {
   constructor(scope: cdk.Construct, id: string, props: CromwellAdapterRoleProps) {
     super(scope, id, {
-      assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
+      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")],
     });
 
     BucketOperations.grantBucketAccess(this, this, props.readOnlyBucketArns, true);

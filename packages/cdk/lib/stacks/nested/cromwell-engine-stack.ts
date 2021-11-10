@@ -4,7 +4,7 @@ import { FargateTaskDefinition, LogDriver } from "monocdk/aws-ecs";
 import { Construct } from "constructs";
 import { ApiProxy, SecureService } from "../../constructs";
 import { IRole } from "monocdk/aws-iam";
-import { createEcrImage, renderServiceWithContainer, renderServiceWithTaskDefinition } from "../../util";
+import { createEcrImage, renderPythonLambda, renderServiceWithTaskDefinition } from "../../util";
 import { Bucket } from "monocdk/aws-s3";
 import { FileSystem } from "monocdk/aws-efs";
 import { EngineOptions, ServiceContainer } from "../../types";
@@ -13,15 +13,14 @@ import { LogGroup } from "monocdk/aws-logs";
 import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
 import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
+import { wesAdapterSourcePath } from "../../constants";
 
 export interface CromwellEngineStackProps extends EngineOptions, NestedStackProps {}
 
 export class CromwellEngineStack extends NestedEngineStack {
   public readonly engine: SecureService;
-  public readonly adapter: SecureService;
   public readonly adapterRole: IRole;
   public readonly apiProxy: ApiProxy;
-  public readonly engineApiProxy: ApiProxy;
   public readonly adapterLogGroup: ILogGroup;
   public readonly engineLogGroup: ILogGroup;
   public readonly engineRole: IRole;
@@ -48,14 +47,22 @@ export class CromwellEngineStack extends NestedEngineStack {
     // TODO: Move log group creation into service construct and make it a property
     this.engine = this.getEngineServiceDefinition(props.vpc, engineContainer, this.engineLogGroup);
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
-    const adapterContainer = params.getAdapterContainer({
-      ENGINE_ENDPOINT: this.engine.loadBalancer.loadBalancerDnsName,
+
+    const lambda = this.renderAdapterLambda({
+      vpc: props.vpc,
+      role: this.adapterRole,
+      engineLogGroupName: this.adapterLogGroup.logGroupName,
+      jobQueueArn: props.jobQueue.jobQueueArn,
+      projectName: params.projectName,
+      contextName: params.contextName,
+      userId: params.userId,
+      engineEndpoint: this.engine.loadBalancer.loadBalancerDnsName,
     });
-    this.adapter = renderServiceWithContainer(this, "Adapter", adapterContainer, props.vpc, this.adapterRole, this.adapterLogGroup);
+    this.adapterLogGroup = lambda.logGroup;
 
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.contextName}${engineContainer.serviceName}ApiProxy`,
-      loadBalancer: this.adapter.loadBalancer,
+      lambda,
       allowedAccountIds: [this.account],
     });
   }
@@ -109,5 +116,17 @@ export class CromwellEngineStack extends NestedEngineStack {
     const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc);
     fileSystem.connections.allowDefaultPortFrom(engine.service);
     return engine;
+  }
+
+  private renderAdapterLambda({ vpc, role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint }) {
+    return renderPythonLambda(this, "CromwellWesAdapterLambda", vpc, role, wesAdapterSourcePath, {
+      ENGINE_NAME: "cromwell",
+      ENGINE_ENDPOINT: engineEndpoint,
+      ENGINE_LOG_GROUP: engineLogGroupName,
+      JOB_QUEUE: jobQueueArn,
+      PROJECT_NAME: projectName,
+      CONTEXT_NAME: contextName,
+      USER_ID: userId,
+    });
   }
 }

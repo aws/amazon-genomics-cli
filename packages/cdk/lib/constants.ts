@@ -1,3 +1,5 @@
+import * as path from "path";
+
 export const PRODUCT_NAME = "Agc";
 export const APP_NAME = "agc";
 export const APP_ENV_NAME = "AGC";
@@ -7,6 +9,8 @@ export const CONTEXT_TAG_KEY = `${APP_NAME}-context`;
 export const USER_ID_TAG_KEY = `${APP_NAME}-user-id`;
 export const USER_EMAIL_TAG_KEY = `${APP_NAME}-user-email`;
 export const VPC_PARAMETER_NAME = "vpc";
+
+export const wesAdapterSourcePath = path.resolve(path.join(__dirname, "./wes_adapter"));
 
 export const LAUNCH_TEMPLATE = `MIME-Version: 1.0
 Content-Type: multipart/mixed; boundary="==MYBOUNDARY=="
