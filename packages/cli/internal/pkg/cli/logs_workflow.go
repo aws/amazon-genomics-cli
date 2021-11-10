@@ -6,6 +6,8 @@ package cli
 import (
 	"bytes"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/batch"
@@ -90,19 +92,10 @@ func (o *logsWorkflowOpts) Execute() error {
 
 	var jobIds []string
 	if o.taskId != "" {
-		var taskExists = false
-		for _, task := range runLog.Tasks {
-			if task.JobId == o.taskId {
-				taskExists = true
-				break
-			}
-		}
-
-		if !taskExists {
+		if !containsTaskId(o.taskId, runLog.Tasks) {
 			log.Info().Msgf("Task `%s` does not exist for run `%s`", o.taskId, o.runId)
 			return nil
 		}
-
 		jobIds = []string{o.taskId}
 	} else if o.allTasks || o.failedTasks {
 		jobIds, err = o.getJobIds(runLog.Tasks)
@@ -110,9 +103,7 @@ func (o *logsWorkflowOpts) Execute() error {
 			return err
 		}
 	} else {
-		b := bytes.NewBufferString("")
-		format.NewStringFormatter(b).Write(runLog)
-		printLn(b)
+		printRunLog(runLog)
 		return nil
 	}
 
@@ -142,6 +133,25 @@ func (o *logsWorkflowOpts) Execute() error {
 	} else {
 		return o.displayLogStreams(logGroupName, o.startTime, o.endTime, o.filter, streamNames...)
 	}
+}
+
+func printRunLog(runLog workflow.RunLog) {
+	taskTable := "No task logs available"
+	if len(runLog.Tasks) > 0 {
+		b := bytes.NewBufferString("\n")
+		format.NewTable(b).Write(runLog.Tasks)
+		taskTable = strings.ReplaceAll(b.String(), "\n", "\n\t")
+	}
+	printLn(fmt.Sprintf("RunId: %s\nState: %s\nTasks: %s", runLog.RunId, runLog.State, taskTable))
+}
+
+func containsTaskId(taskId string, tasks []workflow.Task) bool {
+	for _, task := range tasks {
+		if task.JobId == taskId {
+			return true
+		}
+	}
+	return false
 }
 
 func filterCachedJobIds(ids []string) []string {

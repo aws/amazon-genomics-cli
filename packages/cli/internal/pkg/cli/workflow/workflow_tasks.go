@@ -39,18 +39,18 @@ func (m *Manager) GetWorkflowTasks(runId string) ([]Task, error) {
 }
 
 func (m *Manager) GetRunLog(runId string) (RunLog, error) {
-
-	tasks, err := m.GetWorkflowTasks(runId)
-	if err != nil {
-		return RunLog{}, err
-	} else if m.err != nil {
+	if m.err != nil {
+		return RunLog{}, m.err
+	}
+	var tasks []Task
+	tasks, m.err = m.GetWorkflowTasks(runId)
+	if m.err != nil {
 		return RunLog{}, m.err
 	}
 
-	var runLog = m.taskProps.runLog
 	return RunLog{
-		RunId: runLog.RunId,
-		State: string(runLog.State),
+		RunId: m.taskProps.runLog.RunId,
+		State: string(m.taskProps.runLog.State),
 		Tasks: tasks,
 	}, nil
 }

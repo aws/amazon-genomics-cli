@@ -145,7 +145,7 @@ func TestLogsWorkflowOpts_Execute(t *testing.T) {
 				opts.workflowManager.(*managermocks.MockWorkflowManager).EXPECT().
 					GetRunLog(testRunId).Return(testRunLog, nil)
 			},
-			expectedOutput: "RUNLOG\tTest Workflow Run Id\tCOMPLETE\nTASK\t0\tTest Job Id\tTest Task Name\t<nil>\t<nil>\n\n",
+			expectedOutput: "RunId: Test Workflow Run Id\nState: COMPLETE\nTasks: \n\tName\t\tJobId\t\tStartTime\tStopTimeExitCode\n\tTest Task Name\tTest Job Id\t<nil>\t\t<nil>\t0\n\t\n",
 		},
 		"runId no jobs": {
 			setupOps: func(opts *logsWorkflowOpts, cwlLopPaginator *awsmocks.MockCwlLogPaginator) {
@@ -158,7 +158,7 @@ func TestLogsWorkflowOpts_Execute(t *testing.T) {
 					Tasks: []workflow.Task(nil),
 				}, nil)
 			},
-			expectedOutput: "RUNLOG\tTest Workflow Run Id\tCOMPLETE\n\n",
+			expectedOutput: "RunId: Test Workflow Run Id\nState: COMPLETE\nTasks: No task logs available\n",
 		},
 		"runId empty cached": {
 			setupOps: func(opts *logsWorkflowOpts, cwlLopPaginator *awsmocks.MockCwlLogPaginator) {
@@ -172,7 +172,7 @@ func TestLogsWorkflowOpts_Execute(t *testing.T) {
 					Tasks: []workflow.Task{testCachedTask},
 				}, nil)
 			},
-			expectedOutput: "RUNLOG\tTest Workflow Run Id\tCOMPLETE\nTASK\t0\tXXXXX\tTest Task Name\t<nil>\t<nil>\n\n",
+			expectedOutput: "RunId: Test Workflow Run Id\nState: COMPLETE\nTasks: \n\tName\t\tJobId\tStartTime\tStopTimeExitCode\n\tTest Task Name\tXXXXX\t<nil>\t\t<nil>\t0\n\t\n",
 		},
 		"workflow name single task empty log": {
 			setupOps: func(opts *logsWorkflowOpts, cwlLopPaginator *awsmocks.MockCwlLogPaginator) {
