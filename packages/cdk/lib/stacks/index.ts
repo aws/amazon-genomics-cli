@@ -1,4 +1,4 @@
 export { CoreStack } from "./core-stack";
-export { BatchStack } from "./engines/batch-stack";
-export { CromwellEngineStack } from "./engines/cromwell-engine-stack";
-export { NextflowEngineStack } from "./engines/nextflow-engine-stack";
+export { BatchConstruct } from "./engines/batch-construct";
+export { CromwellEngineConstruct } from "./engines/cromwell-engine-construct";
+export { NextflowEngineConstruct } from "./engines/nextflow-engine-construct";

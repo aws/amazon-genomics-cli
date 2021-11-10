@@ -13,12 +13,12 @@ export abstract class EngineConstruct extends Construct {
     super(scope, id);
   }
 
-  public outputToParent(parentStack: Stack): void {
+  public outputToParent(): void {
     const outputs = this.getOutputs();
-    new CfnOutput(parentStack, "AccessLogGroupName", { value: outputs.accessLogGroup.logGroupName });
-    new CfnOutput(parentStack, "AdapterLogGroupName", { value: outputs.adapterLogGroup.logGroupName });
-    new CfnOutput(parentStack, "EngineLogGroupName", { value: outputs.engineLogGroup.logGroupName });
-    new CfnOutput(parentStack, "WesUrl", { value: outputs.wesUrl });
+    new CfnOutput(Stack.of(this), "AccessLogGroupName", { value: outputs.accessLogGroup.logGroupName });
+    new CfnOutput(Stack.of(this), "AdapterLogGroupName", { value: outputs.adapterLogGroup.logGroupName });
+    new CfnOutput(Stack.of(this), "EngineLogGroupName", { value: outputs.engineLogGroup.logGroupName });
+    new CfnOutput(Stack.of(this), "WesUrl", { value: outputs.wesUrl });
   }
 
   protected abstract getOutputs(): EngineOutputs;

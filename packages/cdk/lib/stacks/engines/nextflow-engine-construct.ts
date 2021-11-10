@@ -11,7 +11,7 @@ import { IJobQueue } from "monocdk/aws-batch";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
 
-export interface NextflowEngineStackProps extends EngineOptions {
+export interface NextflowEngineConstructProps extends EngineOptions {
   /**
    * AWS Batch JobQueue to use for running workflows.
    */
@@ -22,12 +22,12 @@ export interface NextflowEngineStackProps extends EngineOptions {
   readonly headQueue: IJobQueue;
 }
 
-export class NextflowEngineStack extends EngineConstruct {
+export class NextflowEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
   public readonly adapterLogGroup: ILogGroup;
   public readonly nextflowEngine: NextflowEngine;
 
-  constructor(scope: Construct, id: string, props: NextflowEngineStackProps) {
+  constructor(scope: Construct, id: string, props: NextflowEngineConstructProps) {
     super(scope, id);
 
     const params = props.contextParameters;

@@ -16,29 +16,22 @@ import { renderServiceWithContainer } from "../../util";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
 import { EngineOptions } from "../../types";
 
-export interface MiniWdlEngineStackProps extends EngineOptions {
-  /**
-   * Stack deploying MiniWdl construct
-   */
-  parent: Stack;
-}
-
-export class MiniWdlEngineStack extends EngineConstruct {
+export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
   public readonly adapterLogGroup: ILogGroup;
   public readonly miniwdlEngine: MiniWdlEngine;
   private readonly batchHead: Batch;
   private readonly batchWorkers: Batch;
 
-  constructor(scope: Construct, id: string, props: MiniWdlEngineStackProps) {
+  constructor(scope: Construct, id: string, props: EngineOptions) {
     super(scope, id);
 
     const { vpc, contextParameters } = props;
     const params = props.contextParameters;
 
-    this.batchHead = this.renderBatch("HeadBatch", vpc, props.parent, contextParameters.instanceTypes, ComputeResourceType.FARGATE);
+    this.batchHead = this.renderBatch("HeadBatch", vpc, contextParameters.instanceTypes, ComputeResourceType.FARGATE);
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
-    this.batchWorkers = this.renderBatch("TaskBatch", vpc, props.parent, contextParameters.instanceTypes, workerComputeType);
+    this.batchWorkers = this.renderBatch("TaskBatch", vpc, contextParameters.instanceTypes, workerComputeType);
 
     this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
     this.batchHead.role.addToPrincipalPolicy(
@@ -113,14 +106,14 @@ export class MiniWdlEngineStack extends EngineConstruct {
     }
   }
 
-  private renderBatch(id: string, vpc: IVpc, parent: Stack, instanceTypes?: InstanceType[], computeType?: ComputeResourceType): Batch {
+  private renderBatch(id: string, vpc: IVpc, instanceTypes?: InstanceType[], computeType?: ComputeResourceType): Batch {
     return new Batch(this, id, {
       vpc,
       instanceTypes,
       computeType,
       launchTemplateData: LAUNCH_TEMPLATE,
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
-      resourceTags: parent.tags.tagValues(),
+      resourceTags: Stack.of(this).tags.tagValues(),
     });
   }
 

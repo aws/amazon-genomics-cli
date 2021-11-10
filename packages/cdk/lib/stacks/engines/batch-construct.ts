@@ -7,11 +7,7 @@ import { BucketOperations } from "../../../common/BucketOperations";
 import { IRole } from "monocdk/aws-iam";
 import { ComputeResourceType } from "monocdk/aws-batch";
 
-export interface BatchStackProps {
-  /**
-   * Stack running BatchConstruct
-   */
-  readonly parent: Stack;
+export interface BatchConstructProps {
   /**
    * VPC to run resources in.
    */
@@ -30,20 +26,20 @@ export interface BatchStackProps {
   readonly createOnDemandBatch: boolean;
 }
 
-export class BatchStack extends Construct {
+export class BatchConstruct extends Construct {
   public readonly batchSpot: Batch;
   public readonly batchOnDemand: Batch;
 
-  constructor(scope: Construct, id: string, props: BatchStackProps) {
+  constructor(scope: Construct, id: string, props: BatchConstructProps) {
     super(scope, id);
 
     const { vpc, contextParameters, createSpotBatch, createOnDemandBatch } = props;
     const { artifactBucketName, outputBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
     if (createSpotBatch) {
-      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, contextParameters, props.parent, ComputeResourceType.SPOT);
+      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, contextParameters, ComputeResourceType.SPOT);
     }
     if (createOnDemandBatch) {
-      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, contextParameters, props.parent, ComputeResourceType.ON_DEMAND);
+      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, contextParameters, ComputeResourceType.ON_DEMAND);
     }
 
     const artifactBucket = BucketOperations.importBucket(this, "ArtifactBucket", artifactBucketName);
@@ -59,7 +55,7 @@ export class BatchStack extends Construct {
     }
   }
 
-  private renderBatch(id: string, vpc: IVpc, appParams: ContextAppParameters, parent: Stack, computeType?: ComputeResourceType): Batch {
+  private renderBatch(id: string, vpc: IVpc, appParams: ContextAppParameters, computeType?: ComputeResourceType): Batch {
     return new Batch(this, id, {
       vpc,
       computeType,
@@ -67,7 +63,7 @@ export class BatchStack extends Construct {
       maxVCpus: appParams.maxVCpus,
       launchTemplateData: LAUNCH_TEMPLATE,
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
-      resourceTags: parent.tags.tagValues(),
+      resourceTags: Stack.of(this).tags.tagValues(),
     });
   }
 

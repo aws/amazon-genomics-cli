@@ -15,14 +15,14 @@ import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
 import { IJobQueue } from "monocdk/aws-batch";
 
-export interface CromwellEngineStackProps extends EngineOptions {
+export interface CromwellEngineConstructProps extends EngineOptions {
   /**
    * AWS Batch JobQueue to use for running workflows.
    */
   readonly jobQueue: IJobQueue;
 }
 
-export class CromwellEngineStack extends EngineConstruct {
+export class CromwellEngineConstruct extends EngineConstruct {
   public readonly engine: SecureService;
   public readonly adapter: SecureService;
   public readonly adapterRole: IRole;
@@ -32,7 +32,7 @@ export class CromwellEngineStack extends EngineConstruct {
   public readonly engineLogGroup: ILogGroup;
   public readonly engineRole: IRole;
 
-  constructor(scope: Construct, id: string, props: CromwellEngineStackProps) {
+  constructor(scope: Construct, id: string, props: CromwellEngineConstructProps) {
     super(scope, id);
     const params = props.contextParameters;
     this.engineLogGroup = new LogGroup(this, "EngineLogGroup");
