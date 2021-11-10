@@ -24,7 +24,7 @@ func TestConfigureDescribeContextOpts_Execute(t *testing.T) {
 			Id:    "testemail123",
 		},
 		Format: config.Format{
-			Format: "text",
+			Value: "text",
 		},
 	}
 

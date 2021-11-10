@@ -97,7 +97,7 @@ func TestGetFormat(t *testing.T) {
 	}
 	configFormat, err := client.GetFormat()
 	require.NoError(t, err)
-	assert.Equal(t, expectedConfig.Format.Format, configFormat)
+	assert.Equal(t, expectedConfig.Format.Value, configFormat)
 }
 
 func TestSetFormat(t *testing.T) {

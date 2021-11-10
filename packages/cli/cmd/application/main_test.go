@@ -37,13 +37,13 @@ func TestSetFormatter_FormatFlagNotSet(t *testing.T) {
 	require.NoError(t, err)
 	mockedConfig := config.Config{
 		Format: config.Format{
-			Format: defaultFormat,
+			Value: defaultFormat,
 		},
 	}
-	mocks.configMock.EXPECT().GetFormat().Return(mockedConfig.Format.Format, nil)
+	mocks.configMock.EXPECT().GetFormat().Return(mockedConfig.Format.Value, nil)
 	formatOpts.configClient = mocks.configMock
 	configFormat := setFormatter(formatOpts)
-	require.True(t, reflect.DeepEqual(configFormat, mockedConfig.Format.Format))
+	require.True(t, reflect.DeepEqual(configFormat, mockedConfig.Format.Value))
 }
 
 func TestSetFormatter_FormatFlagSet(t *testing.T) {
