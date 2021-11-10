@@ -2,8 +2,6 @@ package config
 
 import (
 	"errors"
-	"github.com/stretchr/testify/require"
-	"gopkg.in/yaml.v3"
 	"io/fs"
 	"testing"
 
@@ -11,6 +9,8 @@ import (
 	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v3"
 )
 
 func TestConfig_UserId(t *testing.T) {
@@ -82,7 +82,6 @@ func TestDetermineHomeDir_Failure(t *testing.T) {
 	assert.Error(t, err, expectedError)
 }
 
-
 func TestGetFormat(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -112,7 +111,6 @@ func TestSetFormat(t *testing.T) {
 	readFile = mockFileReader.ReadFile
 	defer func() { readFile = origReadFile }()
 
-
 	expectedConfigBytes, _ := yaml.Marshal(expectedConfig)
 	mockFileWriter := iomocks.NewMockFileWriter(ctrl)
 	mockFileWriter.EXPECT().WriteFile(testFileName, expectedConfigBytes, fs.FileMode(0644)).Return(nil)
@@ -120,7 +118,6 @@ func TestSetFormat(t *testing.T) {
 	origWriteFile := writeFile
 	writeFile = mockFileWriter.WriteFile
 	defer func() { writeFile = origWriteFile }()
-
 
 	var client = Client{
 		configFilePath: testFileName,

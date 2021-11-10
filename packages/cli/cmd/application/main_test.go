@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	tableFormat   = "table"
+	tableFormat = "table"
 )
 
 type mockClients struct {

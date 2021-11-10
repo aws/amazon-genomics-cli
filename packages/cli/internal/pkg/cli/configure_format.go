@@ -5,6 +5,7 @@ package cli
 
 import (
 	"fmt"
+
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
@@ -50,24 +51,24 @@ func BuildConfigureFormatCommand() *cobra.Command {
 		Short: "Sets default format for output display",
 		Args:  cobra.ArbitraryArgs,
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
-				vars.format = args[0]
-				opts, err := newFormatContextOpts(vars)
-				if err != nil {
-					return err
-				}
-				if err := opts.Validate(args); err != nil {
+			vars.format = args[0]
+			opts, err := newFormatContextOpts(vars)
+			if err != nil {
 				return err
-				}
-				configClient, err := config.NewConfigClient()
-				if err != nil {
-					return clierror.New(configureFormatCommand, vars, err)
-				}
-				opts.configClient = configClient
-				log.Info().Msgf("Setting default format to: '%s'", opts.format)
-				err = opts.Execute()
-				if err != nil {
-					return clierror.New(configureFormatCommand, vars, err)
-				}
+			}
+			if err := opts.Validate(args); err != nil {
+				return err
+			}
+			configClient, err := config.NewConfigClient()
+			if err != nil {
+				return clierror.New(configureFormatCommand, vars, err)
+			}
+			opts.configClient = configClient
+			log.Info().Msgf("Setting default format to: '%s'", opts.format)
+			err = opts.Execute()
+			if err != nil {
+				return clierror.New(configureFormatCommand, vars, err)
+			}
 
 			return nil
 		}),
