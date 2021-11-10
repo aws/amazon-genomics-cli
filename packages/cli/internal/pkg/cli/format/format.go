@@ -2,6 +2,7 @@ package format
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"text/tabwriter"
 )
@@ -41,4 +42,12 @@ type Formatter interface {
 
 func NewStringFormatter(buffer *bytes.Buffer) Formatter {
 	return &Text{buffer}
+}
+
+func (f FormatterType) ValidateFormatter() error {
+	switch f {
+	case textFormat, tableFormat:
+		return nil
+	}
+	return fmt.Errorf("invalid format type. Valid format types are 'text' and 'table'")
 }

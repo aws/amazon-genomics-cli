@@ -8,6 +8,7 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -33,6 +34,10 @@ func (o *formatContextOpts) Validate(args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("format value must be provided")
 	}
+	format := format.FormatterType(args[0])
+	if err := format.ValidateFormatter(); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -48,7 +53,7 @@ func BuildConfigureFormatCommand() *cobra.Command {
 	vars := formatContextVars{}
 	cmd := &cobra.Command{
 		Use:   "format output_format",
-		Short: "Sets default format for output display",
+		Short: "Sets default format option for output display of AGC commands. Valid format options are 'text' and 'table'",
 		Args:  cobra.ArbitraryArgs,
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
 			vars.format = args[0]
@@ -69,7 +74,6 @@ func BuildConfigureFormatCommand() *cobra.Command {
 			if err != nil {
 				return clierror.New(configureFormatCommand, vars, err)
 			}
-
 			return nil
 		}),
 	}

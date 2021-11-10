@@ -50,6 +50,14 @@ type formatOpts struct {
 	formatVars   formatVars
 }
 
+func (o formatOpts) Validate() error {
+	format := format.FormatterType(o.formatVars.format)
+	if err := format.ValidateFormatter(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func newFormatOpts(formatVars formatVars) (*formatOpts, error) {
 	configClient, err := config.NewConfigClient()
 	if err != nil {
@@ -113,6 +121,9 @@ func buildRootCmd() *cobra.Command {
 			opts, err := newFormatOpts(formatVars)
 			if err != nil {
 				log.Error().Err(err)
+			}
+			if err := opts.Validate(); err != nil {
+				fmt.Println(err.Error())
 			}
 			setFormatter(opts)
 			checkCliVersion()
