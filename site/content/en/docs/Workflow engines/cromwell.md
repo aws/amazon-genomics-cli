@@ -2,6 +2,7 @@
 title: "Cromwell"
 date: 2021-10-01T17:27:21-04:00
 draft: false
+weight: 20
 description: >
     Details on the Cromwell engine deployed by Amazon Genomics CLI
 ---

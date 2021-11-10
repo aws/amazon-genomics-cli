@@ -1,0 +1,8 @@
+{
+  "CramToBamFlow.sample_name": "NA12878",
+  "CramToBamFlow.input_cram": "s3://gatk-test-data/wgs_cram/NA12878_20k_hg38/NA12878.cram",
+
+  "CramToBamFlow.ref_dict": "s3://broad-references/hg38/v0/Homo_sapiens_assembly38.dict",
+  "CramToBamFlow.ref_fasta": "s3://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta",
+  "CramToBamFlow.ref_fasta_index": "s3://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.fai"
+}
