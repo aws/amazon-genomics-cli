@@ -5,13 +5,15 @@ import (
 	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 )
 
 const (
-	tableFormat = "table"
+	tableFormat   = "table"
+	invalidFormat = "csv"
 )
 
 type mockClients struct {
@@ -58,4 +60,34 @@ func TestSetFormatter_FormatFlagSet(t *testing.T) {
 	formatOpts.configClient = mocks.configMock
 	configFormat := setFormatter(formatOpts)
 	require.True(t, reflect.DeepEqual(configFormat, formatOpts.formatVars.format))
+}
+
+func TestValidateFormat_ValidFormat(t *testing.T) {
+	mocks := createMocks(t)
+	defer mocks.ctrl.Finish()
+
+	formatOpts, err := newFormatOpts(formatVars{
+		format: tableFormat,
+	})
+	require.NoError(t, err)
+
+	formatOpts.configClient = mocks.configMock
+	format := format.FormatterType(formatOpts.formatVars.format)
+	err = ValidateFormat(format)
+	require.NoError(t, err)
+}
+
+func TestValidateFormat_InvalidFormat(t *testing.T) {
+	mocks := createMocks(t)
+	defer mocks.ctrl.Finish()
+
+	formatOpts, err := newFormatOpts(formatVars{
+		format: invalidFormat,
+	})
+	require.NoError(t, err)
+
+	formatOpts.configClient = mocks.configMock
+	format := format.FormatterType(formatOpts.formatVars.format)
+	err = ValidateFormat(format)
+	require.Error(t, err)
 }

@@ -7,7 +7,8 @@ import (
 )
 
 const (
-	textFormat = "text"
+	textFormat    = "text"
+	invalidFormat = "csv"
 )
 
 func TestFormatContextOpts_Execute(t *testing.T) {
@@ -22,5 +23,33 @@ func TestFormatContextOpts_Execute(t *testing.T) {
 	mocks.configMock.EXPECT().SetFormat(textFormat).Return(nil)
 	formatContextOpts.configClient = mocks.configMock
 	err = formatContextOpts.Execute()
+	require.NoError(t, err)
+}
+
+func TestFormatContextOpts_Validate_InvalidFormat(t *testing.T) {
+	mocks := createMocks(t)
+	defer mocks.ctrl.Finish()
+
+	formatContextOpts, err := newFormatContextOpts(formatContextVars{
+		format: invalidFormat,
+	})
+	require.NoError(t, err)
+
+	formatContextOpts.configClient = mocks.configMock
+	err = formatContextOpts.Validate()
+	require.Error(t, err)
+}
+
+func TestFormatContextOpts_Validate_ValidFormat(t *testing.T) {
+	mocks := createMocks(t)
+	defer mocks.ctrl.Finish()
+
+	formatContextOpts, err := newFormatContextOpts(formatContextVars{
+		format: textFormat,
+	})
+	require.NoError(t, err)
+
+	formatContextOpts.configClient = mocks.configMock
+	err = formatContextOpts.Validate()
 	require.NoError(t, err)
 }
