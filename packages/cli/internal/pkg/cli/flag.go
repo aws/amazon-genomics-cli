@@ -17,7 +17,7 @@ const (
 
 const (
 	FormatFlag            = "format"
-	FormatFlagDescription = "Format option for output. Valid options are: text, tabular"
+	FormatFlagDescription = "Format option for output. Valid options are: text, table"
 )
 
 const (
