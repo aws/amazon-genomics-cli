@@ -1,16 +1,16 @@
 import { NestedStackProps } from "monocdk";
 import { Construct } from "constructs";
 import { NextflowEngine } from "../../constructs/engines/nextflow/nextflow-engine";
-import { renderServiceWithContainer } from "../../util";
+import { renderPythonLambda } from "../../util";
 import { EngineOptions } from "../../types";
 import { Bucket } from "monocdk/aws-s3";
 import { ApiProxy } from "../../constructs";
-import { LogGroup } from "monocdk/aws-logs";
 import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { IJobQueue } from "monocdk/aws-batch";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
+import { wesAdapterSourcePath } from "../../constants";
 
 export interface NextflowEngineStackProps extends EngineOptions, NestedStackProps {
   /**
@@ -53,21 +53,21 @@ export class NextflowEngineStack extends NestedEngineStack {
     });
 
     const engineLogGroup = this.nextflowEngine.logGroup;
-    const adapterContainer = params.getAdapterContainer();
-    adapterContainer.environment!["JOB_DEFINITION"] = this.nextflowEngine.headJobDefinition.jobDefinitionArn;
-    adapterContainer.environment!["JOB_QUEUE"] = props.headQueue.jobQueueArn;
-    adapterContainer.environment!["ENGINE_LOG_GROUP"] = engineLogGroup.logGroupName;
-
-    this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
-    const adapter = renderServiceWithContainer(this, "Adapter", adapterContainer, props.vpc, adapterRole, this.adapterLogGroup);
-
     engineLogGroup.grant(engineRole, "logs:StartQuery");
     engineLogGroup.grant(adapterRole, "logs:StartQuery");
-    this.adapterLogGroup.grant(adapterRole, "logs:StartQuery");
+
+    const lambda = this.renderAdapterLambda({
+      vpc: props.vpc,
+      role: adapterRole,
+      jobQueueArn: props.headQueue.jobQueueArn,
+      jobDefinitionArn: this.nextflowEngine.headJobDefinition.jobDefinitionArn,
+      engineLogGroupName: engineLogGroup.logGroupName,
+    });
+    this.adapterLogGroup = lambda.logGroup;
 
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}NextflowApiProxy`,
-      loadBalancer: adapter.loadBalancer,
+      lambda,
       allowedAccountIds: [this.account],
     });
   }
@@ -79,5 +79,14 @@ export class NextflowEngineStack extends NestedEngineStack {
       engineLogGroup: this.nextflowEngine.logGroup,
       wesUrl: this.apiProxy.restApi.url,
     };
+  }
+
+  private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, engineLogGroupName }) {
+    return renderPythonLambda(this, "NextflowWesAdapterLambda", vpc, role, wesAdapterSourcePath, {
+      ENGINE_NAME: "nextflow",
+      JOB_QUEUE: jobQueueArn,
+      JOB_DEFINITION: jobDefinitionArn,
+      ENGINE_LOG_GROUP: engineLogGroupName,
+    });
   }
 }
