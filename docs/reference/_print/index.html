@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.85.0" /><link rel="canonical" type="text/html" href="/amazon-genomics-cli/docs/reference/">
+<meta name="generator" content="Hugo 0.85.0" />
+<link rel="canonical" type="text/html" href="/amazon-genomics-cli/docs/reference/">
 <link rel="alternate" type="application/rss&#43;xml" href="/amazon-genomics-cli/docs/reference/index.xml">
-<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="robots" content="noindex, nofollow">
 
 
 <link rel="shortcut icon" href="/amazon-genomics-cli/favicons/favicon.ico" >
@@ -40,8 +41,8 @@
 
 
 
-<link rel="preload" href="/amazon-genomics-cli/scss/main.min.bd5285b713d3061549a6bfd34e5f4ec6775ede36672a3088260f0d420050647f.css" as="style">
-<link href="/amazon-genomics-cli/scss/main.min.bd5285b713d3061549a6bfd34e5f4ec6775ede36672a3088260f0d420050647f.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/amazon-genomics-cli/scss/main.min.93be7723579b79373235edba63b64ec3a477823ef01c6ac9507f2157d195802f.css" as="style">
+<link href="/amazon-genomics-cli/scss/main.min.93be7723579b79373235edba63b64ec3a477823ef01c6ac9507f2157d195802f.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -118,22 +119,17 @@
 			
 		</ul>
 	</div>
-	<div class="navbar-nav d-none d-lg-block">
-
-
-
-<input
+	<div class="navbar-nav d-none d-lg-block"><input
   type="search"
   class="form-control td-search-input"
   placeholder="&#xf002; Search this site…"
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.e3ce8f1591bbed2b7c5f73a1dc00c5e8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.324d38097cbb205673bc16b0ce9765bb.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
-
 </div>
 </nav>
 
@@ -388,7 +384,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>27: <a href="#pg-d9846ccd8da83167daa068e396d2e4e3">agc workflow</a></li>
+<li>27: <a href="#pg-d9702cf7a8e95e8b0b4445106f8e4cec">agc project validate</a></li>
 
 
     
@@ -396,7 +392,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>28: <a href="#pg-aa3ea87fa151b468426bd3845a948b1b">agc workflow describe</a></li>
+<li>28: <a href="#pg-d9846ccd8da83167daa068e396d2e4e3">agc workflow</a></li>
 
 
     
@@ -404,7 +400,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>29: <a href="#pg-071929043a3613ca496d42da4a38977b">agc workflow list</a></li>
+<li>29: <a href="#pg-aa3ea87fa151b468426bd3845a948b1b">agc workflow describe</a></li>
 
 
     
@@ -412,7 +408,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>30: <a href="#pg-372e46846966d919f8e8175575c2f226">agc workflow run</a></li>
+<li>30: <a href="#pg-071929043a3613ca496d42da4a38977b">agc workflow list</a></li>
 
 
     
@@ -420,7 +416,7 @@ This the multi-page printable view of this section.
     
     
 	
-<li>31: <a href="#pg-b7723a381adbd21c1f44bcc9e1f7afbe">agc workflow status</a></li>
+<li>31: <a href="#pg-b9790703ef9ea254bb964a01736d5e12">agc workflow output</a></li>
 
 
     
@@ -428,7 +424,23 @@ This the multi-page printable view of this section.
     
     
 	
-<li>32: <a href="#pg-72925bfe8c279fdea76d6c785ec8c1dd">agc workflow stop</a></li>
+<li>32: <a href="#pg-372e46846966d919f8e8175575c2f226">agc workflow run</a></li>
+
+
+    
+  
+    
+    
+	
+<li>33: <a href="#pg-b7723a381adbd21c1f44bcc9e1f7afbe">agc workflow status</a></li>
+
+
+    
+  
+    
+    
+	
+<li>34: <a href="#pg-72925bfe8c279fdea76d6c785ec8c1dd">agc workflow stop</a></li>
 
 
     
@@ -470,9 +482,10 @@ This the multi-page printable view of this section.
   Displays the help menu for the specified sub-command.
   /code $ agc account --help
 </code></pre><h3 id="options">Options</h3>
-<pre><code>  -h, --help      help for agc
-  -v, --verbose   Display verbose diagnostic information.
-      --version   version for agc
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -h, --help            help for agc
+  -v, --verbose         Display verbose diagnostic information.
+      --version         version for agc
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_account/">agc account</a>	 - Commands for AWS account setup.
@@ -515,7 +528,8 @@ These commands should be used to install or remove AGC from your AWS account.</p
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
   -h, --help                help for account
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
@@ -558,6 +572,7 @@ Activate AGC in your AWS account with a custom S3 bucket and VPC.
                         A new VPC will be created if not specified.
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -600,6 +615,7 @@ Deactivate AGC in your AWS account.
   -h, --help    help for deactivate
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -631,7 +647,8 @@ See each sub-command&rsquo;s help for details on how to use the generated script
 <h3 id="options">Options</h3>
 <pre><code>  -h, --help   help for completion
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
@@ -676,7 +693,8 @@ $ agc completion bash &gt; /usr/local/etc/bash_completion.d/agc</p>
 <pre><code>  -h, --help              help for bash
       --no-descriptions   disable completion descriptions
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_completion/">agc completion</a>	 - generate the autocompletion script for the specified shell</li>
@@ -712,7 +730,8 @@ $ agc completion fish &gt; ~/.config/fish/completions/agc.fish</p>
 <pre><code>  -h, --help              help for fish
       --no-descriptions   disable completion descriptions
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_completion/">agc completion</a>	 - generate the autocompletion script for the specified shell</li>
@@ -747,7 +766,8 @@ to your powershell profile.</p>
 <pre><code>  -h, --help              help for powershell
       --no-descriptions   disable completion descriptions
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_completion/">agc completion</a>	 - generate the autocompletion script for the specified shell</li>
@@ -787,7 +807,8 @@ to enable it.  You can execute the following once:</p>
 <pre><code>  -h, --help              help for zsh
       --no-descriptions   disable completion descriptions
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_completion/">agc completion</a>	 - generate the autocompletion script for the specified shell</li>
@@ -819,7 +840,8 @@ Configure local settings and preferences to customize the CLI experience.</p>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
   -h, --help                help for configure
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
@@ -855,6 +877,7 @@ USER: Email Id</p>
 <pre><code>  -h, --help   help for describe
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -885,6 +908,7 @@ Configuration is stored per user.</li>
 <pre><code>  -h, --help   help for email
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -920,7 +944,8 @@ particular context.</p>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
   -h, --help                help for context
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
@@ -954,18 +979,20 @@ particular context.</p>
 It creates AGC resources in AWS.</p>
 <p>Output of the command has following format:
 DETAIL: AccessLogGroupName BucketLocation EngineLogGroupName Status StatusReason WesLogGroupName WesUrl
-SUMMARY: IsSpot Name
+SUMMARY: IsSpot MaxVCpus Name
+ENGINE: Engine Type
 STRING</p>
-<pre><code>agc context deploy {-c context_name ... | --all} [flags]
+<pre><code>agc context deploy {context_name ... | --all} [flags]
 </code></pre><h3 id="examples">Examples</h3>
 <pre><code>
-/code agc context deploy -c context1 -c context2
+/code agc context deploy context1 context2
 </code></pre><h3 id="options">Options</h3>
 <pre><code>      --all               Deploy all contexts in the project
   -c, --context strings   Names of one or more contexts to deploy
   -h, --help              help for deploy
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -994,7 +1021,7 @@ Contexts specify workflow engines and computational fleets to use when running a
 <h3 id="synopsis">Synopsis</h3>
 <p>describe is for showing information about the specified context.</p>
 <p>Output of the command has following format:
-CONTEXT: Name RequestSpotInstances Status StatusReason
+CONTEXT: MaxVCpus Name RequestSpotInstances Status StatusReason
 INSTANCETYPE: Value
 OUTPUTLOCATION: Url</p>
 <pre><code>agc context describe context_name [flags]
@@ -1002,9 +1029,11 @@ OUTPUTLOCATION: Url</p>
 <pre><code>
 /code agc context describe myCtx
 </code></pre><h3 id="options">Options</h3>
-<pre><code>  -h, --help   help for describe
+<pre><code>  -c, --context string   Names of one or more contexts to deploy
+  -h, --help             help for describe
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1033,16 +1062,18 @@ Contexts specify workflow engines and computational fleets to use when running a
 <h3 id="synopsis">Synopsis</h3>
 <p>destroy is for destroying one or more contexts.
 It destroys AGC resources in AWS.</p>
-<pre><code>agc context destroy {-c context_name ... | --all} [flags]
+<pre><code>agc context destroy {context_name ... | --all} [flags]
 </code></pre><h3 id="examples">Examples</h3>
 <pre><code>
-/code agc context destroy -c context1 -c context2
+/code agc context destroy context1 context2
 </code></pre><h3 id="options">Options</h3>
 <pre><code>      --all               Destroy all contexts in the project
   -c, --context strings   Names of one or more contexts to destroy
+      --force             Destroy context and stop running workflows within context
   -h, --help              help for destroy
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1072,12 +1103,13 @@ Contexts specify workflow engines and computational fleets to use when running a
 <p>list is for showing a combined list of contexts specified in
 the project specification.</p>
 <p>Output of the command has following format:
-CONTEXTNAME: Name</p>
+CONTEXTSUMMARY: EngineName Name</p>
 <pre><code>agc context list [flags]
 </code></pre><h3 id="options">Options</h3>
 <pre><code>  -h, --help   help for list
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1115,6 +1147,7 @@ INSTANCE: ContextName ContextReason ContextStatus IsDefinedInProjectFile</p>
 <pre><code>  -h, --help   help for status
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1150,7 +1183,8 @@ access rights to.</p>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
   -h, --help                help for logs
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
@@ -1202,6 +1236,7 @@ If no start, end, or look back periods are set, this command will show logs from
   -t, --tail               Follow the log output.
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1250,6 +1285,7 @@ If no start, end, or look back periods are set, this command will show logs from
   -t, --tail               Follow the log output.
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1298,6 +1334,7 @@ If no start, end, or look back periods are set, this command will show logs from
   -t, --tail               Follow the log output.
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1344,6 +1381,7 @@ If the &ndash;run flag is omitted then the latest workflow run is used.</p>
   -t, --tail               Follow the log output.
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1375,12 +1413,14 @@ and contexts you are working with.</p>
 <h3 id="options">Options</h3>
 <pre><code>  -h, --help   help for project
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_project_describe/">agc project describe</a>	 - Describe a project</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_project_init/">agc project init</a>	 - Initialize current directory with a new empty AGC project for a particular workflow type.</li>
+<li><a href="/amazon-genomics-cli/docs/reference/agc_project_validate/">agc project validate</a>	 - Validate an agc-project.yaml file</li>
 </ul>
 
 </div>
@@ -1413,7 +1453,8 @@ DATA: Location ReadOnly</p>
 </code></pre><h3 id="options">Options</h3>
 <pre><code>  -h, --help   help for describe
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_project/">agc project</a>	 - Commands to interact with projects.</li>
@@ -1447,9 +1488,10 @@ Initialize a new project named &quot;myProject&quot;.
 /code $ agc project init myProject --workflow-type my_workflow_type
 </code></pre><h3 id="options">Options</h3>
 <pre><code>  -h, --help                   help for init
-  -w, --workflow-type string   uses the specified workflow type for the default context. Valid values include nextflow, and wdl
+  -w, --workflow-type string   uses the specified workflow type for the default context. Valid values include [nextflow wdl]
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_project/">agc project</a>	 - Commands to interact with projects.</li>
@@ -1469,7 +1511,45 @@ Initialize a new project named &quot;myProject&quot;.
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-d9846ccd8da83167daa068e396d2e4e3">27 - agc workflow</h1>
+	<h1 id="pg-d9702cf7a8e95e8b0b4445106f8e4cec">27 - agc project validate</h1>
+    
+	<h2 id="agc-project-validate">agc project validate</h2>
+<p>Validate an agc-project.yaml file</p>
+<h3 id="synopsis">Synopsis</h3>
+<p>Determines if the current project specification follows the required format and lists any syntax errors.
+The current project specification is determined to be the agc-project.yaml file in the current working directory or a parent of the current directory
+Output of the command has following format:
+PROJECT: Name
+DATA: Location ReadOnly</p>
+<pre><code>agc project validate [flags]
+</code></pre><h3 id="examples">Examples</h3>
+<pre><code>
+/code agc project describe
+</code></pre><h3 id="options">Options</h3>
+<pre><code>  -h, --help   help for validate
+</code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
+</code></pre><h3 id="see-also">SEE ALSO</h3>
+<ul>
+<li><a href="/amazon-genomics-cli/docs/reference/agc_project/">agc project</a>	 - Commands to interact with projects.</li>
+</ul>
+
+</div>
+
+
+
+    
+	
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-d9846ccd8da83167daa068e396d2e4e3">28 - agc workflow</h1>
     
 	<h2 id="agc-workflow">agc workflow</h2>
 <p>Commands for workflows.
@@ -1484,12 +1564,14 @@ typed according to which workflow definition language they use (e.g. WDL).</p>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
   -h, --help                help for workflow
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>  -v, --verbose   Display verbose diagnostic information.
+<pre><code>      --format string   Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose         Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
 <li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_workflow_describe/">agc workflow describe</a>	 - Show the information for a specific workflow in the current project</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_workflow_list/">agc workflow list</a>	 - Show a list of workflows related to the current project</li>
+<li><a href="/amazon-genomics-cli/docs/reference/agc_workflow_output/">agc workflow output</a>	 - Show the output for a workflow run in the current project.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_workflow_run/">agc workflow run</a>	 - Run a workflow</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_workflow_status/">agc workflow status</a>	 - Show the status for workflow run(s) in the current project.</li>
 <li><a href="/amazon-genomics-cli/docs/reference/agc_workflow_stop/">agc workflow stop</a>	 - Stop the workflow with the specified workflow instance id.</li>
@@ -1509,7 +1591,7 @@ typed according to which workflow definition language they use (e.g. WDL).</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-aa3ea87fa151b468426bd3845a948b1b">28 - agc workflow describe</h1>
+	<h1 id="pg-aa3ea87fa151b468426bd3845a948b1b">29 - agc workflow describe</h1>
     
 	<h2 id="agc-workflow-describe">agc workflow describe</h2>
 <p>Show the information for a specific workflow in the current project</p>
@@ -1524,6 +1606,7 @@ WORKFLOW: Name Source TypeLanguage TypeVersion</p>
 <pre><code>  -h, --help   help for describe
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1545,7 +1628,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-071929043a3613ca496d42da4a38977b">29 - agc workflow list</h1>
+	<h1 id="pg-071929043a3613ca496d42da4a38977b">30 - agc workflow list</h1>
     
 	<h2 id="agc-workflow-list">agc workflow list</h2>
 <p>Show a list of workflows related to the current project</p>
@@ -1559,6 +1642,7 @@ WORKFLOWNAME: Name</p>
 <pre><code>  -h, --help   help for list
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1580,7 +1664,38 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-372e46846966d919f8e8175575c2f226">30 - agc workflow run</h1>
+	<h1 id="pg-b9790703ef9ea254bb964a01736d5e12">31 - agc workflow output</h1>
+    
+	<h2 id="agc-workflow-output">agc workflow output</h2>
+<p>Show the output for a workflow run in the current project.</p>
+<pre><code>agc workflow output run_id [flags]
+</code></pre><h3 id="options">Options</h3>
+<pre><code>  -h, --help   help for output
+</code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
+<pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
+  -v, --verbose             Display verbose diagnostic information.
+</code></pre><h3 id="see-also">SEE ALSO</h3>
+<ul>
+<li><a href="/amazon-genomics-cli/docs/reference/agc_workflow/">agc workflow</a>	 - Commands for workflows.
+Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
+</ul>
+
+</div>
+
+
+
+    
+	
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-372e46846966d919f8e8175575c2f226">32 - agc workflow run</h1>
     
 	<h2 id="agc-workflow-run">agc workflow run</h2>
 <p>Run a workflow</p>
@@ -1599,6 +1714,7 @@ using input parameters contained in file &quot;file:///Users/ec2-user/myproj/tes
   -h, --help             help for run
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1620,7 +1736,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-b7723a381adbd21c1f44bcc9e1f7afbe">31 - agc workflow status</h1>
+	<h1 id="pg-b7723a381adbd21c1f44bcc9e1f7afbe">33 - agc workflow status</h1>
     
 	<h2 id="agc-workflow-status">agc workflow status</h2>
 <p>Show the status for workflow run(s) in the current project.</p>
@@ -1633,6 +1749,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
   -n, --workflow-name string   show status of workflow runs for a specific workflow name
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>
@@ -1654,7 +1771,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.</li>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-72925bfe8c279fdea76d6c785ec8c1dd">32 - agc workflow stop</h1>
+	<h1 id="pg-72925bfe8c279fdea76d6c785ec8c1dd">34 - agc workflow stop</h1>
     
 	<h2 id="agc-workflow-stop">agc workflow stop</h2>
 <p>Stop the workflow with the specified workflow instance id.</p>
@@ -1669,6 +1786,7 @@ agc workflow stop ae12347654329
 <pre><code>  -h, --help   help for stop
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>

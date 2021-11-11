@@ -3,186 +3,204 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/amazon-genomics-cli/docs/concepts/accounts/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/overview/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/getting-started/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/examples/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/concepts/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/concepts/users/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/tutorials/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/best-practices/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
+  </url><url>
+    <loc>/amazon-genomics-cli/docs/workflow-engines/</loc>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/tutorials/walkthrough/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/getting-started/prerequisites/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/concepts/projects/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/contribution-guidelines/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
+  </url><url>
+    <loc>/amazon-genomics-cli/docs/workflow-engines/cromwell/</loc>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/getting-started/installation/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/concepts/contexts/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
+  </url><url>
+    <loc>/amazon-genomics-cli/docs/workflow-engines/miniwdl/</loc>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/getting-started/setup/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/concepts/data/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
+  </url><url>
+    <loc>/amazon-genomics-cli/docs/workflow-engines/nextflow/</loc>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/getting-started/helloworld/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/concepts/workflows/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/concepts/engines/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/concepts/logs/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/concepts/namespaces/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_account/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_account_activate/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_account_deactivate/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_completion/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_completion_bash/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_completion_fish/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_completion_powershell/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_completion_zsh/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_configure/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_configure_describe/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_configure_email/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_context/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_context_deploy/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_context_describe/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_context_destroy/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_context_list/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_context_status/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_logs/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_logs_access/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_logs_adapter/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_logs_engine/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_logs_workflow/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_project/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_project_describe/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_project_init/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
+  </url><url>
+    <loc>/amazon-genomics-cli/docs/reference/agc_project_validate/</loc>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_workflow/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_workflow_describe/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_workflow_list/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
+  </url><url>
+    <loc>/amazon-genomics-cli/docs/reference/agc_workflow_output/</loc>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_workflow_run/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_workflow_status/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/reference/agc_workflow_stop/</loc>
-    <lastmod>2021-10-06T01:09:19+00:00</lastmod>
+    <lastmod>2021-11-11T16:58:06+00:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/best-practices/controllingcosts/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/docs/best-practices/scalingworkloads/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/about/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/community/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url><url>
     <loc>/amazon-genomics-cli/search/</loc>
-    <lastmod>2021-10-05T18:05:56-07:00</lastmod>
+    <lastmod>2021-11-10T16:09:00-08:00</lastmod>
   </url>
 </urlset>

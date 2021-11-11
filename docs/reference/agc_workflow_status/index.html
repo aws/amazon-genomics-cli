@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.85.0" /><META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+<meta name="generator" content="Hugo 0.85.0" />
+<meta name="robots" content="index, follow">
 
 
 <link rel="shortcut icon" href="/amazon-genomics-cli/favicons/favicon.ico" >
@@ -31,14 +32,14 @@ Options
 agc workflow status [flags] Options  -c, --context-name string show status of workflow runs in a specific context -h, --help help for status --limit int maximum number of workflow instances to show (default 20) -r, --run-id string show status of specific workflow run -n, --workflow-name string show status of workflow runs for a specific workflow name Options inherited from parent commands  -p, --awsProfile string Use the provided AWS CLI profile." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/amazon-genomics-cli/docs/reference/agc_workflow_status/" /><meta property="article:section" content="docs" />
-<meta property="article:published_time" content="2021-10-06T01:09:19+00:00" />
-<meta property="article:modified_time" content="2021-10-06T01:09:19+00:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<meta property="article:published_time" content="2021-11-11T16:58:06+00:00" />
+<meta property="article:modified_time" content="2021-11-11T16:58:06+00:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
 <meta itemprop="name" content="agc workflow status">
 <meta itemprop="description" content="agc workflow status Show the status for workflow run(s) in the current project.
-agc workflow status [flags] Options  -c, --context-name string show status of workflow runs in a specific context -h, --help help for status --limit int maximum number of workflow instances to show (default 20) -r, --run-id string show status of specific workflow run -n, --workflow-name string show status of workflow runs for a specific workflow name Options inherited from parent commands  -p, --awsProfile string Use the provided AWS CLI profile."><meta itemprop="datePublished" content="2021-10-06T01:09:19+00:00" />
-<meta itemprop="dateModified" content="2021-10-06T01:09:19+00:00" />
-<meta itemprop="wordCount" content="105">
+agc workflow status [flags] Options  -c, --context-name string show status of workflow runs in a specific context -h, --help help for status --limit int maximum number of workflow instances to show (default 20) -r, --run-id string show status of specific workflow run -n, --workflow-name string show status of workflow runs for a specific workflow name Options inherited from parent commands  -p, --awsProfile string Use the provided AWS CLI profile."><meta itemprop="datePublished" content="2021-11-11T16:58:06+00:00" />
+<meta itemprop="dateModified" content="2021-11-11T16:58:06+00:00" />
+<meta itemprop="wordCount" content="118">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="agc workflow status"/>
 <meta name="twitter:description" content="agc workflow status Show the status for workflow run(s) in the current project.
@@ -47,8 +48,8 @@ agc workflow status [flags] Options  -c, --context-name string show status of wo
 
 
 
-<link rel="preload" href="/amazon-genomics-cli/scss/main.min.bd5285b713d3061549a6bfd34e5f4ec6775ede36672a3088260f0d420050647f.css" as="style">
-<link href="/amazon-genomics-cli/scss/main.min.bd5285b713d3061549a6bfd34e5f4ec6775ede36672a3088260f0d420050647f.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/amazon-genomics-cli/scss/main.min.93be7723579b79373235edba63b64ec3a477823ef01c6ac9507f2157d195802f.css" as="style">
+<link href="/amazon-genomics-cli/scss/main.min.93be7723579b79373235edba63b64ec3a477823ef01c6ac9507f2157d195802f.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -125,22 +126,17 @@ agc workflow status [flags] Options  -c, --context-name string show status of wo
 			
 		</ul>
 	</div>
-	<div class="navbar-nav d-none d-lg-block">
-
-
-
-<input
+	<div class="navbar-nav d-none d-lg-block"><input
   type="search"
   class="form-control td-search-input"
   placeholder="&#xf002; Search this site…"
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.e3ce8f1591bbed2b7c5f73a1dc00c5e8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.324d38097cbb205673bc16b0ce9765bb.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
-
 </div>
 </nav>
 
@@ -152,22 +148,17 @@ agc workflow status [flags] Options  -c, --context-name string show status of wo
             
 <div id="td-sidebar-menu" class="td-sidebar__inner">
   <form class="td-sidebar__search d-flex align-items-center">
-    
-
-
-
-<input
+    <input
   type="search"
   class="form-control td-search-input"
   placeholder="&#xf002; Search this site…"
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.e3ce8f1591bbed2b7c5f73a1dc00c5e8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.324d38097cbb205673bc16b0ce9765bb.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
-
 
     <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
     </button>
@@ -233,6 +224,17 @@ agc workflow status [flags] Options  -c, --context-name string show status of wo
   <a href="/amazon-genomics-cli/docs/best-practices/scalingworkloads/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicesscalingworkloads"><span class="">Scaling Workloads</span></a>
 </li>
   </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocsworkflow-engines-li">
+  <a href="/amazon-genomics-cli/docs/workflow-engines/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsworkflow-engines"><span class="">Workflow Engines</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginescromwell-li">
+  <a href="/amazon-genomics-cli/docs/workflow-engines/cromwell/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginescromwell"><span class="">Cromwell</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesminiwdl-li">
+  <a href="/amazon-genomics-cli/docs/workflow-engines/miniwdl/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesminiwdl"><span class="">miniwdl</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesnextflow-li">
+  <a href="/amazon-genomics-cli/docs/workflow-engines/nextflow/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesnextflow"><span class="">Nextflow</span></a>
+</li>
+  </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocscontribution-guidelines-li">
   <a href="/amazon-genomics-cli/docs/contribution-guidelines/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocscontribution-guidelines"><span class="">Contribution Guidelines</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-amazon-genomics-clidocsreference-li">
@@ -290,12 +292,16 @@ agc workflow status [flags] Options  -c, --context-name string show status of wo
   <a href="/amazon-genomics-cli/docs/reference/agc_project_describe/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_project_describe"><span class="">agc project describe</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_project_init-li">
   <a href="/amazon-genomics-cli/docs/reference/agc_project_init/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_project_init"><span class="">agc project init</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_project_validate-li">
+  <a href="/amazon-genomics-cli/docs/reference/agc_project_validate/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_project_validate"><span class="">agc project validate</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow-li">
   <a href="/amazon-genomics-cli/docs/reference/agc_workflow/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow"><span class="">agc workflow</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow_describe-li">
   <a href="/amazon-genomics-cli/docs/reference/agc_workflow_describe/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow_describe"><span class="">agc workflow describe</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow_list-li">
   <a href="/amazon-genomics-cli/docs/reference/agc_workflow_list/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow_list"><span class="">agc workflow list</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow_output-li">
+  <a href="/amazon-genomics-cli/docs/reference/agc_workflow_output/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow_output"><span class="">agc workflow output</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow_run-li">
   <a href="/amazon-genomics-cli/docs/reference/agc_workflow_run/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow_run"><span class="">agc workflow run</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-amazon-genomics-clidocsreferenceagc_workflow_status-li">
@@ -314,36 +320,13 @@ agc workflow status [flags] Options  -c, --context-name string show status of wo
           </aside>
           <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
             
-  
-  
-  
-  
-  
-  
-  <div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
-  
-    
-    
-      
-    
-    
-    
-    
-    
-    
-    
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/aws/amazon-genomics-cli/edit/main/site//content/en/docs/Reference/agc_workflow_status.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/aws/amazon-genomics-cli/new/main/site//content/en/docs/Reference/agc_workflow_status.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> Create child page</a>
+  <a href="https://github.com/aws/amazon-genomics-cli/issues/new?title=agc%20workflow%20status" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+  <a id="print" href="/amazon-genomics-cli/docs/reference/_print/"><i class="fa fa-print fa-fw"></i> Print entire section</a>
 
-    <a href="https://github.com/aws/amazon-genomics-cli/edit/main/site//content/en/docs/Reference/agc_workflow_status.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-    <a href="https://github.com/aws/amazon-genomics-cli/new/main/site//content/en/docs/Reference/agc_workflow_status.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" target="_blank"><i class="fa fa-edit fa-fw"></i> Create child page</a>
-    <a href="https://github.com/aws/amazon-genomics-cli/issues/new?title=agc%20workflow%20status" target="_blank"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
-    
-
-  
-  
-    <a id="print" href="/amazon-genomics-cli/docs/reference/_print/"><i class="fa fa-print fa-fw"></i> Print entire section</a>
-  
-  </div>
-
+</div>
 
             
 
@@ -451,6 +434,7 @@ agc workflow status [flags] Options  -c, --context-name string show status of wo
   -n, --workflow-name string   show status of workflow runs for a specific workflow name
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, tabular (default &quot;text&quot;)
   -v, --verbose             Display verbose diagnostic information.
 </code></pre><h3 id="see-also">SEE ALSO</h3>
 <ul>

@@ -58,16 +58,16 @@ In the &lt;code&gt;demo-wdl-project&lt;/code&gt; folder, after running the follo
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context list
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see something like:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;2021-09-22T01:15:41Z 𝒊  Listing contexts.
-CONTEXTNAME    myContext
-CONTEXTNAME    spotCtx
+CONTEXTNAME    cromwell    myContext
+CONTEXTNAME    cromwell    spotCtx
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In this project there are two contexts, one configured to run with On-Demand instances (myContext), and one configured to use SPOT instances (spotCtx).&lt;/p&gt;
 &lt;p&gt;You need to have a context running to be able to run workflows. To deploy the context &lt;code&gt;myContext&lt;/code&gt; in the demo-wdl-project, run:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context deploy -c myContext
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context deploy myContext
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will take 10-15min to complete.&lt;/p&gt;
 &lt;p&gt;If you have more than one context configured, and want to deploy them all at once, you can run:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context deploy --all
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Contexts have read-write access to a context specific prefix in the S3 bucket Amazon Genomics CLI creates during account activation. You can check this for the &lt;code&gt;myContext&lt;/code&gt; context with:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context describe -c myContext
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context describe myContext
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see something like:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;CONTEXT    myContext    false    STARTED
 OUTPUTLOCATION    s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext
@@ -82,7 +82,7 @@ appropriate access policy created for the data locations listed when they are de
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://1000genomes&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note, you need to redeploy any running contexts to update their access to data locations. Do this by simply (re)running.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context deploy -c myContext
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context deploy myContext
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Contexts also define what types of compute your workflow will run on - i.e. if you want to run workflows using SPOT or On-demand instances.
 By default, contexts use On-demand instances. The configuration for a context that uses SPOT instances looks like the following:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -277,7 +277,13 @@ PRE scripts/
 PRE workflow/
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;cromwell-execution&lt;/code&gt; prefix is specific to the engine Amazon Genomics CLI uses to run WDL workflows.
 Workflow results will be in &lt;code&gt;cromwell-execution&lt;/code&gt; partitioned by workflow name, workflow run id, and task name. The &lt;code&gt;workflow&lt;/code&gt; prefix is where named workflows are cached when you run workflows definitions stored in your local environment.&lt;/p&gt;
-&lt;h3 id=&#34;accessing-workflow-logs&#34;&gt;Accessing workflow logs&lt;/h3&gt;
+&lt;p&gt;If a workflow declares workflow outputs then these can be obtained using &lt;code&gt;agc workflow output &amp;lt;run_id&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The following is example output from the &amp;ldquo;cram-to-bam&amp;rdquo; workflow&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;OUTPUT	id	aaba95e8-7512-48c3-9a61-1fd837ff6099
+OUTPUT	outputs.CramToBamFlow.outputBai	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-CramToBamTask/NA12878.bai
+OUTPUT	outputs.CramToBamFlow.outputBam	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-CramToBamTask/NA12878.bam
+OUTPUT	outputs.CramToBamFlow.validation_report	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-ValidateSamFile/NA12878.validation_report
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;accessing-workflow-logs&#34;&gt;Accessing workflow logs&lt;/h3&gt;
 &lt;p&gt;You can get a summary of the log information for a workflow as follows:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc logs workflow &amp;lt;workflow-name&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will return the logs for all runs of the workflow. If you just want the logs for a specific workflow run, you can use:&lt;/p&gt;
@@ -318,14 +324,15 @@ Fri, 10 Sep 2021 23:40:59 +0000    2021-09-10 23:40:59,826 cromwell-system-akka.
 For example, the following will give you all error logs from the workflow engine:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc logs engine --context myContext --filter ERROR
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;additional-workflow-examples&#34;&gt;Additional workflow examples&lt;/h3&gt;
-&lt;p&gt;The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on GATK Best Practices. You can find these in:&lt;/p&gt;
+&lt;p&gt;The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on &lt;a href=&#34;https://gatk.broadinstitute.org/hc/en-us&#34;&gt;GATK Best Practices&lt;/a&gt;, developed by the &lt;a href=&#34;https://www.broadinstitute.org/&#34;&gt;Broad Institute&lt;/a&gt;. More information on how these workflows work is available in the &lt;a href=&#34;https://github.com/gatk-workflows&#34;&gt;GATK Workflows Github repository&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You can find these in:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;~/agc/examples/gatk-best-practices-project
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;These workflows come pre-packaged with &lt;code&gt;MANIFEST.json&lt;/code&gt; files that specify example input data available publicly in the &lt;a href=&#34;https://registry.opendata.aws/&#34;&gt;AWS Registry of Open Data&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Note: these workflows take between 5 min to ~3hrs to complete.&lt;/p&gt;
 &lt;h2 id=&#34;cleanup&#34;&gt;Cleanup&lt;/h2&gt;
 &lt;p&gt;When you are done running workflows, it is recommended you stop all cloud resources to save costs.&lt;/p&gt;
 &lt;p&gt;Stop a context with:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context destroy -c &amp;lt;context-name&amp;gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context destroy &amp;lt;context-name&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will destroy all compute resources in a context, but retain any data in S3. If you want to destroy all your running contexts at once, you can use:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc context destroy --all
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note, you will not be able to destroy a context that has a running workflow. Workflows will need to complete on their own or stopped before you can destroy the context.&lt;/p&gt;

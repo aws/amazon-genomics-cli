@@ -1,0 +1,176 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Amazon Genomics CLI – Workflow Engines</title>
+    <link>/amazon-genomics-cli/docs/workflow-engines/</link>
+    <description>Recent content in Workflow Engines on Amazon Genomics CLI</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 01 Oct 2021 17:23:58 -0400</lastBuildDate>
+    
+	  <atom:link href="/amazon-genomics-cli/docs/workflow-engines/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Cromwell</title>
+      <link>/amazon-genomics-cli/docs/workflow-engines/cromwell/</link>
+      <pubDate>Fri, 01 Oct 2021 17:27:21 -0400</pubDate>
+      
+      <guid>/amazon-genomics-cli/docs/workflow-engines/cromwell/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://cromwell.readthedocs.io/en/stable/&#34;&gt;Cromwell&lt;/a&gt; is a workflow engine developed by the &lt;a href=&#34;https://www.broadinstitute.org/&#34;&gt;Broad Institute&lt;/a&gt;.
+In Amazon Genomics CLI, Cromwell is an engine that can be
+deployed in a &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt; as an &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/engines/&#34;&gt;engine&lt;/a&gt;
+to run workflows based on the &lt;a href=&#34;https://openwdl.org/&#34;&gt;WDL&lt;/a&gt; specification.&lt;/p&gt;
+&lt;p&gt;Cromwell is an open source project distributed by the Broad Institute under the &lt;a href=&#34;https://github.com/broadinstitute/cromwell/blob/develop/LICENSE-ASL-2.0&#34;&gt;Apache 2 license&lt;/a&gt; and available on &lt;a href=&#34;https://github.com/broadinstitute/cromwell&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;customizations&#34;&gt;Customizations&lt;/h3&gt;
+&lt;p&gt;Some minor customizations where made to the AWS Backend adapter for Cromwell to facilitate improved scalability and cross
+region S3 bucket access when deployed with Amazon Genomics CLI. The fork containing these customizations is available &lt;a href=&#34;https://github.com/markjschreiber/cromwell&#34;&gt;here&lt;/a&gt;
+and we are working to contribute these bask to the main code base.&lt;/p&gt;
+&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
+&lt;p&gt;There are four components of a Cromwell engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
+&lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
+&lt;p&gt;Amazon Genomics CLI communicates with the Cromwell engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
+the WES standard and translates WES calls into calls to the &lt;a href=&#34;https://cromwell.readthedocs.io/en/stable/api/RESTAPI/&#34;&gt;Cromwell REST API&lt;/a&gt;. The adapter runs as an Amazon ECS service
+available via API Gateway.&lt;/p&gt;
+&lt;h3 id=&#34;engine-service&#34;&gt;Engine Service&lt;/h3&gt;
+&lt;p&gt;The Cromwell engine is run in &amp;ldquo;server mode&amp;rdquo; as a container service in ECS and receives instructions from the WES Adapter. The
+engine can run multiple workflows asynchronously. Workflow tasks are run in an elastic &lt;a href=&#34;#compute-environment&#34;&gt;compute environment&lt;/a&gt; and
+monitored by Cromwell.&lt;/p&gt;
+&lt;h3 id=&#34;metadata-storage&#34;&gt;Metadata Storage&lt;/h3&gt;
+&lt;p&gt;Cromwell can use workflow run metadata to perform call caching. When deployed by Amazon Genomics CLI call caching is enabled
+by default. Metadata is stored by an embedded Hypersonic DB with file storage in an attached EFS volume. The EFS volume
+exists for the lifetime of the context the engine is deployed in so re-runs of workflows within the lifetime can benefit
+from call caching.&lt;/p&gt;
+&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
+&lt;p&gt;Workflow tasks are submitted by Cromwell to an AWS Batch queue and run in containers using an AWS Compute Environment.
+Container characteristics are defined by the &lt;code&gt;runtime&lt;/code&gt;. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
+&lt;h4 id=&#34;fetch-and-run-strategy&#34;&gt;Fetch and Run Strategy&lt;/h4&gt;
+&lt;p&gt;Execution of workflow tasks uses a &amp;ldquo;Fetch and Run&amp;rdquo; strategy. The commands specified in the &lt;code&gt;command&lt;/code&gt; section of the WDL task
+are written as a file to S3 and &amp;ldquo;fetched&amp;rdquo; into the container and run.
+The script is &amp;ldquo;decorated&amp;rdquo; with instructions to fetch any &lt;code&gt;File&lt;/code&gt; inputs from S3 and to write any &lt;code&gt;File&lt;/code&gt; outputs back to S3.&lt;/p&gt;
+&lt;h4 id=&#34;disk-expansion&#34;&gt;Disk Expansion&lt;/h4&gt;
+&lt;p&gt;Container hosts in the Batch compute environment use EBS volumes as local scratch space. As an EBS volume approaches a
+capacity threshold, new EBS volumes will be attached and merged into the file system. These volumes are destroyed when
+AWS Batch terminates the container host. For this reason it is not necessary to specify disk requirements for the task
+&lt;code&gt;runtime&lt;/code&gt; and these WDL directives will be ignored.&lt;/p&gt;
+&lt;h4 id=&#34;aws-batch-retries&#34;&gt;AWS Batch Retries&lt;/h4&gt;
+&lt;p&gt;The Cromwell AWS Batch backend supports AWS Batch&amp;rsquo;s task &lt;a href=&#34;https://docs.aws.amazon.com/batch/latest/APIReference/API_RetryStrategy.html&#34;&gt;retry&lt;/a&gt; option allowing failed tasks to attempt to run again. This
+can be useful for adding resilience to a workflow from sporadic infrastructure failures. It is especially useful when using
+an Amazon Genomics CLI &amp;ldquo;spot&amp;rdquo; context as spot instances can be terminated with minimal warning. To enable retries, add
+the following option to your &lt;code&gt;runtime&lt;/code&gt; section of a task:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;runtime {
+    ...
+    awsBatchRetryAttempts: &amp;lt;int&amp;gt;
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;where &lt;code&gt;&amp;lt;int&amp;gt;&lt;/code&gt; is an integer specifying the number of retries up to a maximum of &lt;code&gt;10&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Although similar to the WDL &lt;code&gt;preemptible&lt;/code&gt; option, &lt;code&gt;awsBatchRetryAttempts&lt;/code&gt; has differences in how retries are implemented. Notably,
+the implementation falls back on the AWS Batch retry strategy and will retry a task that fails for &lt;strong&gt;any&lt;/strong&gt; reason; whereas the &lt;code&gt;preemptible&lt;/code&gt;
+option is more specific to failures caused by preemption. At this time the &lt;code&gt;preemptible&lt;/code&gt; option is not supported by Amazon Genomics CLI
+and is ignored.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: miniwdl</title>
+      <link>/amazon-genomics-cli/docs/workflow-engines/miniwdl/</link>
+      <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>
+      
+      <guid>/amazon-genomics-cli/docs/workflow-engines/miniwdl/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://miniwdl.readthedocs.io/en/latest/index.html&#34;&gt;miniwdl&lt;/a&gt; is free open source software distributed under the MIT licence
+developed by the &lt;a href=&#34;https://chanzuckerberg.com/&#34;&gt;Chan Zuckerberg Initiative&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The source code for miniwdl is available on &lt;a href=&#34;https://github.com/chanzuckerberg/miniwdl&#34;&gt;GitHub&lt;/a&gt;. When deployed with
+Amazon Genomics CLI miniwdl makes use of the &lt;a href=&#34;https://github.com/miniwdl-ext/miniwdl-aws&#34;&gt;miniwdl-aws extension&lt;/a&gt; which is
+also distributed under the MIT licence.&lt;/p&gt;
+&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
+&lt;p&gt;There are four components of a miniwdl engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
+&lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
+&lt;p&gt;Amazon Genomics CLI communicates with the miniwdl engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
+the WES standard and translates WES calls into calls to the miniwdl head process.&lt;/p&gt;
+&lt;h3 id=&#34;engine-batch-job&#34;&gt;Engine Batch Job&lt;/h3&gt;
+&lt;p&gt;For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the miniwdl process responsible
+for running that workflow. These miniwdl &amp;ldquo;head&amp;rdquo; jobs are run in an &amp;ldquo;On-demand&amp;rdquo; AWS Fargate compute environment even when the actual workflow
+tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.&lt;/p&gt;
+&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
+&lt;p&gt;Workflow tasks are submitted by the miniwdl head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
+Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
+&lt;h4 id=&#34;efs-scratch-space-and-s3-localization&#34;&gt;EFS scratch space and S3 localization&lt;/h4&gt;
+&lt;p&gt;Any context with a miniwdl engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from S3 are
+localized to the volume by jobs that the miniwdl engine spawns to copy these files to the volume. Outputs are copied back
+to S3 using a similar process. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.&lt;/p&gt;
+&lt;p&gt;The EFS volume is used by all miniwdl engine &amp;ldquo;head&amp;rdquo; jobs to store metadata necessary for call caching.&lt;/p&gt;
+&lt;p&gt;The EFS volume will remain in your account for the lifetime of the context and are destroyed when contexts are destroyed.
+Because the volume will grow in size as you run more workflows we recommend destroying the context when done to avoid on going EFS
+charges.&lt;/p&gt;
+&lt;h2 id=&#34;using-miniwdl-as-a-context-engine&#34;&gt;Using miniwdl as a Context Engine&lt;/h2&gt;
+&lt;p&gt;You may declare miniwdl to be the &lt;code&gt;engine&lt;/code&gt; for any contexts &lt;code&gt;wdl&lt;/code&gt; type engine. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;onDemandCtx&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;requestSpotInstances&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;miniwdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;call-caching&#34;&gt;Call Caching&lt;/h2&gt;
+&lt;p&gt;Call caching is enabled by default for miniwdl and because the metadata is stored in the contexts EFS volume call caching
+will work across different engine &amp;ldquo;head&amp;rdquo; jobs.&lt;/p&gt;
+&lt;p&gt;To disable call caching you can provide the &lt;code&gt;--no-cache&lt;/code&gt; engine option. You may do this in a workflows &lt;code&gt;MANIFEST.json&lt;/code&gt; by
+adding the following key/ value pair.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  &amp;quot;engineOptions&amp;quot;: &amp;quot;--no-cache&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Nextflow</title>
+      <link>/amazon-genomics-cli/docs/workflow-engines/nextflow/</link>
+      <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>
+      
+      <guid>/amazon-genomics-cli/docs/workflow-engines/nextflow/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.nextflow.io/&#34;&gt;Nextflow&lt;/a&gt; is free open source software distributed under the Apache 2.0 licence
+developed by &lt;a href=&#34;http://www.seqera.io/&#34;&gt;Seqera&lt;/a&gt; Labs.
+The project was started in the Notredame Lab at the &lt;a href=&#34;http://www.crg.eu/&#34;&gt;Centre for Genomic Regulation (CRG)&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The source code for Nextflow is available on &lt;a href=&#34;https://github.com/nextflow-io/nextflow&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
+&lt;p&gt;There are four components of a Nextflow engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
+&lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
+&lt;p&gt;Amazon Genomics CLI communicates with the Nextflow engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
+the WES standard and translates WES calls into calls to the Nextflow head process.&lt;/p&gt;
+&lt;h3 id=&#34;engine-batch-job&#34;&gt;Engine Batch Job&lt;/h3&gt;
+&lt;p&gt;For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the Nextflow process responsible
+for running that workflow. These Nextflow &amp;ldquo;head&amp;rdquo; jobs are run in an &amp;ldquo;On-demand&amp;rdquo; compute environment even when the actual workflow
+tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.&lt;/p&gt;
+&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
+&lt;p&gt;Workflow tasks are submitted by the Nextflow head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
+Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
+&lt;h4 id=&#34;fetch-and-run-strategy&#34;&gt;Fetch and Run Strategy&lt;/h4&gt;
+&lt;p&gt;Execution of workflow tasks uses a &amp;ldquo;Fetch and Run&amp;rdquo; strategy. Input files required by a workflow task are fetched from
+S3 into the task container. Output files are copied out of the container to S3.&lt;/p&gt;
+&lt;h4 id=&#34;disk-expansion&#34;&gt;Disk Expansion&lt;/h4&gt;
+&lt;p&gt;Container hosts in the Batch compute environment use EBS volumes as local scratch space. As an EBS volume approaches a
+capacity threshold, new EBS volumes will be attached and merged into the file system. These volumes are destroyed when
+AWS Batch terminates the container host.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>

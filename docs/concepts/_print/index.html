@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.85.0" /><link rel="canonical" type="text/html" href="/amazon-genomics-cli/docs/concepts/">
+<meta name="generator" content="Hugo 0.85.0" />
+<link rel="canonical" type="text/html" href="/amazon-genomics-cli/docs/concepts/">
 <link rel="alternate" type="application/rss&#43;xml" href="/amazon-genomics-cli/docs/concepts/index.xml">
-<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+<meta name="robots" content="noindex, nofollow">
 
 
 <link rel="shortcut icon" href="/amazon-genomics-cli/favicons/favicon.ico" >
@@ -40,8 +41,8 @@
 
 
 
-<link rel="preload" href="/amazon-genomics-cli/scss/main.min.bd5285b713d3061549a6bfd34e5f4ec6775ede36672a3088260f0d420050647f.css" as="style">
-<link href="/amazon-genomics-cli/scss/main.min.bd5285b713d3061549a6bfd34e5f4ec6775ede36672a3088260f0d420050647f.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/amazon-genomics-cli/scss/main.min.93be7723579b79373235edba63b64ec3a477823ef01c6ac9507f2157d195802f.css" as="style">
+<link href="/amazon-genomics-cli/scss/main.min.93be7723579b79373235edba63b64ec3a477823ef01c6ac9507f2157d195802f.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -118,22 +119,17 @@
 			
 		</ul>
 	</div>
-	<div class="navbar-nav d-none d-lg-block">
-
-
-
-<input
+	<div class="navbar-nav d-none d-lg-block"><input
   type="search"
   class="form-control td-search-input"
   placeholder="&#xf002; Search this site…"
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.e3ce8f1591bbed2b7c5f73a1dc00c5e8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.324d38097cbb205673bc16b0ce9765bb.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
-
 </div>
 </nav>
 
@@ -365,7 +361,7 @@ Amazon Genomics CLI in your VPC and will also reduce NAT gateway traffic charges
 large S3 objects and/ or large container images.</p>
 <h2 id="technical-details">Technical Details.</h2>
 <p>Amazon Genomics CLI core infrastructure is defined in code and deployed by <a href="https://aws.amazon.com/cdk/">AWS CDK</a>. The CDK app responsible for creating the core
-infrastructure can be found in <a href="https://github.com/aws/amazon-genomics-cli/packages/cdk/core"><code>packages/cdk/core/</code></a>.</p>
+infrastructure can be found in <a href="https://github.com/aws/amazon-genomics-cli/tree/main/packages/cdk/apps/core"><code>packages/cdk/apps/core/</code></a>.</p>
 
 </div>
 
@@ -487,6 +483,8 @@ directory. Alternatively project yaml files can be created with any text editor.
 <h3 id="describe"><code>describe</code></h3>
 <p>The <code>agc project describe &lt;project-name&gt;</code> command will provide basic metadata about the &lsquo;local&rsquo; project file. See
 <a href="#project-file-location">above</a> for details on how project files are located.</p>
+<h3 id="validate"><code>validate</code></h3>
+<p>Using <code>agc project validate</code> you can quickly identify any syntax errors in your local project file.</p>
 <h2 id="versioning-and-sharing">Versioning and Sharing</h2>
 <p>We recommend placing a project under source version control using a tool like <a href="https://git-scm.com">Git</a>. The folder containing the <code>agc-project.yaml</code>
 file is a natural location for the root of a Git repository. Workflows relating to the project would naturally be located
@@ -543,7 +541,8 @@ Contexts must have unique names and are defined as YAML maps.</p>
 <p>A context must define an array of one or more <code>engines</code>. Each engine definition must specify the workflow language that it
 will interpret. For each language Amazon Genomics CLI has a default engine however, users may specify the exact engine in the <code>engine</code>
 parameter.</p>
-<h2 id="instance-types">Instance Types</h2>
+<h2 id="context-properties">Context Properties</h2>
+<h3 id="instance-types">Instance Types</h3>
 <p>You may optionally specify the instance types to be used in a context. This can be a specific type such as <code>r5.2xlarge</code>
 or it can be an instance family such as <code>c5</code> or a combination. By default, a context will use instance types up to <code>4xlarge</code></p>
 <blockquote>
@@ -554,7 +553,7 @@ we recommend including smaller types as well.</p>
 context will fail to deploy. You can obtain a list using the following command</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">aws ec2 describe-instance-type-offerings <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>    --region &lt;region_name&gt;
-</code></pre></div><h3 id="examples">Examples</h3>
+</code></pre></div><h4 id="examples">Examples</h4>
 <p>The following snippet defines two contexts, one that uses spot resources and one that uses on demand. Both contain a
 WDL engine.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -579,28 +578,39 @@ WDL engine.</p>
 </span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h3 id="max-vcpus">Max vCpus</h3>
+<p><em>default:</em> 256</p>
+<p>You may optionally specify the maximum number of vCpus used in a context. This is the max total amount of vCpus of all the jobs currently
+running within a context. When the max has been reached, additional jobs will be queued.</p>
+<p><em>note:</em> if your vCPU limit is lower than maxVCpus then you won&rsquo;t get as many as requested and would need to make a limit increase.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">contexts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">largeCtx</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">maxVCpus</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">2000</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div><h2 id="context-commands">Context Commands</h2>
 <p>A full reference of context commands is <a href="/amazon-genomics-cli/docs/reference/agc_context/">here</a></p>
 <h3 id="describe"><code>describe</code></h3>
 <p>The command <code>agc context describe &lt;context-name&gt; [flags]</code> will describe the named context as defined in the project YAML
 as well as other relevant account information.</p>
 <h3 id="list"><code>list</code></h3>
-<p>The command <code>agc context list [flags]</code> will list the names of all contexts defined in the project YAML file</p>
+<p>The command <code>agc context list [flags]</code> will list the names of all contexts defined in the project YAML file along with the name of the engine used by the context.</p>
 <h3 id="deploy"><code>deploy</code></h3>
-<p>The command <code>agc context deploy -c &lt;context-name&gt; [flags]</code> is used to deploy the cloud infrastructure required by the context.
+<p>The command <code>agc context deploy &lt;context-name&gt; [flags]</code> is used to deploy the cloud infrastructure required by the context.
 If the context is already running the existing infrastructure will be updated to reflect changes in project YAML. For example
-if you added another <code>data</code> definition in your project and run <code>agc context deploy -c &lt;context-name&gt;</code> then the deployed context
+if you added another <code>data</code> definition in your project and run <code>agc context deploy &lt;context-name&gt;</code> then the deployed context
 will be updated to allow access to the new data.</p>
 <p>All contexts defined in the project YAML can be deployed or updated using the <code>--all</code> flag.</p>
-<p>Individually named contexts can be deployed or updated as positional arguments. For example: <code>acg context deploy -c ctx1 -c ctx2</code>
+<p>Individually named contexts can be deployed or updated as positional arguments. For example: <code>agc context deploy ctx1 ctx2</code>
 will deploy the contexts <code>ctx1</code> and <code>ctx2</code>.</p>
 <p>The inclusion of the <code>--verbose</code> flag will show the full CloudFormation output of the context deployment.</p>
 <h3 id="destroy"><code>destroy</code></h3>
-<p>A contexts cloud resources can be &ldquo;destroyed&rdquo; using the <code>agc context destroy -c &lt;context-name&gt;</code> command. This will remove any
+<p>A contexts cloud resources can be &ldquo;destroyed&rdquo; using the <code>agc context destroy &lt;context-name&gt;</code> command. This will remove any
 infrastructure artifacts associated with the context unless they are defined as being retained. Typically, things like logs
 and workflow outputs on S3 are retained when a context is destroyed.</p>
 <p>All deployed contexts can be destroyed using the <code>--all</code> flag.</p>
-<p>Multiple contexts can be destroyed in a single command using positional arguments. For example: <code>acg context destroy -c ctx1 -c ctx2</code>
+<p>Multiple contexts can be destroyed in a single command using positional arguments. For example: <code>agc context destroy ctx1 ctx2</code>
 will destroy the contexts <code>ctx1</code> and <code>ctx2</code>.</p>
 <h3 id="status"><code>status</code></h3>
 <p>The status command is used to determine the status of a <em>deployed</em> context or context instance. This can be useful to determine
@@ -634,6 +644,21 @@ price to 100% although if the current price is lower you will pay the lower pric
 can still be interrupted if total demand for on demand instances in an availability zone exceeds the available pool. For
 full details see <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html">Spot Instance Interruptions</a>
 and <a href="https://aws.amazon.com/ec2/spot/pricing/">EC2 Spot Pricing</a>.</p>
+<h3 id="ongoing-costs">Ongoing Costs</h3>
+<p>Until a context is destroyed resources that are deployed can incur ongoing costs even if a workflow is not running. The
+exact costs depend on the configuration of the context.</p>
+<p>Amazon Genomics CLI version 1.0.1 and earlier used an AWS Fargate based WES service for each deployed context. The service
+uses 0.5 vCPU, 4 GB memory and 20 GB base instance storage. Fargate pricing varies by region and is detailed <a href="https://aws.amazon.com/fargate/pricing/">here</a>.
+The estimated cost is available via <a href="https://calculator.aws/#/estimate?id=9a67ba7845199cf108d85ae0f9b8176253266005">this link</a></p>
+<p>After version 1.0.1, the WES endpoints deployed by Amazon Genomics CLI are implemented with AWS Lambda and therefore use
+a <a href="https://aws.amazon.com/lambda/pricing/">pricing model</a> based on invocations.</p>
+<p>Contexts using a Cromwell engine run an additional AWS Fargate service for the engine with 2 vCPU, 16 GB RAM and 20 GB of
+base storage. Additionally, Cromwell is deployed with a standard EFS volume for storage of metadata. EFS <a href="https://aws.amazon.com/efs/pricing/">costs</a> are volume based. While
+relatively small the amount of metadata will expand as more workflows are run. The volume is destroyed when the context is destroyed. An estimated
+cost for both components is available via <a href="https://calculator.aws/#/estimate?id=8ccc606c1b267e2933a6d683c0b98fcf11e4cbab">this link</a></p>
+<p>Contexts using the &ldquo;miniwdl&rdquo; engine use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
+workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use. An estimated cost assuming a
+total of 500 GB of workflow artifacts is available via <a href="https://calculator.aws/#/estimate?id=4d19b43aa86fcc3af199c425bfcc55193592cbb4">this link</a></p>
 <h3 id="tags">Tags</h3>
 <p>All context infrastructure is <a href="/amazon-genomics-cli/docs/concepts/namespaces/#tags">tagged</a> with the context name, username and project name. These tags may be used to help
 differentiate costs.</p>
@@ -780,7 +805,7 @@ the main workflow file and any supporting files:</p>
 </li>
 <li>If the zip file <em>does</em> contain a manifest:
 <ol>
-<li>The manifest must contain a parameter called mainWorkflowURL. If it does then the value of the parameter must either be a URL or the name of a file present in the zip archive. Any subworkflows or tasks imported by the main workflow must either be referenced as URLs in the workflow or be present in the archive as described above.</li>
+<li>The manifest must contain a parameter called mainWorkflowURL. If it does then the value of the parameter must either be a URL, including the relevant protocol, or the name of a file present in the zip archive. Any subworkflows or tasks imported by the main workflow must either be referenced as URLs in the workflow or be present in the archive as described above.</li>
 <li>The manifest may contain an array of URLs to inputs files called inputFileURLs. The WesAdapter must decide if it should resolve these or let the workflow engine resolve them.</li>
 <li>The manifest may contain a URL reference to an options files name optionFileURL. The WesAdapter may chose to make use of this depending on the context of the workflow engine. It may also choose to pass this to the workflow engine or pass a modified copy to the workflow engine.</li>
 </ol>
@@ -844,7 +869,18 @@ Amazon Genomics CLI will look up the appropriate context and engine using the <c
 stop the workflow. What happens next depends on the actual workflow engine. For example, in the case of the Cromwell WDL
 engine, any currently executing tasks will halt, any pending tasks will be removed from the work queue and no further
 tasks will be started for that workflow instance.</p>
-<h2 id="cost">Cost</h2>
+<h3 id="output"><code>output</code></h3>
+<p>You can obtain the output (if any) of a completed workflow run using the output command and supplying the workflow run
+id. Typically, this is useful for locating the files produced by a workflow, although the actual output generated depends on the workflow
+specification and engine.</p>
+<p>If the workflow declares outputs you may also obtain these using the command:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">agc workflow output &lt;workflow_run_id&gt;
+</code></pre></div><p>The following is an example of output from the &ldquo;CramToBam&rdquo; workflow run in a context using the Cromwell engine.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">OUTPUT	id	aaba95e8-7512-48c3-9a61-1fd837ff6099
+OUTPUT	outputs.CramToBamFlow.outputBai	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-CramToBamTask/NA12878.bai
+OUTPUT	outputs.CramToBamFlow.outputBam	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-CramToBamTask/NA12878.bam
+OUTPUT	outputs.CramToBamFlow.validation_report	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-ValidateSamFile/NA12878.validation_report
+</code></pre></div><h2 id="cost">Cost</h2>
 <p>Your account will be charged based on actual resource usage including compute time, storage, data transfer charges etc.
 The resources used will depend on the resources requested in your workflow definition as interpreted by the workflow engine
 according the resources made available in the context in which the workflow is run. If a spot context is used then the costs
