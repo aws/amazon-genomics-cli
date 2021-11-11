@@ -1,55 +1,129 @@
 import { Stack, StackProps } from "monocdk";
-import { Vpc } from "monocdk/aws-ec2";
+import { IVpc, Vpc } from "monocdk/aws-ec2";
 import { Construct } from "constructs";
 import { getCommonParameter } from "../util";
 import { VPC_PARAMETER_NAME } from "../constants";
 import { ContextAppParameters } from "../env";
-import { BatchStack } from "./nested/batch-stack";
-import { CromwellEngineStack, CromwellEngineStackProps } from "./nested/cromwell-engine-stack";
-import { NextflowEngineStack, NextflowEngineStackProps } from "./nested/nextflow-engine-stack";
-import { ManagedPolicy } from "monocdk/aws-iam";
+import { BatchStack, BatchStackProps } from "./nested/batch-stack";
+import { CromwellEngineStack } from "./nested/cromwell-engine-stack";
+import { NextflowEngineStack } from "./nested/nextflow-engine-stack";
+import { MiniWdlEngineStack } from "./nested/miniwdl-engine-stack";
 
 export interface ContextStackProps extends StackProps {
   readonly contextParameters: ContextAppParameters;
 }
 
 export class ContextStack extends Stack {
+  private readonly vpc: IVpc;
+
   constructor(scope: Construct, id: string, props: ContextStackProps) {
     super(scope, id, props);
 
     const vpcId = getCommonParameter(this, VPC_PARAMETER_NAME);
-    const vpc = Vpc.fromLookup(this, "Vpc", { vpcId });
+    this.vpc = Vpc.fromLookup(this, "Vpc", { vpcId });
 
-    const batchStack = new BatchStack(this, "Batch", { vpc, contextParameters: props.contextParameters });
+    const { contextParameters } = props;
+    const { engineName } = contextParameters;
 
-    const commonProps: CromwellEngineStackProps | NextflowEngineStackProps = {
-      vpc,
-      contextParameters: props.contextParameters,
-      jobQueue: batchStack.batchWorkers.jobQueue,
-      policyOptions: {
-        managedPolicies: [
-          // TODO: Can these be scoped down?
-          ManagedPolicy.fromAwsManagedPolicyName("AmazonEC2ContainerRegistryReadOnly"),
-          ManagedPolicy.fromAwsManagedPolicyName("AmazonECS_FullAccess"),
-          ManagedPolicy.fromAwsManagedPolicyName("AWSBatchFullAccess"),
-        ],
-      },
-    };
-    const engineName = props.contextParameters.engineName;
     switch (engineName) {
       case "cromwell":
-        new CromwellEngineStack(this, engineName, {
-          ...commonProps,
-        }).outputToParent(this);
+        this.renderCromwellStack(props);
         break;
       case "nextflow":
-        new NextflowEngineStack(this, engineName, {
-          ...commonProps,
-          headQueue: batchStack.batchHead.jobQueue,
-        }).outputToParent(this);
+        this.renderNextflowStack(props);
+        break;
+      case "miniwdl":
+        this.renderMiniwdlStack(props);
         break;
       default:
         throw Error(`Engine '${engineName}' is not supported`);
     }
+  }
+
+  private renderCromwellStack(props: ContextStackProps) {
+    const batchProps = this.getCromwellBatchProps(props);
+    const batchStack = this.renderBatchStack(batchProps);
+
+    let jobQueue;
+    if (props.contextParameters.requestSpotInstances) {
+      jobQueue = batchStack.batchSpot.jobQueue;
+    } else {
+      jobQueue = batchStack.batchOnDemand.jobQueue;
+    }
+
+    const commonEngineProps = this.getCommonEngineProps(props);
+    new CromwellEngineStack(this, "cromwell", {
+      jobQueue,
+      ...commonEngineProps,
+    }).outputToParent(this);
+  }
+
+  private renderNextflowStack(props: ContextStackProps) {
+    const batchProps = this.getNextflowBatchProps(props);
+    const batchStack = this.renderBatchStack(batchProps);
+
+    let jobQueue, headQueue;
+    if (props.contextParameters.requestSpotInstances) {
+      jobQueue = batchStack.batchSpot.jobQueue;
+      headQueue = batchStack.batchOnDemand.jobQueue;
+    } else {
+      headQueue = jobQueue = batchStack.batchOnDemand.jobQueue;
+    }
+
+    const commonEngineProps = this.getCommonEngineProps(props);
+    new NextflowEngineStack(this, "nextflow", {
+      ...commonEngineProps,
+      jobQueue,
+      headQueue,
+    }).outputToParent(this);
+  }
+
+  private renderMiniwdlStack(props: ContextStackProps) {
+    const commonEngineProps = this.getCommonEngineProps(props);
+    new MiniWdlEngineStack(this, "miniwdl", {
+      ...commonEngineProps,
+    }).outputToParent(this);
+  }
+
+  private getCromwellBatchProps(props: ContextStackProps) {
+    const commonBatchProps = this.getCommonBatchProps(props);
+    const { requestSpotInstances } = props.contextParameters;
+
+    return {
+      ...commonBatchProps,
+      createSpotBatch: requestSpotInstances,
+      createOnDemandBatch: !requestSpotInstances,
+    };
+  }
+
+  private getCommonBatchProps(props: ContextStackProps) {
+    const { contextParameters } = props;
+    return {
+      vpc: this.vpc,
+      contextParameters,
+    };
+  }
+
+  private getNextflowBatchProps(props: ContextStackProps) {
+    const commonBatchProps = this.getCommonBatchProps(props);
+    const { requestSpotInstances } = props.contextParameters;
+    return {
+      ...commonBatchProps,
+      createSpotBatch: requestSpotInstances,
+      createOnDemandBatch: true,
+    };
+  }
+
+  private renderBatchStack(props: BatchStackProps) {
+    return new BatchStack(this, "Batch", props);
+  }
+  private getCommonEngineProps(props: ContextStackProps) {
+    return {
+      vpc: this.vpc,
+      contextParameters: props.contextParameters,
+      policyOptions: {
+        managedPolicies: [],
+      },
+    };
   }
 }

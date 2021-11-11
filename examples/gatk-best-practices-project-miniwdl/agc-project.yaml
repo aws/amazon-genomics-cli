@@ -1,0 +1,72 @@
+---
+name: GATK
+schemaVersion: 1
+workflows:
+  gatk4-data-processing:
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: ./gatk4-data-processing
+  gatk4-germline-snps-indels:
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: ./gatk4-germline-snps-indels
+  gatk4-basic-joint-genotyping:
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: ./gatk4-basic-joint-genotyping
+  seq-format-validation:
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: ./seq-format-validation
+  bam-to-unmapped-bams:
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: ./seq-format-conversions/bam-to-unmapped-bams
+  cram-to-bam:
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: ./seq-format-conversions/cram-to-bam
+  interleaved-fastq-to-paired-fastq:
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: ./seq-format-conversions/interleaved-fastq-to-paired-fastq
+  paired-fastq-to-unmapped-bam:
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: ./seq-format-conversions/paired-fastq-to-unmapped-bam
+  gatk4-rnaseq-germline-snps-indels:
+    type:
+      language: wdl
+      version: 1.0
+    sourceURL: ./gatk4-rnaseq-germline-snps-indels
+data:
+  - location: s3://gatk-test-data
+    readOnly: true
+  - location: s3://broad-references
+    readOnly: true
+  - location: s3://1000genomes-dragen-3.7.6
+    readOnly: true
+  - location: s3://healthai-public-assets-us-east-1/agc-demo-data
+    readOnly: true
+contexts:
+  # The on demand context uses on-demand EC2 instances which may be more expensive but will not be interrupted
+  onDemandCtx:
+    requestSpotInstances: false
+    engines:
+      - type: wdl
+        engine: miniwdl
+
+  # The spot context uses EC2 spot instances which are usually cheaper but may be interrupted
+  spotCtx:
+    requestSpotInstances: true
+    engines:
+      - type: wdl
+        engine: miniwdl

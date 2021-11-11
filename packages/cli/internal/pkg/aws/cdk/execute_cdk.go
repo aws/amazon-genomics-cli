@@ -30,36 +30,48 @@ func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, t
 	cmd := execCommand("npm", cmdArgs...)
 	cmd.Dir = appDir
 
-	stderr, err := cmd.StderrPipe()
+	progressChan, wait, err := processCommandOutputs(cmd)
 	if err != nil {
-		return nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
+		deleteCDKOutputDir(tmpDir)
+		return nil, err
 	}
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
-	}
-	if err := cmd.Start(); err != nil {
-		return nil, fmt.Errorf("couldn't execute CDK deploy command: %w", err)
-	}
-
-	progressChan, wait := processOutputs(bufio.NewScanner(stdout), bufio.NewScanner(stderr))
 
 	go func() {
+		defer close(progressChan)
+		defer deleteCDKOutputDir(tmpDir)
 		wait.Wait()
 		err = cmd.Wait()
 		if err != nil {
 			progressChan <- ProgressEvent{Err: err}
 		}
-		if tmpDir != "" {
-			err := osRemoveAll(tmpDir)
-			if err != nil {
-				log.Error().Err(err).Msgf("tried to delete output from cdk from location '%s' but failed", tmpDir)
-			}
-		}
-		close(progressChan)
-	}()
 
+	}()
 	return progressChan, nil
+}
+
+func processCommandOutputs(cmd *exec.Cmd) (chan ProgressEvent, *sync.WaitGroup, error) {
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
+	}
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
+	}
+	if err := cmd.Start(); err != nil {
+		return nil, nil, fmt.Errorf("couldn't execute CDK deploy command: %w", err)
+	}
+	progressChan, wait := processOutputs(bufio.NewScanner(stdout), bufio.NewScanner(stderr))
+	return progressChan, wait, nil
+}
+
+func deleteCDKOutputDir(cdkOutputDir string) {
+	if cdkOutputDir == "" {
+		return
+	}
+	if err := osRemoveAll(cdkOutputDir); err != nil {
+		log.Error().Err(err).Msgf("tried to delete output from cdk from location '%s' but failed", cdkOutputDir)
+	}
 }
 
 func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner) (chan ProgressEvent, *sync.WaitGroup) {

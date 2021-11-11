@@ -20,6 +20,7 @@ build-cli:
 	(cd packages/cli; $(MAKE) build)
 
 release: release-cli release-cdk
+	./scripts/package-release.sh
 
 release-cli:
 	(cd packages/cli; $(MAKE) release)
@@ -29,7 +30,6 @@ release-cdk:
 
 init:
 	go env -w GOPROXY=direct
-	goenv install --skip-existing
 	target=init $(MAKE) $(PACKAGES)
 
 docs: build-cli

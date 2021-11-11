@@ -66,8 +66,8 @@ You should see something like:
 
 ```
 2021-09-22T01:15:41Z 𝒊  Listing contexts.
-CONTEXTNAME    myContext
-CONTEXTNAME    spotCtx
+CONTEXTNAME    cromwell    myContext
+CONTEXTNAME    cromwell    spotCtx
 ```
 
 In this project there are two contexts, one configured to run with On-Demand instances (myContext), and one configured to use SPOT instances (spotCtx).
@@ -75,7 +75,7 @@ In this project there are two contexts, one configured to run with On-Demand ins
 You need to have a context running to be able to run workflows. To deploy the context `myContext` in the demo-wdl-project, run:
 
 ```shell
-agc context deploy -c myContext
+agc context deploy myContext
 ```
 
 This will take 10-15min to complete.
@@ -89,7 +89,7 @@ agc context deploy --all
 Contexts have read-write access to a context specific prefix in the S3 bucket Amazon Genomics CLI creates during account activation. You can check this for the `myContext` context with:
 
 ```shell
-agc context describe -c myContext
+agc context describe myContext
 ```
 
 You should see something like:
@@ -116,7 +116,7 @@ data:
 Note, you need to redeploy any running contexts to update their access to data locations. Do this by simply (re)running.
 
 ```shell
-agc context deploy -c myContext
+agc context deploy myContext
 ```
 
 Contexts also define what types of compute your workflow will run on - i.e. if you want to run workflows using SPOT or On-demand instances. 
@@ -443,10 +443,18 @@ PRE cromwell-execution/
 PRE workflow/
 ```
 
-
 The `cromwell-execution` prefix is specific to the engine Amazon Genomics CLI uses to run WDL workflows. 
 Workflow results will be in `cromwell-execution` partitioned by workflow name, workflow run id, and task name. The `workflow` prefix is where named workflows are cached when you run workflows definitions stored in your local environment.
 
+If a workflow declares workflow outputs then these can be obtained using `agc workflow output <run_id>`
+
+The following is example output from the "cram-to-bam" workflow
+```
+OUTPUT	id	aaba95e8-7512-48c3-9a61-1fd837ff6099
+OUTPUT	outputs.CramToBamFlow.outputBai	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-CramToBamTask/NA12878.bai
+OUTPUT	outputs.CramToBamFlow.outputBam	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-CramToBamTask/NA12878.bam
+OUTPUT	outputs.CramToBamFlow.validation_report	s3://agc-123456789012-us-east-1/project/GATK/userid/mrschre4GqyMA/context/spotCtx/cromwell-execution/CramToBamFlow/aaba95e8-7512-48c3-9a61-1fd837ff6099/call-ValidateSamFile/NA12878.validation_report
+```
 ### Accessing workflow logs
 
 You can get a summary of the log information for a workflow as follows:
@@ -515,7 +523,9 @@ agc logs engine --context myContext --filter ERROR
 
 ### Additional workflow examples
 
-The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on GATK Best Practices. You can find these in:
+The Amazon Genomics CLI installation also includes a set of typical genomics workflows for raw data processing, germline variant discovery, and joint genotyping based on [GATK Best Practices](https://gatk.broadinstitute.org/hc/en-us), developed by the [Broad Institute](https://www.broadinstitute.org/). More information on how these workflows work is available in the [GATK Workflows Github repository](https://github.com/gatk-workflows).
+
+You can find these in:
 
 ```shell
 ~/agc/examples/gatk-best-practices-project
@@ -532,7 +542,7 @@ When you are done running workflows, it is recommended you stop all cloud resour
 Stop a context with:
 
 ```shell
-agc context destroy -c <context-name>
+agc context destroy <context-name>
 ```
 
 This will destroy all compute resources in a context, but retain any data in S3. If you want to destroy all your running contexts at once, you can use:

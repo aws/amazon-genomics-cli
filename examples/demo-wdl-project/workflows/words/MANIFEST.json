@@ -1,0 +1,6 @@
+{
+  "mainWorkflowURL": "words-with-vowels.wdl",
+  "inputFileURLs": [
+    "words-with-vowels.inputs.json"
+  ]
+}

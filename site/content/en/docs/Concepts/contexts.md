@@ -32,7 +32,9 @@ A context must define an array of one or more `engines`. Each engine definition 
 will interpret. For each language Amazon Genomics CLI has a default engine however, users may specify the exact engine in the `engine`
 parameter.
 
-## Instance Types
+## Context Properties
+
+### Instance Types
 
 You may optionally specify the instance types to be used in a context. This can be a specific type such as `r5.2xlarge`
 or it can be an instance family such as `c5` or a combination. By default, a context will use instance types up to `4xlarge`
@@ -48,7 +50,8 @@ aws ec2 describe-instance-type-offerings \
     --region <region_name>
 ```
 
-### Examples
+
+#### Examples
 
 The following snippet defines two contexts, one that uses spot resources and one that uses on demand. Both contain a
 WDL engine.
@@ -86,6 +89,23 @@ contexts:
         engine: nextflow
 ```
 
+### Max vCpus
+
+*default:* 256
+
+You may optionally specify the maximum number of vCpus used in a context. This is the max total amount of vCpus of all the jobs currently 
+running within a context. When the max has been reached, additional jobs will be queued.
+
+*note:* if your vCPU limit is lower than maxVCpus then you won't get as many as requested and would need to make a limit increase.
+```yaml
+contexts:
+  largeCtx:
+    maxVCpus: 2000
+    engines:
+      - type: nextflow
+        engine: nextflow
+```
+
 ## Context Commands
 
 A full reference of context commands is [here]( {{< relref "../Reference/agc_context" >}} )
@@ -97,31 +117,31 @@ as well as other relevant account information.
 
 ### `list`
 
-The command `agc context list [flags]` will list the names of all contexts defined in the project YAML file
+The command `agc context list [flags]` will list the names of all contexts defined in the project YAML file along with the name of the engine used by the context.
 
 ### `deploy`
 
-The command `agc context deploy -c <context-name> [flags]` is used to deploy the cloud infrastructure required by the context.
+The command `agc context deploy <context-name> [flags]` is used to deploy the cloud infrastructure required by the context.
 If the context is already running the existing infrastructure will be updated to reflect changes in project YAML. For example
-if you added another `data` definition in your project and run `agc context deploy -c <context-name>` then the deployed context
+if you added another `data` definition in your project and run `agc context deploy <context-name>` then the deployed context
 will be updated to allow access to the new data.
 
 All contexts defined in the project YAML can be deployed or updated using the `--all` flag.
 
-Individually named contexts can be deployed or updated as positional arguments. For example: `acg context deploy -c ctx1 -c ctx2`
+Individually named contexts can be deployed or updated as positional arguments. For example: `agc context deploy ctx1 ctx2`
 will deploy the contexts `ctx1` and `ctx2`.
 
 The inclusion of the `--verbose` flag will show the full CloudFormation output of the context deployment.
 
 ### `destroy`
 
-A contexts cloud resources can be "destroyed" using the `agc context destroy -c <context-name>` command. This will remove any 
+A contexts cloud resources can be "destroyed" using the `agc context destroy <context-name>` command. This will remove any 
 infrastructure artifacts associated with the context unless they are defined as being retained. Typically, things like logs
 and workflow outputs on S3 are retained when a context is destroyed.
 
 All deployed contexts can be destroyed using the `--all` flag.
 
-Multiple contexts can be destroyed in a single command using positional arguments. For example: `acg context destroy -c ctx1 -c ctx2`
+Multiple contexts can be destroyed in a single command using positional arguments. For example: `agc context destroy ctx1 ctx2`
 will destroy the contexts `ctx1` and `ctx2`.
 
 ### `status`
@@ -157,6 +177,27 @@ price to 100% although if the current price is lower you will pay the lower pric
 can still be interrupted if total demand for on demand instances in an availability zone exceeds the available pool. For
 full details see [Spot Instance Interruptions](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-interruptions.html) 
 and [EC2 Spot Pricing](https://aws.amazon.com/ec2/spot/pricing/).
+
+### Ongoing Costs
+
+Until a context is destroyed resources that are deployed can incur ongoing costs even if a workflow is not running. The
+exact costs depend on the configuration of the context.
+
+Amazon Genomics CLI version 1.0.1 and earlier used an AWS Fargate based WES service for each deployed context. The service
+uses 0.5 vCPU, 4 GB memory and 20 GB base instance storage. Fargate pricing varies by region and is detailed [here](https://aws.amazon.com/fargate/pricing/).
+The estimated cost is available via [this link](https://calculator.aws/#/estimate?id=9a67ba7845199cf108d85ae0f9b8176253266005)
+
+After version 1.0.1, the WES endpoints deployed by Amazon Genomics CLI are implemented with AWS Lambda and therefore use
+a [pricing model](https://aws.amazon.com/lambda/pricing/) based on invocations.
+
+Contexts using a Cromwell engine run an additional AWS Fargate service for the engine with 2 vCPU, 16 GB RAM and 20 GB of
+base storage. Additionally, Cromwell is deployed with a standard EFS volume for storage of metadata. EFS [costs](https://aws.amazon.com/efs/pricing/) are volume based. While
+relatively small the amount of metadata will expand as more workflows are run. The volume is destroyed when the context is destroyed. An estimated
+cost for both components is available via [this link](https://calculator.aws/#/estimate?id=8ccc606c1b267e2933a6d683c0b98fcf11e4cbab)
+
+Contexts using the "miniwdl" engine use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
+workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use. An estimated cost assuming a
+total of 500 GB of workflow artifacts is available via [this link](https://calculator.aws/#/estimate?id=4d19b43aa86fcc3af199c425bfcc55193592cbb4)
 
 ### Tags
 

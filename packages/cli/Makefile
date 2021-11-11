@@ -79,6 +79,7 @@ gen-mocks:
 	${GOBIN}/mockgen -source=./internal/pkg/mocks/io/interfaces.go -package=iomocks -destination=./internal/pkg/mocks/io/mock_interfaces.go
 	${GOBIN}/mockgen -source=./internal/pkg/mocks/wes/interfaces.go -package=wesmocks -destination=./internal/pkg/mocks/wes/mock_interfaces.go
 	${GOBIN}/mockgen -source=./internal/pkg/mocks/manager/interfaces.go -package=managermocks -destination=./internal/pkg/mocks/manager/mock_interfaces.go
+	${GOBIN}/mockgen -source=./internal/pkg/version/interfaces.go -package=version -destination=./internal/pkg/version/mock_interfaces.go
 
 init: tools
 	go mod vendor

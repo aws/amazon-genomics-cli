@@ -14,9 +14,11 @@ import (
 )
 
 const (
-	destroyContextAllFlag        = "all"
-	destroyContextAllDescription = `Destroy all contexts in the project`
-	destroyContextDescription    = `Names of one or more contexts to destroy`
+	destroyContextAllFlag          = "all"
+	destroyContextAllDescription   = `Destroy all contexts in the project`
+	destroyContextForceFlag        = "force"
+	destroyContextForceDescription = "Destroy context and stop running workflows within context"
+	destroyContextDescription      = `Names of one or more contexts to destroy`
 )
 
 type destroyResult struct {
@@ -25,45 +27,53 @@ type destroyResult struct {
 }
 
 type destroyContextVars struct {
-	contexts   []string
-	destroyAll bool
+	contexts     []string
+	destroyAll   bool
+	destroyForce bool
 }
 
 type destroyContextOpts struct {
 	destroyContextVars
 	ctxManagerFactory func() context.Interface
-	wfsManager        workflow.StatusManager
+	wfsManager        func() workflow.Interface
 }
 
 func newDestroyContextOpts(vars destroyContextVars) (*destroyContextOpts, error) {
 	contextOpts := &destroyContextOpts{
 		destroyContextVars: vars,
 		ctxManagerFactory:  func() context.Interface { return context.NewManager(profile) },
-		wfsManager:         workflow.NewManager(profile),
+		wfsManager:         func() workflow.Interface { return workflow.NewManager(profile) },
 	}
 
 	return contextOpts, nil
 }
 
-func (o *destroyContextOpts) Validate() error {
+func (o *destroyContextOpts) Validate(contexts []string) error {
+	o.contexts = append(o.contexts, contexts...)
+
 	if (!o.destroyAll && len(o.contexts) == 0) || (o.destroyAll && len(o.contexts) > 0) {
-		return fmt.Errorf("one of either the 'context' or 'all' flag is required")
+		return fmt.Errorf("either an 'all' flag or a list of contexts must be provided, but not both")
 	}
 
-	err := o.getContexts()
+	err := o.validateContexts()
 	if err != nil {
 		return err
 	}
 
+	wfsManager := o.wfsManager()
 	for _, ctx := range o.contexts {
-		workflows, err := o.wfsManager.StatusWorkflowByContext(ctx, workflowMaxInstanceDefault)
+		workflows, err := wfsManager.StatusWorkflowByContext(ctx, workflowMaxAllowedInstance)
 		if err != nil {
 			return err
 		}
 		for _, wf := range workflows {
 			if wf.IsInstanceRunning() {
-				return fmt.Errorf("Context '%s' contains running workflows. "+
-					"Please stop all workflows before destroying context.", ctx)
+				if !o.destroyForce {
+					return fmt.Errorf("context '%s' contains running workflows. "+
+						"Please stop all workflows before destroying context", ctx)
+				} else {
+					wfsManager.StopWorkflowInstance(wf.Id)
+				}
 			}
 		}
 	}
@@ -87,7 +97,7 @@ func (o *destroyContextOpts) Execute() error {
 	return nil
 }
 
-func (o *destroyContextOpts) getContexts() error {
+func (o *destroyContextOpts) validateContexts() error {
 	ctxList, err := o.ctxManagerFactory().List()
 	if err != nil {
 		return err
@@ -103,6 +113,7 @@ func (o *destroyContextOpts) getContexts() error {
 			return fmt.Errorf("the provided context '%s' is not defined in the agc-project.yaml file", context)
 		}
 	}
+
 	return nil
 }
 
@@ -123,19 +134,19 @@ func (o *destroyContextOpts) destroyContexts(contexts []string) []destroyResult 
 func BuildContextDestroyCommand() *cobra.Command {
 	vars := destroyContextVars{}
 	cmd := &cobra.Command{
-		Use:   "destroy {-c context_name ... | --all}",
+		Use:   "destroy {context_name ... | --all}",
 		Short: "Destroy contexts in the current project.",
 		Long: `destroy is for destroying one or more contexts. 
 It destroys AGC resources in AWS.`,
 		Example: `
-/code agc context destroy -c context1 -c context2`,
-		Args: cobra.NoArgs,
+/code agc context destroy context1 context2`,
+		Args: cobra.ArbitraryArgs,
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
 			opts, err := newDestroyContextOpts(vars)
 			if err != nil {
 				return err
 			}
-			if err := opts.Validate(); err != nil {
+			if err := opts.Validate(args); err != nil {
 				return err
 			}
 			log.Info().Msgf("Destroying context(s)'")
@@ -148,5 +159,7 @@ It destroys AGC resources in AWS.`,
 	}
 	cmd.Flags().BoolVar(&vars.destroyAll, destroyContextAllFlag, false, destroyContextAllDescription)
 	cmd.Flags().StringSliceVarP(&vars.contexts, contextFlag, contextFlagShort, nil, destroyContextDescription)
+	cmd.Flags().BoolVar(&vars.destroyForce, destroyContextForceFlag, false, destroyContextForceDescription)
+	_ = cmd.RegisterFlagCompletionFunc(contextFlag, NewContextAutoComplete().GetContextAutoComplete())
 	return cmd
 }

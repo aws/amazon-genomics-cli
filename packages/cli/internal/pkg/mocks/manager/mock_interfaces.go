@@ -49,6 +49,21 @@ func (mr *MockWorkflowManagerMockRecorder) GetWorkflowTasks(runId interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWorkflowTasks", reflect.TypeOf((*MockWorkflowManager)(nil).GetWorkflowTasks), runId)
 }
 
+// OutputByInstanceId mocks base method.
+func (m *MockWorkflowManager) OutputByInstanceId(instanceId string) (map[string]interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OutputByInstanceId", instanceId)
+	ret0, _ := ret[0].(map[string]interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// OutputByInstanceId indicates an expected call of OutputByInstanceId.
+func (mr *MockWorkflowManagerMockRecorder) OutputByInstanceId(instanceId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OutputByInstanceId", reflect.TypeOf((*MockWorkflowManager)(nil).OutputByInstanceId), instanceId)
+}
+
 // StatusWorkflowAll mocks base method.
 func (m *MockWorkflowManager) StatusWorkflowAll(numInstances int) ([]workflow.InstanceSummary, error) {
 	m.ctrl.T.Helper()

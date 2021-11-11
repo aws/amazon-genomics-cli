@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 )
 
@@ -45,7 +46,7 @@ func findProjectDirectoryUpwards() (string, error) {
 		currentDir = getParentDir(currentDir)
 	}
 
-	return "", fmt.Errorf("can not find '%s' file", ProjectSpecFileName)
+	return "", actionableerror.New(fmt.Errorf("can not find '%s' file", ProjectSpecFileName), "change to a project directory or create a project spec with 'agc project init'")
 }
 
 func hasProjectFile(dirPath string) bool {

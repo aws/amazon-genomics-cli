@@ -18,7 +18,7 @@ type StreamEvent struct {
 	Err  error
 }
 
-func (c Client) StreamLogs(ctx context.Context, logGroupName string, streams ...string) chan StreamEvent {
+func (c Client) StreamLogs(ctx context.Context, logGroupName string, streams ...string) <-chan StreamEvent {
 	stream := make(chan StreamEvent)
 	go func() {
 		defer func() { close(stream) }()
@@ -38,6 +38,8 @@ func (c Client) StreamLogs(ctx context.Context, logGroupName string, streams ...
 			if aws.ToString(lastToken) != aws.ToString(output.NextToken) {
 				stream <- StreamEvent{Logs: parseEventLogs(output.Events, startTime)}
 				lastToken = output.NextToken
+			} else {
+				stream <- StreamEvent{}
 			}
 
 			select {
@@ -52,12 +54,14 @@ func (c Client) StreamLogs(ctx context.Context, logGroupName string, streams ...
 }
 
 func parseEventLogs(events []types.FilteredLogEvent, latestTimestamp *int64) []string {
-	logs := make([]string, len(events))
-	for i, event := range events {
+	logsByStream := make(map[string][]*types.FilteredLogEvent)
+	for index := range events {
+		event := events[index]
 		if aws.ToInt64(event.Timestamp) > aws.ToInt64(latestTimestamp) {
 			latestTimestamp = event.Timestamp
 		}
-		logs[i] = formatEvent(event)
+		logsByStream[*event.LogStreamName] = append(logsByStream[*event.LogStreamName], &event)
 	}
-	return logs
+
+	return convertStreamLogsToLogs(logsByStream, len(events))
 }

@@ -1,14 +1,18 @@
 import { InstanceType } from "monocdk/aws-ec2";
-import { ComputeType } from "../types/index";
+import { ComputeResourceType } from "monocdk/aws-batch";
 
 // https://github.com/aws-samples/aws-genomics-workflows/blob/master/src/templates/gwfcore/gwfcore-batch.template.yaml#L145-L180
 // batch 'optimal' isn't optimal for genomics computation, these types have been tuned over several customer engagements
-export const optimalInstanceTypes: { [key in ComputeType]: string[] } = {
-  [ComputeType.ON_DEMAND]: [
+export const optimalInstanceTypes: { [key in ComputeResourceType]: string[] } = {
+  [ComputeResourceType.ON_DEMAND]: [
     "c5.large",
     "c5.xlarge",
     "c5.2xlarge",
     "c5.4xlarge",
+    "c5a.large",
+    "c5a.xlarge",
+    "c5a.2xlarge",
+    "c5a.4xlarge",
     "c5n.large",
     "c5n.xlarge",
     "c5n.2xlarge",
@@ -17,6 +21,10 @@ export const optimalInstanceTypes: { [key in ComputeType]: string[] } = {
     "m5.xlarge",
     "m5.2xlarge",
     "m5.4xlarge",
+    "m5a.large",
+    "m5a.xlarge",
+    "m5a.2xlarge",
+    "m5a.4xlarge",
     "m5n.large",
     "m5n.xlarge",
     "m5n.2xlarge",
@@ -25,16 +33,24 @@ export const optimalInstanceTypes: { [key in ComputeType]: string[] } = {
     "r5.xlarge",
     "r5.2xlarge",
     "r5.4xlarge",
+    "r5a.large",
+    "r5a.xlarge",
+    "r5a.2xlarge",
+    "r5a.4xlarge",
     "r5n.large",
     "r5n.xlarge",
     "r5n.2xlarge",
     "r5n.4xlarge",
   ],
-  [ComputeType.SPOT]: [
+  [ComputeResourceType.SPOT]: [
     "c4.large",
     "c4.xlarge",
     "c4.2xlarge",
     "c4.4xlarge",
+    "c5a.large",
+    "c5a.xlarge",
+    "c5a.2xlarge",
+    "c5a.4xlarge",
     "c5.large",
     "c5.xlarge",
     "c5.2xlarge",
@@ -51,6 +67,10 @@ export const optimalInstanceTypes: { [key in ComputeType]: string[] } = {
     "m5.xlarge",
     "m5.2xlarge",
     "m5.4xlarge",
+    "m5a.large",
+    "m5a.xlarge",
+    "m5a.2xlarge",
+    "m5a.4xlarge",
     "m5n.large",
     "m5n.xlarge",
     "m5n.2xlarge",
@@ -63,14 +83,18 @@ export const optimalInstanceTypes: { [key in ComputeType]: string[] } = {
     "r5.xlarge",
     "r5.2xlarge",
     "r5.4xlarge",
+    "r5a.large",
+    "r5a.xlarge",
+    "r5a.2xlarge",
+    "r5a.4xlarge",
     "r5n.large",
     "r5n.xlarge",
     "r5n.2xlarge",
     "r5n.4xlarge",
   ],
   // TODO: Determine optimal instances for fargate when it's supported
-  [ComputeType.FARGATE]: [],
-  [ComputeType.FARGATE_SPOT]: [],
+  [ComputeResourceType.FARGATE]: [],
+  [ComputeResourceType.FARGATE_SPOT]: [],
 };
 
 // These need to be manually updated as regions release new instance types
@@ -91,6 +115,18 @@ const unLaunchedInstanceTypesByRegion: { [key in string]: { [key in string]: boo
     "c5n.2xlarge": true,
     "c5n.xlarge": true,
     "r5n.xlarge": true,
+    "c5a.large": true,
+    "c5a.xlarge": true,
+    "c5a.2xlarge": true,
+    "c5a.4xlarge": true,
+    "m5a.large": true,
+    "m5a.xlarge": true,
+    "m5a.2xlarge": true,
+    "m5a.4xlarge": true,
+    "r5a.large": true,
+    "r5a.xlarge": true,
+    "r5a.2xlarge": true,
+    "r5a.4xlarge": true,
   },
   "ap-southeast-2": { "m5n.large": true, "m5n.xlarge": true, "m5n.2xlarge": true, "m5n.4xlarge": true },
   "ca-central-1": { "m5n.large": true, "m5n.xlarge": true, "m5n.2xlarge": true, "m5n.4xlarge": true },
@@ -126,11 +162,19 @@ const unLaunchedInstanceTypesByRegion: { [key in string]: { [key in string]: boo
     "r4.xlarge": true,
     "r4.2xlarge": true,
     "r4.4xlarge": true,
+    "m5a.large": true,
+    "m5a.xlarge": true,
+    "m5a.2xlarge": true,
+    "m5a.4xlarge": true,
+    "r5a.large": true,
+    "r5a.xlarge": true,
+    "r5a.2xlarge": true,
+    "r5a.4xlarge": true,
   },
   "sa-east-1": { "m5n.large": true, "m5n.xlarge": true, "m5n.2xlarge": true, "m5n.4xlarge": true },
 };
 
-export const getInstanceTypesForBatch = (instanceTypes: InstanceType[] | undefined, computeType: ComputeType, region?: string): InstanceType[] => {
+export const getInstanceTypesForBatch = (instanceTypes: InstanceType[] | undefined, computeType: ComputeResourceType, region?: string): InstanceType[] => {
   if (instanceTypes && instanceTypes.length > 0) {
     return instanceTypes;
   }

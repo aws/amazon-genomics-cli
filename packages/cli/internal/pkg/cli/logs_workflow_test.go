@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"testing"
@@ -127,8 +128,9 @@ func TestLogsWorkflowOpts_Execute(t *testing.T) {
 	}
 
 	tests := map[string]struct {
-		setupOps       func(*logsWorkflowOpts, *awsmocks.MockCwlLogPaginator)
-		expectedOutput string
+		setupOps             func(*logsWorkflowOpts, *awsmocks.MockCwlLogPaginator)
+		expectedOutput       string
+		expectedErrorMessage string
 	}{
 		"runId empty log": {
 			setupOps: func(opts *logsWorkflowOpts, cwlLopPaginator *awsmocks.MockCwlLogPaginator) {
@@ -225,6 +227,29 @@ func TestLogsWorkflowOpts_Execute(t *testing.T) {
 			},
 			expectedOutput: "Test Log Page 1\n",
 		},
+		"receives error": {
+			setupOps: func(opts *logsWorkflowOpts, cwlLopPaginator *awsmocks.MockCwlLogPaginator) {
+				opts.workflowName = testWorkflowName
+				opts.runId = testRunId
+
+				opts.workflowManager.(*managermocks.MockWorkflowManager).EXPECT().
+					GetWorkflowTasks(testRunId).Return([]workflow.Task{testTask}, nil)
+				opts.batchClient.(*awsmocks.MockBatchClient).EXPECT().
+					GetJobs([]string{testJobId}).Return([]batch.Job{testJob}, nil)
+				opts.cwlClient.(*awsmocks.MockCwlClient).EXPECT().
+					GetLogsPaginated(cwl.GetLogsInput{
+						LogGroupName: testLogGroupName,
+						StartTime:    nil,
+						EndTime:      nil,
+						Filter:       "",
+						Streams:      []string{testLogStreamName},
+					}).Return(cwlLopPaginator)
+				cwlLopPaginator.EXPECT().HasMoreLogs().Return(true)
+				cwlLopPaginator.EXPECT().NextLogs().Return([]string{}, errors.New("some error"))
+			},
+			expectedOutput:       "",
+			expectedErrorMessage: "some error",
+		},
 	}
 
 	for name, tt := range tests {
@@ -256,7 +281,11 @@ func TestLogsWorkflowOpts_Execute(t *testing.T) {
 			cwlPager := awsmocks.NewMockCwlLogPaginator(ctrl)
 			tt.setupOps(opts, cwlPager)
 			err := opts.Execute()
-			if assert.NoError(t, err) {
+
+			if tt.expectedErrorMessage != "" {
+				assert.Error(t, err, tt.expectedErrorMessage)
+			} else {
+				assert.NoError(t, err)
 				actualOutput := output.String()
 				assert.Equal(t, tt.expectedOutput, actualOutput)
 			}

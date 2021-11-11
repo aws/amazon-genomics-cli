@@ -19,3 +19,8 @@ type WorkflowInstance struct {
 	SubmittedTime string
 	InProject     bool
 }
+
+type Output struct {
+	Path  string
+	Value string
+}

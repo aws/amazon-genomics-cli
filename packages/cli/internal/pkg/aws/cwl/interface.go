@@ -13,7 +13,7 @@ type LogPaginator interface {
 
 type Interface interface {
 	GetLogsPaginated(input GetLogsInput) LogPaginator
-	StreamLogs(ctx context.Context, logGroupName string, streams ...string) chan StreamEvent
+	StreamLogs(ctx context.Context, logGroupName string, streams ...string) <-chan StreamEvent
 }
 
 type cwlInterface interface {
