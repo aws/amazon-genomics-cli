@@ -54,7 +54,7 @@ Commands
                 Configuration is stored per user.
 
 Flags
-      --format string   Format option for output. Valid options are: text, tabular (default "text")
+      --format string   Format option for output. Valid options are: text, table (default "text")
   -h, --help            help for agc
   -v, --verbose         Display verbose diagnostic information.
       --version         version for agc
