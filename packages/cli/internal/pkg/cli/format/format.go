@@ -3,6 +3,7 @@ package format
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"text/tabwriter"
 )
@@ -21,9 +22,9 @@ func NewText() *Text {
 	return &Text{os.Stdout}
 }
 
-func NewTable() *Table {
+func NewTable(output io.Writer) *Table {
 	return &Table{
-		*tabwriter.NewWriter(os.Stdout, 0, 8, 0, tableDelimiter[0], 0),
+		*tabwriter.NewWriter(output, 0, 8, 0, tableDelimiter[0], 0),
 	}
 }
 
@@ -32,7 +33,7 @@ func SetFormatter(format FormatterType) {
 	case textFormat:
 		Default = NewText()
 	case tableFormat:
-		Default = NewTable()
+		Default = NewTable(os.Stdout)
 	}
 }
 

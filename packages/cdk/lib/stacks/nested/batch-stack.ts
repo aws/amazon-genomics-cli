@@ -69,7 +69,7 @@ export class BatchStack extends NestedStack {
   }
 
   private getBatchRoles(): IRole[] {
-    const roles = [];
+    const roles: IRole[] = [];
     if (this.batchOnDemand) {
       roles.push(this.batchOnDemand.role);
     }

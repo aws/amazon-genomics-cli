@@ -1,9 +1,8 @@
 import { NestedStackProps } from "monocdk";
 import { Construct } from "constructs";
-import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "monocdk/aws-iam";
+import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "monocdk/aws-iam";
 import { Bucket } from "monocdk/aws-s3";
 import { ApiProxy, Batch } from "../../constructs";
-import { LogGroup } from "monocdk/aws-logs";
 import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
@@ -13,8 +12,9 @@ import { ComputeResourceType } from "monocdk/aws-batch";
 import { BucketOperations } from "../../../common/BucketOperations";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
-import { renderServiceWithContainer } from "../../util";
+import { renderPythonLambda } from "../../util";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
+import { wesAdapterSourcePath } from "../../constants";
 
 export interface MiniWdlEngineStackProps extends NestedStackProps {
   /**
@@ -60,7 +60,8 @@ export class MiniWdlEngineStack extends NestedEngineStack {
     });
 
     const adapterRole = new Role(this, "MiniWdlAdapterRole", {
-      assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"),
+      assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+      managedPolicies: [ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")],
       inlinePolicies: {
         MiniwdlAdapterPolicy: new PolicyDocument({
           statements: [
@@ -79,15 +80,17 @@ export class MiniWdlEngineStack extends NestedEngineStack {
 
     this.grantS3Permissions(contextParameters);
 
-    const adapterContainer = params.getAdapterContainer();
-    adapterContainer.environment!["JOB_DEFINITION"] = this.miniwdlEngine.headJobDefinition.jobDefinitionArn;
-    adapterContainer.environment!["JOB_QUEUE"] = this.batchHead.jobQueue.jobQueueArn;
-    this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
-    const adapter = renderServiceWithContainer(this, "Adapter", adapterContainer, props.vpc, adapterRole, this.adapterLogGroup);
+    const lambda = this.renderAdapterLambda({
+      vpc: props.vpc,
+      role: adapterRole,
+      jobQueueArn: this.batchHead.jobQueue.jobQueueArn,
+      jobDefinitionArn: this.miniwdlEngine.headJobDefinition.jobDefinitionArn,
+    });
+    this.adapterLogGroup = lambda.logGroup;
 
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}MiniWdlApiProxy`,
-      loadBalancer: adapter.loadBalancer,
+      lambda,
       allowedAccountIds: [this.account],
     });
   }
@@ -130,5 +133,13 @@ export class MiniWdlEngineStack extends NestedEngineStack {
 
   private getBatchRoles(): IRole[] {
     return [this.batchHead.role, this.batchWorkers.role];
+  }
+
+  private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn }) {
+    return renderPythonLambda(this, "MiniWDLWesAdapterLambda", vpc, role, wesAdapterSourcePath, {
+      ENGINE_NAME: "miniwdl",
+      JOB_QUEUE: jobQueueArn,
+      JOB_DEFINITION: jobDefinitionArn,
+    });
   }
 }
