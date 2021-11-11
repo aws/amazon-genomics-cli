@@ -11,10 +11,14 @@ Download the Amazon Genomics CLI zip, unzip its contents, and run the `install.s
 
 To download a specific release, see [releases page](https://github.com/aws/amazon-genomics-cli/releases) of our Github repo.
 
-```
-curl -OLs https://github.com/aws/amazon-genomics-cli/releases/latest/download/amazon-genomics-cli.zip
-unzip amazon-genomics-cli.zip -d agc
-./agc/install.sh
+To download the latest release navigate to https://github.com/aws/amazon-genomics-cli/releases/
+
+Once you have downloaded a release, type the following to install:
+
+```shell
+unzip amazon-genomics-cli-<version>.zip
+cd amazon-genomics-cli/ 
+./install.sh
 ```
 
 This will place the `agc` command in `$HOME/bin`.
