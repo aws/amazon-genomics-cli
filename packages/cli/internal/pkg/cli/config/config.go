@@ -7,7 +7,7 @@ type User struct {
 	Id string `yaml:"-"`
 }
 type Format struct {
-	Value string
+	Name string
 }
 type Config struct {
 	User   User   `yaml:"user"`

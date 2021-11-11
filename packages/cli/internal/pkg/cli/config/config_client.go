@@ -141,7 +141,7 @@ func (c Client) SetFormat(format string) error {
 	if err != nil {
 		return err
 	}
-	configData.Format.Value = format
+	configData.Format.Name = format
 	return c.storeToFile(configData)
 }
 
@@ -150,5 +150,5 @@ func (c Client) GetFormat() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return configData.Format.Value, nil
+	return configData.Format.Name, nil
 }

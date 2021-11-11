@@ -26,7 +26,7 @@ var (
 			Email: "my@email.com",
 		},
 		Format{
-			Value: "text",
+			Name: "text",
 		},
 	}
 )
