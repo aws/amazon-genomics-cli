@@ -151,12 +151,14 @@ func buildRootCmd() *cobra.Command {
 
 	return cmd
 }
+
 func ValidateFormat(f format.FormatterType) error {
 	if err := f.ValidateFormatter(); err != nil {
 		return err
 	}
 	return nil
 }
+
 func setFormatter(opts *formatOpts) string {
 	configClient := opts.configClient
 	formatVars := opts.formatVars
