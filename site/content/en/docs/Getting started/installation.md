@@ -33,7 +33,7 @@ $ agc --help
 Commands
   Getting Started 🌱
     account     Commands for AWS account setup.
-                Install or remove Amazon Genomics CLI from your account.
+                Install or remove AGC from your account.
 
   Contexts
     context     Commands for contexts.
@@ -50,14 +50,14 @@ Commands
                 Workflows are potentially-dynamic graphs of computational tasks to execute.
 
   Settings ⚙️
-    version     Print the version number.
     configure   Commands for configuration.
                 Configuration is stored per user.
 
 Flags
-  -h, --help      help for agc
-  -v, --verbose   Display verbose diagnostic information.
-      --version   version for agc
+      --format string   Format option for output. Valid options are: text, tabular (default "text")
+  -h, --help            help for agc
+  -v, --verbose         Display verbose diagnostic information.
+      --version         version for agc
 Examples
   Displays the help menu for the specified sub-command.
   `$ agc account --help`
