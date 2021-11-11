@@ -16,7 +16,7 @@ import (
 
 var ExecuteCdkCommand = executeCdkCommand
 var execCommand = exec.Command
-var progressRegex = regexp.MustCompile(`^\s*([0-9]+/[0-9]+)\s*\|(.*)`)
+var progressRegex = regexp.MustCompile(`^.*\|\s*([0-9]+/[0-9]+)\s*\|(.*)`)
 
 var osRemoveAll = os.RemoveAll
 
@@ -44,7 +44,6 @@ func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, t
 		if err != nil {
 			progressChan <- ProgressEvent{Err: err}
 		}
-
 	}()
 	return progressChan, nil
 }
