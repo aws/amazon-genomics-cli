@@ -1,11 +1,12 @@
 BINARY_NAME=agc
 PACKAGES=./internal...
 SOURCE_DOCS=${PWD}/site
+VERSION_FILE=../../version.json
 GOBIN=${PWD}/bin/tools
 COVERAGE=coverage.out
 
 DESTINATION=./bin/local/${BINARY_NAME}
-VERSION=$(shell git describe --always --tags)
+VERSION=$(shell jq .version -r < ${VERSION_FILE})
 
 LINKER_FLAGS=-X github.com/aws/amazon-genomics-cli/internal/pkg/version.Version=${VERSION}
 # RELEASE_BUILD_LINKER_FLAGS disables DWARF and symbol table generation to reduce binary size
