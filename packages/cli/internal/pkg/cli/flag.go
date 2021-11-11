@@ -20,7 +20,7 @@ const (
 const (
 	FormatFlag            = "format"
 	FormatFlagDefault     = string(format.DefaultFormat)
-	FormatFlagDescription = "Format option for output. Valid options are: text, tabular"
+	FormatFlagDescription = "Format option for output. Valid options are: text, table"
 )
 
 const (
