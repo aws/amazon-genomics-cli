@@ -1,12 +1,15 @@
 package storagemocks
 
-import "github.com/aws/amazon-genomics-cli/internal/pkg/storage"
+import (
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
+)
 
 type ProjectClient interface {
 	storage.ProjectClient
 }
 type ConfigClient interface {
-	storage.ConfigClient
+	config.ConfigClient
 }
 type StorageClient interface {
 	storage.StorageClient

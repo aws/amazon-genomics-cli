@@ -18,7 +18,6 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/term/color"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
 	"github.com/rs/zerolog"
@@ -41,25 +40,11 @@ type formatVars struct {
 	format string
 }
 
+var newConfigClient = config.NewConfigClient
+
 const (
 	defaultFormat = "text"
 )
-
-type formatOpts struct {
-	configClient storage.ConfigClient
-	formatVars   formatVars
-}
-
-func newFormatOpts(formatVars formatVars) (*formatOpts, error) {
-	configClient, err := config.NewConfigClient()
-	if err != nil {
-		return nil, err
-	}
-	return &formatOpts{
-		formatVars:   formatVars,
-		configClient: configClient,
-	}, nil
-}
 
 func init() {
 	color.DisableColorBasedOnEnvVar()
@@ -110,11 +95,7 @@ func buildRootCmd() *cobra.Command {
   /code $ agc account --help`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			setLoggingLevel()
-			opts, err := newFormatOpts(formatVars)
-			if err != nil {
-				log.Error().Err(err)
-			}
-			setFormatter(opts)
+			setFormatter(formatVars)
 			checkCliVersion()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -159,24 +140,26 @@ func ValidateFormat(f format.FormatterType) error {
 	return nil
 }
 
-func setFormatter(opts *formatOpts) string {
-	configClient := opts.configClient
-	formatVars := opts.formatVars
-
-	if formatVars.format == "" {
-		formatVars.format = defaultFormat
-		configFormat, err := configClient.GetFormat()
+func setFormatter(f formatVars) string {
+	configClient, err := newConfigClient()
+	if err != nil {
+		log.Error().Err(err)
+		return ""
+	}
+	if f.format == "" {
+		f.format = defaultFormat
+		configFormat, err := configClient.ConfigInterface.GetFormat()
 		if err != nil {
 			log.Error().Err(err)
 		} else {
-			formatVars.format = configFormat
+			f.format = configFormat
 		}
 	}
-	if err := ValidateFormat(format.FormatterType(formatVars.format)); err != nil {
+	if err := ValidateFormat(format.FormatterType(f.format)); err != nil {
 		fmt.Println(err.Error())
 	}
-	format.SetFormatter(format.FormatterType(formatVars.format))
-	return formatVars.format
+	format.SetFormatter(format.FormatterType(f.format))
+	return f.format
 }
 
 func checkCliVersion() {

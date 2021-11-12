@@ -9,7 +9,6 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -21,7 +20,7 @@ type formatContextVars struct {
 }
 type formatContextOpts struct {
 	formatContextVars
-	configClient storage.ConfigClient
+	configClient config.ConfigClient
 }
 
 func newFormatContextOpts(vars formatContextVars) (*formatContextOpts, error) {

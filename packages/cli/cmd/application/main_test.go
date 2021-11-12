@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"reflect"
 	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -32,62 +32,69 @@ func createMocks(t *testing.T) mockClients {
 func TestSetFormatter_FormatFlagNotSet(t *testing.T) {
 	mocks := createMocks(t)
 	defer mocks.ctrl.Finish()
-
-	formatOpts, err := newFormatOpts(formatVars{
-		format: "",
-	})
-	require.NoError(t, err)
-	mockedConfig := config.Config{
-		Format: config.Format{
-			Name: defaultFormat,
-		},
+	f := formatVars{format: ""}
+	mocks.configMock.EXPECT().GetFormat().Return(defaultFormat, nil)
+	origConfigClient := newConfigClient
+	var mockConfigClient = func() (*config.Client, error) {
+		return &config.Client{
+			ConfigInterface: mocks.configMock,
+		}, nil
 	}
-	mocks.configMock.EXPECT().GetFormat().Return(mockedConfig.Format.Name, nil)
-	formatOpts.configClient = mocks.configMock
-	configFormat := setFormatter(formatOpts)
-	require.True(t, reflect.DeepEqual(configFormat, mockedConfig.Format.Name))
+	newConfigClient = mockConfigClient
+	defer func() { newConfigClient = origConfigClient }()
+	configFormat := setFormatter(f)
+	require.True(t, reflect.DeepEqual(configFormat, defaultFormat))
 }
 
 func TestSetFormatter_FormatFlagSet(t *testing.T) {
 	mocks := createMocks(t)
 	defer mocks.ctrl.Finish()
+	f := formatVars{format: tableFormat}
 
-	formatOpts, err := newFormatOpts(formatVars{
-		format: tableFormat,
-	})
-	require.NoError(t, err)
-
-	formatOpts.configClient = mocks.configMock
-	configFormat := setFormatter(formatOpts)
-	require.True(t, reflect.DeepEqual(configFormat, formatOpts.formatVars.format))
+	origConfigClient := newConfigClient
+	var mockConfigClient = func() (*config.Client, error) {
+		return &config.Client{
+			ConfigInterface: mocks.configMock,
+		}, nil
+	}
+	newConfigClient = mockConfigClient
+	defer func() { newConfigClient = origConfigClient }()
+	configFormat := setFormatter(f)
+	require.True(t, reflect.DeepEqual(configFormat, tableFormat))
 }
 
 func TestValidateFormat_ValidFormat(t *testing.T) {
 	mocks := createMocks(t)
 	defer mocks.ctrl.Finish()
+	f := formatVars{format: tableFormat}
 
-	formatOpts, err := newFormatOpts(formatVars{
-		format: tableFormat,
-	})
-	require.NoError(t, err)
-
-	formatOpts.configClient = mocks.configMock
-	format := format.FormatterType(formatOpts.formatVars.format)
-	err = ValidateFormat(format)
+	origConfigClient := newConfigClient
+	var mockConfigClient = func() (*config.Client, error) {
+		return &config.Client{
+			ConfigInterface: mocks.configMock,
+		}, nil
+	}
+	newConfigClient = mockConfigClient
+	defer func() { newConfigClient = origConfigClient }()
+	testFormat := format.FormatterType(f.format)
+	err := ValidateFormat(testFormat)
 	require.NoError(t, err)
 }
 
 func TestValidateFormat_InvalidFormat(t *testing.T) {
 	mocks := createMocks(t)
 	defer mocks.ctrl.Finish()
+	f := formatVars{format: invalidFormat}
 
-	formatOpts, err := newFormatOpts(formatVars{
-		format: invalidFormat,
-	})
-	require.NoError(t, err)
-
-	formatOpts.configClient = mocks.configMock
-	format := format.FormatterType(formatOpts.formatVars.format)
-	err = ValidateFormat(format)
+	origConfigClient := newConfigClient
+	var mockConfigClient = func() (*config.Client, error) {
+		return &config.Client{
+			ConfigInterface: mocks.configMock,
+		}, nil
+	}
+	newConfigClient = mockConfigClient
+	defer func() { newConfigClient = origConfigClient }()
+	testFormat := format.FormatterType(f.format)
+	err := ValidateFormat(testFormat)
 	require.Error(t, err)
 }

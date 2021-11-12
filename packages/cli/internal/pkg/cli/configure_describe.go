@@ -7,7 +7,6 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -15,16 +14,16 @@ import (
 const configureDescribeCommand = "configure describe"
 
 type showContextOpts struct {
-	configClient storage.ConfigClient
+	configClient config.ConfigClient
 }
 
 func newConfigureDescribeContextOpts() (*showContextOpts, error) {
-	configClient, err := config.NewConfigClient()
+	newConfigClient, err := config.NewConfigClient()
 	if err != nil {
 		return nil, err
 	}
 
-	return &showContextOpts{configClient}, nil
+	return &showContextOpts{newConfigClient.ConfigInterface}, nil
 }
 
 func (o *showContextOpts) Validate() error {

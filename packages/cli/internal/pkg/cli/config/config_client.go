@@ -18,7 +18,17 @@ const (
 )
 
 type Client struct {
-	configFilePath string
+	configFilePath  string
+	ConfigInterface ConfigClient
+}
+
+type ConfigClient interface {
+	Read() (Config, error)
+	GetUserEmailAddress() (string, error)
+	SetUserEmailAddress(userId string) error
+	GetUserId() (string, error)
+	GetFormat() (string, error)
+	SetFormat(format string) error
 }
 
 var osUserHomeDir = os.UserHomeDir

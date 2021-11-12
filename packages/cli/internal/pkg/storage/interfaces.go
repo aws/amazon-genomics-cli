@@ -4,7 +4,6 @@
 package storage
 
 import (
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 )
 
@@ -23,13 +22,4 @@ type ProjectClient interface {
 	IsInitialized() (bool, error)
 	GetProjectName() (string, error)
 	GetLocation() string
-}
-
-type ConfigClient interface {
-	Read() (config.Config, error)
-	GetUserEmailAddress() (string, error)
-	SetUserEmailAddress(userId string) error
-	GetUserId() (string, error)
-	GetFormat() (string, error)
-	SetFormat(format string) error
 }

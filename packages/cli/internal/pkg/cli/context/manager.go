@@ -56,7 +56,7 @@ type Manager struct {
 	Cdk     cdk.Interface
 	Cfn     cfn.Interface
 	Project storage.ProjectClient
-	Config  storage.ConfigClient
+	Config  config.ConfigClient
 	Ssm     ssm.Interface
 
 	baseProps
@@ -83,7 +83,7 @@ func NewManager(profile string) *Manager {
 		Cdk:       aws.CdkClient(profile),
 		Cfn:       aws.CfnClient(profile),
 		Project:   projectClient,
-		Config:    configClient,
+		Config:    configClient.ConfigInterface,
 		Ssm:       aws.SsmClient(profile),
 		baseProps: baseProps{homeDir: homeDir},
 	}
