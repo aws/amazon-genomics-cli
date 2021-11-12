@@ -68,6 +68,9 @@ func TestClient_StreamLogs(t *testing.T) {
 	}
 	assert.True(t, eventToIndexMap[logStream1Event1] < eventToIndexMap[logStream1Event2], "events in correct order in logs stream 1")
 	assert.True(t, eventToIndexMap[logStream2Event1] < eventToIndexMap[logStream2Event2], "events in correct order in logs stream 2")
+	assert.Equal(t, 1, eventToIndexMap[logStream1Event2]-eventToIndexMap[logStream1Event1], "distance between event from the same log stream")
+	assert.Equal(t, 1, eventToIndexMap[logStream2Event2]-eventToIndexMap[logStream2Event1], "distance between event from the same log stream")
+
 	_, isOpen := <-stream
 	assert.False(t, isOpen)
 }
