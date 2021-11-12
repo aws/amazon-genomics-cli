@@ -112,23 +112,25 @@ class MiniWdlWESAdapter(BatchAdapter):
         job_id = head_job.get("jobId")
         bucket, folder = self.output_dir_s3_uri.split('/', 2)[-1].split('/', 1)
         output_file_key = f"{folder}/{job_id}/{MINIWDL_OUTPUT_FILE_NAME}"
-        try:
-            output_object = self.aws_s3.get_object(
-                Bucket=bucket,
-                Key=output_file_key
-            )
-            output = json.load(output_object["Body"])
-        except ClientError as ex:
-            if ex.response['Error']['Code'] == 'NoSuchKey':
-                self.logger.warn(f"No object found")
-                output = None
-            else:
-                raise ex
+        output = self.get_s3_object_json(bucket, output_file_key)
         return {
             "id": job_id,
             "outputs": output
         }
 
+    def get_s3_object_json(self, bucket, output_file_key):
+        try:
+            output_object = self.aws_s3.get_object(
+                Bucket=bucket,
+                Key=output_file_key
+            )
+            return json.load(output_object["Body"])
+        except ClientError as ex:
+            if ex.response['Error']['Code'] == 'NoSuchKey':
+                self.logger.warn(f"No object found")
+                return None
+            else:
+                raise ex
 
 def job_id_from_arn(job_arn: str) -> str:
     return job_arn[job_arn.rindex("/") + 1 :]
