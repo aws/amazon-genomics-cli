@@ -16,7 +16,7 @@ import (
 const (
 	testExecuteCommandSuccessArg   = "test-execute-command-success-arg"
 	testExecuteCommandFailureArg   = "test-execute-command-failure-arg"
-	testExecuteCommandProgressLine = "  3/10 |4:56:17 PM | CREATE_COMPLETE      | AWS::IAM::Policy               | TaskBatch/BatchRole/DefaultPolicy (TaskBatchBatchRoleDefaultPolicyB9AAE3A1)"
+	testExecuteCommandProgressLine = "Agc-Context-Demo-yy110HKO4J-ctx1 | 3/10 | 3:22:16 PM | REVIEW_IN_PROGRESS   | AWS::CloudFormation::Stack | Agc-Context-Demo-yy110HKO4J-ctx1 User Initiated"
 )
 
 func fakeExecCommand(command string, args ...string) *exec.Cmd {
