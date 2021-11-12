@@ -7,7 +7,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"
 	"github.com/golang/mock/gomock"
@@ -83,14 +82,12 @@ func TestDeployContextOpts_Execute_One(t *testing.T) {
 	defer ctrl.Finish()
 	ctxMock := contextmocks.NewMockContextManager(ctrl)
 	ctxMock.EXPECT().Deploy([]string{testContextName1}).Return(nil)
-	ctxMock.EXPECT().Info(testContextName1).Return(testContextInfoStruct1, nil)
 	opts := &deployContextOpts{
 		deployContextVars: deployContextVars{contexts: []string{testContextName1}},
 		ctxManager:        ctxMock,
 	}
-	info, err := opts.Execute()
+	err := opts.Execute()
 	require.NoError(t, err)
-	require.Equal(t, []context.Detail{testContextInfoStruct1}, info)
 }
 
 func TestDeployContextOpts_Execute_All(t *testing.T) {
@@ -98,17 +95,13 @@ func TestDeployContextOpts_Execute_All(t *testing.T) {
 	defer ctrl.Finish()
 	ctxMock := contextmocks.NewMockContextManager(ctrl)
 	ctxMock.EXPECT().Deploy([]string{testContextName1, testContextName2}).Return([]context.ProgressResult{{Context: testContextName1}, {Context: testContextName2}})
-	ctxMock.EXPECT().Info(testContextName1).Return(testContextInfoStruct1, nil)
-	ctxMock.EXPECT().Info(testContextName2).Return(testContextInfoStruct2, nil)
 
 	opts := &deployContextOpts{
 		deployContextVars: deployContextVars{deployAll: true, contexts: []string{testContextName1, testContextName2}},
 		ctxManager:        ctxMock,
 	}
-	info, err := opts.Execute()
+	err := opts.Execute()
 	require.NoError(t, err)
-	expectedDetailList := []context.Detail{testContextInfoStruct1, testContextInfoStruct2}
-	require.Equal(t, expectedDetailList, info)
 }
 
 func TestDeployContextOpts_ExecuteAll_LogsOutErrors(t *testing.T) {
@@ -122,23 +115,6 @@ func TestDeployContextOpts_ExecuteAll_LogsOutErrors(t *testing.T) {
 		deployContextVars: deployContextVars{deployAll: true, contexts: []string{testContextName1, testContextName2}},
 		ctxManager:        ctxMock,
 	}
-	_, err := opts.Execute()
+	err := opts.Execute()
 	require.Error(t, err)
-}
-
-func TestDeployContextOpts_Execute_InfoError(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	ctxMock := contextmocks.NewMockContextManager(ctrl)
-	expectedErr := actionableerror.New(errors.New("one or more contexts failed to deploy"), "")
-	ctxMock.EXPECT().Deploy([]string{testContextName1, testContextName2}).Return(nil)
-	ctxMock.EXPECT().Info(testContextName1).Return(context.Detail{}, errors.New("some info error"))
-	ctxMock.EXPECT().Info(testContextName2).Return(testContextInfoStruct2, nil)
-
-	opts := &deployContextOpts{
-		deployContextVars: deployContextVars{deployAll: true, contexts: []string{testContextName1, testContextName2}},
-		ctxManager:        ctxMock,
-	}
-	_, err := opts.Execute()
-	require.Equal(t, expectedErr, err)
 }

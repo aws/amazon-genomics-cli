@@ -8,7 +8,7 @@ import (
 
 var mkDirTemp = os.MkdirTemp
 
-func (client Client) DeployApp(appDir string, context []string, uniqueKey string) (ProgressStream, error) {
+func (client Client) DeployApp(appDir string, context []string, deploymentName string) (ProgressStream, error) {
 	tmpDir, _ := mkDirTemp(appDir, "cdk-output")
 	cmdArgs := []string{
 		"deploy",
@@ -18,6 +18,6 @@ func (client Client) DeployApp(appDir string, context []string, uniqueKey string
 		"--output", tmpDir,
 	}
 	cmdArgs = appendContextArguments(cmdArgs, context)
-	progressStream, err := executeCdkCommandAndCleanupDirectory(appDir, cmdArgs, tmpDir, uniqueKey)
+	progressStream, err := executeCdkCommandAndCleanupDirectory(appDir, cmdArgs, tmpDir, deploymentName)
 	return progressStream, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 }

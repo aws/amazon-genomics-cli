@@ -6,14 +6,11 @@ package cli
 import (
 	"errors"
 	"fmt"
-	"sort"
 	"strings"
-	"sync"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/slices"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -24,6 +21,11 @@ const (
 	deployContextAllDescription = `Deploy all contexts in the project`
 	deployContextDescription    = `Names of one or more contexts to deploy`
 )
+
+type ContextResult struct {
+	Context string
+	Err     error
+}
 
 type deployContextVars struct {
 	contexts  []string
@@ -82,21 +84,16 @@ func (o *deployContextOpts) validateSuppliedContexts(contextList []string) error
 }
 
 // Execute causes the specified context(s) to be deployed.
-func (o *deployContextOpts) Execute() ([]context.Detail, error) {
+func (o *deployContextOpts) Execute() error {
 	o.contexts = slices.DeDuplicateStrings(o.contexts)
 
 	err := o.deployContexts()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	contextDetails, err := o.validateDeploymentResults()
-	if err != nil {
-		return nil, err
-	}
-
-	sortContextDetails(contextDetails)
-	return contextDetails, nil
+	log.Info().Msgf("Successfully deployed context(s) %s", o.contexts)
+	return nil
 }
 
 func (o *deployContextOpts) deployContexts() error {
@@ -148,47 +145,6 @@ func printErroredLogs(failedDeployment context.ProgressResult, isLastDeployment 
 	}
 }
 
-func (o *deployContextOpts) validateDeploymentResults() ([]context.Detail, error) {
-	contextDetails, deploymentHasErrors := make([]context.Detail, len(o.contexts)), false
-	var aggregateSuggestions []string
-	var wait sync.WaitGroup
-	wait.Add(len(o.contexts))
-
-	for i, contextName := range o.contexts {
-		go getContextStatus(o.ctxManager, contextName, &contextDetails[i], &wait, &aggregateSuggestions, &deploymentHasErrors)
-	}
-
-	wait.Wait()
-	if deploymentHasErrors {
-		aggregateSuggestions = slices.DeDuplicateStrings(aggregateSuggestions)
-		return nil, actionableerror.New(fmt.Errorf("one or more contexts failed to deploy"), strings.Join(aggregateSuggestions, ", "))
-	}
-
-	return contextDetails, nil
-}
-
-func getContextStatus(ctxManager context.Interface, contextName string, contextDetail *context.Detail, wait *sync.WaitGroup, aggregateSuggestions *[]string, deploymentHasErrors *bool) {
-	defer wait.Done()
-	info, err := ctxManager.Info(contextName)
-	*contextDetail = info
-	if err != nil {
-		var actionableError *actionableerror.Error
-		if errors.As(err, &actionableError) {
-			log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
-			*aggregateSuggestions = append(*aggregateSuggestions, actionableError.SuggestedAction)
-		} else {
-			log.Error().Err(err).Msgf("failed to retrieve context status for '%s'", contextName)
-		}
-		*deploymentHasErrors = true
-	}
-}
-
-func sortContextDetails(contextDetails []context.Detail) {
-	sort.Slice(contextDetails, func(i, j int) bool {
-		return contextDetails[i].Name < contextDetails[j].Name
-	})
-}
-
 // BuildContextDeployCommand builds the command to deploy specified contexts in the current project.
 func BuildContextDeployCommand() *cobra.Command {
 	vars := deployContextVars{}
@@ -211,11 +167,10 @@ It creates AGC resources in AWS.
 				return err
 			}
 			log.Info().Msgf("Deploying context(s)")
-			contextInfo, err := opts.Execute()
+			err = opts.Execute()
 			if err != nil {
 				return clierror.New("context deploy", vars, err)
 			}
-			format.Default.Write(contextInfo)
 			return nil
 		}),
 	}
