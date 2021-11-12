@@ -44,7 +44,7 @@ func TestManager_Deploy(t *testing.T) {
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Any(), testContextName1).After(clearContext).Return(mockClients.progressStream1, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
-				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Deploying resources for context(s) %s", contextList), []cdk.ProgressStream{mockClients.progressStream1}).Return([]cdk.Result{{Outputs: []string{"some message"}, UniqueKey: testContextName1}})
+				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Deploying resources for context(s) %s", contextList), []cdk.ProgressStream{mockClients.progressStream1}).Return([]cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName1}})
 				return mockClients
 			},
 		},
@@ -68,7 +68,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Any(), testContextName1).After(clearContext).Return(mockClients.progressStream1, nil)
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Any(), testContextName2).After(clearContext2).Return(mockClients.progressStream2, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
-				expectedCdkResult := []cdk.Result{{Outputs: []string{"some message"}, UniqueKey: testContextName1}, {Outputs: []string{"some other message"}, UniqueKey: testContextName2}}
+				expectedCdkResult := []cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName1}, {Outputs: []string{"some other message"}, ExecutionName: testContextName2}}
 				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Deploying resources for context(s) %s", []string{testContextName1, testContextName2}), []cdk.ProgressStream{mockClients.progressStream1, mockClients.progressStream2}).Return(expectedCdkResult)
 				return mockClients
 			},

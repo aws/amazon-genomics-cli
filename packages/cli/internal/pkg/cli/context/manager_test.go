@@ -21,7 +21,7 @@ func TestManager_ProcessExecution(t *testing.T) {
 	mockClients := createMocks(t)
 
 	showExecution = mockClients.cdkMock.ShowExecution
-	cdkResults := []cdk.Result{{Outputs: []string{"some message"}, UniqueKey: testContextName1}, {UniqueKey: testContextName2, Err: errors.New("Some error")}}
+	cdkResults := []cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName1}, {ExecutionName: testContextName2, Err: errors.New("Some error")}}
 	progressStreams := []cdk.ProgressStream{mockClients.progressStream1, mockClients.progressStream2}
 	mockClients.cdkMock.EXPECT().ShowExecution(progressStreams).Return(cdkResults)
 	defer close(mockClients.progressStream1)

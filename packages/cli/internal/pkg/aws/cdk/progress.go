@@ -22,14 +22,14 @@ type ProgressEvent struct {
 	StepDescription string
 	Outputs         []string
 	Err             error
-	UniqueKey       string
+	ExecutionName   string
 	LastOutput      string
 }
 
 type Result struct {
-	UniqueKey string
-	Outputs   []string
-	Err       error
+	ExecutionName string
+	Outputs       []string
+	Err           error
 }
 
 func (p ProgressStream) DisplayProgress(description string) error {
@@ -61,7 +61,7 @@ func ShowExecution(progressEvents []ProgressStream) []Result {
 		if event.LastOutput != "" {
 			log.Info().Msg(event.LastOutput)
 		}
-		keyToEventMap[event.UniqueKey] = event
+		keyToEventMap[event.ExecutionName] = event
 	}
 
 	return convertProgressEventsToResults(keyToEventMap, len(progressEvents))
@@ -80,7 +80,7 @@ func updateResultFromStream(stream ProgressStream, progressResult *Result, wait 
 	}
 
 	progressResult.Outputs = lastEvent.Outputs
-	progressResult.UniqueKey = lastEvent.UniqueKey
+	progressResult.ExecutionName = lastEvent.ExecutionName
 }
 
 func DisplayProgressBar(description string, progressEvents []ProgressStream) []Result {
@@ -93,7 +93,7 @@ func DisplayProgressBar(description string, progressEvents []ProgressStream) []R
 	barReceiver := runProgressBar(ctx, description, len(progressEvents))
 	for event := range combinedStream {
 		barReceiver <- event
-		keyToEventMap[event.UniqueKey] = event
+		keyToEventMap[event.ExecutionName] = event
 	}
 
 	return convertProgressEventsToResults(keyToEventMap, len(progressEvents))
@@ -104,7 +104,7 @@ func convertProgressEventsToResults(keyToEventMap map[string]ProgressEvent, numb
 	index := 0
 	for _, progressResult := range keyToEventMap {
 		results[index] = Result{
-			progressResult.UniqueKey,
+			progressResult.ExecutionName,
 			progressResult.Outputs,
 			progressResult.Err,
 		}
@@ -136,14 +136,14 @@ func sendDataToReceiver(channel <-chan ProgressEvent, waitGroup *sync.WaitGroup,
 		CurrentStep: 1,
 		TotalSteps:  1,
 	}
-	for initialChannelOut := range channel {
-		if initialChannelOut.Err != nil {
-			stopProcessingEvent.UniqueKey = lastEvent.UniqueKey
+	for cdkChannelOut := range channel {
+		if cdkChannelOut.Err != nil {
+			stopProcessingEvent.ExecutionName = lastEvent.ExecutionName
 			receiver <- stopProcessingEvent
 			return
 		} else {
-			receiver <- initialChannelOut
-			lastEvent = initialChannelOut
+			receiver <- cdkChannelOut
+			lastEvent = cdkChannelOut
 		}
 	}
 }
@@ -166,21 +166,21 @@ func runProgressBar(ctx context.Context, description string, numberOfChannels in
 		for {
 			select {
 			case progressEvent := <-receiver:
-				oldEvent, matchExists := oldProgressEvents[progressEvent.UniqueKey]
+				oldEvent, matchExists := oldProgressEvents[progressEvent.ExecutionName]
 
 				if matchExists {
 					totalSteps += progressEvent.TotalSteps - oldEvent.TotalSteps
 					currentStep += progressEvent.CurrentStep - oldEvent.CurrentStep
-					oldProgressEvents[oldEvent.UniqueKey] = progressEvent
+					oldProgressEvents[oldEvent.ExecutionName] = progressEvent
 
-					_, keysExist := keyWithSteps[progressEvent.UniqueKey]
+					_, keysExist := keyWithSteps[progressEvent.ExecutionName]
 					if !keysExist && progressEvent.TotalSteps > 0 {
-						keyWithSteps[progressEvent.UniqueKey] = true
+						keyWithSteps[progressEvent.ExecutionName] = true
 					}
-				} else if progressEvent.UniqueKey != "" {
+				} else if progressEvent.ExecutionName != "" {
 					totalSteps += progressEvent.TotalSteps
 					currentStep += progressEvent.CurrentStep
-					oldProgressEvents[progressEvent.UniqueKey] = progressEvent
+					oldProgressEvents[progressEvent.ExecutionName] = progressEvent
 				}
 
 				if len(keyWithSteps) == numberOfChannels {

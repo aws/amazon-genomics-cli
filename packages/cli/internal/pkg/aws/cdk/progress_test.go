@@ -16,7 +16,7 @@ func Test_SendDataToReceiverAndUpdateResult_Success(t *testing.T) {
 
 	go sendDataToReceiver(testChannel, &waitGroup, receivingChannel)
 
-	sentEvent := ProgressEvent{UniqueKey: "myKey", Outputs: []string{"hi"}}
+	sentEvent := ProgressEvent{ExecutionName: "myKey", Outputs: []string{"hi"}}
 	testChannel <- sentEvent
 	close(testChannel)
 
@@ -35,8 +35,8 @@ func Test_SendDataToReceiverAndUpdateResult_Error(t *testing.T) {
 
 	go sendDataToReceiver(testChannel, &waitGroup, receivingChannel)
 
-	sentEvent := ProgressEvent{UniqueKey: "someKey", Outputs: []string{"hi"}}
-	sentErrorEvent := ProgressEvent{Err: errors.New("some error"), UniqueKey: "someKey"}
+	sentEvent := ProgressEvent{ExecutionName: "someKey", Outputs: []string{"hi"}}
+	sentErrorEvent := ProgressEvent{Err: errors.New("some error"), ExecutionName: "someKey"}
 	testChannel <- sentEvent
 	<-receivingChannel
 	testChannel <- sentErrorEvent
@@ -45,7 +45,7 @@ func Test_SendDataToReceiverAndUpdateResult_Error(t *testing.T) {
 
 	waitGroup.Wait()
 
-	expectedEvent := ProgressEvent{UniqueKey: "someKey", CurrentStep: 1, TotalSteps: 1}
+	expectedEvent := ProgressEvent{ExecutionName: "someKey", CurrentStep: 1, TotalSteps: 1}
 	assert.Equal(t, expectedEvent, channelOutput)
 }
 
@@ -58,15 +58,15 @@ func Test_updateResultFromStream_Success(t *testing.T) {
 
 	go updateResultFromStream(testChannel, &progressResult, &waitGroup)
 
-	sentEvent := ProgressEvent{UniqueKey: "someKey", Outputs: []string{"hi"}}
+	sentEvent := ProgressEvent{ExecutionName: "someKey", Outputs: []string{"hi"}}
 	testChannel <- sentEvent
 	close(testChannel)
 
 	waitGroup.Wait()
 
 	expectedProgressResult := Result{
-		UniqueKey: "someKey",
-		Outputs:   []string{"hi"},
+		ExecutionName: "someKey",
+		Outputs:       []string{"hi"},
 	}
 
 	assert.Equal(t, expectedProgressResult, progressResult)
@@ -81,13 +81,13 @@ func Test_updateResultFromStream_Error(t *testing.T) {
 
 	go updateResultFromStream(testChannel, &progressResult, &waitGroup)
 
-	sentEvent := ProgressEvent{UniqueKey: "someKey", Outputs: []string{"hi"}}
+	sentEvent := ProgressEvent{ExecutionName: "someKey", Outputs: []string{"hi"}}
 	testChannel <- sentEvent
 
 	sentErrorEvent := ProgressEvent{
-		Err:       errors.New("some error"),
-		UniqueKey: "someKey",
-		Outputs:   []string{"hi"},
+		Err:           errors.New("some error"),
+		ExecutionName: "someKey",
+		Outputs:       []string{"hi"},
 	}
 	testChannel <- sentErrorEvent
 	close(testChannel)
@@ -95,9 +95,9 @@ func Test_updateResultFromStream_Error(t *testing.T) {
 	waitGroup.Wait()
 
 	expectedProgressResult := Result{
-		UniqueKey: "someKey",
-		Outputs:   []string{"hi"},
-		Err:       errors.New("some error"),
+		ExecutionName: "someKey",
+		Outputs:       []string{"hi"},
+		Err:           errors.New("some error"),
 	}
 
 	assert.Equal(t, expectedProgressResult, progressResult)
