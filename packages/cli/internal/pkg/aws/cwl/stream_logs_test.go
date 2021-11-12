@@ -54,7 +54,7 @@ func TestClient_StreamLogs(t *testing.T) {
 	cancel()
 	stream := client.StreamLogs(ctx, testLogGroupName)
 	event := <-stream
-	assert.Equal(t, []string{
+	assert.ElementsMatch(t, []string{
 		fmt.Sprintf("%s\tHello", someTime1.Format(time.RFC1123Z)),
 		fmt.Sprintf("%s\tworld!", someTime2.Format(time.RFC1123Z)),
 		fmt.Sprintf("%s\tHola", someTime1.Format(time.RFC1123Z)),
