@@ -1,5 +1,5 @@
 ---
-name: GATK
+name: GATKOnMiniwdl
 schemaVersion: 1
 workflows:
   gatk4-data-processing:
