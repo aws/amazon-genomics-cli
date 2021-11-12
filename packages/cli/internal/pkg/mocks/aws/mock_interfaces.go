@@ -57,33 +57,33 @@ func (mr *MockCdkClientMockRecorder) ClearContext(appDir interface{}) *gomock.Ca
 }
 
 // DeployApp mocks base method.
-func (m *MockCdkClient) DeployApp(appDir string, context []string, uniqueKey string) (cdk.ProgressStream, error) {
+func (m *MockCdkClient) DeployApp(appDir string, context []string, executionName string) (cdk.ProgressStream, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeployApp", appDir, context, uniqueKey)
+	ret := m.ctrl.Call(m, "DeployApp", appDir, context, executionName)
 	ret0, _ := ret[0].(cdk.ProgressStream)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DeployApp indicates an expected call of DeployApp.
-func (mr *MockCdkClientMockRecorder) DeployApp(appDir, context, uniqueKey interface{}) *gomock.Call {
+func (mr *MockCdkClientMockRecorder) DeployApp(appDir, context, executionName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeployApp", reflect.TypeOf((*MockCdkClient)(nil).DeployApp), appDir, context, uniqueKey)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeployApp", reflect.TypeOf((*MockCdkClient)(nil).DeployApp), appDir, context, executionName)
 }
 
 // DestroyApp mocks base method.
-func (m *MockCdkClient) DestroyApp(appDir string, context []string, uniqueKey string) (cdk.ProgressStream, error) {
+func (m *MockCdkClient) DestroyApp(appDir string, context []string, executionName string) (cdk.ProgressStream, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DestroyApp", appDir, context, uniqueKey)
+	ret := m.ctrl.Call(m, "DestroyApp", appDir, context, executionName)
 	ret0, _ := ret[0].(cdk.ProgressStream)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DestroyApp indicates an expected call of DestroyApp.
-func (mr *MockCdkClientMockRecorder) DestroyApp(appDir, context, uniqueKey interface{}) *gomock.Call {
+func (mr *MockCdkClientMockRecorder) DestroyApp(appDir, context, executionName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyApp", reflect.TypeOf((*MockCdkClient)(nil).DestroyApp), appDir, context, uniqueKey)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DestroyApp", reflect.TypeOf((*MockCdkClient)(nil).DestroyApp), appDir, context, executionName)
 }
 
 // DisplayProgressBar mocks base method.
