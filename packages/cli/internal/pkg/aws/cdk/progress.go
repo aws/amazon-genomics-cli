@@ -51,24 +51,20 @@ func (p ProgressStream) DisplayProgress(description string) error {
 }
 
 func ShowExecution(progressEvents []ProgressStream) []Result {
-	var progressResults []*Result
+	var keyToEventMap = make(map[string]ProgressEvent)
 	var waitGroup sync.WaitGroup
 	waitGroup.Add(len(progressEvents))
 
-	singleStream, progressResults := combineProgressEvents(progressEvents)
+	combinedStream := combineProgressEvents(progressEvents)
 
-	for event := range singleStream {
+	for event := range combinedStream {
 		if event.LastOutput != "" {
 			log.Info().Msg(event.LastOutput)
 		}
+		keyToEventMap[event.UniqueKey] = event
 	}
 
-	var results []Result
-	for _, progressResult := range progressResults {
-		results = append(results, *progressResult)
-	}
-
-	return results
+	return convertProgressEventsToResults(keyToEventMap, len(progressEvents))
 }
 
 func updateResultFromStream(stream ProgressStream, progressResult *Result, wait *sync.WaitGroup) {
@@ -88,42 +84,51 @@ func updateResultFromStream(stream ProgressStream, progressResult *Result, wait 
 }
 
 func DisplayProgressBar(description string, progressEvents []ProgressStream) []Result {
+	var keyToEventMap = make(map[string]ProgressEvent)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	singleStream, progressResults := combineProgressEvents(progressEvents)
+	combinedStream := combineProgressEvents(progressEvents)
 
 	barReceiver := runProgressBar(ctx, description, len(progressEvents))
-	for event := range singleStream {
+	for event := range combinedStream {
 		barReceiver <- event
+		keyToEventMap[event.UniqueKey] = event
 	}
 
-	var results []Result
-	for _, progressResult := range progressResults {
-		results = append(results, *progressResult)
+	return convertProgressEventsToResults(keyToEventMap, len(progressEvents))
+}
+
+func convertProgressEventsToResults(keyToEventMap map[string]ProgressEvent, numberOfEvents int) []Result {
+	var results = make([]Result, numberOfEvents)
+	index := 0
+	for _, progressResult := range keyToEventMap {
+		results[index] = Result{
+			progressResult.UniqueKey,
+			progressResult.Outputs,
+			progressResult.Err,
+		}
+		index++
 	}
 
 	return results
 }
 
-func combineProgressEvents(progressEventChannels []ProgressStream) (ProgressStream, []*Result) {
-	var results []*Result
+func combineProgressEvents(progressEventChannels []ProgressStream) ProgressStream {
 	receiver := make(ProgressStream)
 	var waitGroup sync.WaitGroup
 	waitGroup.Add(len(progressEventChannels))
 
 	for _, channel := range progressEventChannels {
-		progressResult := &Result{}
-		results = append(results, progressResult)
-		go sendDataToReceiverAndUpdateResult(channel, progressResult, &waitGroup, receiver)
+		go sendDataToReceiver(channel, &waitGroup, receiver)
 	}
 
 	go closeChannelAfterWaitGroup(receiver, &waitGroup)
 
-	return receiver, results
+	return receiver
 }
 
-func sendDataToReceiverAndUpdateResult(channel <-chan ProgressEvent, progressResult *Result, waitGroup *sync.WaitGroup, receiver chan ProgressEvent) {
+func sendDataToReceiver(channel <-chan ProgressEvent, waitGroup *sync.WaitGroup, receiver chan ProgressEvent) {
 	defer waitGroup.Done()
 
 	var lastEvent ProgressEvent
@@ -133,22 +138,14 @@ func sendDataToReceiverAndUpdateResult(channel <-chan ProgressEvent, progressRes
 	}
 	for initialChannelOut := range channel {
 		if initialChannelOut.Err != nil {
-			progressResult.Err = initialChannelOut.Err
-
 			stopProcessingEvent.UniqueKey = lastEvent.UniqueKey
 			receiver <- stopProcessingEvent
-
-			progressResult.Outputs = lastEvent.Outputs
-			progressResult.UniqueKey = lastEvent.UniqueKey
 			return
 		} else {
 			receiver <- initialChannelOut
 			lastEvent = initialChannelOut
 		}
 	}
-
-	progressResult.Outputs = lastEvent.Outputs
-	progressResult.UniqueKey = lastEvent.UniqueKey
 }
 
 func closeChannelAfterWaitGroup(channel chan ProgressEvent, waitGroup *sync.WaitGroup) {
