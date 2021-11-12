@@ -16,7 +16,7 @@ import (
 const (
 	testExecuteCommandSuccessArg   = "test-execute-command-success-arg"
 	testExecuteCommandFailureArg   = "test-execute-command-failure-arg"
-	testUniqueKey                  = "test-key"
+	testExecuteExecutioName        = "test-key"
 	testExecuteCommandProgressLine = "Agc-Context-Demo-yy110HKO4J-ctx1 | 3/10 | 3:22:16 PM | REVIEW_IN_PROGRESS   | AWS::CloudFormation::Stack | Agc-Context-Demo-yy110HKO4J-ctx1 User Initiated"
 )
 
@@ -69,13 +69,13 @@ func (s *ExecuteCdkCommandTestSuite) TearDownTest() {
 func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommand_Success() {
 	s.mockOs.EXPECT().RemoveAll(gomock.Any()).Return(nil).Times(0)
 
-	progressStream, err := executeCdkCommand(s.appDir, []string{testExecuteCommandSuccessArg}, testUniqueKey)
+	progressStream, err := executeCdkCommand(s.appDir, []string{testExecuteCommandSuccessArg}, testExecuteExecutioName)
 	s.Require().NoError(err)
 	event1 := <-progressStream
 	s.Assert().Equal(3, event1.CurrentStep)
 	s.Assert().Equal(10, event1.TotalSteps)
 	s.Assert().Equal(testExecuteCommandProgressLine, event1.Outputs[0])
-	s.Assert().Equal(testUniqueKey, event1.UniqueKey)
+	s.Assert().Equal(testExecuteExecutioName, event1.ExecutionName)
 	event2 := <-progressStream
 	s.Assert().NoError(event2.Err)
 	waitForChanToClose(progressStream)
@@ -84,13 +84,13 @@ func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommand_Success() {
 func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Success() {
 	s.mockOs.EXPECT().RemoveAll(s.tmpDir).Return(nil).Times(1)
 
-	progressStream, err := executeCdkCommandAndCleanupDirectory(s.appDir, []string{testExecuteCommandSuccessArg}, s.tmpDir, testUniqueKey)
+	progressStream, err := executeCdkCommandAndCleanupDirectory(s.appDir, []string{testExecuteCommandSuccessArg}, s.tmpDir, testExecuteExecutioName)
 	s.Require().NoError(err)
 	event1 := <-progressStream
 	s.Assert().Equal(3, event1.CurrentStep)
 	s.Assert().Equal(10, event1.TotalSteps)
 	s.Assert().Equal(testExecuteCommandProgressLine, event1.Outputs[0])
-	s.Assert().Equal(testUniqueKey, event1.UniqueKey)
+	s.Assert().Equal(testExecuteExecutioName, event1.ExecutionName)
 	event2 := <-progressStream
 	s.Assert().NoError(event2.Err)
 	waitForChanToClose(progressStream)
@@ -99,11 +99,11 @@ func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Su
 func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Failure() {
 	s.mockOs.EXPECT().RemoveAll(s.tmpDir).Return(nil).Times(1)
 
-	progressStream, err := executeCdkCommandAndCleanupDirectory(s.appDir, []string{testExecuteCommandFailureArg}, s.tmpDir, testUniqueKey)
+	progressStream, err := executeCdkCommandAndCleanupDirectory(s.appDir, []string{testExecuteCommandFailureArg}, s.tmpDir, testExecuteExecutioName)
 	s.Require().NoError(err)
 	event1 := <-progressStream
 	s.Assert().Equal(testExecuteCommandFailureArg, event1.Outputs[0])
-	s.Assert().Equal(testUniqueKey, event1.UniqueKey)
+	s.Assert().Equal(testExecuteExecutioName, event1.ExecutionName)
 	event2 := <-progressStream
 	s.Assert().Error(event2.Err)
 	waitForChanToClose(progressStream)
@@ -112,7 +112,7 @@ func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Fa
 func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_FailToExecute() {
 	s.mockOs.EXPECT().RemoveAll(s.tmpDir).Return(nil).Times(1)
 
-	progressStream, err := executeCdkCommandAndCleanupDirectory("foo/bar", []string{testExecuteCommandFailureArg}, s.tmpDir, testUniqueKey)
+	progressStream, err := executeCdkCommandAndCleanupDirectory("foo/bar", []string{testExecuteCommandFailureArg}, s.tmpDir, testExecuteExecutioName)
 	s.Assert().Error(err)
 	s.Assert().Nil(progressStream)
 }
@@ -120,11 +120,11 @@ func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommandAndCleanupDirectory_Fa
 func (s *ExecuteCdkCommandTestSuite) TestExecuteCdkCommand_Failure() {
 	s.mockOs.EXPECT().RemoveAll(gomock.Any()).Return(nil).Times(0)
 
-	progressStream, err := executeCdkCommand(s.appDir, []string{testExecuteCommandFailureArg}, testUniqueKey)
+	progressStream, err := executeCdkCommand(s.appDir, []string{testExecuteCommandFailureArg}, testExecuteExecutioName)
 	s.Require().NoError(err)
 	event1 := <-progressStream
 	s.Assert().Equal(testExecuteCommandFailureArg, event1.Outputs[0])
-	s.Assert().Equal(testUniqueKey, event1.UniqueKey)
+	s.Assert().Equal(testExecuteExecutioName, event1.ExecutionName)
 	event2 := <-progressStream
 	s.Assert().Error(event2.Err)
 	waitForChanToClose(progressStream)

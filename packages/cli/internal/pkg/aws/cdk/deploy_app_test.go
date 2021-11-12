@@ -11,7 +11,7 @@ import (
 var (
 	testDeployAppPath         = "test/deploy/app/path"
 	testDeployProfile         = "test-deploy-profile"
-	testDeployUniqueKey       = "test-unique-key"
+	testDeployExecutionName   = "test-unique-key"
 	testDeployEnvironmentVars = []string{"a=1", "b=2"}
 )
 
@@ -22,7 +22,7 @@ func TestDeployApp(t *testing.T) {
 
 	client := NewClient(testDeployProfile)
 	realExecuteCdkCommand := ExecuteCdkCommand
-	ExecuteCdkCommand = func(appDir string, cmdArgs []string, uniqueKey string) (ProgressStream, error) {
+	ExecuteCdkCommand = func(appDir string, cmdArgs []string, executionName string) (ProgressStream, error) {
 		assert.Equal(t, testDeployAppPath, appDir)
 		assert.Equal(t, []string{
 			"deploy",
@@ -39,7 +39,7 @@ func TestDeployApp(t *testing.T) {
 
 	mockOs.EXPECT().MkdirTemp(testDeployAppPath, "cdk-output").Return("/some/path", nil)
 
-	_, _ = client.DeployApp(testDeployAppPath, testDeployEnvironmentVars, testDeployUniqueKey)
+	_, _ = client.DeployApp(testDeployAppPath, testDeployEnvironmentVars, testDeployExecutionName)
 }
 
 func TestDeployAppWithNilEnvVars(t *testing.T) {
@@ -48,7 +48,7 @@ func TestDeployAppWithNilEnvVars(t *testing.T) {
 	mkDirTemp = mockOs.MkdirTemp
 	client := NewClient("")
 	realExecuteCdkCommand := ExecuteCdkCommand
-	ExecuteCdkCommand = func(appDir string, cmdArgs []string, uniqueKey string) (ProgressStream, error) {
+	ExecuteCdkCommand = func(appDir string, cmdArgs []string, executionName string) (ProgressStream, error) {
 		assert.Equal(t, testDeployAppPath, appDir)
 		assert.Equal(t, []string{
 			"deploy",
@@ -63,5 +63,5 @@ func TestDeployAppWithNilEnvVars(t *testing.T) {
 
 	mockOs.EXPECT().MkdirTemp(testDeployAppPath, "cdk-output").Return("/some/path", nil)
 
-	_, _ = client.DeployApp(testDeployAppPath, nil, testDeployUniqueKey)
+	_, _ = client.DeployApp(testDeployAppPath, nil, testDeployExecutionName)
 }

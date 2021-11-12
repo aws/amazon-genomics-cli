@@ -18,7 +18,7 @@ func cdkResultsToContextResults(cdkResults []cdk.Result) []ProgressResult {
 	var results []ProgressResult
 	for _, cdkResult := range cdkResults {
 		progressResult := ProgressResult{
-			cdkResult.UniqueKey,
+			cdkResult.ExecutionName,
 			cdkResult.Outputs,
 			cdkResult.Err,
 		}

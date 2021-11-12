@@ -12,7 +12,7 @@ var (
 	testDestroyAppPath         = "test/destroy/app/path"
 	testDestroyProfile         = "test-destroy-profile"
 	testDestroyEnvironmentVars = []string{"a=1", "b=2"}
-	testDestroyUniqueKey       = "test-unique-key"
+	testDestroyExecutionName   = "test-unique-key"
 )
 
 func TestDestroyApp(t *testing.T) {
@@ -21,7 +21,7 @@ func TestDestroyApp(t *testing.T) {
 	mkDirTemp = mockOs.MkdirTemp
 	client := NewClient(testDestroyProfile)
 	realExecuteCdkCommand := ExecuteCdkCommand
-	ExecuteCdkCommand = func(cdkAppPathDir string, cmdArgs []string, uniqueKey string) (ProgressStream, error) {
+	ExecuteCdkCommand = func(cdkAppPathDir string, cmdArgs []string, executionName string) (ProgressStream, error) {
 		assert.Equal(t, testDestroyAppPath, cdkAppPathDir)
 		assert.Equal(t, []string{
 			"destroy",
@@ -37,7 +37,7 @@ func TestDestroyApp(t *testing.T) {
 	defer func() { ExecuteCdkCommand = realExecuteCdkCommand }()
 	mockOs.EXPECT().MkdirTemp(testDestroyAppPath, "cdk-output").Return("/some/path", nil)
 
-	_, _ = client.DestroyApp(testDestroyAppPath, testDestroyEnvironmentVars, testDestroyUniqueKey)
+	_, _ = client.DestroyApp(testDestroyAppPath, testDestroyEnvironmentVars, testDestroyExecutionName)
 }
 
 func TestDestroyAppWithNilEnvVars(t *testing.T) {
@@ -46,7 +46,7 @@ func TestDestroyAppWithNilEnvVars(t *testing.T) {
 	mkDirTemp = mockOs.MkdirTemp
 	client := NewClient("")
 	realExecuteCdkCommand := ExecuteCdkCommand
-	ExecuteCdkCommand = func(cdkAppPathDir string, cmdArgs []string, uniqueKey string) (ProgressStream, error) {
+	ExecuteCdkCommand = func(cdkAppPathDir string, cmdArgs []string, executionName string) (ProgressStream, error) {
 		assert.Equal(t, testDestroyAppPath, cdkAppPathDir)
 		assert.Equal(t, []string{
 			"destroy",
@@ -60,5 +60,5 @@ func TestDestroyAppWithNilEnvVars(t *testing.T) {
 	defer func() { ExecuteCdkCommand = realExecuteCdkCommand }()
 	mockOs.EXPECT().MkdirTemp(testDestroyAppPath, "cdk-output").Return("/some/path", nil)
 
-	_, _ = client.DestroyApp(testDestroyAppPath, nil, testDestroyUniqueKey)
+	_, _ = client.DestroyApp(testDestroyAppPath, nil, testDestroyExecutionName)
 }
