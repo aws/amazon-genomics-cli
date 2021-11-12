@@ -54,7 +54,7 @@ export class MiniWdlEngineStack extends NestedEngineStack {
 
     this.miniwdlEngine = new MiniWdlEngine(this, "MiniWdlEngine", {
       vpc: props.vpc,
-      outputBucketName: params.outputBucketName,
+      rootDirS3Uri: params.getEngineBucketPath(),
       engineBatch: this.batchHead,
       workerBatch: this.batchWorkers,
     });
