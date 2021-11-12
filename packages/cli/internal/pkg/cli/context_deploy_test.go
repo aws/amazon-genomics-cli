@@ -14,9 +14,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var testContextInfoStruct1 = context.Detail{Summary: context.Summary{Name: testContextName1}}
-var testContextInfoStruct2 = context.Detail{Summary: context.Summary{Name: testContextName2}}
-
 func TestDeployContextOpts_Validate_ValidContexts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
