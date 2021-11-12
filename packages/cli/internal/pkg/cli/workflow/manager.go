@@ -111,7 +111,7 @@ type workflowOutputProps struct {
 
 type Manager struct {
 	Project    storage.ProjectClient
-	Config     config.ConfigClient
+	Config     storage.ConfigClient
 	S3         s3.Interface
 	Ssm        ssm.Interface
 	Cfn        cfn.Interface
@@ -147,7 +147,7 @@ func NewManager(profile string) *Manager {
 	}
 	return &Manager{
 		Project:    projectClient,
-		Config:     configClient.ConfigInterface,
+		Config:     configClient,
 		Ssm:        aws.SsmClient(profile),
 		Cfn:        aws.CfnClient(profile),
 		S3:         aws.S3Client(profile),

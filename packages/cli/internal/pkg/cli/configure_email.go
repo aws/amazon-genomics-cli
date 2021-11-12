@@ -8,6 +8,7 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -19,7 +20,7 @@ type emailContextVars struct {
 }
 type emailContextOpts struct {
 	emailContextVars
-	configClient config.ConfigClient
+	configClient storage.ConfigClient
 }
 
 func newEmailContextOpts(vars emailContextVars) (*emailContextOpts, error) {

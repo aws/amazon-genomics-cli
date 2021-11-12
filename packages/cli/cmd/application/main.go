@@ -18,6 +18,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/term/color"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
 	"github.com/rs/zerolog"
@@ -40,7 +41,9 @@ type formatVars struct {
 	format string
 }
 
-var newConfigClient = config.NewConfigClient
+var newConfigClient = func() (storage.ConfigClient, error) {
+	return config.NewConfigClient()
+}
 
 const (
 	defaultFormat = "text"
@@ -148,7 +151,7 @@ func setFormatter(f formatVars) string {
 	}
 	if f.format == "" {
 		f.format = defaultFormat
-		configFormat, err := configClient.ConfigInterface.GetFormat()
+		configFormat, err := configClient.GetFormat()
 		if err != nil {
 			log.Error().Err(err)
 		} else {
