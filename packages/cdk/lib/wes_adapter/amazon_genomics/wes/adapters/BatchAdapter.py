@@ -244,4 +244,4 @@ class BatchAdapter(AbstractWESAdapter):
 def to_iso(epoch: Optional[int]) -> Optional[str]:
     if not epoch:
         return None
-    return datetime.utcfromtimestamp(epoch / 1000.0).isoformat()
+    return datetime.utcfromtimestamp(epoch / 1000.0).astimezone().isoformat()
