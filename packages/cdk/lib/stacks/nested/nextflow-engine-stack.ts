@@ -40,9 +40,8 @@ export class NextflowEngineStack extends NestedEngineStack {
 
     this.nextflowEngine = new NextflowEngine(this, "NextflowEngine", {
       vpc: props.vpc,
-      outputBucketName: params.outputBucketName,
       jobQueueArn: props.jobQueue.jobQueueArn,
-      rootDir: params.getEngineBucketPath(),
+      rootDirS3Uri: params.getEngineBucketPath(),
       taskRole: engineRole,
     });
 

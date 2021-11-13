@@ -25,6 +25,7 @@ ENGINE_NAME = os.getenv("ENGINE_NAME")
 JOB_QUEUE = os.getenv("JOB_QUEUE")
 JOB_DEFINITION = os.getenv("JOB_DEFINITION")
 ENGINE_LOG_GROUP = os.getenv("ENGINE_LOG_GROUP")
+OUTPUT_DIR_S3_URI = os.getenv("OUTPUT_DIR_S3_URI")
 
 if ENGINE_NAME == "nextflow":
     print("Using Nextflow adapter")
@@ -42,6 +43,7 @@ elif ENGINE_NAME == "miniwdl":
     adapter = MiniWdlWESAdapter(
         job_queue=JOB_QUEUE,
         job_definition=JOB_DEFINITION,
+        output_dir_s3_uri=OUTPUT_DIR_S3_URI,
     )
 else:
     raise Exception(f"Unknown engine name `{ENGINE_NAME}`")

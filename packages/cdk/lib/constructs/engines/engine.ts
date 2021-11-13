@@ -4,7 +4,7 @@ import { IVpc } from "monocdk/aws-ec2";
 
 export interface EngineProps {
   readonly vpc: IVpc;
-  readonly outputBucketName: string;
+  readonly rootDirS3Uri: string;
 }
 
 export class Engine extends Construct {
