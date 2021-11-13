@@ -1,7 +1,7 @@
 import { NestedStackProps } from "monocdk";
 import { Construct } from "constructs";
 import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "monocdk/aws-iam";
-import { Bucket } from "monocdk/aws-s3";
+import { Bucket, IBucket } from "monocdk/aws-s3";
 import { ApiProxy, Batch } from "../../constructs";
 import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
@@ -33,12 +33,14 @@ export class MiniWdlEngineStack extends NestedEngineStack {
   public readonly miniwdlEngine: MiniWdlEngine;
   private readonly batchHead: Batch;
   private readonly batchWorkers: Batch;
+  private readonly outputBucket: IBucket;
 
   constructor(scope: Construct, id: string, props: MiniWdlEngineStackProps) {
     super(scope, id, props);
 
     const { vpc, contextParameters } = props;
     const params = props.contextParameters;
+    const rootDirS3Uri = params.getEngineBucketPath();
 
     this.batchHead = this.renderBatch("HeadBatch", vpc, contextParameters.instanceTypes, ComputeResourceType.FARGATE);
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
@@ -54,7 +56,7 @@ export class MiniWdlEngineStack extends NestedEngineStack {
 
     this.miniwdlEngine = new MiniWdlEngine(this, "MiniWdlEngine", {
       vpc: props.vpc,
-      outputBucketName: params.outputBucketName,
+      rootDirS3Uri: rootDirS3Uri,
       engineBatch: this.batchHead,
       workerBatch: this.batchWorkers,
     });
@@ -74,6 +76,8 @@ export class MiniWdlEngineStack extends NestedEngineStack {
         }),
       },
     });
+    this.outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
+    this.outputBucket.grantRead(adapterRole);
 
     this.batchHead.grantJobAdministration(adapterRole);
     this.batchWorkers.grantJobAdministration(this.batchHead.role);
@@ -85,6 +89,7 @@ export class MiniWdlEngineStack extends NestedEngineStack {
       role: adapterRole,
       jobQueueArn: this.batchHead.jobQueue.jobQueueArn,
       jobDefinitionArn: this.miniwdlEngine.headJobDefinition.jobDefinitionArn,
+      rootDirS3Uri: rootDirS3Uri,
     });
     this.adapterLogGroup = lambda.logGroup;
 
@@ -105,13 +110,12 @@ export class MiniWdlEngineStack extends NestedEngineStack {
   }
 
   private grantS3Permissions(contextParameters: ContextAppParameters) {
-    const { artifactBucketName, outputBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
+    const { artifactBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
 
-    const outputBucket = Bucket.fromBucketName(this, "OutputBucket", outputBucketName);
     const artifactBucket = Bucket.fromBucketName(this, "ArtifactBucket", artifactBucketName);
 
     readBucketArns.push(artifactBucket.bucketArn);
-    readWriteBucketArns.push(outputBucket.bucketArn);
+    readWriteBucketArns.push(this.outputBucket.bucketArn);
 
     const batchRoles = this.getBatchRoles();
     for (const role of batchRoles) {
@@ -135,11 +139,12 @@ export class MiniWdlEngineStack extends NestedEngineStack {
     return [this.batchHead.role, this.batchWorkers.role];
   }
 
-  private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn }) {
+  private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, rootDirS3Uri }) {
     return renderPythonLambda(this, "MiniWDLWesAdapterLambda", vpc, role, wesAdapterSourcePath, {
       ENGINE_NAME: "miniwdl",
       JOB_QUEUE: jobQueueArn,
       JOB_DEFINITION: jobDefinitionArn,
+      OUTPUT_DIR_S3_URI: rootDirS3Uri,
     });
   }
 }

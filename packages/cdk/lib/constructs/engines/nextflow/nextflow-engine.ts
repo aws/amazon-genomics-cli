@@ -8,7 +8,6 @@ import { Engine, EngineProps } from "../engine";
 export interface NextflowEngineProps extends EngineProps {
   readonly jobQueueArn: string;
   readonly taskRole: IRole;
-  readonly rootDir: string;
 }
 
 const NEXTFLOW_IMAGE_DESIGNATION = "nextflow";
@@ -27,8 +26,8 @@ export class NextflowEngine extends Engine {
         command: [],
         environment: {
           NF_JOB_QUEUE: props.jobQueueArn,
-          NF_WORKDIR: `${props.rootDir}/runs`,
-          NF_LOGSDIR: `${props.rootDir}/logs`,
+          NF_WORKDIR: `${props.rootDirS3Uri}/runs`,
+          NF_LOGSDIR: `${props.rootDirS3Uri}/logs`,
         },
         volumes: [],
       },
