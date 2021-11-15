@@ -1,10 +1,13 @@
+import json
 import os
 import typing
 
 import boto3
+from botocore.exceptions import ClientError
 from mypy_boto3_batch import BatchClient
 from mypy_boto3_batch.type_defs import JobDetailTypeDef
 from mypy_boto3_resourcegroupstaggingapi import ResourceGroupsTaggingAPIClient
+from mypy_boto3_s3 import S3Client
 from amazon_genomics.wes.adapters.BatchAdapter import BatchAdapter
 from rest_api.models import (
     WorkflowTypeVersion,
@@ -12,20 +15,26 @@ from rest_api.models import (
 )
 
 MINIWDL_PARENT_TAG_KEY = "AWS_BATCH_PARENT_JOB_ID"
-
+MINIWDL_OUTPUT_FILE_NAME = "outputs.json"
 
 class MiniWdlWESAdapter(BatchAdapter):
     def __init__(
         self,
         job_queue: str,
         job_definition: str,
+        output_dir_s3_uri: str,
         aws_batch: BatchClient = None,
         aws_tags: ResourceGroupsTaggingAPIClient = None,
+        aws_s3: S3Client = None,
         logger=None,
     ):
         super().__init__(job_queue, job_definition, aws_batch, logger)
+        self.output_dir_s3_uri = output_dir_s3_uri
         self.aws_tags: ResourceGroupsTaggingAPIClient = aws_tags or boto3.client(
             "resourcegroupstaggingapi", region_name=os.environ["AWS_REGION"]
+        )
+        self.aws_s3: S3Client = aws_s3 or boto3.client(
+            "s3", region_name=os.environ["AWS_REGION"]
         )
 
     def command(
@@ -100,10 +109,28 @@ class MiniWdlWESAdapter(BatchAdapter):
         )
 
     def get_task_outputs(self, head_job: JobDetailTypeDef):
+        job_id = head_job.get("jobId")
+        bucket, folder = self.output_dir_s3_uri.split('/', 2)[-1].split('/', 1)
+        output_file_key = f"{folder}/{job_id}/{MINIWDL_OUTPUT_FILE_NAME}"
+        output = self.get_s3_object_json(bucket, output_file_key)
         return {
-            "id": head_job.get("jobId"),
+            "id": job_id,
+            "outputs": output
         }
 
+    def get_s3_object_json(self, bucket, output_file_key):
+        try:
+            output_object = self.aws_s3.get_object(
+                Bucket=bucket,
+                Key=output_file_key
+            )
+            return json.load(output_object["Body"])
+        except ClientError as ex:
+            if ex.response['Error']['Code'] == 'NoSuchKey':
+                self.logger.warn(f"No object found")
+                return None
+            else:
+                raise ex
 
 def job_id_from_arn(job_arn: str) -> str:
     return job_arn[job_arn.rindex("/") + 1 :]
