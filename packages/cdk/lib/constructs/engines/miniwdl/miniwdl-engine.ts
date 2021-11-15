@@ -22,7 +22,7 @@ export class MiniWdlEngine extends Engine {
   constructor(scope: Construct, id: string, props: MiniWdlEngineProps) {
     super(scope, id);
 
-    const { vpc, outputBucketName, engineBatch, workerBatch } = props;
+    const { vpc, rootDirS3Uri, engineBatch, workerBatch } = props;
     const fileSystem = this.createFileSystem(vpc);
     const accessPoint = this.createAccessPoint(fileSystem);
 
@@ -42,7 +42,7 @@ export class MiniWdlEngine extends Engine {
           MINIWDL__AWS__FS: fileSystem.fileSystemId,
           MINIWDL__AWS__FSAP: accessPoint.accessPointId,
           MINIWDL__AWS__TASK_QUEUE: workerBatch.jobQueue.jobQueueArn,
-          MINIWDL_S3_OUTPUT_URI: `s3://${outputBucketName}/miniwdl`,
+          MINIWDL_S3_OUTPUT_URI: rootDirS3Uri,
         },
         volumes: [this.toVolume(fileSystem, accessPoint)],
         mountPoints: [this.toMountPoint("/mnt/efs")],

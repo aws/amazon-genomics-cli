@@ -196,7 +196,7 @@ def test_get_run_log_in_progress(aws_batch: BatchClient, adapter: StubBatchAdapt
                 name="agc-run-workflow|xyz",
                 cmd=test_command,
                 stdout=log_stream,
-                start_time="1970-01-01T00:00:01",
+                start_time="1970-01-01T00:00:01+00:00",
             ),
             task_logs=[
                 Log(
@@ -231,8 +231,8 @@ def test_get_run_log_completed(aws_batch: BatchClient, adapter: StubBatchAdapter
                 name="agc-run-workflow|xyz",
                 cmd=test_command,
                 stdout=log_stream,
-                start_time="1970-01-01T00:00:01",
-                end_time="1970-01-01T00:00:02",
+                start_time="1970-01-01T00:00:01+00:00",
+                end_time="1970-01-01T00:00:02+00:00",
             ),
             task_logs=[
                 Log(
