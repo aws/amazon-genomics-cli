@@ -124,6 +124,6 @@ export const renderPythonLambda = (
     runtime: Runtime.PYTHON_3_9,
     environment,
     role,
-    timeout: Duration.seconds(30),
+    timeout: Duration.seconds(60),
   });
 };
