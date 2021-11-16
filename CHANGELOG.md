@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file. See [standa
 * progress bar doesn't show any progress ([#166](https://github.com/aws/amazon-genomics-cli/issues/166)) ([5b4a5b4](https://github.com/aws/amazon-genomics-cli/commit/5b4a5b4c81cf4ef99d82a146b378c66936ff7be4))
 * Return timezone information in RunLog ([#174](https://github.com/aws/amazon-genomics-cli/issues/174)) ([37b33a7](https://github.com/aws/amazon-genomics-cli/commit/37b33a753d96010a581588c8734d482163ad1161))
 * unique project name ([#171](https://github.com/aws/amazon-genomics-cli/issues/171)) ([a464f81](https://github.com/aws/amazon-genomics-cli/commit/a464f81d86575f1f3c0c95b1161f0474681537ac))
+* Increasing WES adapter lambda timeout ([#180](https://github.com/aws/amazon-genomics-cli/issues/180)) ([20cd77d](https://github.com/aws/amazon-genomics-cli/commit/20cd77dac1def4414f0159509caa8dfe853d62bb))
 
 ## 1.1.0 (2021-11-11)
 
