@@ -1,9 +1,8 @@
 import { Construct, Stack, Aws } from "monocdk";
-import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "monocdk/aws-iam";
-import { Bucket } from "monocdk/aws-s3";
+import { Bucket, IBucket } from "monocdk/aws-s3";
 import { ApiProxy, Batch } from "../../constructs";
-import { LogGroup } from "monocdk/aws-logs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
+import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "monocdk/aws-iam";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
 import { InstanceType, IVpc } from "monocdk/aws-ec2";
@@ -12,9 +11,10 @@ import { ComputeResourceType } from "monocdk/aws-batch";
 import { BucketOperations } from "../../../common/BucketOperations";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
-import { renderServiceWithContainer } from "../../util";
+import { renderPythonLambda } from "../../util";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
 import { EngineOptions } from "../../types";
+import { wesAdapterSourcePath } from "../../constants";
 
 export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -22,12 +22,14 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly miniwdlEngine: MiniWdlEngine;
   private readonly batchHead: Batch;
   private readonly batchWorkers: Batch;
+  private readonly outputBucket: IBucket;
 
   constructor(scope: Construct, id: string, props: EngineOptions) {
     super(scope, id);
 
     const { vpc, contextParameters } = props;
     const params = props.contextParameters;
+    const rootDirS3Uri = params.getEngineBucketPath();
 
     this.batchHead = this.renderBatch("HeadBatch", vpc, contextParameters.instanceTypes, ComputeResourceType.FARGATE);
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
@@ -43,13 +45,14 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
 
     this.miniwdlEngine = new MiniWdlEngine(this, "MiniWdlEngine", {
       vpc: props.vpc,
-      outputBucketName: params.outputBucketName,
+      rootDirS3Uri: rootDirS3Uri,
       engineBatch: this.batchHead,
       workerBatch: this.batchWorkers,
     });
 
     const adapterRole = new Role(this, "MiniWdlAdapterRole", {
-      assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"),
+      assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+      managedPolicies: [ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")],
       inlinePolicies: {
         MiniwdlAdapterPolicy: new PolicyDocument({
           statements: [
@@ -62,21 +65,26 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
         }),
       },
     });
+    this.outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
+    this.outputBucket.grantRead(adapterRole);
 
     this.batchHead.grantJobAdministration(adapterRole);
     this.batchWorkers.grantJobAdministration(this.batchHead.role);
 
     this.grantS3Permissions(contextParameters);
 
-    const adapterContainer = params.getAdapterContainer();
-    adapterContainer.environment!["JOB_DEFINITION"] = this.miniwdlEngine.headJobDefinition.jobDefinitionArn;
-    adapterContainer.environment!["JOB_QUEUE"] = this.batchHead.jobQueue.jobQueueArn;
-    this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
-    const adapter = renderServiceWithContainer(this, "Adapter", adapterContainer, props.vpc, adapterRole, this.adapterLogGroup);
+    const lambda = this.renderAdapterLambda({
+      vpc: props.vpc,
+      role: adapterRole,
+      jobQueueArn: this.batchHead.jobQueue.jobQueueArn,
+      jobDefinitionArn: this.miniwdlEngine.headJobDefinition.jobDefinitionArn,
+      rootDirS3Uri: rootDirS3Uri,
+    });
+    this.adapterLogGroup = lambda.logGroup;
 
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}MiniWdlApiProxy`,
-      loadBalancer: adapter.loadBalancer,
+      lambda,
       allowedAccountIds: [Aws.ACCOUNT_ID],
     });
   }
@@ -91,13 +99,12 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
   }
 
   private grantS3Permissions(contextParameters: ContextAppParameters) {
-    const { artifactBucketName, outputBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
+    const { artifactBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
 
-    const outputBucket = Bucket.fromBucketName(this, "OutputBucket", outputBucketName);
     const artifactBucket = Bucket.fromBucketName(this, "ArtifactBucket", artifactBucketName);
 
     readBucketArns.push(artifactBucket.bucketArn);
-    readWriteBucketArns.push(outputBucket.bucketArn);
+    readWriteBucketArns.push(this.outputBucket.bucketArn);
 
     const batchRoles = this.getBatchRoles();
     for (const role of batchRoles) {
@@ -119,5 +126,14 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
 
   private getBatchRoles(): IRole[] {
     return [this.batchHead.role, this.batchWorkers.role];
+  }
+
+  private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, rootDirS3Uri }) {
+    return renderPythonLambda(this, "MiniWDLWesAdapterLambda", vpc, role, wesAdapterSourcePath, {
+      ENGINE_NAME: "miniwdl",
+      JOB_QUEUE: jobQueueArn,
+      JOB_DEFINITION: jobDefinitionArn,
+      OUTPUT_DIR_S3_URI: rootDirS3Uri,
+    });
   }
 }

@@ -68,7 +68,7 @@ export class BatchConstruct extends Construct {
   }
 
   private getBatchRoles(): IRole[] {
-    const roles = [];
+    const roles: IRole[] = [];
     if (this.batchOnDemand) {
       roles.push(this.batchOnDemand.role);
     }

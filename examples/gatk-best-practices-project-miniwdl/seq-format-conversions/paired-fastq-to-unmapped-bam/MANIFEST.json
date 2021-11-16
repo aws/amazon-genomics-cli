@@ -1,0 +1,7 @@
+{
+  "mainWorkflowURL": "paired-fastq-to-unmapped-bam.wdl",
+  "inputFileURLs": [
+    "paired-fastq-to-unmapped-inputs.json"
+  ],
+  "engineOptions": "--no-cache"
+}

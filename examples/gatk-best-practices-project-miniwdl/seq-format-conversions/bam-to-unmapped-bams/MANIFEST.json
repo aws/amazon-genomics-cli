@@ -1,0 +1,7 @@
+{
+  "mainWorkflowURL": "bam-to-unmapped-bams.wdl",
+  "inputFileURLs": [
+    "bam-to-unmapped-bams.inputs.json"
+  ],
+  "engineOptions": "--no-cache"
+}

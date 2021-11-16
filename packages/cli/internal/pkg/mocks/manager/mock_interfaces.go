@@ -123,3 +123,18 @@ func (mr *MockWorkflowManagerMockRecorder) StatusWorkflowByName(workflowName, nu
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StatusWorkflowByName", reflect.TypeOf((*MockWorkflowManager)(nil).StatusWorkflowByName), workflowName, numInstances)
 }
+
+// GetRunLog mocks base method.
+func (m *MockWorkflowManager) GetRunLog(runId string) (workflow.RunLog, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRunLog", runId)
+	ret0, _ := ret[0].(workflow.RunLog)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRunLog indicates an expected call of GetRunLog.
+func (mr *MockWorkflowManagerMockRecorder) GetRunLog(runId string) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRunLog", reflect.TypeOf((*MockWorkflowManager)(nil).GetRunLog), runId)
+}

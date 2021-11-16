@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-RELEASE_DIR="dist"
+RELEASE_DIR="dist/amazon-genomics-cli"
 
 mkdir -p ${RELEASE_DIR}
 cp ./{LICENSE,THIRD-PARTY,CHANGELOG.md} ${RELEASE_DIR}

@@ -4,6 +4,8 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
@@ -28,7 +30,17 @@ func newDescribeContextOpts(vars describeContextVars) (*describeContextOpts, err
 	}, nil
 }
 
-func (o *describeContextOpts) Validate() error {
+func (o *describeContextOpts) Validate(args []string) error {
+	if len(args) == 0 && o.ContextName == "" {
+		return fmt.Errorf("a context must be provided")
+	} else if len(args) == 1 && o.ContextName != "" {
+		return fmt.Errorf("either the '-c' flag or a context must be provided, but not both")
+	}
+
+	if len(args) == 1 {
+		o.ContextName = args[0]
+	}
+
 	return nil
 }
 
@@ -69,19 +81,16 @@ func BuildContextDescribeCommand() *cobra.Command {
 ` + DescribeOutput(types.Context{}),
 		Example: `
 /code agc context describe myCtx`,
-		Args: cobra.ExactArgs(1),
+		Args: cobra.ArbitraryArgs,
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
-			if len(args) > 0 {
-				vars.ContextName = args[0]
-			}
 			opts, err := newDescribeContextOpts(vars)
 			if err != nil {
 				return err
 			}
-			log.Info().Msgf("Describing context '%s'", opts.ContextName)
-			if err := opts.Validate(); err != nil {
+			if err := opts.Validate(args); err != nil {
 				return err
 			}
+			log.Info().Msgf("Describing context '%s'", opts.ContextName)
 			ctx, err := opts.Execute()
 			if err != nil {
 				return clierror.New("context describe", vars, err)
@@ -90,5 +99,6 @@ func BuildContextDescribeCommand() *cobra.Command {
 			return nil
 		}),
 	}
+	cmd.Flags().StringVarP(&vars.ContextName, contextFlag, contextFlagShort, "", deployContextDescription)
 	return cmd
 }

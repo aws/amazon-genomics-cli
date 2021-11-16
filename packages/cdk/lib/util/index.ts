@@ -10,6 +10,9 @@ import { IVpc } from "monocdk/aws-ec2";
 import { IRole } from "monocdk/aws-iam";
 import { LogConfiguration, LogDriver as BatchLogDriver } from "monocdk/aws-batch";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
+import { PythonFunction } from "monocdk/aws-lambda-python";
+import { Runtime } from "monocdk/aws-lambda";
+import { Duration } from "monocdk";
 
 export const getContext = (node: ConstructNode, key: string): string => {
   const context = getContextOrDefault(node, key, undefined);
@@ -107,3 +110,20 @@ export function renderBatchLogConfiguration(scope: Construct, logGroup: ILogGrou
 export function batchArn(scope: Construct, resource: string, resourcePrefix = "*"): string {
   return Arn.format({ resource: `${resource}/${resourcePrefix}`, service: "batch" }, Stack.of(scope));
 }
+export const renderPythonLambda = (
+  scope: Construct,
+  id: string,
+  vpc: IVpc,
+  role: IRole,
+  codePath: string,
+  environment: Record<string, string>
+): PythonFunction => {
+  return new PythonFunction(scope, id, {
+    vpc,
+    entry: codePath,
+    runtime: Runtime.PYTHON_3_9,
+    environment,
+    role,
+    timeout: Duration.seconds(30),
+  });
+};
