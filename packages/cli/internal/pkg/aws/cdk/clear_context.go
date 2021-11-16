@@ -13,7 +13,7 @@ func (client Client) ClearContext(appDir string) error {
 		"--clear",
 	}
 
-	stream, err := ExecuteCdkCommand(appDir, cmdArgs)
+	stream, err := ExecuteCdkCommand(appDir, cmdArgs, "clear-context")
 	if err != nil {
 		return actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
