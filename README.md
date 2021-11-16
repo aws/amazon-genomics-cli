@@ -61,7 +61,7 @@ need to use a newer version of sed to ensure script compatibility.
 
 ```bash
 brew install gnu-sed
-echo 'export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$(brew --prefix gnu-sed)/libexec/gnubin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
