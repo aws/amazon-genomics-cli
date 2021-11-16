@@ -36,7 +36,8 @@ func (p ProgressStream) DisplayProgress(description string) error {
 	var lastEvent ProgressEvent
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	barReceiver := runProgressBar(ctx, description, 1)
+	numberOfChannels := 1
+	barReceiver := runProgressBar(ctx, description, numberOfChannels)
 	for event := range p {
 		barReceiver <- event
 		if event.Err != nil {
