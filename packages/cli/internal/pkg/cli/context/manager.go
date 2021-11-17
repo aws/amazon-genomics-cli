@@ -13,6 +13,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/rs/zerolog/log"
 )
@@ -64,8 +65,18 @@ type Manager struct {
 	contextProps
 	infoProps
 	listProps
-	err error
+	err             error
+	progressResults []ProgressResult
 }
+
+type ProgressResult struct {
+	Context string
+	Outputs []string
+	Err     error
+}
+
+var displayProgressBar = cdk.DisplayProgressBar
+var showExecution = cdk.ShowExecution
 
 func NewManager(profile string) *Manager {
 	projectClient, err := storage.NewProjectClient()
@@ -218,4 +229,26 @@ func (m *Manager) readConfig() {
 		return
 	}
 	m.userEmail, m.err = m.Config.GetUserEmailAddress()
+}
+
+func (m *Manager) readProjectInformation() {
+	if m.err != nil {
+		return
+	}
+	m.readProjectSpec()
+	m.readConfig()
+}
+
+func (m *Manager) processExecution(allProgressStreams []cdk.ProgressStream, description string) {
+	if len(allProgressStreams) == 0 {
+		return
+	}
+
+	var cdkResults []cdk.Result
+	if logging.Verbose {
+		cdkResults = showExecution(allProgressStreams)
+	} else {
+		cdkResults = displayProgressBar(description, allProgressStreams)
+	}
+	m.progressResults = append(m.progressResults, cdkResultsToContextResults(cdkResults)...)
 }

@@ -15,13 +15,18 @@ const (
 	testFileName       = "config.yaml"
 	expectedConfigYaml = `
 user:
-    email: my@email.com`
+    email: my@email.com
+format:
+    format: text`
 )
 
 var (
 	expectedConfig = Config{
 		User{
 			Email: "my@email.com",
+		},
+		Format{
+			Name: "text",
 		},
 	}
 )

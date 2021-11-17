@@ -33,6 +33,11 @@ contexts:
       - type: wdl
         engine: cromwell
 
+  miniContext:
+    engines:
+      - type: wdl
+        engine: miniwdl
+
   spotCtx:
     requestSpotInstances: true
     engines:

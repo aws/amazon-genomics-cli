@@ -79,12 +79,18 @@ func TestClient_GetLogs(t *testing.T) {
 	logs, err := output.NextLogs()
 	assert.False(t, output.HasMoreLogs())
 	assert.NoError(t, err)
-	assert.Equal(t, []string{
-		fmt.Sprintf("%s\tHello", eventTime1.Format(time.RFC1123Z)),
-		fmt.Sprintf("%s\tworld!", eventTime2.Format(time.RFC1123Z)),
-		fmt.Sprintf("%s\tHola", eventTime1.Format(time.RFC1123Z)),
-		fmt.Sprintf("%s\tmundo!", eventTime2.Format(time.RFC1123Z)),
+
+	englishHelloLog, spanishHelloLog := fmt.Sprintf("%s\tHello", eventTime1.Format(time.RFC1123Z)), fmt.Sprintf("%s\tHola", eventTime1.Format(time.RFC1123Z))
+	englishWorldLog, spanishWorldLog := fmt.Sprintf("%s\tworld!", eventTime2.Format(time.RFC1123Z)), fmt.Sprintf("%s\tmundo!", eventTime2.Format(time.RFC1123Z))
+	assert.ElementsMatch(t, []string{
+		englishHelloLog,
+		englishWorldLog,
+		spanishHelloLog,
+		spanishWorldLog,
 	}, logs)
+
+	assert.Contains(t, []string{englishHelloLog, spanishHelloLog}, logs[0])
+	assert.Contains(t, []string{englishHelloLog, spanishHelloLog}, logs[2])
 }
 
 func TestClient_GetLogs_Error(t *testing.T) {

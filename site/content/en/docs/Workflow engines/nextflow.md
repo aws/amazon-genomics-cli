@@ -2,8 +2,9 @@
 title: "Nextflow"
 date: 2021-10-01T17:27:31-04:00
 draft: false
+weight: 40
 description: >
-    Details on the Cromwell engine deployed by Amazon Genomics CLI
+    Details on the Nextflow engine deployed by Amazon Genomics CLI
 ---
 
 ## Description

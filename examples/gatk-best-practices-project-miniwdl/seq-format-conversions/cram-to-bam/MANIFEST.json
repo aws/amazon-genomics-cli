@@ -1,0 +1,7 @@
+{
+  "mainWorkflowURL": "cram-to-bam.wdl",
+  "inputFileURLs": [
+    "cram-to-bam.inputs.json"
+  ],
+  "engineOptions": "--no-cache"
+}

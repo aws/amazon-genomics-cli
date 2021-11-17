@@ -35,31 +35,31 @@ func (m *MockContextManager) EXPECT() *MockContextManagerMockRecorder {
 }
 
 // Deploy mocks base method.
-func (m *MockContextManager) Deploy(contextName string, showProgress bool) error {
+func (m *MockContextManager) Deploy(contexts []string) []context.ProgressResult {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Deploy", contextName, showProgress)
-	ret0, _ := ret[0].(error)
+	ret := m.ctrl.Call(m, "Deploy", contexts)
+	ret0, _ := ret[0].([]context.ProgressResult)
 	return ret0
 }
 
 // Deploy indicates an expected call of Deploy.
-func (mr *MockContextManagerMockRecorder) Deploy(contextName, showProgress interface{}) *gomock.Call {
+func (mr *MockContextManagerMockRecorder) Deploy(contexts interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Deploy", reflect.TypeOf((*MockContextManager)(nil).Deploy), contextName, showProgress)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Deploy", reflect.TypeOf((*MockContextManager)(nil).Deploy), contexts)
 }
 
 // Destroy mocks base method.
-func (m *MockContextManager) Destroy(contextName string, showProgress bool) error {
+func (m *MockContextManager) Destroy(contexts []string) []context.ProgressResult {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Destroy", contextName, showProgress)
-	ret0, _ := ret[0].(error)
+	ret := m.ctrl.Call(m, "Destroy", contexts)
+	ret0, _ := ret[0].([]context.ProgressResult)
 	return ret0
 }
 
 // Destroy indicates an expected call of Destroy.
-func (mr *MockContextManagerMockRecorder) Destroy(contextName, showProgress interface{}) *gomock.Call {
+func (mr *MockContextManagerMockRecorder) Destroy(contexts interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockContextManager)(nil).Destroy), contextName, showProgress)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockContextManager)(nil).Destroy), contexts)
 }
 
 // Info mocks base method.

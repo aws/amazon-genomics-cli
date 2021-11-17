@@ -1,0 +1,7 @@
+{
+  "mainWorkflowURL": "interleaved-fastq-to-paired-fastq.wdl",
+  "inputFileURLs": [
+    "interleaved-fastq-to-paired-fastq.inputs.json"
+  ],
+  "engineOptions": "--no-cache"
+}
