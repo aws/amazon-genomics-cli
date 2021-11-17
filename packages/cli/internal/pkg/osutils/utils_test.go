@@ -35,53 +35,9 @@ func TestDetermineHomeDir_Failure(t *testing.T) {
 	assert.Error(t, err, expectedError)
 }
 
-func TestExpandHomeDir_WithExpansion(t *testing.T) {
+func TestExpandHomeDirNegative(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockOs := iomocks.NewMockOS(ctrl)
-	osUserHomeDir = mockOs.UserHomeDir
-
-	expectedHomePath := "/home/user"
-	expectedExpandedPath := "/home/user/FooBar"
-
-	mockOs.EXPECT().UserHomeDir().Return(expectedHomePath, nil)
-	actualExpandedPath, _ := ExpandHomeDir("~/FooBar")
-
-	assert.Equal(t, expectedExpandedPath, actualExpandedPath)
-	ctrl.Finish()
-}
-
-func TestExpandHomeDir_WithExpansion_HomeDirOnly(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockOs := iomocks.NewMockOS(ctrl)
-	osUserHomeDir = mockOs.UserHomeDir
-
-	expectedHomePath := "/home/user"
-	expectedExpandedPath := "/home/user"
-
-	mockOs.EXPECT().UserHomeDir().Return(expectedHomePath, nil)
-	actualExpandedPath, _ := ExpandHomeDir("~")
-
-	assert.Equal(t, expectedExpandedPath, actualExpandedPath)
-	ctrl.Finish()
-}
-
-func TestExpandHomeDir_WithExpansion_HomeDirOnlyWithSlash(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockOs := iomocks.NewMockOS(ctrl)
-	osUserHomeDir = mockOs.UserHomeDir
-
-	expectedHomePath := "/home/user"
-	expectedExpandedPath := "/home/user"
-
-	mockOs.EXPECT().UserHomeDir().Return(expectedHomePath, nil)
-	actualExpandedPath, _ := ExpandHomeDir("~/")
-
-	assert.Equal(t, expectedExpandedPath, actualExpandedPath)
-	ctrl.Finish()
-}
-
-func TestExpandHomeDir_WithExpansionError(t *testing.T) {
-	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 	mockOs := iomocks.NewMockOS(ctrl)
 	osUserHomeDir = mockOs.UserHomeDir
 	expectedOsError := errors.New("OS Error")
@@ -91,52 +47,104 @@ func TestExpandHomeDir_WithExpansionError(t *testing.T) {
 	expectedError := actionableerror.New(err, "Please check that your home or user profile directory is defined within your environment variables")
 
 	assert.Error(t, err, expectedError)
-	ctrl.Finish()
 }
 
-func TestExpandHomeDir_WithoutExpansion(t *testing.T) {
-	tests := map[string]struct {
-		input        string
-		expectedPath string
+func TestExpandHomeDirPositive(t *testing.T) {
+	var tests = map[string]struct {
+		input string
+		mockCallTimes int
+		expectedHomeDir string
+		err error
+		expectedOutput string
 	}{
+		"HomeDir only": {
+			input:               "~",
+			expectedHomeDir:     "/home/user",
+			err:                 nil,
+			mockCallTimes:       1,
+			expectedOutput:      "/home/user",
+		},
+		"HomeDir only with backslash": {
+			input:              "~/",
+			expectedHomeDir:    "/home/user",
+			err:                 nil,
+			mockCallTimes:       1,
+			expectedOutput:      "/home/user",
+		},
+		"HomeDir only with subsequent dir": {
+			input:              "~/FooBar",
+			expectedHomeDir:    "/home/user",
+			err:                nil,
+			mockCallTimes:      1,
+			expectedOutput:     "/home/user/FooBar",
+		},
 		"Tilde at the beginning": {
-			input:        "~~~",
-			expectedPath: "~~~",
+			input: 				"~~~",
+			expectedHomeDir:    "",
+			err:                nil,
+			mockCallTimes:      0,
+			expectedOutput:     "~~~",
 		},
 		"Tilde at the beginning with backslash": {
-			input:        "/~/~/~/",
-			expectedPath: "/~/~/~/",
+			input:              "/~/~/~/",
+			expectedHomeDir:    "",
+			err:                nil,
+			mockCallTimes:      0,
+			expectedOutput:     "/~/~/~/",
 		},
 		"Tilde at the beginning ": {
-			input:        "/~/~/~",
-			expectedPath: "/~/~/~",
+			input:              "/~/~/~",
+			expectedHomeDir:    "",
+			err:                nil,
+			mockCallTimes:      0,
+			expectedOutput:     "/~/~/~",
 		},
 		"Tilde in the middle": {
-			input:        "Foo~/~Bar",
-			expectedPath: "Foo~/~Bar",
+			input:              "Foo~/~Bar",
+			expectedHomeDir:    "",
+			err:                nil,
+			mockCallTimes:      0,
+			expectedOutput:     "Foo~/~Bar",
 		},
 		"Tilde in the end": {
-			input:        "~Foo/Bar~",
-			expectedPath: "~Foo/Bar~",
+			input:              "~Foo/Bar~",
+			expectedHomeDir:    "",
+			err:                nil,
+			mockCallTimes:      0,
+			expectedOutput:     "~Foo/Bar~",
 		},
 		"Empty string": {
-			input:        "",
-			expectedPath: "",
+			input:              "",
+			expectedHomeDir:    "",
+			err:                nil,
+			mockCallTimes:      0,
+			expectedOutput:     "",
 		},
 		"Relative": {
-			input:        "FooBar",
-			expectedPath: "FooBar",
+			input:              "FooBar",
+			expectedHomeDir:    "",
+			err:                nil,
+			mockCallTimes:      0,
+			expectedOutput:     "FooBar",
 		},
 		"Absolute": {
-			input:        "/Foo/Bar",
-			expectedPath: "/Foo/Bar",
+			input:              "/Foo/Bar",
+			expectedHomeDir:    "",
+			err:                nil,
+			mockCallTimes:      0,
+			expectedOutput:     "/Foo/Bar",
 		},
 	}
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			mockOs := iomocks.NewMockOS(ctrl)
+			osUserHomeDir = mockOs.UserHomeDir
+			mockOs.EXPECT().UserHomeDir().Return(tt.expectedHomeDir, tt.err).Times(tt.mockCallTimes)
 			actualPath, _ := ExpandHomeDir(tt.input)
-			assert.Equal(t, tt.expectedPath, actualPath)
+			assert.Equal(t, tt.expectedOutput, actualPath)
 		})
 	}
 }
