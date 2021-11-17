@@ -1,6 +1,5 @@
-import { NestedStack, NestedStackProps } from "monocdk";
 import { IVpc } from "monocdk/aws-ec2";
-import { Construct } from "constructs";
+import { Construct, Stack } from "monocdk";
 import { LAUNCH_TEMPLATE } from "../../constants";
 import { Batch } from "../../constructs";
 import { ContextAppParameters } from "../../env";
@@ -8,7 +7,7 @@ import { BucketOperations } from "../../../common/BucketOperations";
 import { IRole } from "monocdk/aws-iam";
 import { ComputeResourceType } from "monocdk/aws-batch";
 
-export interface BatchStackProps extends NestedStackProps {
+export interface BatchConstructProps {
   /**
    * VPC to run resources in.
    */
@@ -27,12 +26,12 @@ export interface BatchStackProps extends NestedStackProps {
   readonly createOnDemandBatch: boolean;
 }
 
-export class BatchStack extends NestedStack {
+export class BatchConstruct extends Construct {
   public readonly batchSpot: Batch;
   public readonly batchOnDemand: Batch;
 
-  constructor(scope: Construct, id: string, props: BatchStackProps) {
-    super(scope, id, props);
+  constructor(scope: Construct, id: string, props: BatchConstructProps) {
+    super(scope, id);
 
     const { vpc, contextParameters, createSpotBatch, createOnDemandBatch } = props;
     const { artifactBucketName, outputBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
@@ -64,7 +63,7 @@ export class BatchStack extends NestedStack {
       maxVCpus: appParams.maxVCpus,
       launchTemplateData: LAUNCH_TEMPLATE,
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
-      resourceTags: this.nestedStackParent?.tags.tagValues(),
+      resourceTags: Stack.of(this).tags.tagValues(),
     });
   }
 
