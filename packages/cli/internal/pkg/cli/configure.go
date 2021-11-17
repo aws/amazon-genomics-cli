@@ -21,6 +21,7 @@ Configure local settings and preferences to customize the CLI experience.`,
 
 	cmd.AddCommand(BuildConfigureEmailCommand())
 	cmd.AddCommand(BuildDescribeShowCommand())
+	cmd.AddCommand(BuildConfigureFormatCommand())
 
 	cmd.SetUsageTemplate(template.Usage)
 	cmd.Annotations = map[string]string{

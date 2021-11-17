@@ -2,12 +2,15 @@ package config
 
 import (
 	"errors"
+	"io/fs"
 	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v3"
 )
 
 func TestConfig_UserId(t *testing.T) {
@@ -77,4 +80,48 @@ func TestDetermineHomeDir_Failure(t *testing.T) {
 	expectedError := actionableerror.New(err, "Please check that your home or user profile directory is defined within your environment variables")
 
 	assert.Error(t, err, expectedError)
+}
+
+func TestGetFormat(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFileReader := iomocks.NewMockFileReader(ctrl)
+	mockFileReader.EXPECT().ReadFile(testFileName).Return([]byte(expectedConfigYaml), nil)
+
+	origReadFile := readFile
+	readFile = mockFileReader.ReadFile
+	defer func() { readFile = origReadFile }()
+	var client = Client{
+		configFilePath: testFileName,
+	}
+	configFormat, err := client.GetFormat()
+	require.NoError(t, err)
+	assert.Equal(t, expectedConfig.Format.Name, configFormat)
+}
+
+func TestSetFormat(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFileReader := iomocks.NewMockFileReader(ctrl)
+	mockFileReader.EXPECT().ReadFile(testFileName).Return([]byte(expectedConfigYaml), nil)
+
+	origReadFile := readFile
+	readFile = mockFileReader.ReadFile
+	defer func() { readFile = origReadFile }()
+
+	expectedConfigBytes, _ := yaml.Marshal(expectedConfig)
+	mockFileWriter := iomocks.NewMockFileWriter(ctrl)
+	mockFileWriter.EXPECT().WriteFile(testFileName, expectedConfigBytes, fs.FileMode(0644)).Return(nil)
+
+	origWriteFile := writeFile
+	writeFile = mockFileWriter.WriteFile
+	defer func() { writeFile = origWriteFile }()
+
+	var client = Client{
+		configFilePath: testFileName,
+	}
+	err := client.SetFormat(defaultFormat)
+	require.NoError(t, err)
 }

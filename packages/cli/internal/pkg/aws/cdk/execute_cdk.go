@@ -20,17 +20,17 @@ var progressRegex = regexp.MustCompile(`^.*\|\s*([0-9]+/[0-9]+)\s*\|(.*)`)
 
 var osRemoveAll = os.RemoveAll
 
-func executeCdkCommand(appDir string, commandArgs []string) (ProgressStream, error) {
-	return executeCdkCommandAndCleanupDirectory(appDir, commandArgs, "")
+func executeCdkCommand(appDir string, commandArgs []string, executionName string) (ProgressStream, error) {
+	return executeCdkCommandAndCleanupDirectory(appDir, commandArgs, "", executionName)
 }
 
-func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, tmpDir string) (ProgressStream, error) {
+func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, tmpDir string, executionName string) (ProgressStream, error) {
 	log.Debug().Msgf("executeCDKCommand(%s, %v)", appDir, commandArgs)
 	cmdArgs := append([]string{"run", "cdk", "--"}, commandArgs...)
 	cmd := execCommand("npm", cmdArgs...)
 	cmd.Dir = appDir
 
-	progressChan, wait, err := processCommandOutputs(cmd)
+	progressChan, wait, err := processCommandOutputs(cmd, executionName)
 	if err != nil {
 		deleteCDKOutputDir(tmpDir)
 		return nil, err
@@ -48,7 +48,7 @@ func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, t
 	return progressChan, nil
 }
 
-func processCommandOutputs(cmd *exec.Cmd) (chan ProgressEvent, *sync.WaitGroup, error) {
+func processCommandOutputs(cmd *exec.Cmd, executionName string) (chan ProgressEvent, *sync.WaitGroup, error) {
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
@@ -60,7 +60,7 @@ func processCommandOutputs(cmd *exec.Cmd) (chan ProgressEvent, *sync.WaitGroup, 
 	if err := cmd.Start(); err != nil {
 		return nil, nil, fmt.Errorf("couldn't execute CDK deploy command: %w", err)
 	}
-	progressChan, wait := processOutputs(bufio.NewScanner(stdout), bufio.NewScanner(stderr))
+	progressChan, wait := processOutputs(bufio.NewScanner(stdout), bufio.NewScanner(stderr), executionName)
 	return progressChan, wait, nil
 }
 
@@ -73,11 +73,13 @@ func deleteCDKOutputDir(cdkOutputDir string) {
 	}
 }
 
-func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner) (chan ProgressEvent, *sync.WaitGroup) {
+func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName string) (chan ProgressEvent, *sync.WaitGroup) {
 	var wait sync.WaitGroup
 	wait.Add(2)
 	progressChan := make(chan ProgressEvent)
-	currentEvent := &ProgressEvent{}
+	currentEvent := &ProgressEvent{
+		ExecutionName: executionName,
+	}
 	go func() {
 		defer wait.Done()
 		for stdout.Scan() {
@@ -92,7 +94,6 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner) (chan Progress
 		defer wait.Done()
 		for stderr.Scan() {
 			line := stderr.Text()
-			log.Debug().Msg(line)
 			progressChan <- updateEvent(currentEvent, line)
 		}
 		err := stderr.Err()
@@ -105,6 +106,7 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner) (chan Progress
 
 func updateEvent(event *ProgressEvent, line string) ProgressEvent {
 	event.Outputs = append(event.Outputs, line)
+	event.LastOutput = line
 	match := progressRegex.FindStringSubmatch(line)
 	if len(match) == 3 {
 		stepParts := strings.Split(match[1], "/")

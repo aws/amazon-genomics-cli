@@ -1,7 +1,7 @@
-import { NestedStackProps, RemovalPolicy } from "monocdk";
+import { RemovalPolicy, Construct } from "monocdk";
+import { Aws } from "monocdk";
 import { IVpc } from "monocdk/aws-ec2";
 import { FargateTaskDefinition, LogDriver } from "monocdk/aws-ecs";
-import { Construct } from "constructs";
 import { ApiProxy, SecureService } from "../../constructs";
 import { IRole } from "monocdk/aws-iam";
 import { createEcrImage, renderPythonLambda, renderServiceWithTaskDefinition } from "../../util";
@@ -10,14 +10,20 @@ import { FileSystem } from "monocdk/aws-efs";
 import { EngineOptions, ServiceContainer } from "../../types";
 import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
 import { LogGroup } from "monocdk/aws-logs";
-import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
+import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
+import { IJobQueue } from "monocdk/aws-batch";
 import { wesAdapterSourcePath } from "../../constants";
 
-export interface CromwellEngineStackProps extends EngineOptions, NestedStackProps {}
+export interface CromwellEngineConstructProps extends EngineOptions {
+  /**
+   * AWS Batch JobQueue to use for running workflows.
+   */
+  readonly jobQueue: IJobQueue;
+}
 
-export class CromwellEngineStack extends NestedEngineStack {
+export class CromwellEngineConstruct extends EngineConstruct {
   public readonly engine: SecureService;
   public readonly adapterRole: IRole;
   public readonly apiProxy: ApiProxy;
@@ -25,8 +31,8 @@ export class CromwellEngineStack extends NestedEngineStack {
   public readonly engineLogGroup: ILogGroup;
   public readonly engineRole: IRole;
 
-  constructor(scope: Construct, id: string, props: CromwellEngineStackProps) {
-    super(scope, id, props);
+  constructor(scope: Construct, id: string, props: CromwellEngineConstructProps) {
+    super(scope, id);
     const params = props.contextParameters;
     this.engineLogGroup = new LogGroup(this, "EngineLogGroup");
     const engineContainer = params.getEngineContainer(props.jobQueue.jobQueueArn);
@@ -63,7 +69,7 @@ export class CromwellEngineStack extends NestedEngineStack {
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.contextName}${engineContainer.serviceName}ApiProxy`,
       lambda,
-      allowedAccountIds: [this.account],
+      allowedAccountIds: [Aws.ACCOUNT_ID],
     });
   }
 
