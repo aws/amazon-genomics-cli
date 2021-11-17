@@ -16,6 +16,9 @@ export class CromwellEngineRole extends iam.Role {
   constructor(scope: cdk.Construct, id: string, props: CromwellEngineRoleProps) {
     const cromwellJobArn = Arn.format(
       {
+        account: cdk.Aws.ACCOUNT_ID,
+        region: cdk.Aws.REGION,
+        partition: cdk.Aws.PARTITION,
         resource: "job-definition/*",
         service: "batch",
       },
