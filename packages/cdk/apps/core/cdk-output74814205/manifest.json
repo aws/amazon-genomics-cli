@@ -1,0 +1,748 @@
+{
+  "version": "14.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "Agc-Core": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://967721762817/us-west-2",
+      "properties": {
+        "templateFile": "Agc-Core.template.json",
+        "tags": {
+          "application-name": "agc"
+        },
+        "validateOnSynth": false
+      },
+      "metadata": {
+        "/Agc-Core": [
+          {
+            "type": "aws:cdk:error",
+            "data": "Could not find any VPCs matching {\"account\":\"967721762817\",\"region\":\"us-west-2\",\"filter\":{\"vpc-id\":\"Vpc8378EB38\"},\"returnAsymmetricSubnets\":true}",
+            "trace": [
+              "Annotations.addMessage (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/annotations.ts:45:29)",
+              "Annotations.addError (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/annotations.ts:22:14)",
+              "Function.getValue (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/context-provider.ts:72:39)",
+              "Function.fromLookup (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ec2/lib/vpc.ts:503:70)",
+              "CoreStack.renderVpc (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:24:34)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:15:25)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          },
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "application-name",
+                "Value": "agc"
+              }
+            ],
+            "trace": [
+              "ConstructNode.addMetadata (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/construct-compat.ts:200:94)",
+              "Object.addStackArtifactToAssembly (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/stack-synthesizers/_shared.ts:19:20)",
+              "LegacyStackSynthesizer.emitStackArtifact (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/stack-synthesizers/stack-synthesizer.ts:22:9)",
+              "LegacyStackSynthesizer.synthesize (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/stack-synthesizers/legacy.ts:88:14)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/synthesis.ts:165:35",
+              "visit (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/synthesis.ts:209:9)",
+              "visit (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/synthesis.ts:206:9)",
+              "synthesizeTree (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/synthesis.ts:158:5)",
+              "Object.synthesize (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/synthesis.ts:31:5)",
+              "App.synth (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/stage.ts:74:29)",
+              "process.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/app.ts:50:51)",
+              "Object.onceWrapper (node:events:510:26)",
+              "process.emit (node:events:390:28)",
+              "process.emit (node:domain:475:12)",
+              "process.emit (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/@cspotcode/source-map-support/source-map-support.js:527:35)",
+              "process.emit (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/source-map-support/source-map-support.js:516:21)"
+            ]
+          }
+        ],
+        "/Agc-Core/Table": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "TableCD117FA1"
+            },
+            "trace": [
+              "ConstructNode.addMetadata (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/construct-compat.ts:200:94)",
+              "new Table (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-dynamodb/lib/table.ts:567:23)",
+              "CoreStack.renderTable (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:65:23)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:16:27)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/Table/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TableCD117FA1",
+            "trace": [
+              "new Table (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-dynamodb/lib/table.ts:540:22)",
+              "CoreStack.renderTable (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:65:23)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:16:27)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/vpc/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "vpcA2121C38",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:18:14)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/bucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "bucket43879C71",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/installed-artifacts--s3-root-url/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "installedartifactss3rooturl8C1CE61F",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/wes--ecr-repo--account/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "wesecrrepoaccount42455509",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/wes--ecr-repo--region/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "wesecrreporegion27A8A65E",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/wes--ecr-repo--tag/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "wesecrrepotag4B444498",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/wes--ecr-repo--repository/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "wesecrreporepository85483DE0",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/cromwell--ecr-repo--account/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "cromwellecrrepoaccount61F506A9",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/cromwell--ecr-repo--region/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "cromwellecrreporegionEB806DEB",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/cromwell--ecr-repo--tag/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "cromwellecrrepotag57BCECE2",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/cromwell--ecr-repo--repository/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "cromwellecrreporepository73FC1229",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/nextflow--ecr-repo--account/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "nextflowecrrepoaccount3C6FEE72",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/nextflow--ecr-repo--region/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "nextflowecrreporegion6753E6A7",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/nextflow--ecr-repo--tag/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "nextflowecrrepotagCD478838",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/nextflow--ecr-repo--repository/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "nextflowecrreporepository36D4D164",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/miniwdl--ecr-repo--account/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "miniwdlecrrepoaccountC7AC1D08",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/miniwdl--ecr-repo--region/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "miniwdlecrreporegion01FB688A",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/miniwdl--ecr-repo--tag/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "miniwdlecrrepotagA9C47B5A",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/miniwdl--ecr-repo--repository/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "miniwdlecrreporepository33B49277",
+            "trace": [
+              "new StringParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/aws-ssm/lib/parameter.ts:217:26)",
+              "CoreStack.addParameter (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:113:16)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:106",
+              "Array.forEach (<anonymous>)",
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:19:73)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/TableName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TableName",
+            "trace": [
+              "new CoreStack (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/lib/stacks/core-stack.ts:20:9)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/apps/core/app.ts:15:1)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Module.m._compile (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1310:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/index.ts:1313:12)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "main (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:331:12)",
+              "Object.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/ts-node/src/bin.ts:482:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1095:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1147:10)",
+              "Module.load (node:internal/modules/cjs/loader:975:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
+              "node:internal/main/run_main_module:17:47"
+            ]
+          }
+        ],
+        "/Agc-Core/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata",
+            "trace": [
+              "new MetadataResource (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/metadata-resource.ts:20:30)",
+              "/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/synthesis.ts:149:9",
+              "visit (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/synthesis.ts:209:9)",
+              "visit (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/synthesis.ts:206:9)",
+              "injectMetadataResources (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/synthesis.ts:138:5)",
+              "Object.synthesize (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/private/synthesis.ts:15:5)",
+              "App.synth (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/stage.ts:74:29)",
+              "process.<anonymous> (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/monocdk/lib/core/lib/app.ts:50:51)",
+              "Object.onceWrapper (node:events:510:26)",
+              "process.emit (node:events:390:28)",
+              "process.emit (node:domain:475:12)",
+              "process.emit (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/@cspotcode/source-map-support/source-map-support.js:527:35)",
+              "process.emit (/Users/dzl/work/agc/amazon-genomics-cli/packages/cdk/node_modules/source-map-support/source-map-support.js:516:21)"
+            ]
+          }
+        ]
+      },
+      "displayName": "Agc-Core"
+    }
+  },
+  "missing": [
+    {
+      "key": "vpc-provider:account=967721762817:filter.vpc-id=Vpc8378EB38:region=us-west-2:returnAsymmetricSubnets=true",
+      "provider": "vpc-provider",
+      "props": {
+        "account": "967721762817",
+        "region": "us-west-2",
+        "filter": {
+          "vpc-id": "Vpc8378EB38"
+        },
+        "returnAsymmetricSubnets": true
+      }
+    }
+  ]
+}

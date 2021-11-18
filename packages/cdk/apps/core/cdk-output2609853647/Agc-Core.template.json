@@ -1,0 +1,372 @@
+{
+  "Resources": {
+    "TableCD117FA1": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "PK",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "SK",
+            "KeyType": "RANGE"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "PK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "SK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "GSI1_PK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "GSI1_SK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "LSI1_SK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "LSI2_SK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "LSI3_SK",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "gsi1",
+            "KeySchema": [
+              {
+                "AttributeName": "GSI1_PK",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "GSI1_SK",
+                "KeyType": "RANGE"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
+          }
+        ],
+        "LocalSecondaryIndexes": [
+          {
+            "IndexName": "lsi1",
+            "KeySchema": [
+              {
+                "AttributeName": "PK",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "LSI1_SK",
+                "KeyType": "RANGE"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
+          },
+          {
+            "IndexName": "lsi2",
+            "KeySchema": [
+              {
+                "AttributeName": "PK",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "LSI2_SK",
+                "KeyType": "RANGE"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
+          },
+          {
+            "IndexName": "lsi3",
+            "KeySchema": [
+              {
+                "AttributeName": "PK",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "LSI3_SK",
+                "KeyType": "RANGE"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
+          }
+        ],
+        "TableName": "Agc",
+        "TimeToLiveSpecification": {
+          "AttributeName": "expiry",
+          "Enabled": true
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/Table/Resource"
+      }
+    },
+    "vpcA2121C38": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "vpc-12345",
+        "Description": "VPC ID for Agc",
+        "Name": "/agc/_common/vpc"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/vpc/Resource"
+      }
+    },
+    "bucket43879C71": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "agc-967721762817-us-west-2",
+        "Description": "S3 bucket which contains outputs, intermediate results, and other project-specific data",
+        "Name": "/agc/_common/bucket"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/bucket/Resource"
+      }
+    },
+    "installedartifactss3rooturl8C1CE61F": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "s3://healthai-public-assets-us-east-1/batch/1.0.2/artifacts",
+        "Description": "S3 root url for assets",
+        "Name": "/agc/_common/installed-artifacts/s3-root-url"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/installed-artifacts--s3-root-url/Resource"
+      }
+    },
+    "wesecrrepoaccount42455509": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "680431765560",
+        "Description": "Account ID of ECR that contains the WES docker image",
+        "Name": "/agc/_common/wes/ecr-repo/account"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/wes--ecr-repo--account/Resource"
+      }
+    },
+    "wesecrreporegion27A8A65E": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "us-east-1",
+        "Description": "Region of ECR that contains the WES docker image",
+        "Name": "/agc/_common/wes/ecr-repo/region"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/wes--ecr-repo--region/Resource"
+      }
+    },
+    "wesecrrepotag4B444498": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "0.1.0",
+        "Description": "Docker tag for the WES image",
+        "Name": "/agc/_common/wes/ecr-repo/tag"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/wes--ecr-repo--tag/Resource"
+      }
+    },
+    "wesecrreporepository85483DE0": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "aws/wes-release",
+        "Description": "ECR repository for the WES image",
+        "Name": "/agc/_common/wes/ecr-repo/repository"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/wes--ecr-repo--repository/Resource"
+      }
+    },
+    "cromwellecrrepoaccount61F506A9": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "680431765560",
+        "Description": "Account ID of ECR that contains the Cromwell docker image",
+        "Name": "/agc/_common/cromwell/ecr-repo/account"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/cromwell--ecr-repo--account/Resource"
+      }
+    },
+    "cromwellecrreporegionEB806DEB": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "us-east-1",
+        "Description": "Region of ECR that contains the Cromwell docker image",
+        "Name": "/agc/_common/cromwell/ecr-repo/region"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/cromwell--ecr-repo--region/Resource"
+      }
+    },
+    "cromwellecrrepotag57BCECE2": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "64",
+        "Description": "Docker tag for the Cromwell image",
+        "Name": "/agc/_common/cromwell/ecr-repo/tag"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/cromwell--ecr-repo--tag/Resource"
+      }
+    },
+    "cromwellecrreporepository73FC1229": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "aws/cromwell-mirror",
+        "Description": "ECR repository for the Cromwell image",
+        "Name": "/agc/_common/cromwell/ecr-repo/repository"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/cromwell--ecr-repo--repository/Resource"
+      }
+    },
+    "nextflowecrrepoaccount3C6FEE72": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "680431765560",
+        "Description": "Account ID of ECR that contains the Nextflow docker image",
+        "Name": "/agc/_common/nextflow/ecr-repo/account"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/nextflow--ecr-repo--account/Resource"
+      }
+    },
+    "nextflowecrreporegion6753E6A7": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "us-east-1",
+        "Description": "Region of ECR that contains the Nextflow docker image",
+        "Name": "/agc/_common/nextflow/ecr-repo/region"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/nextflow--ecr-repo--region/Resource"
+      }
+    },
+    "nextflowecrrepotagCD478838": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "21.04.3",
+        "Description": "Docker tag for the Nextflow image",
+        "Name": "/agc/_common/nextflow/ecr-repo/tag"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/nextflow--ecr-repo--tag/Resource"
+      }
+    },
+    "nextflowecrreporepository36D4D164": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "aws/nextflow-mirror",
+        "Description": "ECR repository for the Nextflow image",
+        "Name": "/agc/_common/nextflow/ecr-repo/repository"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/nextflow--ecr-repo--repository/Resource"
+      }
+    },
+    "miniwdlecrrepoaccountC7AC1D08": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "680431765560",
+        "Description": "Account ID of ECR that contains the MiniWDL docker image",
+        "Name": "/agc/_common/miniwdl/ecr-repo/account"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/miniwdl--ecr-repo--account/Resource"
+      }
+    },
+    "miniwdlecrreporegion01FB688A": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "us-east-1",
+        "Description": "Region of ECR that contains the MiniWDL docker image",
+        "Name": "/agc/_common/miniwdl/ecr-repo/region"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/miniwdl--ecr-repo--region/Resource"
+      }
+    },
+    "miniwdlecrrepotagA9C47B5A": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "v0.1.6",
+        "Description": "Docker tag for the MiniWDL image",
+        "Name": "/agc/_common/miniwdl/ecr-repo/tag"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/miniwdl--ecr-repo--tag/Resource"
+      }
+    },
+    "miniwdlecrreporepository33B49277": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Value": "aws/miniwdl-mirror",
+        "Description": "ECR repository for the MiniWDL image",
+        "Name": "/agc/_common/miniwdl/ecr-repo/repository"
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/miniwdl--ecr-repo--repository/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/z2NwQrCMBBEv6X3uDYqeG8/QKneJU1WSWs2kt0oUvLv0oqe5g0zzGjQmx3UVYgUrRthOomxo+qQY04WlXnxZXJvMiG6Hqaz6e+o2istUBRvocl2RGkMo2IO80DydDuaZAIKprn8N6WoNhJLylbm4JDlkRf6HRZF0SEMvH7qPdSgq4G9X6VM4gNC99UP59X+IbYAAAA="
+      },
+      "Metadata": {
+        "aws:cdk:path": "Agc-Core/CDKMetadata/Default"
+      }
+    }
+  },
+  "Outputs": {
+    "TableName": {
+      "Value": {
+        "Ref": "TableCD117FA1"
+      }
+    }
+  }
+}

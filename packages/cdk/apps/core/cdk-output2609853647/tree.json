@@ -1,0 +1,775 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "monocdk.Construct",
+          "version": "1.124.0"
+        }
+      },
+      "Agc-Core": {
+        "id": "Agc-Core",
+        "path": "Agc-Core",
+        "children": {
+          "Vpc": {
+            "id": "Vpc",
+            "path": "Agc-Core/Vpc",
+            "children": {
+              "PublicSubnet1": {
+                "id": "PublicSubnet1",
+                "path": "Agc-Core/Vpc/PublicSubnet1",
+                "constructInfo": {
+                  "fqn": "monocdk.Resource",
+                  "version": "1.124.0"
+                }
+              },
+              "PublicSubnet2": {
+                "id": "PublicSubnet2",
+                "path": "Agc-Core/Vpc/PublicSubnet2",
+                "constructInfo": {
+                  "fqn": "monocdk.Resource",
+                  "version": "1.124.0"
+                }
+              },
+              "PrivateSubnet1": {
+                "id": "PrivateSubnet1",
+                "path": "Agc-Core/Vpc/PrivateSubnet1",
+                "constructInfo": {
+                  "fqn": "monocdk.Resource",
+                  "version": "1.124.0"
+                }
+              },
+              "PrivateSubnet2": {
+                "id": "PrivateSubnet2",
+                "path": "Agc-Core/Vpc/PrivateSubnet2",
+                "constructInfo": {
+                  "fqn": "monocdk.Resource",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.Resource",
+              "version": "1.124.0"
+            }
+          },
+          "Table": {
+            "id": "Table",
+            "path": "Agc-Core/Table",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/Table/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
+                  "aws:cdk:cloudformation:props": {
+                    "keySchema": [
+                      {
+                        "attributeName": "PK",
+                        "keyType": "HASH"
+                      },
+                      {
+                        "attributeName": "SK",
+                        "keyType": "RANGE"
+                      }
+                    ],
+                    "attributeDefinitions": [
+                      {
+                        "attributeName": "PK",
+                        "attributeType": "S"
+                      },
+                      {
+                        "attributeName": "SK",
+                        "attributeType": "S"
+                      },
+                      {
+                        "attributeName": "GSI1_PK",
+                        "attributeType": "S"
+                      },
+                      {
+                        "attributeName": "GSI1_SK",
+                        "attributeType": "S"
+                      },
+                      {
+                        "attributeName": "LSI1_SK",
+                        "attributeType": "S"
+                      },
+                      {
+                        "attributeName": "LSI2_SK",
+                        "attributeType": "S"
+                      },
+                      {
+                        "attributeName": "LSI3_SK",
+                        "attributeType": "S"
+                      }
+                    ],
+                    "billingMode": "PAY_PER_REQUEST",
+                    "globalSecondaryIndexes": [
+                      {
+                        "indexName": "gsi1",
+                        "keySchema": [
+                          {
+                            "attributeName": "GSI1_PK",
+                            "keyType": "HASH"
+                          },
+                          {
+                            "attributeName": "GSI1_SK",
+                            "keyType": "RANGE"
+                          }
+                        ],
+                        "projection": {
+                          "projectionType": "ALL"
+                        }
+                      }
+                    ],
+                    "localSecondaryIndexes": [
+                      {
+                        "indexName": "lsi1",
+                        "keySchema": [
+                          {
+                            "attributeName": "PK",
+                            "keyType": "HASH"
+                          },
+                          {
+                            "attributeName": "LSI1_SK",
+                            "keyType": "RANGE"
+                          }
+                        ],
+                        "projection": {
+                          "projectionType": "ALL"
+                        }
+                      },
+                      {
+                        "indexName": "lsi2",
+                        "keySchema": [
+                          {
+                            "attributeName": "PK",
+                            "keyType": "HASH"
+                          },
+                          {
+                            "attributeName": "LSI2_SK",
+                            "keyType": "RANGE"
+                          }
+                        ],
+                        "projection": {
+                          "projectionType": "ALL"
+                        }
+                      },
+                      {
+                        "indexName": "lsi3",
+                        "keySchema": [
+                          {
+                            "attributeName": "PK",
+                            "keyType": "HASH"
+                          },
+                          {
+                            "attributeName": "LSI3_SK",
+                            "keyType": "RANGE"
+                          }
+                        ],
+                        "projection": {
+                          "projectionType": "ALL"
+                        }
+                      }
+                    ],
+                    "tableName": "Agc",
+                    "timeToLiveSpecification": {
+                      "attributeName": "expiry",
+                      "enabled": true
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_dynamodb.CfnTable",
+                  "version": "1.124.0"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "Agc-Core/Table/ScalingRole",
+                "constructInfo": {
+                  "fqn": "monocdk.Resource",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_dynamodb.Table",
+              "version": "1.124.0"
+            }
+          },
+          "Bucket": {
+            "id": "Bucket",
+            "path": "Agc-Core/Bucket",
+            "children": {
+              "Notifications": {
+                "id": "Notifications",
+                "path": "Agc-Core/Bucket/Notifications",
+                "constructInfo": {
+                  "fqn": "monocdk.Construct",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_s3.BucketBase",
+              "version": "1.124.0"
+            }
+          },
+          "vpc": {
+            "id": "vpc",
+            "path": "Agc-Core/vpc",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/vpc/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "vpc-12345",
+                    "description": "VPC ID for Agc",
+                    "name": "/agc/_common/vpc"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "bucket": {
+            "id": "bucket",
+            "path": "Agc-Core/bucket",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/bucket/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "agc-967721762817-us-west-2",
+                    "description": "S3 bucket which contains outputs, intermediate results, and other project-specific data",
+                    "name": "/agc/_common/bucket"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "installed-artifacts--s3-root-url": {
+            "id": "installed-artifacts--s3-root-url",
+            "path": "Agc-Core/installed-artifacts--s3-root-url",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/installed-artifacts--s3-root-url/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "s3://healthai-public-assets-us-east-1/batch/1.0.2/artifacts",
+                    "description": "S3 root url for assets",
+                    "name": "/agc/_common/installed-artifacts/s3-root-url"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "wes--ecr-repo--account": {
+            "id": "wes--ecr-repo--account",
+            "path": "Agc-Core/wes--ecr-repo--account",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/wes--ecr-repo--account/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "680431765560",
+                    "description": "Account ID of ECR that contains the WES docker image",
+                    "name": "/agc/_common/wes/ecr-repo/account"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "wes--ecr-repo--region": {
+            "id": "wes--ecr-repo--region",
+            "path": "Agc-Core/wes--ecr-repo--region",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/wes--ecr-repo--region/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "us-east-1",
+                    "description": "Region of ECR that contains the WES docker image",
+                    "name": "/agc/_common/wes/ecr-repo/region"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "wes--ecr-repo--tag": {
+            "id": "wes--ecr-repo--tag",
+            "path": "Agc-Core/wes--ecr-repo--tag",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/wes--ecr-repo--tag/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "0.1.0",
+                    "description": "Docker tag for the WES image",
+                    "name": "/agc/_common/wes/ecr-repo/tag"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "wes--ecr-repo--repository": {
+            "id": "wes--ecr-repo--repository",
+            "path": "Agc-Core/wes--ecr-repo--repository",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/wes--ecr-repo--repository/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "aws/wes-release",
+                    "description": "ECR repository for the WES image",
+                    "name": "/agc/_common/wes/ecr-repo/repository"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "cromwell--ecr-repo--account": {
+            "id": "cromwell--ecr-repo--account",
+            "path": "Agc-Core/cromwell--ecr-repo--account",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/cromwell--ecr-repo--account/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "680431765560",
+                    "description": "Account ID of ECR that contains the Cromwell docker image",
+                    "name": "/agc/_common/cromwell/ecr-repo/account"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "cromwell--ecr-repo--region": {
+            "id": "cromwell--ecr-repo--region",
+            "path": "Agc-Core/cromwell--ecr-repo--region",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/cromwell--ecr-repo--region/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "us-east-1",
+                    "description": "Region of ECR that contains the Cromwell docker image",
+                    "name": "/agc/_common/cromwell/ecr-repo/region"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "cromwell--ecr-repo--tag": {
+            "id": "cromwell--ecr-repo--tag",
+            "path": "Agc-Core/cromwell--ecr-repo--tag",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/cromwell--ecr-repo--tag/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "64",
+                    "description": "Docker tag for the Cromwell image",
+                    "name": "/agc/_common/cromwell/ecr-repo/tag"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "cromwell--ecr-repo--repository": {
+            "id": "cromwell--ecr-repo--repository",
+            "path": "Agc-Core/cromwell--ecr-repo--repository",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/cromwell--ecr-repo--repository/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "aws/cromwell-mirror",
+                    "description": "ECR repository for the Cromwell image",
+                    "name": "/agc/_common/cromwell/ecr-repo/repository"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "nextflow--ecr-repo--account": {
+            "id": "nextflow--ecr-repo--account",
+            "path": "Agc-Core/nextflow--ecr-repo--account",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/nextflow--ecr-repo--account/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "680431765560",
+                    "description": "Account ID of ECR that contains the Nextflow docker image",
+                    "name": "/agc/_common/nextflow/ecr-repo/account"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "nextflow--ecr-repo--region": {
+            "id": "nextflow--ecr-repo--region",
+            "path": "Agc-Core/nextflow--ecr-repo--region",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/nextflow--ecr-repo--region/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "us-east-1",
+                    "description": "Region of ECR that contains the Nextflow docker image",
+                    "name": "/agc/_common/nextflow/ecr-repo/region"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "nextflow--ecr-repo--tag": {
+            "id": "nextflow--ecr-repo--tag",
+            "path": "Agc-Core/nextflow--ecr-repo--tag",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/nextflow--ecr-repo--tag/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "21.04.3",
+                    "description": "Docker tag for the Nextflow image",
+                    "name": "/agc/_common/nextflow/ecr-repo/tag"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "nextflow--ecr-repo--repository": {
+            "id": "nextflow--ecr-repo--repository",
+            "path": "Agc-Core/nextflow--ecr-repo--repository",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/nextflow--ecr-repo--repository/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "aws/nextflow-mirror",
+                    "description": "ECR repository for the Nextflow image",
+                    "name": "/agc/_common/nextflow/ecr-repo/repository"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "miniwdl--ecr-repo--account": {
+            "id": "miniwdl--ecr-repo--account",
+            "path": "Agc-Core/miniwdl--ecr-repo--account",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/miniwdl--ecr-repo--account/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "680431765560",
+                    "description": "Account ID of ECR that contains the MiniWDL docker image",
+                    "name": "/agc/_common/miniwdl/ecr-repo/account"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "miniwdl--ecr-repo--region": {
+            "id": "miniwdl--ecr-repo--region",
+            "path": "Agc-Core/miniwdl--ecr-repo--region",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/miniwdl--ecr-repo--region/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "us-east-1",
+                    "description": "Region of ECR that contains the MiniWDL docker image",
+                    "name": "/agc/_common/miniwdl/ecr-repo/region"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "miniwdl--ecr-repo--tag": {
+            "id": "miniwdl--ecr-repo--tag",
+            "path": "Agc-Core/miniwdl--ecr-repo--tag",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/miniwdl--ecr-repo--tag/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "v0.1.6",
+                    "description": "Docker tag for the MiniWDL image",
+                    "name": "/agc/_common/miniwdl/ecr-repo/tag"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "miniwdl--ecr-repo--repository": {
+            "id": "miniwdl--ecr-repo--repository",
+            "path": "Agc-Core/miniwdl--ecr-repo--repository",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "Agc-Core/miniwdl--ecr-repo--repository/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                  "aws:cdk:cloudformation:props": {
+                    "type": "String",
+                    "value": "aws/miniwdl-mirror",
+                    "description": "ECR repository for the MiniWDL image",
+                    "name": "/agc/_common/miniwdl/ecr-repo/repository"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "monocdk.aws_ssm.CfnParameter",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.aws_ssm.StringParameter",
+              "version": "1.124.0"
+            }
+          },
+          "TableName": {
+            "id": "TableName",
+            "path": "Agc-Core/TableName",
+            "constructInfo": {
+              "fqn": "monocdk.CfnOutput",
+              "version": "1.124.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "Agc-Core/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "Agc-Core/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "monocdk.CfnResource",
+                  "version": "1.124.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "monocdk.Construct",
+              "version": "1.124.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "monocdk.Stack",
+          "version": "1.124.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "monocdk.App",
+      "version": "1.124.0"
+    }
+  }
+}
