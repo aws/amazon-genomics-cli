@@ -13,6 +13,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/rs/zerolog/log"
 )
@@ -82,7 +83,7 @@ func NewManager(profile string) *Manager {
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to create Project client for context manager")
 	}
-	homeDir, err := config.DetermineHomeDir()
+	homeDir, err := osutils.DetermineHomeDir()
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to determine home directory")
 	}

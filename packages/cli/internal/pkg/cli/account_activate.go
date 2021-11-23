@@ -13,9 +13,9 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -121,7 +121,7 @@ func (o accountActivateOpts) generateDefaultBucket() (string, error) {
 }
 
 func (o accountActivateOpts) deployCoreInfrastructure(environmentVars []string) error {
-	homeDir, err := config.DetermineHomeDir()
+	homeDir, err := osutils.DetermineHomeDir()
 	if err != nil {
 		return err
 	}
