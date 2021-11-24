@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.1.2 (2021-11-24)
+
+
+### Bug Fixes
+
+* Fixing monocdk imports ([#190](https://github.com/aws/amazon-genomics-cli/issues/190)) ([9c94fd8](https://github.com/aws/amazon-genomics-cli/commit/9c94fd87bcd860fe3842536dbcedd2165fdcc80e)) 
+* Improve context stack deployment speed ([#150](https://github.com/aws/amazon-genomics-cli/issues/150)) ([f7d6c7f](https://github.com/aws/amazon-genomics-cli/commit/f7d6c7f4e5e0fb91b3851bf806bc411b7f4526e5))
+
+
 ## 1.1.1 (2021-11-15)
 
 
