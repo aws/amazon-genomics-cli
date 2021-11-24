@@ -5,7 +5,7 @@ import { EngineOptions } from "../../types";
 import { Bucket } from "monocdk/aws-s3";
 import { ApiProxy } from "../../constructs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
-import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
+import { ILogGroup } from "monocdk/aws-logs";
 import { IJobQueue } from "monocdk/aws-batch";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
