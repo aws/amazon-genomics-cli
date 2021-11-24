@@ -1,10 +1,9 @@
-import { NestedStackProps } from "monocdk";
-import { Construct } from "constructs";
-import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "monocdk/aws-iam";
+import { Construct, Stack, Aws } from "monocdk";
 import { Bucket, IBucket } from "monocdk/aws-s3";
 import { ApiProxy, Batch } from "../../constructs";
-import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
-import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
+import { EngineOutputs, EngineConstruct } from "./engine-construct";
+import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "monocdk/aws-iam";
+import { ILogGroup } from "monocdk/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
 import { InstanceType, IVpc } from "monocdk/aws-ec2";
 import { LAUNCH_TEMPLATE } from "../../constants";
@@ -14,20 +13,10 @@ import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
 import { renderPythonLambda } from "../../util";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
+import { EngineOptions } from "../../types";
 import { wesAdapterSourcePath } from "../../constants";
 
-export interface MiniWdlEngineStackProps extends NestedStackProps {
-  /**
-   * VPC to run resources in.
-   */
-  readonly vpc: IVpc;
-  /**
-   * Parameters determined by the context.
-   */
-  readonly contextParameters: ContextAppParameters;
-}
-
-export class MiniWdlEngineStack extends NestedEngineStack {
+export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
   public readonly adapterLogGroup: ILogGroup;
   public readonly miniwdlEngine: MiniWdlEngine;
@@ -35,8 +24,8 @@ export class MiniWdlEngineStack extends NestedEngineStack {
   private readonly batchWorkers: Batch;
   private readonly outputBucket: IBucket;
 
-  constructor(scope: Construct, id: string, props: MiniWdlEngineStackProps) {
-    super(scope, id, props);
+  constructor(scope: Construct, id: string, props: EngineOptions) {
+    super(scope, id);
 
     const { vpc, contextParameters } = props;
     const params = props.contextParameters;
@@ -96,7 +85,7 @@ export class MiniWdlEngineStack extends NestedEngineStack {
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}MiniWdlApiProxy`,
       lambda,
-      allowedAccountIds: [this.account],
+      allowedAccountIds: [Aws.ACCOUNT_ID],
     });
   }
 
@@ -131,7 +120,7 @@ export class MiniWdlEngineStack extends NestedEngineStack {
       computeType,
       launchTemplateData: LAUNCH_TEMPLATE,
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
-      resourceTags: this.nestedStackParent?.tags.tagValues(),
+      resourceTags: Stack.of(this).tags.tagValues(),
     });
   }
 
