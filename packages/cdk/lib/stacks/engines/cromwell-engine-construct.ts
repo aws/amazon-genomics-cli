@@ -8,8 +8,7 @@ import { createEcrImage, renderPythonLambda, renderServiceWithTaskDefinition } f
 import { Bucket } from "monocdk/aws-s3";
 import { FileSystem } from "monocdk/aws-efs";
 import { EngineOptions, ServiceContainer } from "../../types";
-import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
-import { LogGroup } from "monocdk/aws-logs";
+import { LogGroup, ILogGroup } from "monocdk/aws-logs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
