@@ -9,7 +9,7 @@ import { Protocol } from "monocdk/aws-elasticloadbalancingv2";
 import { IVpc } from "monocdk/aws-ec2";
 import { IRole } from "monocdk/aws-iam";
 import { LogConfiguration, LogDriver as BatchLogDriver } from "monocdk/aws-batch";
-import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
+import { ILogGroup } from "monocdk/aws-logs";
 import { PythonFunction } from "monocdk/aws-lambda-python";
 import { Runtime } from "monocdk/aws-lambda";
 import { Duration } from "monocdk";

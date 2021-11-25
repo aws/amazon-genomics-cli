@@ -1,6 +1,6 @@
 import { CfnOutput, NestedStack, NestedStackProps, Stack } from "monocdk";
 import { Construct } from "constructs";
-import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
+import { ILogGroup } from "monocdk/aws-logs";
 
 export interface EngineOutputs {
   accessLogGroup: ILogGroup;

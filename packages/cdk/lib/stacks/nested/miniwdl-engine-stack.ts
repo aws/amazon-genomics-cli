@@ -4,7 +4,7 @@ import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, Managed
 import { Bucket, IBucket } from "monocdk/aws-s3";
 import { ApiProxy, Batch } from "../../constructs";
 import { EngineOutputs, NestedEngineStack } from "./nested-engine-stack";
-import { ILogGroup } from "monocdk/lib/aws-logs/lib/log-group";
+import { ILogGroup } from "monocdk/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
 import { InstanceType, IVpc } from "monocdk/aws-ec2";
 import { LAUNCH_TEMPLATE } from "../../constants";

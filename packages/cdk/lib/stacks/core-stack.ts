@@ -1,11 +1,10 @@
 import { CfnOutput, RemovalPolicy, Stack, StackProps } from "monocdk";
 import { AttributeType, BillingMode, ITable, ProjectionType, Table } from "monocdk/aws-dynamodb";
-import { StringParameter } from "monocdk/aws-ssm";
+import { StringParameter, IParameter } from "monocdk/aws-ssm";
 import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, Vpc } from "monocdk/aws-ec2";
 import { Bucket, BucketEncryption, IBucket } from "monocdk/aws-s3";
 import { Construct } from "constructs";
 import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME } from "../constants";
-import { IParameter } from "monocdk/lib/aws-ssm/lib/parameter";
 
 export interface ParameterProps {
   /**
