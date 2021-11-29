@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.2](https://github.com/aws/amazon-genomics-cli/compare/v1.1.1...v1.1.2) (2021-11-24)
+
+
+### Bug Fixes
+
+* fixing monocdk imports ([#190](https://github.com/aws/amazon-genomics-cli/issues/190)) ([6e4b295](https://github.com/aws/amazon-genomics-cli/commit/6e4b29551a0316cf8207871ec84681c34e91e96e))
+
 ## 1.1.1 (2021-11-15)
 
 
