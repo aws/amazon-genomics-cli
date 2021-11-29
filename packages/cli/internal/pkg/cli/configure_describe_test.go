@@ -23,12 +23,14 @@ func TestConfigureDescribeContextOpts_Execute(t *testing.T) {
 			Email: "test-email@amazon.com",
 			Id:    "testemail123",
 		},
+		Format: config.Format{
+			Name: "text",
+		},
 	}
 
 	mocks.configMock.EXPECT().Read().Return(mockedConfig, nil)
 	describeContextOpts.configClient = mocks.configMock
 	configReturned, err := describeContextOpts.Execute()
 	require.NoError(t, err)
-
 	require.True(t, reflect.DeepEqual(configReturned, mockedConfig))
 }

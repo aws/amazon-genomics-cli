@@ -258,7 +258,8 @@ func TestDestroyContextOpts_Execute_One(t *testing.T) {
 	defer workflowCtrl.Finish()
 	wfMock := workflowmocks.NewMockWorkflowManager(workflowCtrl)
 	ctxMock := contextmocks.NewMockContextManager(ctrl)
-	ctxMock.EXPECT().Destroy(testContextName1, true).Return(nil)
+	progressResults := []context.ProgressResult{{Context: testContextName1, Outputs: []string{"log1", "log2"}}}
+	ctxMock.EXPECT().Destroy([]string{testContextName1}).Return(progressResults)
 	opts := &destroyContextOpts{
 		destroyContextVars: destroyContextVars{contexts: []string{testContextName1}},
 		ctxManagerFactory: func() context.Interface {
@@ -279,8 +280,8 @@ func TestDestroyContextOpts_Execute_All(t *testing.T) {
 	defer workflowCtrl.Finish()
 	wfMock := workflowmocks.NewMockWorkflowManager(workflowCtrl)
 	ctxMock := contextmocks.NewMockContextManager(ctrl)
-	ctxMock.EXPECT().Destroy(testContextName1, true).Return(nil)
-	ctxMock.EXPECT().Destroy(testContextName2, true).Return(nil)
+	progressResults := []context.ProgressResult{{Context: testContextName1, Outputs: []string{"log1", "log2"}}, {Context: testContextName2}}
+	ctxMock.EXPECT().Destroy([]string{testContextName1, testContextName2}).Return(progressResults)
 
 	opts := &destroyContextOpts{
 		destroyContextVars: destroyContextVars{destroyAll: true, contexts: []string{testContextName1, testContextName2}},
@@ -303,8 +304,8 @@ func TestDestroyContextOpts_Execute_DestroyError(t *testing.T) {
 	wfMock := workflowmocks.NewMockWorkflowManager(workflowCtrl)
 	ctxMock := contextmocks.NewMockContextManager(ctrl)
 	expectedErr := errors.New("one or more contexts failed to be destroyed")
-	ctxMock.EXPECT().Destroy(testContextName1, true).Return(errors.New("some destroy error"))
-	ctxMock.EXPECT().Destroy(testContextName2, true).Return(nil)
+	progressResults := []context.ProgressResult{{Context: testContextName1, Err: errors.New("some destroy error"), Outputs: []string{"log1", "log2"}}, {Context: testContextName2}}
+	ctxMock.EXPECT().Destroy([]string{testContextName1, testContextName2}).Return(progressResults)
 
 	opts := &destroyContextOpts{
 		destroyContextVars: destroyContextVars{destroyAll: true, contexts: []string{testContextName1, testContextName2}},

@@ -244,12 +244,111 @@ contexts:
 `,
 			errMessage: "\n\t1. contexts: Additional property not-default is not allowed\n",
 		},
+		"invalidExtraProperty": {
+			yaml: `---
+name: Demo
+schemaVersion: 1
+contexts:
+    default:
+        engines:
+            - type: wdl
+              engine: cromwell
+extra: true
+`,
+			errMessage: "\n\t1. (root): Additional property extra is not allowed\n",
+		},
+		"invalidExtraContextProperty": {
+			yaml: `---
+name: Demo
+schemaVersion: 1
+contexts:
+    default:
+        extra: foo
+        engines:
+            - type: wdl
+              engine: cromwell
+`,
+			errMessage: "\n\t1. contexts.default: Additional property extra is not allowed\n",
+		},
+		"invalidExtraEngineProperty": {
+			yaml: `---
+name: Demo
+schemaVersion: 1
+contexts:
+    default:
+        engines:
+            - type: wdl
+              engine: cromwell
+              extra: foo
+`,
+			errMessage: "\n\t1. contexts.default.engines.0: Additional property extra is not allowed\n",
+		},
+		"invalidExtraDataProperty": {
+			yaml: `---
+name: Demo
+schemaVersion: 1
+contexts:
+    default:
+        engines:
+            - type: wdl
+              engine: cromwell
+data:
+    - location: s3://some-bucket
+      readOnly: true
+      extra: foo
+`,
+			errMessage: "\n\t1. data.0: Additional property extra is not allowed\n",
+		},
+		"invalidExtraWorkflowProperty": {
+			yaml: `---
+name: Demo
+schemaVersion: 1
+contexts:
+    default:
+        engines:
+            - type: wdl
+              engine: cromwell
+data:
+    - location: s3://some-bucket
+      readOnly: true
+workflows:
+    some-workflow:
+      type:
+        language: wdl
+        version: 1.0
+      sourceURL: ./somewhere
+      extra: foo
+`,
+			errMessage: "\n\t1. workflows.some-workflow: Additional property extra is not allowed\n",
+		},
+		"invalidExtraWorkflowTypeProperty": {
+			yaml: `---
+name: Demo
+schemaVersion: 1
+contexts:
+    default:
+        engines:
+            - type: wdl
+              engine: cromwell
+data:
+    - location: s3://some-bucket
+      readOnly: true
+workflows:
+    some-workflow:
+      type:
+        language: wdl
+        version: 1.0
+        extra: foo
+      sourceURL: ./somewhere
+`,
+			errMessage: "\n\t1. workflows.some-workflow.type: Additional property extra is not allowed\n",
+		},
 	}
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			err := ValidateProject([]byte(tt.yaml))
-			assert.Error(t, err, tt.errMessage)
+			assert.EqualError(t, err, tt.errMessage)
 		})
 	}
 }

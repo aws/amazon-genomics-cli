@@ -4,12 +4,16 @@
 package cli
 
 import (
+	"bytes"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/batch"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -19,6 +23,12 @@ const (
 	logWorkflowRunFlag            = "run"
 	logWorkflowRunFlagShort       = "r"
 	logWorkflowRunFlagDescription = `The ID of a workflow run to retrieve.`
+
+	logWorkflowTaskFlag            = "task"
+	logWorkflowTaskFlagDescription = `The ID of a single task to retrieve.`
+
+	logAllTasksFlag            = "all-tasks"
+	logAllTasksFlagDescription = `Show logs of all tasks in the given workflow run`
 
 	logFailedTasksFlag            = "failed-tasks"
 	logFailedTasksFlagDescription = `Only show logs of tasks that have not exited cleanly.`
@@ -32,6 +42,8 @@ type logsWorkflowVars struct {
 	logsSharedVars
 	workflowName string
 	runId        string
+	taskId       string
+	allTasks     bool
 	failedTasks  bool
 }
 
@@ -72,9 +84,27 @@ func (o *logsWorkflowOpts) Execute() error {
 		return err
 	}
 	log.Debug().Msgf("Showing logs for workflow run '%s'", o.runId)
-	jobIds, err := o.getJobIds()
+
+	runLog, err := o.workflowManager.GetRunLog(o.runId)
 	if err != nil {
 		return err
+	}
+
+	var jobIds []string
+	if o.taskId != "" {
+		if !containsTaskId(o.taskId, runLog.Tasks) {
+			log.Info().Msgf("Task `%s` does not exist for run `%s`", o.taskId, o.runId)
+			return nil
+		}
+		jobIds = []string{o.taskId}
+	} else if o.allTasks || o.failedTasks {
+		jobIds, err = o.getJobIds(runLog.Tasks)
+		if err != nil {
+			return err
+		}
+	} else {
+		printRunLog(runLog)
+		return nil
 	}
 
 	if len(jobIds) == 0 {
@@ -105,6 +135,25 @@ func (o *logsWorkflowOpts) Execute() error {
 	}
 }
 
+func printRunLog(runLog workflow.RunLog) {
+	taskTable := "No task logs available"
+	if len(runLog.Tasks) > 0 {
+		b := bytes.NewBufferString("\n")
+		format.NewTable(b).Write(runLog.Tasks)
+		taskTable = strings.ReplaceAll(b.String(), "\n", "\n\t")
+	}
+	printLn(fmt.Sprintf("RunId: %s\nState: %s\nTasks: %s", runLog.RunId, runLog.State, taskTable))
+}
+
+func containsTaskId(taskId string, tasks []workflow.Task) bool {
+	for _, task := range tasks {
+		if task.JobId == taskId {
+			return true
+		}
+	}
+	return false
+}
+
 func filterCachedJobIds(ids []string) []string {
 	var result []string
 	for _, id := range ids {
@@ -130,11 +179,7 @@ func (o *logsWorkflowOpts) setRunId() error {
 	return nil
 }
 
-func (o *logsWorkflowOpts) getJobIds() ([]string, error) {
-	tasks, err := o.workflowManager.GetWorkflowTasks(o.runId)
-	if err != nil {
-		return nil, err
-	}
+func (o *logsWorkflowOpts) getJobIds(tasks []workflow.Task) ([]string, error) {
 
 	var jobIds []string
 	for _, task := range tasks {
@@ -199,6 +244,8 @@ If the --run flag is omitted then the latest workflow run is used.`,
 	}
 	vars.setFilterFlags(cmd)
 	cmd.Flags().StringVarP(&vars.runId, logWorkflowRunFlag, logWorkflowRunFlagShort, "", logWorkflowRunFlagDescription)
+	cmd.Flags().StringVar(&vars.taskId, logWorkflowTaskFlag, "", logWorkflowTaskFlagDescription)
+	cmd.Flags().BoolVar(&vars.allTasks, logAllTasksFlag, false, logAllTasksFlagDescription)
 	cmd.Flags().BoolVar(&vars.failedTasks, logFailedTasksFlag, false, logFailedTasksFlagDescription)
 	return cmd
 }

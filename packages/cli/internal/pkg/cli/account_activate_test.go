@@ -106,7 +106,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					append([]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-					}, testAccountBaseEnvVars...)).Return(mocks.progressStream, nil)
+					}, testAccountBaseEnvVars...),
+					"activate").Return(mocks.progressStream, nil)
 				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				return mocks
 			},
@@ -134,7 +135,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					append([]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-					}, testAccountBaseEnvVars...)).Return(mocks.progressStream, nil)
+					}, testAccountBaseEnvVars...),
+					"activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 		},
@@ -151,7 +153,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					append([]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
-					}, testAccountBaseEnvVars...)).Return(mocks.progressStream, nil)
+					}, testAccountBaseEnvVars...),
+					"activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 		},
@@ -169,7 +172,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				}, testAccountBaseEnvVars...)
 				mocks.cdkMock.EXPECT().DeployApp(
 					gomock.Any(),
-					append(baseVars, fmt.Sprintf("VPC_ID=%s", testAccountVpcId))).Return(mocks.progressStream, nil)
+					append(baseVars, fmt.Sprintf("VPC_ID=%s", testAccountVpcId)),
+					"activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 		},
@@ -204,7 +208,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					append([]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
-					}, testAccountBaseEnvVars...)).Return(nil, fmt.Errorf("some deploy error"))
+					}, testAccountBaseEnvVars...),
+					"activate").Return(nil, fmt.Errorf("some deploy error"))
 				return mocks
 			},
 			expectedErr: fmt.Errorf("An error occurred while activating the account. Error was: 'some deploy error'"),

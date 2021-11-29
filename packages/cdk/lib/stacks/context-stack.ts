@@ -4,10 +4,10 @@ import { Construct } from "constructs";
 import { getCommonParameter } from "../util";
 import { VPC_PARAMETER_NAME } from "../constants";
 import { ContextAppParameters } from "../env";
-import { BatchStack, BatchStackProps } from "./nested/batch-stack";
-import { CromwellEngineStack } from "./nested/cromwell-engine-stack";
-import { NextflowEngineStack } from "./nested/nextflow-engine-stack";
-import { MiniWdlEngineStack } from "./nested/miniwdl-engine-stack";
+import { BatchConstruct, BatchConstructProps } from "./engines/batch-construct";
+import { CromwellEngineConstruct } from "./engines/cromwell-engine-construct";
+import { NextflowEngineConstruct } from "./engines/nextflow-engine-construct";
+import { MiniwdlEngineConstruct } from "./engines/miniwdl-engine-construct";
 
 export interface ContextStackProps extends StackProps {
   readonly contextParameters: ContextAppParameters;
@@ -52,10 +52,10 @@ export class ContextStack extends Stack {
     }
 
     const commonEngineProps = this.getCommonEngineProps(props);
-    new CromwellEngineStack(this, "cromwell", {
+    new CromwellEngineConstruct(this, "cromwell", {
       jobQueue,
       ...commonEngineProps,
-    }).outputToParent(this);
+    }).outputToParent();
   }
 
   private renderNextflowStack(props: ContextStackProps) {
@@ -71,18 +71,18 @@ export class ContextStack extends Stack {
     }
 
     const commonEngineProps = this.getCommonEngineProps(props);
-    new NextflowEngineStack(this, "nextflow", {
+    new NextflowEngineConstruct(this, "nextflow", {
       ...commonEngineProps,
       jobQueue,
       headQueue,
-    }).outputToParent(this);
+    }).outputToParent();
   }
 
   private renderMiniwdlStack(props: ContextStackProps) {
     const commonEngineProps = this.getCommonEngineProps(props);
-    new MiniWdlEngineStack(this, "miniwdl", {
+    new MiniwdlEngineConstruct(this, "miniwdl", {
       ...commonEngineProps,
-    }).outputToParent(this);
+    }).outputToParent();
   }
 
   private getCromwellBatchProps(props: ContextStackProps) {
@@ -111,11 +111,12 @@ export class ContextStack extends Stack {
       ...commonBatchProps,
       createSpotBatch: requestSpotInstances,
       createOnDemandBatch: true,
+      parent: this,
     };
   }
 
-  private renderBatchStack(props: BatchStackProps) {
-    return new BatchStack(this, "Batch", props);
+  private renderBatchStack(props: BatchConstructProps) {
+    return new BatchConstruct(this, "Batch", props);
   }
   private getCommonEngineProps(props: ContextStackProps) {
     return {

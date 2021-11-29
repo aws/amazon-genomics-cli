@@ -18,6 +18,7 @@ const MINIWDL_IMAGE_DESIGNATION = "miniwdl";
 export class MiniWdlEngine extends Engine {
   readonly headJobDefinition: JobDefinition;
   private readonly volumeName = "efs";
+  private readonly engineMemoryMiB = 4096;
 
   constructor(scope: Construct, id: string, props: MiniWdlEngineProps) {
     super(scope, id);
@@ -34,6 +35,7 @@ export class MiniWdlEngine extends Engine {
       logGroup: this.logGroup,
       platformCapabilities: [PlatformCapabilities.FARGATE],
       container: {
+        memoryLimitMiB: this.engineMemoryMiB,
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
         image: createEcrImage(this, MINIWDL_IMAGE_DESIGNATION),
