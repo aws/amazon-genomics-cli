@@ -56,7 +56,6 @@ func BuildConfigureFormatCommand() *cobra.Command {
 		Short: "Sets default format option for output display of AGC commands. Valid format options are 'text' and 'table'",
 		Args:  cobra.ArbitraryArgs,
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
-			vars.format = args[0]
 			opts, err := newFormatContextOpts(vars)
 			if err != nil {
 				return err
@@ -64,6 +63,7 @@ func BuildConfigureFormatCommand() *cobra.Command {
 			if err := opts.Validate(args); err != nil {
 				return err
 			}
+			vars.format = args[0]
 			configClient, err := config.NewConfigClient()
 			if err != nil {
 				return clierror.New(configureFormatCommand, vars, err)
