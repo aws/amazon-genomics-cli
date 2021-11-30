@@ -91,10 +91,12 @@ aws configure
         &lt;h2 id=&#34;download-and-install-amazon-genomics-cli&#34;&gt;Download and install Amazon Genomics CLI&lt;/h2&gt;
 &lt;p&gt;Download the Amazon Genomics CLI zip, unzip its contents, and run the &lt;code&gt;install.sh&lt;/code&gt; script:&lt;/p&gt;
 &lt;p&gt;To download a specific release, see &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/releases&#34;&gt;releases page&lt;/a&gt; of our Github repo.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;curl -OLs https://github.com/aws/amazon-genomics-cli/releases/latest/download/amazon-genomics-cli.zip
-unzip amazon-genomics-cli.zip -d agc
-./agc/install.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will place the &lt;code&gt;agc&lt;/code&gt; command in &lt;code&gt;$HOME/bin&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To download the latest release navigate to &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/releases/&#34;&gt;https://github.com/aws/amazon-genomics-cli/releases/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Once you have downloaded a release, type the following to install:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;unzip amazon-genomics-cli-&amp;lt;version&amp;gt;.zip
+&lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; amazon-genomics-cli/ 
+./install.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will place the &lt;code&gt;agc&lt;/code&gt; command in &lt;code&gt;$HOME/bin&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The Amazon Genomics CLI is a statically compiled Go binary. It should run in your environment natively without any additional setup. Test the CLI with:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ agc --help
 
