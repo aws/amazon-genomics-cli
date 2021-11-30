@@ -76,7 +76,7 @@ func (c Client) Read() (Config, error) {
 func (c Client) loadFromFile() (Config, error) {
 	configData, err := fromYaml(c.configFilePath)
 	if err != nil {
-		return Config{}, err
+		return configData, err
 	}
 	configData.User.Id = userIdFromEmailAddress(configData.User.Email)
 	return configData, nil

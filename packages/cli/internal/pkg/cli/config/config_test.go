@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"io/fs"
 	"testing"
 
@@ -29,6 +30,15 @@ var (
 			Name: "text",
 		},
 	}
+
+	expectedDefaultConfig = Config{
+		User{
+			Email: "",
+		},
+		Format{
+			Name: "text",
+		},
+	}
 )
 
 func TestConfig_ReadData(t *testing.T) {
@@ -45,6 +55,23 @@ func TestConfig_ReadData(t *testing.T) {
 	configData, err := fromYaml(testFileName)
 	require.NoError(t, err)
 	assert.Equal(t, expectedConfig, configData)
+}
+
+func TestConfig_ReadDataError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFileReader := iomocks.NewMockFileReader(ctrl)
+	err := errors.New("error with read file")
+	mockFileReader.EXPECT().ReadFile(testFileName).Return(nil, err)
+
+	origReadFile := readFile
+	readFile = mockFileReader.ReadFile
+	defer func() { readFile = origReadFile }()
+
+	configData, err := fromYaml(testFileName)
+	require.Error(t, err)
+	assert.Equal(t, expectedDefaultConfig, configData)
 }
 
 func TestConfig_WriteData(t *testing.T) {
