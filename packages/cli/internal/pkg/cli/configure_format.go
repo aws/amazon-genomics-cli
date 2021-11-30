@@ -31,8 +31,8 @@ func newFormatContextOpts(vars formatContextVars) (*formatContextOpts, error) {
 }
 
 func (o *formatContextOpts) Validate(args []string) error {
-	if len(args) == 0 {
-		return fmt.Errorf("format value must be provided")
+	if len(args) != 1 {
+		return fmt.Errorf("a single format value must be provided")
 	}
 	format := format.FormatterType(o.formatContextVars.format)
 	if err := format.ValidateFormatter(); err != nil {
