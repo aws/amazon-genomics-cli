@@ -30,8 +30,8 @@ func newFormatContextOpts(vars formatContextVars) (*formatContextOpts, error) {
 	}, nil
 }
 
-func (o *formatContextOpts) Validate() error {
-	if o.formatContextVars.format == "" {
+func (o *formatContextOpts) Validate(args []string) error {
+	if len(args) == 0 {
 		return fmt.Errorf("format value must be provided")
 	}
 	format := format.FormatterType(o.formatContextVars.format)
@@ -61,7 +61,7 @@ func BuildConfigureFormatCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			if err := opts.Validate(); err != nil {
+			if err := opts.Validate(args); err != nil {
 				return err
 			}
 			configClient, err := config.NewConfigClient()
