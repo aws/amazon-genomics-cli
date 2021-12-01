@@ -75,7 +75,7 @@ func (c Client) Read() (Config, error) {
 }
 
 func (c Client) loadFromFile() (Config, error) {
-	configData, err := fromYaml(c.configFilePath, defaultConfig)
+	configData, err := configFromYaml(c.configFilePath, defaultConfig)
 	if err != nil {
 		return defaultConfig, err
 	}
@@ -84,7 +84,7 @@ func (c Client) loadFromFile() (Config, error) {
 }
 
 func (c Client) storeToFile(config Config) error {
-	return toYaml(c.configFilePath, config)
+	return configToYaml(c.configFilePath, config)
 }
 
 func (c Client) GetUserEmailAddress() (string, error) {
