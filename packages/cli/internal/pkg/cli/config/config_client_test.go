@@ -115,7 +115,7 @@ func TestLoadFromFile(t *testing.T) {
 	var client = Client{
 		configFilePath: testFileName,
 	}
-	configData,err := client.loadFromFile()
+	configData, err := client.loadFromFile()
 	require.Error(t, err)
-	assert.Equal(t, configData,defaultConfig)
+	assert.Equal(t, configData, expectedDefaultConfig)
 }

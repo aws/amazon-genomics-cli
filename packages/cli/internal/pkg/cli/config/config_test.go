@@ -17,7 +17,7 @@ const (
 user:
     email: my@email.com
 format:
-    format: text`
+    name: text`
 )
 
 var (
@@ -30,7 +30,7 @@ var (
 		},
 	}
 
-	defaultConfig = Config{
+	expectedDefaultConfig = Config{
 		User{
 			Email: "",
 		},

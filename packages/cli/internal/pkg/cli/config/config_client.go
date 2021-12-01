@@ -68,7 +68,7 @@ func userIdFromEmailAddress(emailAddress string) string {
 	sanitizedUserName := sanitizeUserName(userName)
 	return sanitizedUserName + hash(emailAddress)
 }
-func defaultConfig() Config{
+func defaultConfig() Config {
 	return Config{Format: Format{defaultFormat}}
 }
 func (c Client) Read() (Config, error) {
