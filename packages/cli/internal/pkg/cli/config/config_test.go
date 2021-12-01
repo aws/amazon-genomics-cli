@@ -29,6 +29,15 @@ var (
 			Name: "text",
 		},
 	}
+
+	defaultConfig = Config{
+		User{
+			Email: "",
+		},
+		Format{
+			Name: "text",
+		},
+	}
 )
 
 func TestConfig_ReadData(t *testing.T) {

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"io/fs"
 	"testing"
 
@@ -97,4 +98,24 @@ func TestSetFormat(t *testing.T) {
 	}
 	err := client.SetFormat(defaultFormat)
 	require.NoError(t, err)
+}
+
+func TestLoadFromFile(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFileReader := iomocks.NewMockFileReader(ctrl)
+	mockErr := fmt.Errorf("unable to read from file")
+	mockFileReader.EXPECT().ReadFile(testFileName).Return(nil, mockErr)
+
+	origReadFile := readFile
+	readFile = mockFileReader.ReadFile
+	defer func() { readFile = origReadFile }()
+
+	var client = Client{
+		configFilePath: testFileName,
+	}
+	configData,err := client.loadFromFile()
+	require.Error(t, err)
+	assert.Equal(t, configData,defaultConfig)
 }
