@@ -11,7 +11,7 @@ import (
 
 var (
 	sleep                                   = time.Sleep
-	progressTemplate pb.ProgressBarTemplate = `{{ string . "description" }} {{ bar . }}{{ etime . }}`
+	progressTemplate pb.ProgressBarTemplate = `{{ string . "description" }} [{{cycle . "o---" "-o--" "--o-" "---o" "--o-" "-o--" "o---" }}] {{ etime . }}`
 )
 
 type ProgressStream chan ProgressEvent
@@ -156,7 +156,7 @@ func closeChannelAfterWaitGroup(channel chan ProgressEvent, waitGroup *sync.Wait
 
 func runProgressBar(ctx context.Context, description string, numberOfChannels int) chan ProgressEvent {
 	receiver := make(chan ProgressEvent)
-	bar := progressTemplate.New(1).
+	bar := progressTemplate.New(0).
 		Set("description", description).
 		Start()
 
@@ -185,7 +185,6 @@ func runProgressBar(ctx context.Context, description string, numberOfChannels in
 				}
 
 				if len(keyWithSteps) == numberOfChannels {
-					bar.SetTotal(int64(totalSteps))
 					bar.SetCurrent(int64(currentStep))
 				}
 			case <-ctx.Done():
