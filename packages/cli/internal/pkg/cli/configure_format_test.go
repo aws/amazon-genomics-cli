@@ -36,7 +36,7 @@ func TestFormatContextOpts_Validate_InvalidFormat(t *testing.T) {
 	require.NoError(t, err)
 
 	formatContextOpts.configClient = mocks.configMock
-	err = formatContextOpts.Validate()
+	err = formatContextOpts.Validate([]string{invalidFormat})
 	require.Error(t, err)
 }
 
@@ -50,6 +50,6 @@ func TestFormatContextOpts_Validate_ValidFormat(t *testing.T) {
 	require.NoError(t, err)
 
 	formatContextOpts.configClient = mocks.configMock
-	err = formatContextOpts.Validate()
+	err = formatContextOpts.Validate([]string{textFormat})
 	require.NoError(t, err)
 }
