@@ -5,7 +5,7 @@ import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "monocdk/aws-iam";
 import { ILogGroup } from "monocdk/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
-import { InstanceType, IVpc } from "monocdk/aws-ec2";
+import { IVpc } from "monocdk/aws-ec2";
 import { LAUNCH_TEMPLATE } from "../../constants";
 import { ComputeResourceType } from "monocdk/aws-batch";
 import { BucketOperations } from "../../../common/BucketOperations";
