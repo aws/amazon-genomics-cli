@@ -31,9 +31,9 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     const params = props.contextParameters;
     const rootDirS3Uri = params.getEngineBucketPath();
 
-    this.batchHead = this.renderBatch("HeadBatch", vpc, contextParameters.instanceTypes, ComputeResourceType.FARGATE);
+    this.batchHead = this.renderBatch("HeadBatch", vpc, contextParameters, ComputeResourceType.FARGATE);
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
-    this.batchWorkers = this.renderBatch("TaskBatch", vpc, contextParameters.instanceTypes, workerComputeType);
+    this.batchWorkers = this.renderBatch("TaskBatch", vpc, contextParameters, workerComputeType);
 
     this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
     this.batchHead.role.addToPrincipalPolicy(
@@ -113,11 +113,12 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     }
   }
 
-  private renderBatch(id: string, vpc: IVpc, instanceTypes?: InstanceType[], computeType?: ComputeResourceType): Batch {
+  private renderBatch(id: string, vpc: IVpc, appParams: ContextAppParameters, computeType?: ComputeResourceType): Batch {
     return new Batch(this, id, {
       vpc,
-      instanceTypes,
       computeType,
+      instanceTypes: appParams.instanceTypes,
+      maxVCpus: appParams.maxVCpus,
       launchTemplateData: LAUNCH_TEMPLATE,
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: Stack.of(this).tags.tagValues(),
