@@ -16,6 +16,8 @@ const (
 	configFileName = "config.yaml"
 )
 
+var defaultConfig = Config{Format: Format{defaultFormat}}
+
 type Client struct {
 	configFilePath string
 }
@@ -68,17 +70,14 @@ func userIdFromEmailAddress(emailAddress string) string {
 	sanitizedUserName := sanitizeUserName(userName)
 	return sanitizedUserName + hash(emailAddress)
 }
-func defaultConfig() Config {
-	return Config{Format: Format{defaultFormat}}
-}
 func (c Client) Read() (Config, error) {
 	return c.loadFromFile()
 }
 
 func (c Client) loadFromFile() (Config, error) {
-	configData, err := fromYaml(c.configFilePath)
+	configData, err := fromYaml(c.configFilePath, defaultConfig)
 	if err != nil {
-		return defaultConfig(), err
+		return defaultConfig, err
 	}
 	configData.User.Id = userIdFromEmailAddress(configData.User.Email)
 	return configData, nil

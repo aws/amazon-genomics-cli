@@ -23,12 +23,11 @@ func toYaml(filePath string, configData Config) error {
 	return writeFile(filePath, bytes, 0644)
 }
 
-func fromYaml(filePath string) (Config, error) {
+func fromYaml(filePath string, configData Config) (Config, error) {
 	bytes, err := readFile(filePath)
 	if err != nil {
 		return Config{}, err
 	}
-	var configData Config
 	if err := yaml.Unmarshal(bytes, &configData); err != nil {
 		return Config{}, err
 	}

@@ -51,7 +51,7 @@ func TestConfig_ReadData(t *testing.T) {
 	readFile = mockFileReader.ReadFile
 	defer func() { readFile = origReadFile }()
 
-	configData, err := fromYaml(testFileName)
+	configData, err := fromYaml(testFileName, defaultConfig)
 	require.NoError(t, err)
 	assert.Equal(t, expectedConfig, configData)
 }
