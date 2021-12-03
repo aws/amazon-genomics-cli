@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
@@ -36,7 +35,6 @@ type deployContextVars struct {
 type deployContextOpts struct {
 	deployContextVars
 	ctxManager context.Interface
-	imageRefs  map[string]ecr.ImageReference
 }
 
 func newDeployContextOpts(vars deployContextVars) (*deployContextOpts, error) {
