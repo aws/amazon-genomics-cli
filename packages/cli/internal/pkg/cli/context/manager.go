@@ -1,17 +1,20 @@
 package context
 
 import (
+	"fmt"
 	"net/url"
 	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ssm"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
@@ -55,11 +58,12 @@ type listProps struct {
 }
 
 type Manager struct {
-	Cdk     cdk.Interface
-	Cfn     cfn.Interface
-	Project storage.ProjectClient
-	Config  storage.ConfigClient
-	Ssm     ssm.Interface
+	Cdk       cdk.Interface
+	Cfn       cfn.Interface
+	Project   storage.ProjectClient
+	Config    storage.ConfigClient
+	Ssm       ssm.Interface
+	imageRefs map[string]ecr.ImageReference
 
 	baseProps
 	contextProps
@@ -77,6 +81,30 @@ type ProgressResult struct {
 
 var displayProgressBar = cdk.DisplayProgressBar
 var showExecution = cdk.ShowExecution
+
+func (m *Manager) getEnvironmentVars() []string {
+	return []string{
+		fmt.Sprintf("ECR_WES_ACCOUNT_ID=%s", m.imageRefs[environment.WesImageKey].RegistryId),
+		fmt.Sprintf("ECR_WES_REGION=%s", m.imageRefs[environment.WesImageKey].Region),
+		fmt.Sprintf("ECR_WES_TAG=%s", m.imageRefs[environment.WesImageKey].ImageTag),
+		fmt.Sprintf("ECR_WES_REPOSITORY=%s", m.imageRefs[environment.WesImageKey].RepositoryName),
+
+		fmt.Sprintf("ECR_CROMWELL_ACCOUNT_ID=%s", m.imageRefs[environment.CromwellImageKey].RegistryId),
+		fmt.Sprintf("ECR_CROMWELL_REGION=%s", m.imageRefs[environment.CromwellImageKey].Region),
+		fmt.Sprintf("ECR_CROMWELL_TAG=%s", m.imageRefs[environment.CromwellImageKey].ImageTag),
+		fmt.Sprintf("ECR_CROMWELL_REPOSITORY=%s", m.imageRefs[environment.CromwellImageKey].RepositoryName),
+
+		fmt.Sprintf("ECR_NEXTFLOW_ACCOUNT_ID=%s", m.imageRefs[environment.NextflowImageKey].RegistryId),
+		fmt.Sprintf("ECR_NEXTFLOW_REGION=%s", m.imageRefs[environment.NextflowImageKey].Region),
+		fmt.Sprintf("ECR_NEXTFLOW_TAG=%s", m.imageRefs[environment.NextflowImageKey].ImageTag),
+		fmt.Sprintf("ECR_NEXTFLOW_REPOSITORY=%s", m.imageRefs[environment.NextflowImageKey].RepositoryName),
+
+		fmt.Sprintf("ECR_MINIWDL_ACCOUNT_ID=%s", m.imageRefs[environment.MiniwdlImageKey].RegistryId),
+		fmt.Sprintf("ECR_MINIWDL_REGION=%s", m.imageRefs[environment.MiniwdlImageKey].Region),
+		fmt.Sprintf("ECR_MINIWDL_TAG=%s", m.imageRefs[environment.MiniwdlImageKey].ImageTag),
+		fmt.Sprintf("ECR_MINIWDL_REPOSITORY=%s", m.imageRefs[environment.MiniwdlImageKey].RepositoryName),
+	}
+}
 
 func NewManager(profile string) *Manager {
 	projectClient, err := storage.NewProjectClient()
@@ -98,6 +126,7 @@ func NewManager(profile string) *Manager {
 		Config:    configClient,
 		Ssm:       aws.SsmClient(profile),
 		baseProps: baseProps{homeDir: homeDir},
+		imageRefs: environment.CommonImages,
 	}
 }
 

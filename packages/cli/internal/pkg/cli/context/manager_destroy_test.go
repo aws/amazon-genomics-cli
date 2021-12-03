@@ -38,7 +38,7 @@ func TestManager_Destroy(t *testing.T) {
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
 				mockClients.configMock.EXPECT().GetUserId().Return(testUserId, nil)
 				mockClients.projMock.EXPECT().Read().Return(testValidProjectSpec, nil)
-				mockClients.cdkMock.EXPECT().DestroyApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Any(), testContextName1).Return(mockClients.progressStream1, nil)
+				mockClients.cdkMock.EXPECT().DestroyApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(34), testContextName1).Return(mockClients.progressStream1, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
 				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Destroying resources for context(s) %s", contextList), []cdk.ProgressStream{mockClients.progressStream1}).Return([]cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName1}})
 				return mockClients
@@ -65,7 +65,7 @@ func TestManager_Destroy(t *testing.T) {
 				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
 				mockClients.configMock.EXPECT().GetUserId().Return(testUserId, nil)
 				mockClients.projMock.EXPECT().Read().Return(testValidProjectSpec, nil)
-				mockClients.cdkMock.EXPECT().DestroyApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Any(), testContextName1).Return(nil, fmt.Errorf("some context error"))
+				mockClients.cdkMock.EXPECT().DestroyApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(34), testContextName1).Return(nil, fmt.Errorf("some context error"))
 				return mockClients
 			},
 		},

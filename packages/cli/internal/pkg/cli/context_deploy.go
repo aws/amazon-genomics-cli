@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
@@ -35,6 +36,7 @@ type deployContextVars struct {
 type deployContextOpts struct {
 	deployContextVars
 	ctxManager context.Interface
+	imageRefs  map[string]ecr.ImageReference
 }
 
 func newDeployContextOpts(vars deployContextVars) (*deployContextOpts, error) {
@@ -74,9 +76,9 @@ func (o *deployContextOpts) validateSuppliedContexts(contextList []string) error
 		return err
 	}
 
-	for _, context := range contextList {
-		if _, ok := ctxList[context]; !ok {
-			return fmt.Errorf("the provided context '%s' is not defined in the agc-project.yaml file", context)
+	for _, contextName := range contextList {
+		if _, ok := ctxList[contextName]; !ok {
+			return fmt.Errorf("the provided context '%s' is not defined in the agc-project.yaml file", contextName)
 		}
 	}
 
