@@ -4,10 +4,10 @@ import { Construct } from "constructs";
 import { getCommonParameter } from "../util";
 import { VPC_PARAMETER_NAME } from "../constants";
 import { ContextAppParameters } from "../env";
-import { BatchConstruct, BatchConstructProps } from "./engines/batch-construct";
-import { CromwellEngineConstruct } from "./engines/cromwell-engine-construct";
-import { NextflowEngineConstruct } from "./engines/nextflow-engine-construct";
-import { MiniwdlEngineConstruct } from "./engines/miniwdl-engine-construct";
+import { BatchStack, BatchStackProps } from "./nested/batch-stack";
+import { CromwellEngineStack } from "./nested/cromwell-engine-stack";
+import { NextflowEngineStack } from "./nested/nextflow-engine-stack";
+import { ManagedPolicy } from "monocdk/aws-iam";
 
 export interface ContextStackProps extends StackProps {
   readonly contextParameters: ContextAppParameters;
@@ -32,9 +32,6 @@ export class ContextStack extends Stack {
       case "nextflow":
         this.renderNextflowStack(props);
         break;
-      case "miniwdl":
-        this.renderMiniwdlStack(props);
-        break;
       default:
         throw Error(`Engine '${engineName}' is not supported`);
     }
@@ -52,10 +49,10 @@ export class ContextStack extends Stack {
     }
 
     const commonEngineProps = this.getCommonEngineProps(props);
-    new CromwellEngineConstruct(this, "cromwell", {
+    new CromwellEngineStack(this, "cromwell", {
       jobQueue,
       ...commonEngineProps,
-    }).outputToParent();
+    }).outputToParent(this);
   }
 
   private renderNextflowStack(props: ContextStackProps) {
@@ -71,18 +68,11 @@ export class ContextStack extends Stack {
     }
 
     const commonEngineProps = this.getCommonEngineProps(props);
-    new NextflowEngineConstruct(this, "nextflow", {
+    new NextflowEngineStack(this, "nextflow", {
       ...commonEngineProps,
       jobQueue,
       headQueue,
-    }).outputToParent();
-  }
-
-  private renderMiniwdlStack(props: ContextStackProps) {
-    const commonEngineProps = this.getCommonEngineProps(props);
-    new MiniwdlEngineConstruct(this, "miniwdl", {
-      ...commonEngineProps,
-    }).outputToParent();
+    }).outputToParent(this);
   }
 
   private getCromwellBatchProps(props: ContextStackProps) {
@@ -111,19 +101,23 @@ export class ContextStack extends Stack {
       ...commonBatchProps,
       createSpotBatch: requestSpotInstances,
       createOnDemandBatch: true,
-      parent: this,
     };
   }
 
-  private renderBatchStack(props: BatchConstructProps) {
-    return new BatchConstruct(this, "Batch", props);
+  private renderBatchStack(props: BatchStackProps) {
+    return new BatchStack(this, "Batch", props);
   }
   private getCommonEngineProps(props: ContextStackProps) {
     return {
       vpc: this.vpc,
       contextParameters: props.contextParameters,
       policyOptions: {
-        managedPolicies: [],
+        managedPolicies: [
+          // TODO: Can these be scoped down?
+          ManagedPolicy.fromAwsManagedPolicyName("AmazonEC2ContainerRegistryReadOnly"),
+          ManagedPolicy.fromAwsManagedPolicyName("AmazonECS_FullAccess"),
+          ManagedPolicy.fromAwsManagedPolicyName("AWSBatchFullAccess"),
+        ],
       },
     };
   }
