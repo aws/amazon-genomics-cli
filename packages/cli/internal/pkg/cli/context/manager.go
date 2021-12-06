@@ -247,7 +247,7 @@ func (m *Manager) validateImage() {
 	}
 
 	imageRef, imageRefExists := m.imageRefs[strings.ToUpper(m.contextEnv.EngineName)]
-	if imageRefExists == false {
+	if !imageRefExists {
 		m.err = actionableerror.New(
 			fmt.Errorf("the engine name in your context file '%s' does not exist", m.contextEnv.EngineName),
 			"Please check your agc config file for the engine you have supplied",
