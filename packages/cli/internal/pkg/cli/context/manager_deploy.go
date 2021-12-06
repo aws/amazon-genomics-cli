@@ -38,6 +38,7 @@ func (m *Manager) getStreamsForCdkDeployments(contexts []string) ([]cdk.Progress
 		m.setCdkConfigurationForDeployment(contextName)
 		m.clearCdkContext(contextDir)
 		m.setContextEnv(contextName)
+		m.validateImage()
 
 		progressStream := m.deployContext(contextName)
 		if progressStream != nil {

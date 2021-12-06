@@ -76,7 +76,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
 					},
 					"activate").Return(mocks.progressStream, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				return mocks
 			},
 			vpcId: "",
@@ -97,7 +96,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				mocks.cdkMock.EXPECT().DeployApp(
 					gomock.Any(),
 					[]string{
@@ -115,7 +113,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				mocks.cdkMock.EXPECT().DeployApp(
 					gomock.Any(),
 					[]string{
@@ -133,7 +130,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				baseVars := []string{
 					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
@@ -154,23 +150,12 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 			},
 			expectedErr: fmt.Errorf("An error occurred while activating the account. Error was: 'some account error'"),
 		},
-		"image does not exist error": {
-			bucketName: testAccountBucketName,
-			setupMocks: func(t *testing.T) mockClients {
-				mocks := createMocks(t)
-				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(fmt.Errorf("some image error"))
-				return mocks
-			},
-			expectedErr: fmt.Errorf("An error occurred while activating the account. Error was: 'some image error'"),
-		},
 		"deploy error": {
 			bucketName: testAccountBucketName,
 			vpcId:      "",
 			setupMocks: func(t *testing.T) mockClients {
 				mocks := createMocks(t)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
 				mocks.cdkMock.EXPECT().DeployApp(
 					gomock.Any(),
 					[]string{

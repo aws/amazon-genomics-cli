@@ -13,7 +13,6 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 	"github.com/rs/zerolog/log"
@@ -48,14 +47,11 @@ type accountActivateOpts struct {
 }
 
 func newAccountActivateOpts(vars accountActivateVars) (*accountActivateOpts, error) {
-	imageRefs := environment.CommonImages
 	return &accountActivateOpts{
 		accountActivateVars: vars,
-		imageRefs:           imageRefs,
 		stsClient:           aws.StsClient(profile),
 		s3Client:            aws.S3Client(profile),
 		cdkClient:           cdk.NewClient(profile),
-		ecrClient:           aws.EcrClient(profile),
 		region:              aws.Region(profile),
 	}, nil
 }
@@ -73,12 +69,6 @@ func (o *accountActivateOpts) Execute() error {
 	exists, err := o.s3Client.BucketExists(o.bucketName)
 	if err != nil {
 		return err
-	}
-
-	for _, imageRef := range o.imageRefs {
-		if err := o.ecrClient.VerifyImageExists(imageRef); err != nil {
-			return err
-		}
 	}
 
 	environmentVars := []string{

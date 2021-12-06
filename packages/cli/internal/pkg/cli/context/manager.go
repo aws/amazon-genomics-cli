@@ -63,6 +63,7 @@ type Manager struct {
 	Project   storage.ProjectClient
 	Config    storage.ConfigClient
 	Ssm       ssm.Interface
+	ecrClient ecr.Interface
 	imageRefs map[string]ecr.ImageReference
 
 	baseProps
@@ -83,27 +84,18 @@ var displayProgressBar = cdk.DisplayProgressBar
 var showExecution = cdk.ShowExecution
 
 func (m *Manager) getEnvironmentVars() []string {
-	return []string{
-		fmt.Sprintf("ECR_WES_ACCOUNT_ID=%s", m.imageRefs[environment.WesImageKey].RegistryId),
-		fmt.Sprintf("ECR_WES_REGION=%s", m.imageRefs[environment.WesImageKey].Region),
-		fmt.Sprintf("ECR_WES_TAG=%s", m.imageRefs[environment.WesImageKey].ImageTag),
-		fmt.Sprintf("ECR_WES_REPOSITORY=%s", m.imageRefs[environment.WesImageKey].RepositoryName),
+	var environmentVars []string
 
-		fmt.Sprintf("ECR_CROMWELL_ACCOUNT_ID=%s", m.imageRefs[environment.CromwellImageKey].RegistryId),
-		fmt.Sprintf("ECR_CROMWELL_REGION=%s", m.imageRefs[environment.CromwellImageKey].Region),
-		fmt.Sprintf("ECR_CROMWELL_TAG=%s", m.imageRefs[environment.CromwellImageKey].ImageTag),
-		fmt.Sprintf("ECR_CROMWELL_REPOSITORY=%s", m.imageRefs[environment.CromwellImageKey].RepositoryName),
-
-		fmt.Sprintf("ECR_NEXTFLOW_ACCOUNT_ID=%s", m.imageRefs[environment.NextflowImageKey].RegistryId),
-		fmt.Sprintf("ECR_NEXTFLOW_REGION=%s", m.imageRefs[environment.NextflowImageKey].Region),
-		fmt.Sprintf("ECR_NEXTFLOW_TAG=%s", m.imageRefs[environment.NextflowImageKey].ImageTag),
-		fmt.Sprintf("ECR_NEXTFLOW_REPOSITORY=%s", m.imageRefs[environment.NextflowImageKey].RepositoryName),
-
-		fmt.Sprintf("ECR_MINIWDL_ACCOUNT_ID=%s", m.imageRefs[environment.MiniwdlImageKey].RegistryId),
-		fmt.Sprintf("ECR_MINIWDL_REGION=%s", m.imageRefs[environment.MiniwdlImageKey].Region),
-		fmt.Sprintf("ECR_MINIWDL_TAG=%s", m.imageRefs[environment.MiniwdlImageKey].ImageTag),
-		fmt.Sprintf("ECR_MINIWDL_REPOSITORY=%s", m.imageRefs[environment.MiniwdlImageKey].RepositoryName),
+	for imageName := range m.imageRefs {
+		environmentVars = append(environmentVars,
+			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", imageName, m.imageRefs[environment.WesImageKey].RegistryId),
+			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.imageRefs[environment.WesImageKey].Region),
+			fmt.Sprintf("ECR_%s_TAG=%s", imageName, m.imageRefs[environment.WesImageKey].ImageTag),
+			fmt.Sprintf("ECR_%s_REPOSITORY=%s", imageName, m.imageRefs[environment.WesImageKey].RepositoryName),
+		)
 	}
+
+	return environmentVars
 }
 
 func NewManager(profile string) *Manager {
@@ -127,6 +119,7 @@ func NewManager(profile string) *Manager {
 		Ssm:       aws.SsmClient(profile),
 		baseProps: baseProps{homeDir: homeDir},
 		imageRefs: environment.CommonImages,
+		ecrClient: aws.EcrClient(profile),
 	}
 }
 
@@ -246,6 +239,24 @@ func (m *Manager) setContextEnv(contextName string) {
 		// need to allow for multiple engines in the same context
 		EngineName:        context.Engines[0].Engine,
 		EngineDesignation: context.Engines[0].Engine,
+	}
+}
+func (m *Manager) validateImage() {
+	if m.err != nil {
+		return
+	}
+
+	imageRef, imageRefExists := m.imageRefs[strings.ToUpper(m.contextEnv.EngineName)]
+	if imageRefExists == false {
+		m.err = actionableerror.New(
+			fmt.Errorf("the engine name in your context file '%s' does not exist", m.contextEnv.EngineName),
+			"Please check your agc config file for the engine you have supplied",
+		)
+		return
+	}
+
+	if err := m.ecrClient.VerifyImageExists(imageRef); err != nil {
+		m.err = err
 	}
 }
 
