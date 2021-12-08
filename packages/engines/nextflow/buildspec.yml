@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    # These variables may be over-ridden as appropriate by the CI/CD pipeline
+    NEXTFLOW_IMAGE_NAME: "nextflow"
+    NEXTFLOW_VERSION: "21.04.3"
+
+phases:
+  pre_build:
+    commands:
+      - NEXTFLOW_IMAGE_URI=${NEXTFLOW_IMAGE_NAME}:${NEXTFLOW_VERSION}
+  build:
+    commands:
+      - docker build -t ${NEXTFLOW_IMAGE_URI} --build-arg NEXTFLOW_VERSION=${NEXTFLOW_VERSION} ./
+  post_build:
+    commands:
+      - docker save -o nextflow_image.tar ${NEXTFLOW_IMAGE_URI}
+
+artifacts:
+  files:
+    - nextflow_image.tar

@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    # These variables may be over-ridden as appropriate by the CI/CD pipeline
+    MINIWDL_IMAGE_NAME: "miniwdl"
+    MINIWDL_VERSION: "v0.1.6"
+
+phases:
+  pre_build:
+    commands:
+      - MINIWDL_IMAGE_URI=${MINIWDL_IMAGE_NAME}:${MINIWDL_VERSION}
+  build:
+    commands:
+      - docker build -t ${MINIWDL_IMAGE_URI} --build-arg MINIWDL_VERSION=${MINIWDL_VERSION} ./
+  post_build:
+    commands:
+      - docker save -o miniwdl_image.tar ${MINIWDL_IMAGE_URI}
+
+artifacts:
+  files:
+    - miniwdl_image.tar
