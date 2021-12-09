@@ -13,7 +13,7 @@ phases:
       - NEXTFLOW_IMAGE_URI=${NEXTFLOW_IMAGE_NAME}:${NEXTFLOW_VERSION}
   build:
     commands:
-      - docker build -t ${NEXTFLOW_IMAGE_URI} --build-arg NEXTFLOW_VERSION=${NEXTFLOW_VERSION} ./
+      - docker build -t ${NEXTFLOW_IMAGE_URI} --build-arg NEXTFLOW_VERSION=${NEXTFLOW_VERSION} ./packages/engines/nextflow
   post_build:
     commands:
       - docker save -o nextflow_image.tar ${NEXTFLOW_IMAGE_URI}
