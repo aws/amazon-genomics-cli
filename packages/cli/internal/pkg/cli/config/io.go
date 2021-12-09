@@ -15,7 +15,7 @@ const (
 	defaultFormat = "text"
 )
 
-func toYaml(filePath string, configData Config) error {
+func configToYaml(filePath string, configData Config) error {
 	bytes, err := yaml.Marshal(configData)
 	if err != nil {
 		return err
@@ -23,14 +23,13 @@ func toYaml(filePath string, configData Config) error {
 	return writeFile(filePath, bytes, 0644)
 }
 
-func fromYaml(filePath string) (Config, error) {
-	configData := Config{Format: Format{defaultFormat}}
+func configFromYaml(filePath string, configData Config) (Config, error) {
 	bytes, err := readFile(filePath)
 	if err != nil {
-		return configData, err
+		return Config{}, err
 	}
 	if err := yaml.Unmarshal(bytes, &configData); err != nil {
-		return configData, err
+		return Config{}, err
 	}
 	return configData, nil
 }
