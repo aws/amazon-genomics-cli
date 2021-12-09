@@ -22,7 +22,6 @@ phases:
     commands:
       - cd $CODEBUILD_SRC_DIR/cromwell
       - CROMWELL_IMAGE_URI=${CROMWELL_IMAGE_NAME}:${CROMWELL_VERSION}
-      - ls -l $CODEBUILD_SRC_DIR/
       - git checkout tags/${CROMWELL_VERSION} && git apply $CODEBUILD_SRC_DIR/packages/engines/cromwell/aws-cromwell-updates.patch
   build:
     on-failure: ABORT
