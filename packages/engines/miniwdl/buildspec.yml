@@ -13,7 +13,7 @@ phases:
       - MINIWDL_IMAGE_URI=${MINIWDL_IMAGE_NAME}:${MINIWDL_VERSION}
   build:
     commands:
-      - docker build -t ${MINIWDL_IMAGE_URI} --build-arg MINIWDL_VERSION=${MINIWDL_VERSION} ./
+      - docker build -t ${MINIWDL_IMAGE_URI} --build-arg MINIWDL_VERSION=${MINIWDL_VERSION} ./packages/engines/miniwdl
   post_build:
     commands:
       - docker save -o miniwdl_image.tar ${MINIWDL_IMAGE_URI}
