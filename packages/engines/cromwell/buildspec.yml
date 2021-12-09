@@ -17,7 +17,7 @@ phases:
     commands:
       - curl -s "https://get.sdkman.io" | bash
       - . $HOME/.sdkman/bin/sdkman-init.sh && . $SDKMAN_DIR/src/sdkman-main.sh && sdk install sbt $SBT_VERSION && sdk install scala $SCALA_VERSION
-      - git submodule update --init --recursive
+      - git clone https://github.com/broadinstitute/cromwell.git
   pre_build:
     commands:
       - cd $CODEBUILD_SRC_DIR/cromwell
