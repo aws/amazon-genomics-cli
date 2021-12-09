@@ -22,14 +22,15 @@ phases:
     commands:
       - cd $CODEBUILD_SRC_DIR/cromwell
       - CROMWELL_IMAGE_URI=${CROMWELL_IMAGE_NAME}:${CROMWELL_VERSION}
-      - git checkout tags/${CROMWELL_VERSION} && git apply $CODEBUILD_SRC_DIR/aws-cromwell-updates.patch
+      - ls -l $CODEBUILD_SRC_DIR/
+      - git checkout tags/${CROMWELL_VERSION} && git apply $CODEBUILD_SRC_DIR/packages/engines/cromwell/aws-cromwell-updates.patch
   build:
     on-failure: ABORT
     commands:
       - cd $CODEBUILD_SRC_DIR/cromwell
       - sbt assembly
-      - cp server/target/scala-*/cromwell-*.jar $CODEBUILD_SRC_DIR/cromwell.jar
-      - cd $CODEBUILD_SRC_DIR
+      - cp server/target/scala-*/cromwell-*.jar $CODEBUILD_SRC_DIR/packages/engines/cromwell/cromwell.jar
+      - cd $CODEBUILD_SRC_DIR/packages/engines/cromwell
       - docker build -t ${CROMWELL_IMAGE_URI} ./
   post_build:
     on-failure: ABORT
