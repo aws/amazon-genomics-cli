@@ -35,8 +35,8 @@ phases:
   post_build:
     on-failure: ABORT
     commands:
-      - docker save -o cromwell_image.tar ${CROMWELL_IMAGE_URI}
+      - docker save -o $CODEBUILD_SRC_DIR/cromwell_image.tar ${CROMWELL_IMAGE_URI}
 
 artifacts:
   files:
-    - cromwell_image.tar
+    - $CODEBUILD_SRC_DIR/cromwell_image.tar
