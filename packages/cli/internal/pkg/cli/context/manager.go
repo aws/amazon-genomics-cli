@@ -88,10 +88,10 @@ func (m *Manager) getEnvironmentVars() []string {
 
 	for imageName := range m.imageRefs {
 		environmentVars = append(environmentVars,
-			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", imageName, m.imageRefs[environment.WesImageKey].RegistryId),
-			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.imageRefs[environment.WesImageKey].Region),
-			fmt.Sprintf("ECR_%s_TAG=%s", imageName, m.imageRefs[environment.WesImageKey].ImageTag),
-			fmt.Sprintf("ECR_%s_REPOSITORY=%s", imageName, m.imageRefs[environment.WesImageKey].RepositoryName),
+			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", imageName, m.imageRefs[imageName].RegistryId),
+			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.imageRefs[imageName].Region),
+			fmt.Sprintf("ECR_%s_TAG=%s", imageName, m.imageRefs[imageName].ImageTag),
+			fmt.Sprintf("ECR_%s_REPOSITORY=%s", imageName, m.imageRefs[imageName].RepositoryName),
 		)
 	}
 
@@ -255,9 +255,7 @@ func (m *Manager) validateImage() {
 		return
 	}
 
-	if err := m.ecrClient.VerifyImageExists(imageRef); err != nil {
-		m.err = err
-	}
+	m.err = m.ecrClient.VerifyImageExists(imageRef)
 }
 
 func (m *Manager) readConfig() {

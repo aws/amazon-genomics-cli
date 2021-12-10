@@ -30,9 +30,9 @@ func TestManager_Deploy(t *testing.T) {
 		contextList                []string
 	}{
 		"deploy success": {
-			contextList: contextList,
+			contextList: []string{testContextName3},
 			expectedProgressResultList: []ProgressResult{
-				{Outputs: []string{"some message"}, Context: testContextName1},
+				{Outputs: []string{"some message"}, Context: testContextName3},
 			},
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)
@@ -43,11 +43,11 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.projMock.EXPECT().Read().Return(testValidProjectSpec, nil)
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
-				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["CROMWELL"]).Return(nil)
+				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["NEXTFLOW"]).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
-				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(34), testContextName1).After(clearContext).Return(mockClients.progressStream1, nil)
+				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(34), testContextName3).After(clearContext).Return(mockClients.progressStream1, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
-				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Deploying resources for context(s) %s", contextList), []cdk.ProgressStream{mockClients.progressStream1}).Return([]cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName1}})
+				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Deploying resources for context(s) %s", []string{testContextName3}), []cdk.ProgressStream{mockClients.progressStream1}).Return([]cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName3}})
 				return mockClients
 			},
 		},
