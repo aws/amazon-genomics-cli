@@ -1,0 +1,41 @@
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    # These variables may be over-ridden as appropriate by the CI/CD pipeline
+    CROMWELL_IMAGE_NAME: "cromwell"
+    CROMWELL_VERSION: "64"
+    SCALA_VERSION: "2.12.15"
+    SBT_VERSION: "1.5.5"
+    SBT_OPTS: "-Xms4G -Xmx12G"
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+    commands:
+      - curl -s "https://get.sdkman.io" | bash
+      - . $HOME/.sdkman/bin/sdkman-init.sh && . $SDKMAN_DIR/src/sdkman-main.sh && sdk install sbt $SBT_VERSION && sdk install scala $SCALA_VERSION
+      - git clone https://github.com/broadinstitute/cromwell.git
+  pre_build:
+    commands:
+      - cd $CODEBUILD_SRC_DIR/cromwell
+      - CROMWELL_IMAGE_URI=${CROMWELL_IMAGE_NAME}:${CROMWELL_VERSION}
+      - git checkout tags/${CROMWELL_VERSION} && git apply $CODEBUILD_SRC_DIR/packages/engines/cromwell/aws-cromwell-updates.patch
+  build:
+    on-failure: ABORT
+    commands:
+      - cd $CODEBUILD_SRC_DIR/cromwell
+      - sbt assembly
+      - cp server/target/scala-*/cromwell-*.jar $CODEBUILD_SRC_DIR/packages/engines/cromwell/cromwell.jar
+      - cd $CODEBUILD_SRC_DIR/packages/engines/cromwell
+      - docker build -t ${CROMWELL_IMAGE_URI} ./
+  post_build:
+    on-failure: ABORT
+    commands:
+      - docker save -o $CODEBUILD_SRC_DIR/cromwell_image.tar ${CROMWELL_IMAGE_URI}
+
+artifacts:
+  files:
+    - $CODEBUILD_SRC_DIR/cromwell_image.tar
