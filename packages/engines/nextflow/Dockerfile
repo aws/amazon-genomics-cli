@@ -12,7 +12,7 @@ RUN yum update -y \
   && yum install -y \
   curl \
   hostname \
-  java \
+  "java-11-amazon-corretto-headless(x86-64)" \
   unzip \
   jq \
   && yum clean -y all
