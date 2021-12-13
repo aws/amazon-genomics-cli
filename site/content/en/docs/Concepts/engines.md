@@ -15,13 +15,25 @@ to Amazon Genomics CLI through which it will submit workflows and workflow comma
 
 Currently, Amazon Genomics CLI's officially supported engines can be used to run the following workflows:
 
-| Engine | Language | Language Versions |
-----------|---------|-------------------|
-| [Cromwell](https://cromwell.readthedocs.io/en/stable/) | [WDL](https://openwdl.org) | All versions up to 1.0 |
-| [Nextflow](https://www.nextflow.io) | [Nextflow DSL](https://www.nextflow.io/docs/latest/script.html) | Standard and DSL 2 |
+| Engine                                                 | Language                                                        | Language Versions                                                                                                       | Run Mode     |
+|--------------------------------------------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|--------------|
+| [Cromwell](https://cromwell.readthedocs.io/en/stable/) | [WDL](https://openwdl.org)                                      | All versions up to 1.0                                                                                                  | Server       |
+| [Nextflow](https://www.nextflow.io)                    | [Nextflow DSL](https://www.nextflow.io/docs/latest/script.html) | Standard and DSL 2                                                                                                      | Head Process |
+| [miniwdl](https://miniwdl.readthedocs.io/en/latest/)   | [WDL](https://openwdl.org)                                      | [documented here](https://miniwdl.readthedocs.io/en/latest/runner_reference.html?highlight=errata#wdl-interoperability) | Head Process |
 
 Overtime we plan to add additional engine and language support and provide the ability for third party developers to 
 develop engine plugins.
+
+### Run Mode
+
+#### Server
+
+In server mode the engine runs as a long-running process that exists for the lifetime of the context. All workflow instances sent to the context are handled by that server. The server resides on on-demand instances to prevent Spot interruption even if the workflow tasks are run on Spot instances
+
+#### Head Process
+
+Head process engines are run when a workflow is submitted, manage a single workflow and only run for the lifetime of the workflow. If multiple workflows are submitted to a context in parallel then multiple head processes are spawned. The head processes always run on on-demand resources to prevent Spot interruption even if the workflow tasks are run on Spot instances. 
+
 
 ## Engine Definition
 
