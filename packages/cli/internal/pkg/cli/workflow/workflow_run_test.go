@@ -77,11 +77,11 @@ type WorkflowRunTestSuite struct {
 	origCompressToTmp func(srcPath string) (string, error)
 	origWriteToTmp    func(namePattern, content string) (string, error)
 
-	testProjSpec    spec.Project
-	absDataFilePath string
+	testProjSpec         spec.Project
+	absDataFilePath      string
 	localWorkflowAbsPath string
-	wfInstance      ddb.WorkflowInstance
-	testStackInfo   cfn.StackInfo
+	wfInstance           ddb.WorkflowInstance
+	testStackInfo        cfn.StackInfo
 
 	manager *Manager
 }
