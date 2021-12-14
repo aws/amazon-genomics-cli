@@ -36,11 +36,11 @@ export const getProjectParameter = (scope: Construct, project: string, keySuffix
 };
 
 export const createEcrImage = (scope: Construct, designation: string): ContainerImage => {
-  const propertyPrefix = `${designation}/ecr-repo`;
-  const accountId = getCommonParameter(scope, `${propertyPrefix}/account`);
-  const region = getCommonParameter(scope, `${propertyPrefix}/region`);
-  const tag = getCommonParameter(scope, `${propertyPrefix}/tag`);
-  const repositoryName = getCommonParameter(scope, `${propertyPrefix}/repository`);
+  const engineName = designation.toUpperCase();
+  const accountId = getContext(scope.node, `ECR_${engineName}_ACCOUNT_ID`);
+  const region = getContext(scope.node, `ECR_${engineName}_REGION`);
+  const tag = getContext(scope.node, `ECR_${engineName}_TAG`);
+  const repositoryName = getContext(scope.node, `ECR_${engineName}_REPOSITORY`);
   const ecrArn = `arn:aws:ecr:${region}:${accountId}:repository/${repositoryName}`;
   const repository = Repository.fromRepositoryAttributes(scope, repositoryName, {
     repositoryName,

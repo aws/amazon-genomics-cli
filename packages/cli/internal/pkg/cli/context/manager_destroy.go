@@ -54,7 +54,8 @@ func (m *Manager) destroyContext(contextName string) cdk.ProgressStream {
 		return nil
 	}
 
-	progressStream, err := m.Cdk.DestroyApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), m.contextEnv.ToEnvironmentList(), contextName)
+	deploymentVars := append(m.contextEnv.ToEnvironmentList(), m.getEnvironmentVars()...)
+	progressStream, err := m.Cdk.DestroyApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), deploymentVars, contextName)
 
 	if err != nil {
 		m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: err})
