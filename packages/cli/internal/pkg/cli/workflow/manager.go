@@ -205,7 +205,7 @@ func (m *Manager) packWorkflowFiles() {
 		return
 	}
 	projectLocation := m.Project.GetLocation()
-	workflowPath :=  m.parsedSourceURL.Path
+	workflowPath := m.parsedSourceURL.Path
 	path := filepath.Join(projectLocation, workflowPath)
 	m.packPath, m.err = compressToTmp(path)
 }

@@ -83,7 +83,7 @@ type WorkflowRunTestSuite struct {
 	wfInstance      ddb.WorkflowInstance
 	testStackInfo   cfn.StackInfo
 
-	manager              *Manager
+	manager *Manager
 }
 
 func (s *WorkflowRunTestSuite) BeforeTest(_, _ string) {
