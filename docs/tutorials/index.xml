@@ -1,12 +1,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Amazon Genomics CLI – Tutorials</title>
-    <link>/amazon-genomics-cli/docs/tutorials/</link>
+    <link>https://aws.github.io/amazon-genomics-cli/docs/tutorials/</link>
     <description>Recent content in Tutorials on Amazon Genomics CLI</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Wed, 04 Jan 2017 00:00:00 +0000</lastBuildDate>
     
-	  <atom:link href="/amazon-genomics-cli/docs/tutorials/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://aws.github.io/amazon-genomics-cli/docs/tutorials/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -16,20 +16,20 @@
     
     <item>
       <title>Docs: Walk through</title>
-      <link>/amazon-genomics-cli/docs/tutorials/walkthrough/</link>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/tutorials/walkthrough/</link>
       <pubDate>Thu, 09 Sep 2021 10:16:57 -0400</pubDate>
       
-      <guid>/amazon-genomics-cli/docs/tutorials/walkthrough/</guid>
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/tutorials/walkthrough/</guid>
       <description>
         
         
         &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
-&lt;p&gt;Ensure you have completed the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; before beginning.&lt;/p&gt;
+&lt;p&gt;Ensure you have completed the &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; before beginning.&lt;/p&gt;
 &lt;h2 id=&#34;download-and-install-amazon-genomics-cli&#34;&gt;Download and install Amazon Genomics CLI&lt;/h2&gt;
-&lt;p&gt;Download the Amazon Genomics CLI according to the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/installation/&#34;&gt;installation&lt;/a&gt;
+&lt;p&gt;Download the Amazon Genomics CLI according to the &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/installation/&#34;&gt;installation&lt;/a&gt;
 instructions.&lt;/p&gt;
 &lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;
-&lt;p&gt;Ensure you have initialized your account and created a username by following the &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/setup/&#34;&gt;setup&lt;/a&gt;
+&lt;p&gt;Ensure you have initialized your account and created a username by following the &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/setup/&#34;&gt;setup&lt;/a&gt;
 instructions.&lt;/p&gt;
 &lt;h2 id=&#34;initialize-a-project&#34;&gt;Initialize a project&lt;/h2&gt;
 &lt;p&gt;Amazon Genomics CLI uses local folders and config files to define projects. Projects contain configuration settings for contexts and workflows (more on these below). To create a new project for running WDL based workflows do the following:&lt;/p&gt;

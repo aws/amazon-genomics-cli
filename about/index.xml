@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Amazon Genomics CLI – About Amazon Genomics CLI</title>
-    <link>/amazon-genomics-cli/about/</link>
+    <link>https://aws.github.io/amazon-genomics-cli/about/</link>
     <description>Recent content in About Amazon Genomics CLI on Amazon Genomics CLI</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="/amazon-genomics-cli/about/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://aws.github.io/amazon-genomics-cli/about/index.xml" rel="self" type="application/rss+xml" />
     
     
       

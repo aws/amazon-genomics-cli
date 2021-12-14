@@ -1,12 +1,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Amazon Genomics CLI – Workflow Engines</title>
-    <link>/amazon-genomics-cli/docs/workflow-engines/</link>
+    <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/</link>
     <description>Recent content in Workflow Engines on Amazon Genomics CLI</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Fri, 01 Oct 2021 17:23:58 -0400</lastBuildDate>
     
-	  <atom:link href="/amazon-genomics-cli/docs/workflow-engines/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -16,17 +16,17 @@
     
     <item>
       <title>Docs: Cromwell</title>
-      <link>/amazon-genomics-cli/docs/workflow-engines/cromwell/</link>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/cromwell/</link>
       <pubDate>Fri, 01 Oct 2021 17:27:21 -0400</pubDate>
       
-      <guid>/amazon-genomics-cli/docs/workflow-engines/cromwell/</guid>
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/cromwell/</guid>
       <description>
         
         
         &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://cromwell.readthedocs.io/en/stable/&#34;&gt;Cromwell&lt;/a&gt; is a workflow engine developed by the &lt;a href=&#34;https://www.broadinstitute.org/&#34;&gt;Broad Institute&lt;/a&gt;.
 In Amazon Genomics CLI, Cromwell is an engine that can be
-deployed in a &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt; as an &lt;a href=&#34;/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/engines/&#34;&gt;engine&lt;/a&gt;
+deployed in a &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt; as an &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/engines/&#34;&gt;engine&lt;/a&gt;
 to run workflows based on the &lt;a href=&#34;https://openwdl.org/&#34;&gt;WDL&lt;/a&gt; specification.&lt;/p&gt;
 &lt;p&gt;Cromwell is an open source project distributed by the Broad Institute under the &lt;a href=&#34;https://github.com/broadinstitute/cromwell/blob/develop/LICENSE-ASL-2.0&#34;&gt;Apache 2 license&lt;/a&gt; and available on &lt;a href=&#34;https://github.com/broadinstitute/cromwell&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;customizations&#34;&gt;Customizations&lt;/h3&gt;
@@ -82,10 +82,10 @@ and is ignored.&lt;/p&gt;
     
     <item>
       <title>Docs: miniwdl</title>
-      <link>/amazon-genomics-cli/docs/workflow-engines/miniwdl/</link>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/miniwdl/</link>
       <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>
       
-      <guid>/amazon-genomics-cli/docs/workflow-engines/miniwdl/</guid>
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/miniwdl/</guid>
       <description>
         
         
@@ -136,10 +136,10 @@ adding the following key/ value pair.&lt;/p&gt;
     
     <item>
       <title>Docs: Nextflow</title>
-      <link>/amazon-genomics-cli/docs/workflow-engines/nextflow/</link>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/nextflow/</link>
       <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>
       
-      <guid>/amazon-genomics-cli/docs/workflow-engines/nextflow/</guid>
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/nextflow/</guid>
       <description>
         
         
