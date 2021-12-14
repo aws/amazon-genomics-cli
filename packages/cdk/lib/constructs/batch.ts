@@ -1,4 +1,4 @@
-import { Construct, Fn, Names, Stack } from "monocdk";
+import { Aws, Construct, Fn, Names, Stack } from "monocdk";
 import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "monocdk/aws-batch";
 import { CfnLaunchTemplate, InstanceType, IVpc } from "monocdk/aws-ec2";
 import {
@@ -15,6 +15,7 @@ import {
 } from "monocdk/aws-iam";
 import { getInstanceTypesForBatch } from "../util/instance-types";
 import { batchArn } from "../util";
+import { APP_NAME, APP_TAG_KEY } from "../../lib/constants";
 
 export interface ComputeOptions {
   /**
@@ -124,8 +125,21 @@ export class Batch extends Construct {
         "ebs-autoscaling": new PolicyDocument({
           statements: [
             new PolicyStatement({
-              actions: ["ec2:CreateTags", "ec2:DescribeVolumes", "ec2:CreateVolume", "ec2:AttachVolume", "ec2:DeleteVolume", "ec2:ModifyInstanceAttribute"],
+              actions: ["ec2:CreateTags"],
+              resources: [`arn:aws:ec2:${Aws.REGION}:${Aws.ACCOUNT_ID}:volume/*`],
+            }),
+            new PolicyStatement({
+              actions: ["ec2:DescribeVolumes", "ec2:CreateVolume", "ec2:AttachVolume", "ec2:ModifyInstanceAttribute"],
               resources: ["*"],
+            }),
+            new PolicyStatement({
+              actions: ["ec2:DeleteVolume"],
+              resources: ["*"],
+              conditions: {
+                StringEquals: {
+                  [`aws:ResourceTag/${APP_TAG_KEY}`]: APP_NAME,
+                },
+              },
             }),
           ],
         }),

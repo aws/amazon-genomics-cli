@@ -1,7 +1,7 @@
 import * as cdk from "monocdk";
 import * as iam from "monocdk/aws-iam";
 import { PolicyOptions } from "../types/engine-options";
-import { BucketOperations } from "../../common/BucketOperations";
+import { BucketOperations } from "../common/BucketOperations";
 import { CromwellBatchPolicy } from "./policies/cromwell-batch-policy";
 import { Arn, Stack } from "monocdk";
 
