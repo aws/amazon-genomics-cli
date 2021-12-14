@@ -38,8 +38,8 @@ func TestManager_List(t *testing.T) {
 					Name: testContextName3,
 					Engines: []spec.Engine{
 						{
-							Type:   "wdl",
-							Engine: "cromwell",
+							Type:   "nextflow",
+							Engine: "nextflow",
 						},
 					},
 				},
