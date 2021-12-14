@@ -74,7 +74,6 @@ type WorkflowRunTestSuite struct {
 	mockTmp           *iomocks.MockTmp
 	mockWes           *wesmocks.MockWesClient
 	origRemoveFile    func(name string) error
-	origChdir         func(name string) error
 	origCompressToTmp func(srcPath string) (string, error)
 	origWriteToTmp    func(namePattern, content string) (string, error)
 
