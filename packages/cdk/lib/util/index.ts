@@ -110,6 +110,11 @@ export function renderBatchLogConfiguration(scope: Construct, logGroup: ILogGrou
 export function batchArn(scope: Construct, resource: string, resourcePrefix = "*"): string {
   return Arn.format({ resource: `${resource}/${resourcePrefix}`, service: "batch" }, Stack.of(scope));
 }
+
+export function ec2Arn(scope: Construct, resource: string, resourcePrefix = "*"): string {
+  return Arn.format({ resource: `${resource}/${resourcePrefix}`, service: "ec2" }, Stack.of(scope));
+}
+
 export const renderPythonLambda = (
   scope: Construct,
   id: string,
