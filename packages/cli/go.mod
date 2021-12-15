@@ -8,6 +8,7 @@ require (
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
 	github.com/aws/aws-sdk-go-v2 v1.8.1
 	github.com/aws/aws-sdk-go-v2/config v1.6.1
+	github.com/aws/aws-sdk-go-v2/credentials v1.3.3
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.1.4
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression v1.2.0
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.3.2

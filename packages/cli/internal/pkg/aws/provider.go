@@ -14,7 +14,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-    "github.com/aws/aws-sdk-go-v2/stscreds"
+    "github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/rs/zerolog/log"
 )
 
