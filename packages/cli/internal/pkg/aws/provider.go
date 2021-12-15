@@ -14,7 +14,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-    "github.com/aws/aws-sdk-go-v2/credentials/stscreds"
+	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
 	"github.com/rs/zerolog/log"
 )
 
@@ -147,11 +147,11 @@ func initClientMap(profile string) {
 func getProfileConfig(profile string) aws.Config {
 	if _, ok := profileConfigs[profile]; !ok {
 		cfg, err := loadConfig(context.Background(),
-            config.WithSharedConfigProfile(profile),
-            config.WithAssumeRoleCredentialOptions(func(o *stscreds.AssumeRoleOptions) {
-		        o.TokenProvider = stscreds.StdinTokenProvider
-	        })
-        )
+			config.WithSharedConfigProfile(profile),
+			config.WithAssumeRoleCredentialOptions(func(o *stscreds.AssumeRoleOptions) {
+				o.TokenProvider = stscreds.StdinTokenProvider
+			}),
+		)
 		if err != nil {
 			log.Fatal().Err(err).Send()
 		}
