@@ -125,16 +125,16 @@ export class Batch extends Construct {
         "ebs-autoscaling": new PolicyDocument({
           statements: [
             new PolicyStatement({
-              actions: ["ec2:CreateTags"],
+              actions: ["ec2:DescribeVolumes", "ec2:CreateVolume", "ec2:CreateTags"],
               resources: [`arn:aws:ec2:${Aws.REGION}:${Aws.ACCOUNT_ID}:volume/*`],
             }),
             new PolicyStatement({
-              actions: ["ec2:DescribeVolumes", "ec2:CreateVolume", "ec2:AttachVolume", "ec2:ModifyInstanceAttribute"],
-              resources: ["*"],
+              actions: ["ec2:AttachVolume", "ec2:ModifyInstanceAttribute"],
+              resources: [`arn:aws:ec2:${Aws.REGION}:${Aws.ACCOUNT_ID}:*`],
             }),
             new PolicyStatement({
               actions: ["ec2:DeleteVolume"],
-              resources: ["*"],
+              resources: [`arn:aws:ec2:${Aws.REGION}:${Aws.ACCOUNT_ID}:volume/*`],
               conditions: {
                 StringEquals: {
                   [`aws:ResourceTag/${APP_TAG_KEY}`]: APP_NAME,
