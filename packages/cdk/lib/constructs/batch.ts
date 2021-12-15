@@ -1,4 +1,4 @@
-import { Aws, Construct, Fn, Names, Stack } from "monocdk";
+import { Construct, Fn, Names, Stack } from "monocdk";
 import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "monocdk/aws-batch";
 import { CfnLaunchTemplate, InstanceType, IVpc } from "monocdk/aws-ec2";
 import {
