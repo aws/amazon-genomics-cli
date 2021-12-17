@@ -42,7 +42,7 @@ Amazon Genomics CLI build process, so that it will be available when the build
 process invokes goenv's `go` shim:
 
 ```bash
-goenv install $(cat .go-version)
+goenv install
 ```
 
 You will need to do this step again whenever the required version of Go is
