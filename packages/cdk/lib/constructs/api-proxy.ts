@@ -1,4 +1,4 @@
-import { Construct } from "monocdk";
+import { Construct } from "constructs";
 import {
   AccessLogField,
   AccessLogFormat,
@@ -13,11 +13,11 @@ import {
   MethodLoggingLevel,
   RestApi,
   VpcLink,
-} from "monocdk/aws-apigateway";
-import { INetworkLoadBalancer } from "monocdk/aws-elasticloadbalancingv2";
-import { AccountPrincipal, PolicyDocument, PolicyStatement } from "monocdk/aws-iam";
-import { ILogGroup, LogGroup } from "monocdk/aws-logs";
-import { IFunction } from "monocdk/aws-lambda";
+} from "aws-cdk-lib/aws-apigateway";
+import { INetworkLoadBalancer } from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import { AccountPrincipal, PolicyDocument, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { ILogGroup, LogGroup } from "aws-cdk-lib/aws-logs";
+import { IFunction } from "aws-cdk-lib/aws-lambda";
 
 export interface ApiProxyProps {
   /**

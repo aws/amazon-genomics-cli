@@ -1,6 +1,6 @@
-import { Construct, Fn, Names, Stack } from "monocdk";
-import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "monocdk/aws-batch";
-import { CfnLaunchTemplate, InstanceType, IVpc } from "monocdk/aws-ec2";
+import { Fn, Names, Stack } from "aws-cdk-lib";
+import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "@aws-cdk/aws-batch-alpha";
+import { CfnLaunchTemplate, InstanceType, IVpc } from "aws-cdk-lib/aws-ec2";
 import {
   CfnInstanceProfile,
   Grant,
@@ -12,10 +12,11 @@ import {
   PolicyStatement,
   Role,
   ServicePrincipal,
-} from "monocdk/aws-iam";
+} from "aws-cdk-lib/aws-iam";
 import { getInstanceTypesForBatch } from "../util/instance-types";
 import { batchArn, ec2Arn } from "../util";
 import { APP_NAME, APP_TAG_KEY } from "../../lib/constants";
+import { Construct } from "constructs";
 
 export interface ComputeOptions {
   /**

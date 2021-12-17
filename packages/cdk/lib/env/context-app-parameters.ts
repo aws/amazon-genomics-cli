@@ -1,6 +1,6 @@
 import { getEnvNumber, getEnvBoolOrDefault, getEnvString, getEnvStringListOrDefault, getEnvStringOrDefault } from "./";
-import { InstanceType } from "monocdk/aws-ec2";
-import { ConstructNode } from "monocdk";
+import { InstanceType } from "aws-cdk-lib/aws-ec2";
+import { Node } from "constructs";
 import { ServiceContainer } from "../types";
 
 const oneCpuUnit = 1024;
@@ -80,7 +80,7 @@ export class ContextAppParameters {
    */
   public readonly instanceTypes?: InstanceType[];
 
-  constructor(node: ConstructNode) {
+  constructor(node: Node) {
     const instanceTypeStrings = getEnvStringListOrDefault(node, "BATCH_COMPUTE_INSTANCE_TYPES");
 
     this.projectName = getEnvString(node, "PROJECT");

@@ -1,5 +1,6 @@
-import { CfnOutput, Stack, Construct } from "monocdk";
-import { ILogGroup } from "monocdk/aws-logs";
+import { CfnOutput, Stack } from "aws-cdk-lib";
+import { ILogGroup } from "aws-cdk-lib/aws-logs";
+import { Construct } from "constructs";
 
 export interface EngineOutputs {
   accessLogGroup: ILogGroup;

@@ -1,5 +1,5 @@
 import { APP_ENV_NAME, APP_NAME } from "../constants";
-import { ConstructNode } from "monocdk";
+import { Node } from "constructs";
 import { getEnvBoolOrDefault, getEnvStringOrDefault } from "./index";
 
 export class CoreAppParameters {
@@ -16,7 +16,7 @@ export class CoreAppParameters {
    */
   public readonly createNewBucket: boolean;
 
-  constructor(node: ConstructNode, account: string, region: string) {
+  constructor(node: Node, account: string, region: string) {
     this.vpcId = getEnvStringOrDefault(node, "VPC_ID");
     this.bucketName = getEnvStringOrDefault(node, `${APP_ENV_NAME}_BUCKET_NAME`, `${APP_NAME}-${account}-${region}`)!;
     this.createNewBucket = getEnvBoolOrDefault(node, `CREATE_${APP_ENV_NAME}_BUCKET`, true)!;

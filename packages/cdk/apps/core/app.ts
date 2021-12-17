@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { App } from "monocdk";
+import { App } from "aws-cdk-lib";
 import "source-map-support/register";
 import { getContextOrDefault } from "../../lib/util";
 import { CoreStack } from "../../lib/stacks";

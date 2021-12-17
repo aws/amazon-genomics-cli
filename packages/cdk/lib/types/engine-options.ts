@@ -1,5 +1,5 @@
-import { RoleProps } from "monocdk/aws-iam";
-import { IVpc } from "monocdk/aws-ec2";
+import { RoleProps } from "aws-cdk-lib/aws-iam";
+import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { ContextAppParameters } from "../env";
 
 export type PolicyOptions = Pick<RoleProps, "inlinePolicies" | "managedPolicies">;
