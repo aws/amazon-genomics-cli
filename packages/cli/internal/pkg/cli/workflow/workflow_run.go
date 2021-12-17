@@ -4,7 +4,6 @@ import "fmt"
 
 func (m *Manager) RunWorkflow(contextName, workflowName, argumentsUrl string) (string, error) {
 	m.readProjectSpec()
-	m.chdirIntoProject()
 	m.setWorkflowSpec(workflowName)
 	m.readConfig()
 	m.setContext(contextName)
