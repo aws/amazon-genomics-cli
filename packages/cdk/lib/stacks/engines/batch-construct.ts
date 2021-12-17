@@ -3,7 +3,7 @@ import { Construct, Stack } from "monocdk";
 import { LAUNCH_TEMPLATE } from "../../constants";
 import { Batch } from "../../constructs";
 import { ContextAppParameters } from "../../env";
-import { BucketOperations } from "../../../common/BucketOperations";
+import { BucketOperations } from "../../common/BucketOperations";
 import { IRole } from "monocdk/aws-iam";
 import { ComputeResourceType } from "monocdk/aws-batch";
 

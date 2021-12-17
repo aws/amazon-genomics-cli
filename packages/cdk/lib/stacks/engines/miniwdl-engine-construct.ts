@@ -8,7 +8,7 @@ import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
 import { IVpc } from "monocdk/aws-ec2";
 import { LAUNCH_TEMPLATE } from "../../constants";
 import { ComputeResourceType } from "monocdk/aws-batch";
-import { BucketOperations } from "../../../common/BucketOperations";
+import { BucketOperations } from "../../common/BucketOperations";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
 import { renderPythonLambda } from "../../util";

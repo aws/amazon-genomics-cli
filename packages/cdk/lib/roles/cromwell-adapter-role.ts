@@ -1,6 +1,6 @@
 import * as cdk from "monocdk";
 import * as iam from "monocdk/aws-iam";
-import { BucketOperations } from "../../common/BucketOperations";
+import { BucketOperations } from "../common/BucketOperations";
 
 export interface CromwellAdapterRoleProps {
   readOnlyBucketArns: string[];

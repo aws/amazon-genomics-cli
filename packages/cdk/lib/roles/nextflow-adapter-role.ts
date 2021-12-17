@@ -2,7 +2,7 @@ import * as cdk from "monocdk";
 import * as iam from "monocdk/aws-iam";
 import { NextflowAdapterBatchPolicy, NextflowSubmitJobBatchPolicyProps } from "./policies/nextflow-adapter-batch-policy";
 import { batchArn } from "../util";
-import { BucketOperations } from "../../common/BucketOperations";
+import { BucketOperations } from "../common/BucketOperations";
 
 export interface NextflowAdapterRoleProps extends NextflowSubmitJobBatchPolicyProps {
   readOnlyBucketArns: string[];

@@ -14,7 +14,8 @@ import {
   ServicePrincipal,
 } from "monocdk/aws-iam";
 import { getInstanceTypesForBatch } from "../util/instance-types";
-import { batchArn } from "../util";
+import { batchArn, ec2Arn } from "../util";
+import { APP_NAME, APP_TAG_KEY } from "../../lib/constants";
 
 export interface ComputeOptions {
   /**
@@ -118,14 +119,29 @@ export class Batch extends Construct {
   }
 
   private renderEc2Role(managedPolicies?: IManagedPolicy[]): IRole {
+    const volumeArn = ec2Arn(this, "volume");
+
     return new Role(this, "BatchRole", {
       assumedBy: new ServicePrincipal("ec2.amazonaws.com"),
       inlinePolicies: {
         "ebs-autoscaling": new PolicyDocument({
           statements: [
             new PolicyStatement({
-              actions: ["ec2:CreateTags", "ec2:DescribeVolumes", "ec2:CreateVolume", "ec2:AttachVolume", "ec2:DeleteVolume", "ec2:ModifyInstanceAttribute"],
-              resources: ["*"],
+              actions: ["ec2:DescribeVolumes", "ec2:CreateVolume", "ec2:CreateTags"],
+              resources: [volumeArn],
+            }),
+            new PolicyStatement({
+              actions: ["ec2:AttachVolume", "ec2:ModifyInstanceAttribute"],
+              resources: [ec2Arn(this, "instance"), volumeArn],
+            }),
+            new PolicyStatement({
+              actions: ["ec2:DeleteVolume"],
+              resources: [volumeArn],
+              conditions: {
+                StringEquals: {
+                  [`aws:ResourceTag/${APP_TAG_KEY}`]: APP_NAME,
+                },
+              },
             }),
           ],
         }),
