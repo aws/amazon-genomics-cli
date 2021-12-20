@@ -1,5 +1,5 @@
-import * as cdk from "monocdk";
-import * as iam from "monocdk/aws-iam";
+import { Role, ServicePrincipal, ManagedPolicy } from "aws-cdk-lib/aws-iam";
+import { Construct } from "constructs";
 import { BucketOperations } from "../common/BucketOperations";
 
 export interface CromwellAdapterRoleProps {
@@ -7,11 +7,11 @@ export interface CromwellAdapterRoleProps {
   readWriteBucketArns: string[];
 }
 
-export class CromwellAdapterRole extends iam.Role {
-  constructor(scope: cdk.Construct, id: string, props: CromwellAdapterRoleProps) {
+export class CromwellAdapterRole extends Role {
+  constructor(scope: Construct, id: string, props: CromwellAdapterRoleProps) {
     super(scope, id, {
-      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")],
+      assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+      managedPolicies: [ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")],
     });
 
     BucketOperations.grantBucketAccess(this, this, props.readOnlyBucketArns, true);

@@ -1,11 +1,12 @@
-import { IVpc } from "monocdk/aws-ec2";
-import { Construct, Stack } from "monocdk";
+import { IVpc } from "aws-cdk-lib/aws-ec2";
+import { Stack } from "aws-cdk-lib";
 import { LAUNCH_TEMPLATE } from "../../constants";
 import { Batch } from "../../constructs";
 import { ContextAppParameters } from "../../env";
 import { BucketOperations } from "../../common/BucketOperations";
-import { IRole } from "monocdk/aws-iam";
-import { ComputeResourceType } from "monocdk/aws-batch";
+import { IRole } from "aws-cdk-lib/aws-iam";
+import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
+import { Construct } from "constructs";
 
 export interface BatchConstructProps {
   /**

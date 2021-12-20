@@ -1,13 +1,13 @@
-import { Construct, Stack, Aws } from "monocdk";
-import { Bucket, IBucket } from "monocdk/aws-s3";
+import { Stack, Aws } from "aws-cdk-lib";
+import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import { ApiProxy, Batch } from "../../constructs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
-import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "monocdk/aws-iam";
-import { ILogGroup } from "monocdk/aws-logs";
+import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "aws-cdk-lib/aws-iam";
+import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
-import { IVpc } from "monocdk/aws-ec2";
+import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { LAUNCH_TEMPLATE } from "../../constants";
-import { ComputeResourceType } from "monocdk/aws-batch";
+import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { BucketOperations } from "../../common/BucketOperations";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
@@ -15,6 +15,7 @@ import { renderPythonLambda } from "../../util";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
 import { EngineOptions } from "../../types";
 import { wesAdapterSourcePath } from "../../constants";
+import { Construct } from "constructs";
 
 export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;

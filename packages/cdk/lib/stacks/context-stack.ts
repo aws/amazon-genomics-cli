@@ -1,5 +1,5 @@
-import { Stack, StackProps } from "monocdk";
-import { IVpc, Vpc } from "monocdk/aws-ec2";
+import { Stack, StackProps } from "aws-cdk-lib";
+import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
 import { getCommonParameter } from "../util";
 import { VPC_PARAMETER_NAME } from "../constants";
