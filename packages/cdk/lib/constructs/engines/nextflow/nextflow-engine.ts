@@ -1,6 +1,6 @@
-import { Construct } from "monocdk";
-import { JobDefinition } from "monocdk/aws-batch";
-import { IRole } from "monocdk/aws-iam";
+import { Construct } from "constructs";
+import { JobDefinition } from "@aws-cdk/aws-batch-alpha";
+import { IRole } from "aws-cdk-lib/aws-iam";
 import { createEcrImage } from "../../../util";
 import { EngineJobDefinition } from "../engine-job-definition";
 import { Engine, EngineProps } from "../engine";

@@ -1,5 +1,5 @@
-import { InstanceType } from "monocdk/aws-ec2";
-import { ComputeResourceType } from "monocdk/aws-batch";
+import { InstanceType } from "aws-cdk-lib/aws-ec2";
+import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 
 // https://github.com/aws-samples/aws-genomics-workflows/blob/master/src/templates/gwfcore/gwfcore-batch.template.yaml#L145-L180
 // batch 'optimal' isn't optimal for genomics computation, these types have been tuned over several customer engagements

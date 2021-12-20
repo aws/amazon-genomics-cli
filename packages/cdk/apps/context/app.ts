@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { App } from "monocdk";
+import { App } from "aws-cdk-lib";
 import "source-map-support/register";
 import { APP_NAME, APP_TAG_KEY, CONTEXT_TAG_KEY, PRODUCT_NAME, PROJECT_TAG_KEY, USER_EMAIL_TAG_KEY, USER_ID_TAG_KEY } from "../../lib/constants";
 import { ContextAppParameters } from "../../lib/env";

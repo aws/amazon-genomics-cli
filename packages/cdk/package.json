@@ -23,10 +23,12 @@
     "ts-jest": "^26.2.0",
     "ts-node": "^10.2.0",
     "typescript": "^3.9.9",
-    "aws-cdk": "^1.124.0"
+    "aws-cdk": "^2.2.0"
   },
   "dependencies": {
-    "monocdk": "^1.124.0",
-    "constructs": "^3.3.155"
+    "aws-cdk-lib": "2.2.0",
+    "@aws-cdk/aws-batch-alpha": "2.2.0-alpha.0",
+    "@aws-cdk/aws-lambda-python-alpha": "2.2.0-alpha.0",
+    "constructs": "^10.0.0"
   }
 }

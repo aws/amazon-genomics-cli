@@ -1,6 +1,6 @@
-import { ILogGroup, LogGroup } from "monocdk/aws-logs";
-import { Construct } from "monocdk";
-import { IVpc } from "monocdk/aws-ec2";
+import { ILogGroup, LogGroup } from "aws-cdk-lib/aws-logs";
+import { Construct } from "constructs";
+import { IVpc } from "aws-cdk-lib/aws-ec2";
 
 export interface EngineProps {
   readonly vpc: IVpc;

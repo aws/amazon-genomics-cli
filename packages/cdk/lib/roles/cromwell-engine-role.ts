@@ -1,9 +1,9 @@
-import * as cdk from "monocdk";
-import * as iam from "monocdk/aws-iam";
 import { PolicyOptions } from "../types/engine-options";
 import { BucketOperations } from "../common/BucketOperations";
 import { CromwellBatchPolicy } from "./policies/cromwell-batch-policy";
-import { Arn, Stack } from "monocdk";
+import { Arn, Aws, Stack } from "aws-cdk-lib";
+import { Construct } from "constructs";
+import { Role, ServicePrincipal, PolicyDocument, PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
 
 interface CromwellEngineRoleProps {
   readOnlyBucketArns: string[];
@@ -12,30 +12,30 @@ interface CromwellEngineRoleProps {
   jobQueueArn: string;
 }
 
-export class CromwellEngineRole extends iam.Role {
-  constructor(scope: cdk.Construct, id: string, props: CromwellEngineRoleProps) {
+export class CromwellEngineRole extends Role {
+  constructor(scope: Construct, id: string, props: CromwellEngineRoleProps) {
     const cromwellJobArn = Arn.format(
       {
-        account: cdk.Aws.ACCOUNT_ID,
-        region: cdk.Aws.REGION,
-        partition: cdk.Aws.PARTITION,
+        account: Aws.ACCOUNT_ID,
+        region: Aws.REGION,
+        partition: Aws.PARTITION,
         resource: "job-definition/*",
         service: "batch",
       },
       scope as Stack
     );
     super(scope, id, {
-      assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
+      assumedBy: new ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {
         CromwellEngineBatchPolicy: new CromwellBatchPolicy({
           ...props,
           cromwellJobArn: cromwellJobArn,
         }),
-        CromwellEcsDescribeInstances: new iam.PolicyDocument({
+        CromwellEcsDescribeInstances: new PolicyDocument({
           assignSids: true,
           statements: [
-            new iam.PolicyStatement({
-              effect: iam.Effect.ALLOW,
+            new PolicyStatement({
+              effect: Effect.ALLOW,
               actions: ["ecs:DescribeContainerInstances", "s3:ListAllMyBuckets"],
               resources: ["*"],
             }),

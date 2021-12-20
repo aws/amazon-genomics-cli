@@ -1,7 +1,7 @@
-import { CfnJobDefinition, JobDefinition, JobDefinitionProps } from "monocdk/aws-batch";
-import { Construct } from "monocdk";
+import { JobDefinition, JobDefinitionProps } from "@aws-cdk/aws-batch-alpha";
+import { Construct } from "constructs";
 import { renderBatchLogConfiguration } from "../../util";
-import { ILogGroup } from "monocdk/aws-logs";
+import { ILogGroup } from "aws-cdk-lib/aws-logs";
 
 interface EngineJobDefinitionProps extends JobDefinitionProps {
   readonly logGroup: ILogGroup;
@@ -19,17 +19,9 @@ export class EngineJobDefinition extends JobDefinition {
           AWS_METADATA_SERVICE_NUM_ATTEMPTS: "10",
           ...props.container.environment,
         },
+        memoryLimitMiB: props.container.memoryLimitMiB || 2048,
+        vcpus: props.container.vcpus || 1,
       },
     });
-
-    const cfnJobDef = this.node.defaultChild as CfnJobDefinition;
-
-    //Removing old method for specifying resources. Using newer ResourceRequirements.
-    cfnJobDef.addPropertyDeletionOverride("ContainerProperties.Vcpus");
-    cfnJobDef.addPropertyDeletionOverride("ContainerProperties.Memory");
-    cfnJobDef.addPropertyOverride("ContainerProperties.ResourceRequirements", [
-      { Type: "VCPU", Value: props.container.vcpus || "1" },
-      { Type: "MEMORY", Value: props.container.memoryLimitMiB || "2048" },
-    ]);
   }
 }
