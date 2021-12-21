@@ -24,7 +24,7 @@ HERE
 cat > ${RELEASE_DIR}/nightly-build.json <<HERE
 {
   "name": "amazon-genomics-cli",
-  "version": "$nightly-build",
+  "version": "nightly-build",
   "commit": "${commit}"
 }
 HERE
