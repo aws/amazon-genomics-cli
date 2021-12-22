@@ -89,11 +89,51 @@ func processInputs(stdin io.WriteCloser, executionName string, wait *sync.WaitGr
 	wait.Add(1)
 	go func() {
         defer wait.Done()
-        _, err := io.Copy(stdin, os.Stdin)
+        err := copyStream(stdin, os.Stdin)
         if err != nil {
 			log.Debug().Msgf("error encountered while copying stdin: %v", err)
 		}
     }()
+}
+
+func copyStream(copyTo io.WriteCloser, copyFrom io.ReadCloser) (error) {
+    // Copy from copyFrom to copyTo without blocking when there's nothing to read.
+    // TODO: May need to use two goroutines and a channel like <https://stackoverflow.com/a/27210020>
+    b := make([]byte, 1)
+	for {
+        // Try to get a byte
+		nRead, err := copyFrom.Read(b)
+		if err == io.EOF {
+            // This is what we expect if we don't have a stdin ourselves.
+            // Make sure to pass along the closed-ness of the stream.
+            return copyTo.Close()
+		}
+        if err != nil {
+			return err
+		}
+        totalWritten := 0
+	    if (nRead > 0) {
+            for {
+                // Spin until we can put the byte down or we get that the
+                // destination stream is closed.
+                nWritten, err := copyTo.Write(b)
+                if err == io.ErrClosedPipe {
+                    // This is what we expect if the process is done.
+                    // TODO: We can't put the byte we are holding back into standard input, so it will be lost.
+                    // Don't close the source stream; we may need it later.
+                    return nil
+                }
+                if err != nil {
+                    return err
+                }
+                totalWritten += nWritten
+                if totalWritten >= nRead {
+                    break
+                }
+            }
+        }
+	}
+    return copyTo.Close()
 }
 
 func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName string) (chan ProgressEvent, *sync.WaitGroup) {
