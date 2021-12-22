@@ -20,6 +20,7 @@ Content-Type: text/cloud-config; charset="us-ascii"
 
 packages:
 - jq
+- grep
 - btrfs-progs
 - sed
 - git
@@ -79,17 +80,16 @@ runcmd:
 
 # start the amazon-cloudwatch-agent
 - /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
+- /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status | jq -r '.status' | grep -iw "running" || sleep 5 && /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
+- /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status | jq -r '.status' | grep -iw "running" || sleep 10 && /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json
+- /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status | jq -r '.status' | grep -iw "running" || shutdown -P now
 
 # install aws-cli v2 and copy the static binary in an easy to find location for bind-mounts into containers
-- curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
-- unzip -q /tmp/awscliv2.zip -d /tmp
-- /tmp/aws/install -b /usr/bin
-
-# check that the aws-cli was actually installed. if not shutdown (terminate) the instance
-- command -v aws || shutdown -P now
-
 - mkdir -p /opt/aws-cli/bin
-- cp -a $(dirname $(find /usr/local/aws-cli -name 'aws' -type f))/. /opt/aws-cli/bin/
+- curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && unzip -q /tmp/awscliv2.zip -d /tmp && /tmp/aws/install -b /usr/bin && cp -a -f $(dirname $(find /usr/local/aws-cli -name 'aws' -type f))/. /opt/aws-cli/bin/
+- command -v aws || sleep 5 | curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && unzip -q /tmp/awscliv2.zip -d /tmp && /tmp/aws/install -b /usr/bin && cp -a -f $(dirname $(find /usr/local/aws-cli -name 'aws' -type f))/. /opt/aws-cli/bin/
+- command -v aws || sleep 10 | curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && unzip -q /tmp/awscliv2.zip -d /tmp && /tmp/aws/install -b /usr/bin && cp -a -f $(dirname $(find /usr/local/aws-cli -name 'aws' -type f))/. /opt/aws-cli/bin/
+- command -v aws || shutdown -P now
 
 # set environment variables for provisioning
 - export ARTIFACTS_NAMESPACE=${APP_NAME}
@@ -101,10 +101,14 @@ runcmd:
 # pull docker images only if missing
 - echo ECS_IMAGE_PULL_BEHAVIOR=prefer-cached >> /etc/ecs/ecs.config
 
+# Setup ecs additions
 - cd /opt
-- aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions
-- chmod a+x /opt/ecs-additions/provision.sh
 - /opt/ecs-additions/provision.sh
+- aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh  
+- test -f ./ecs-additions/fetch_and_run.sh || sleep 5 || aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh    
+- test -f ./ecs-additions/fetch_and_run.sh || sleep 10 || aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh    
+- test -f ./ecs-additions/fetch_and_run.sh || shutdown -P now
 
+- echo "successfully initiated"
 --==MYBOUNDARY==--
 `;
