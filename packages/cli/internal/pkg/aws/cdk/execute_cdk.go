@@ -3,6 +3,7 @@ package cdk
 import (
 	"bufio"
 	"fmt"
+    "io"
 	"os"
 	"os/exec"
 	"regexp"
@@ -54,7 +55,7 @@ func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, t
 	return progressChan, nil
 }
 
-func processCommandOutputs(cmd *exec.Cmd, executionName string) (chan ProgressEvent, *sync.WaitGroup, error) {
+func processCommandIO(cmd *exec.Cmd, executionName string) (chan ProgressEvent, *sync.WaitGroup, error) {
     stderr, err := cmd.StderrPipe()
 	if err != nil {
 		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
@@ -84,31 +85,14 @@ func deleteCDKOutputDir(cdkOutputDir string) {
 	}
 }
 
-func processInputs(stdin *io.WriteCloser, executionName string, wait *sync.WaitGroup) {
+func processInputs(stdin io.WriteCloser, executionName string, wait *sync.WaitGroup) {
 	wait.Add(1)
 	go func() {
-		defer wait.Done()
-        b [1]byte
-        bytesRead, err := os.Stdin.Read(b)
-        if errors.Is(err, io.EOF) {
-            return
-        }
+        defer wait.Done()
+        _, err := io.Copy(stdin, os.Stdin)
         if err != nil {
-            log.Debug().Msgf("error encountered while scanning stdin: %v", err)
-            return
-        }
-        if bytesRead > 0 {
-            err := stdin.Write(b[0])
-            if errors.Is(err, io.ErrClosedPipe) {
-                // This is expected when the process ends.
-                // We will just drop this byte since there's no putback on stdin.
-                return
-            }
-            if err != nil {
-                log.Debug().Msgf("error encountered while forwarding stdin: %v", err)
-                return
-            }
-        }
+			log.Debug().Msgf("error encountered while copying stdin: %v", err)
+		}
     }()
 }
 
