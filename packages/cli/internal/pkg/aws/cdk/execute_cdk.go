@@ -30,7 +30,13 @@ func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, t
 	cmd := execCommand("npm", cmdArgs...)
 	cmd.Dir = appDir
 
-	progressChan, wait, err := processCommandOutputs(cmd, executionName)
+    // Note that cmd won't have any access to stdin, stdout, or stderr that go
+    // anywhere by default. It does not inherit our streams. This is a problem
+    // because sometimes the CDK needs to dialog interactively with the user to
+    // e.g. get MFA codes. So we make sure to forward along important output
+    // and send input ourselves from our stdin in processCommandIO.
+
+	progressChan, wait, err := processCommandIO(cmd, executionName)
 	if err != nil {
 		deleteCDKOutputDir(tmpDir)
 		return nil, err
@@ -49,7 +55,7 @@ func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, t
 }
 
 func processCommandOutputs(cmd *exec.Cmd, executionName string) (chan ProgressEvent, *sync.WaitGroup, error) {
-	stderr, err := cmd.StderrPipe()
+    stderr, err := cmd.StderrPipe()
 	if err != nil {
 		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
@@ -57,10 +63,15 @@ func processCommandOutputs(cmd *exec.Cmd, executionName string) (chan ProgressEv
 	if err != nil {
 		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
-	if err := cmd.Start(); err != nil {
+    stdin, err := cmd.StdinPipe()
+	if err != nil {
+		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
+	}
+    if err := cmd.Start(); err != nil {
 		return nil, nil, fmt.Errorf("couldn't execute CDK deploy command: %w", err)
 	}
 	progressChan, wait := processOutputs(bufio.NewScanner(stdout), bufio.NewScanner(stderr), executionName)
+    processInputs(stdin, executionName, wait)
 	return progressChan, wait, nil
 }
 
@@ -73,6 +84,34 @@ func deleteCDKOutputDir(cdkOutputDir string) {
 	}
 }
 
+func processInputs(stdin *io.WriteCloser, executionName string, wait *sync.WaitGroup) {
+	wait.Add(1)
+	go func() {
+		defer wait.Done()
+        b [1]byte
+        bytesRead, err := os.Stdin.Read(b)
+        if errors.Is(err, io.EOF) {
+            return
+        }
+        if err != nil {
+            log.Debug().Msgf("error encountered while scanning stdin: %v", err)
+            return
+        }
+        if bytesRead > 0 {
+            err := stdin.Write(b[0])
+            if errors.Is(err, io.ErrClosedPipe) {
+                // This is expected when the process ends.
+                // We will just drop this byte since there's no putback on stdin.
+                return
+            }
+            if err != nil {
+                log.Debug().Msgf("error encountered while forwarding stdin: %v", err)
+                return
+            }
+        }
+    }()
+}
+
 func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName string) (chan ProgressEvent, *sync.WaitGroup) {
 	var wait sync.WaitGroup
 	wait.Add(2)
@@ -83,7 +122,12 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName 
 	go func() {
 		defer wait.Done()
 		for stdout.Scan() {
-			log.Debug().Msg(stdout.Text())
+            line := stdout.Text()
+			log.Debug().Msg(line)
+            if strings.HasPrefix(line, "MFA token for") {
+                // CDK may make MFA prompts here, so we need to forward them to the user
+                fmt.Printf("%s\n", line)
+            }
 		}
 		err := stdout.Err()
 		if err != nil {
