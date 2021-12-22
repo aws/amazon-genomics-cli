@@ -65,6 +65,7 @@ type Manager struct {
 	Ssm       ssm.Interface
 	ecrClient ecr.Interface
 	imageRefs map[string]ecr.ImageReference
+	region    string
 
 	baseProps
 	contextProps
@@ -85,11 +86,10 @@ var showExecution = cdk.ShowExecution
 
 func (m *Manager) getEnvironmentVars() []string {
 	var environmentVars []string
-
 	for imageName := range m.imageRefs {
 		environmentVars = append(environmentVars,
 			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", imageName, m.imageRefs[imageName].RegistryId),
-			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.imageRefs[imageName].Region),
+			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.region),
 			fmt.Sprintf("ECR_%s_TAG=%s", imageName, m.imageRefs[imageName].ImageTag),
 			fmt.Sprintf("ECR_%s_REPOSITORY=%s", imageName, m.imageRefs[imageName].RepositoryName),
 		)
@@ -120,6 +120,7 @@ func NewManager(profile string) *Manager {
 		baseProps: baseProps{homeDir: homeDir},
 		imageRefs: environment.CommonImages,
 		ecrClient: aws.EcrClient(profile),
+		region:    aws.Region(profile),
 	}
 }
 
