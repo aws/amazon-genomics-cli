@@ -103,11 +103,11 @@ runcmd:
 
 # Setup ecs additions
 - cd /opt
-- /opt/ecs-additions/provision.sh
 - aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh  
 - test -f ./ecs-additions/fetch_and_run.sh || sleep 5 || aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh    
 - test -f ./ecs-additions/fetch_and_run.sh || sleep 10 || aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh    
 - test -f ./ecs-additions/fetch_and_run.sh || shutdown -P now
+- /opt/ecs-additions/provision.sh
 
 - echo "successfully initiated"
 --==MYBOUNDARY==--
