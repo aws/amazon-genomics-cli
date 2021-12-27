@@ -33,7 +33,7 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
     },
     {
       name: "installed-artifacts/s3-root-url",
-      value: "s3://healthai-public-assets-us-east-1/batch/1.0.2/artifacts",
+      value: `s3://healthai-public-assets-us-east-1/batch/${version}/artifacts`,
       description: "S3 root url for assets",
     },
   ],
