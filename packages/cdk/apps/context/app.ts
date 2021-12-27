@@ -1,7 +1,16 @@
 #!/usr/bin/env node
 import { App } from "aws-cdk-lib";
 import "source-map-support/register";
-import { APP_NAME, APP_TAG_KEY, CONTEXT_TAG_KEY, PRODUCT_NAME, PROJECT_TAG_KEY, USER_EMAIL_TAG_KEY, USER_ID_TAG_KEY } from "../../lib/constants";
+import {
+  AGC_VERSION_KEY,
+  APP_NAME,
+  APP_TAG_KEY,
+  CONTEXT_TAG_KEY,
+  PRODUCT_NAME,
+  PROJECT_TAG_KEY,
+  USER_EMAIL_TAG_KEY,
+  USER_ID_TAG_KEY,
+} from "../../lib/constants";
 import { ContextAppParameters } from "../../lib/env";
 import { ContextStack } from "../../lib/stacks/context-stack";
 
@@ -23,5 +32,6 @@ new ContextStack(app, `${PRODUCT_NAME}-Context-${contextParameters.projectName}-
     [CONTEXT_TAG_KEY]: contextParameters.contextName,
     [USER_ID_TAG_KEY]: contextParameters.userId,
     [USER_EMAIL_TAG_KEY]: contextParameters.userEmail,
+    [AGC_VERSION_KEY]: contextParameters.agcVersion,
   },
 });

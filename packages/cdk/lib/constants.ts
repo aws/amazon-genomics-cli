@@ -8,6 +8,7 @@ export const PROJECT_TAG_KEY = `${APP_NAME}-project`;
 export const CONTEXT_TAG_KEY = `${APP_NAME}-context`;
 export const USER_ID_TAG_KEY = `${APP_NAME}-user-id`;
 export const USER_EMAIL_TAG_KEY = `${APP_NAME}-user-email`;
+export const AGC_VERSION_KEY = `${APP_NAME}-version`;
 export const VPC_PARAMETER_NAME = "vpc";
 
 export const wesAdapterSourcePath = path.resolve(path.join(__dirname, "./wes_adapter"));

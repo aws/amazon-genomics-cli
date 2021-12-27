@@ -15,6 +15,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -74,6 +75,7 @@ func (o *accountActivateOpts) Execute() error {
 	environmentVars := []string{
 		fmt.Sprintf("AGC_BUCKET_NAME=%s", o.bucketName),
 		fmt.Sprintf("CREATE_AGC_BUCKET=%t", !exists),
+		fmt.Sprintf("AGC_VERSION=%s", version.Version),
 	}
 	if o.vpcId != "" {
 		environmentVars = append(environmentVars, fmt.Sprintf("VPC_ID=%s", o.vpcId))
