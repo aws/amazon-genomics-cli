@@ -10,6 +10,7 @@ const app = new App();
 const account: string = process.env.CDK_DEFAULT_ACCOUNT!;
 const region: string = process.env.CDK_DEFAULT_REGION!;
 
+const agcVersion = "placeholder";
 const vpcId = getContextOrDefault<Maybe<string>>(app.node, "VPC_ID");
 const bucketName = getContextOrDefault(app.node, `${APP_ENV_NAME}_BUCKET_NAME`, `${APP_NAME}-${account}-${region}`);
 const createNewBucket = getContextOrDefault(app.node, `CREATE_${APP_ENV_NAME}_BUCKET`, "true").toLowerCase() == "true";
@@ -18,6 +19,7 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
   vpcId,
   bucketName,
   createNewBucket,
+  idempotencyKey: agcVersion,
   env: {
     account,
     region,
@@ -33,8 +35,8 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
     },
     {
       name: "installed-artifacts/s3-root-url",
-      value: `s3://healthai-public-assets-us-east-1/batch/${agcVersion}/artifacts`,
-      description: "S3 root url for assets",
+      value: `s3://${bucketName}/batch-artifacts`,
+      description: "S3 root url for batch assets",
     },
   ],
 });

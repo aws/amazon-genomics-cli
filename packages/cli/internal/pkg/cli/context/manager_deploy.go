@@ -35,7 +35,7 @@ func (m *Manager) getStreamsForCdkDeployments(contexts []string) ([]cdk.Progress
 	var contextsWithStreams []string
 	for _, contextName := range contexts {
 		m.readContextSpec(contextName)
-		m.setCdkConfigurationForDeployment(contextName)
+		m.setCdkConfigurationForDeployment()
 		m.clearCdkContext(contextDir)
 		m.setContextEnv(contextName)
 		m.validateImage()
@@ -52,12 +52,11 @@ func (m *Manager) getStreamsForCdkDeployments(contexts []string) ([]cdk.Progress
 	return progressStreams, contextsWithStreams
 }
 
-func (m *Manager) setCdkConfigurationForDeployment(contextName string) {
+func (m *Manager) setCdkConfigurationForDeployment() {
 	m.setDataBuckets()
 	m.setOutputBucket()
 	m.setArtifactUrl()
 	m.setArtifactBucket()
-	m.setTaskContext(contextName)
 }
 
 func (m *Manager) clearCdkContext(appDir string) {

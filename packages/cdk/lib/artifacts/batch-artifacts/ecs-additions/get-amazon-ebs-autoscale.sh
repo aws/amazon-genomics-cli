@@ -121,7 +121,7 @@ function release() {
 
 function dist_release() {
     # retrieve the version of amazon-ebs-autoscale installed as an artifact with
-    # the GWF Core stack.
+    # the AGC Core stack.
     # recommended for a fully self-contained deployment
 
     if [[ ! $ARTIFACT_ROOT_URL ]]; then

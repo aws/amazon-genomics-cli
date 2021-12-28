@@ -1,5 +1,5 @@
 VERSION := $(shell git describe --always --tags)
-PACKAGES := $(shell ls -d ${PWD}/packages/*/ | grep -v -E "(vendor|api|engines|ecs-additions)")
+PACKAGES := $(shell ls -d ${PWD}/packages/*/ | grep -v -E "(vendor|api|engines)")
 
 .PHONY: test build build-cli release release-cli release-cdk $(PACKAGES)
 
