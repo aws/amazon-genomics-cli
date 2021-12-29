@@ -6,6 +6,7 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
@@ -74,6 +75,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					[]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
+						fmt.Sprintf("AGC_VERSION=%s", version.Version),
 					},
 					"activate").Return(mocks.progressStream, nil)
 				return mocks
@@ -101,6 +103,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					[]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
+						fmt.Sprintf("AGC_VERSION=%s", version.Version),
 					},
 					"activate").Return(mocks.progressStream, nil)
 				return mocks
@@ -118,6 +121,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					[]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
+						fmt.Sprintf("AGC_VERSION=%s", version.Version),
 					},
 					"activate").Return(mocks.progressStream, nil)
 				return mocks
@@ -133,6 +137,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				baseVars := []string{
 					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
 				}
 				mocks.cdkMock.EXPECT().DeployApp(
 					gomock.Any(),
@@ -148,7 +153,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, fmt.Errorf("some bucket exists error"))
 				return mocks
 			},
-			expectedErr: fmt.Errorf("An error occurred while activating the account. Error was: 'some account error'"),
+			expectedErr: fmt.Errorf("some bucket exists error"),
 		},
 		"deploy error": {
 			bucketName: testAccountBucketName,
@@ -161,11 +166,12 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					[]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
+						fmt.Sprintf("AGC_VERSION=%s", version.Version),
 					},
 					"activate").Return(nil, fmt.Errorf("some deploy error"))
 				return mocks
 			},
-			expectedErr: fmt.Errorf("An error occurred while activating the account. Error was: 'some deploy error'"),
+			expectedErr: fmt.Errorf("some deploy error"),
 		},
 	}
 
@@ -188,7 +194,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 
 			err := opts.Execute()
 			if tc.expectedErr != nil {
-				assert.Error(t, err, tc.expectedErr)
+				assert.Equal(t, err, tc.expectedErr)
 			} else {
 				assert.NoError(t, err)
 			}
