@@ -45,7 +45,7 @@ func Test_SendDataToReceiverAndUpdateResult_Error(t *testing.T) {
 
 	waitGroup.Wait()
 
-	expectedEvent := ProgressEvent{ExecutionName: "someKey", CurrentStep: 1, TotalSteps: 1}
+	expectedEvent := ProgressEvent{ExecutionName: "someKey", CurrentStep: 1, TotalSteps: 1, Outputs: []string{"hi"}, Err: errors.New("some error")}
 	assert.Equal(t, expectedEvent, channelOutput)
 }
 
