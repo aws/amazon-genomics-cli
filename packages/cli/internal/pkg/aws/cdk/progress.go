@@ -51,12 +51,10 @@ func (p ProgressStream) DisplayProgress(description string) error {
 	return nil
 }
 
-func ShowExecution(progressEvents []ProgressStream) []Result {
+func ShowExecution(progressStreams []ProgressStream) []Result {
 	var keyToEventMap = make(map[string]ProgressEvent)
-	var waitGroup sync.WaitGroup
-	waitGroup.Add(len(progressEvents))
 
-	combinedStream := combineProgressEvents(progressEvents)
+	combinedStream := combineProgressEvents(progressStreams)
 
 	for event := range combinedStream {
 		if event.LastOutput != "" {
@@ -65,7 +63,7 @@ func ShowExecution(progressEvents []ProgressStream) []Result {
 		keyToEventMap[event.ExecutionName] = event
 	}
 
-	return convertProgressEventsToResults(keyToEventMap, len(progressEvents))
+	return convertProgressEventsToResults(keyToEventMap, len(progressStreams))
 }
 
 func updateResultFromStream(stream ProgressStream, progressResult *Result, wait *sync.WaitGroup) {
@@ -96,7 +94,6 @@ func DisplayProgressBar(description string, progressEvents []ProgressStream) []R
 		barReceiver <- event
 		keyToEventMap[event.ExecutionName] = event
 	}
-
 	return convertProgressEventsToResults(keyToEventMap, len(progressEvents))
 }
 
@@ -140,6 +137,8 @@ func sendDataToReceiver(channel <-chan ProgressEvent, waitGroup *sync.WaitGroup,
 	for cdkChannelOut := range channel {
 		if cdkChannelOut.Err != nil {
 			stopProcessingEvent.ExecutionName = lastEvent.ExecutionName
+			stopProcessingEvent.Err = cdkChannelOut.Err
+			stopProcessingEvent.Outputs = lastEvent.Outputs
 			receiver <- stopProcessingEvent
 			return
 		} else {
