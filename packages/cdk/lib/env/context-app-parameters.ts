@@ -79,6 +79,10 @@ export class ContextAppParameters {
    * The types of EC2 instances that may be launched in the compute environment.
    */
   public readonly instanceTypes?: InstanceType[];
+  /**
+   * AGC version being deployed.
+   */
+  public readonly agcVersion: string;
 
   constructor(node: Node) {
     const instanceTypeStrings = getEnvStringListOrDefault(node, "BATCH_COMPUTE_INSTANCE_TYPES");
@@ -104,6 +108,8 @@ export class ContextAppParameters {
     this.maxVCpus = getEnvNumber(node, "MAX_V_CPUS");
     this.requestSpotInstances = getEnvBoolOrDefault(node, "REQUEST_SPOT_INSTANCES", false)!;
     this.instanceTypes = instanceTypeStrings ? instanceTypeStrings.map((instanceType) => new InstanceType(instanceType.trim())) : undefined;
+
+    this.agcVersion = getEnvString(node, "AGC_VERSION");
   }
 
   public getContextBucketPath(): string {
