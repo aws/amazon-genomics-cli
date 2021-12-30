@@ -20,6 +20,7 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
   vpcId,
   bucketName,
   createNewBucket,
+  idempotencyKey: agcVersion,
   env: {
     account,
     region,
@@ -36,8 +37,8 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
     },
     {
       name: "installed-artifacts/s3-root-url",
-      value: "s3://healthai-public-assets-us-east-1/batch/1.0.2/artifacts",
-      description: "S3 root url for assets",
+      value: `s3://${bucketName}/batch-artifacts`,
+      description: "S3 root url for batch assets",
     },
   ],
 });

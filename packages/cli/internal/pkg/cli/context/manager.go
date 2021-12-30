@@ -193,26 +193,6 @@ func (m *Manager) setOutputBucket() {
 	}
 }
 
-func (m *Manager) setTaskContext(contextName string) {
-	if m.err != nil {
-		return
-	}
-
-	m.contextEnv = contextEnvironment{
-		ProjectName:          m.projectSpec.Name,
-		ContextName:          contextName,
-		UserId:               m.userId,
-		UserEmail:            m.userEmail,
-		OutputBucketName:     m.outputBucket,
-		ArtifactBucketName:   m.artifactBucket,
-		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
-		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
-		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
-		MaxVCpus:             m.contextSpec.MaxVCpus,
-		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
-	}
-}
-
 func (m *Manager) setContextEnv(contextName string) {
 	if m.err != nil {
 		return
