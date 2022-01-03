@@ -1,3 +1,4 @@
+ARG SNAKEMAKE_VERSION
 FROM public.ecr.aws/amazonlinux/amazonlinux:2 AS final
 
 # COPY THIRD-PARTY /opt/
@@ -28,7 +29,7 @@ ENV PATH /opt/conda/bin:${PATH}
 ENV JAVA_HOME /usr/lib/jvm/jre-openjdk/
 
 RUN conda install -y -c conda-forge mamba && \
-    mamba create -q -y -c conda-forge -c bioconda -n snakemake snakemake && \
+    mamba create -q -y -c conda-forge -c bioconda -n snakemake snakemake=${SNAKEMAKE_VERSION} && \
     source activate snakemake
 
 COPY snakemake.aws.sh /opt/bin/snakemake.aws.sh
