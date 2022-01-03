@@ -106,8 +106,11 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
 				line = ""
 			}
 			if strings.HasSuffix(line, ": ") && strings.HasPrefix(line, "MFA token for") {
-				// CDK may make MFA prompts here, so we need to forward them to the user
-				fmt.Printf("%s", line)
+				// CDK may make MFA prompts here, so we need to forward them to the user.
+				// We also need to make sure to drop down a couple lines
+				// because if there's a progress spinner going it will just
+				// immediately clobber our prompt.
+				fmt.Printf("\n%s\n\n", line)
 				line = ""
 				// And we need to read and pass along a code.
 				var reply string
