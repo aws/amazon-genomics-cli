@@ -97,7 +97,6 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
         // So scan runes instead and do our own line buffering
         stdout.Split(bufio.ScanRunes)
         line := ""
-        log.Debug().Msg("Wait for stdout character")
 		for stdout.Scan() {
             line += stdout.Text()
             if strings.HasSuffix(line, "\n") {
@@ -124,12 +123,10 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
                     log.Debug().Msgf("error encountered while closing CDK input stream: %v", err)
                 }
             }
-            log.Debug().Msg("Wait for stdout character")
 		}
         if line != "" {
             log.Debug().Msg(line)
         }
-        log.Debug().Msg("stdout depleted")
 		err := stdout.Err()
 		if err != nil {
 			log.Debug().Msgf("error encountered while scanning stdout: %v", err)
@@ -137,14 +134,11 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
 	}()
 	go func() {
 		defer wait.Done()
-        log.Debug().Msg("Wait for stderr line")
 		for stderr.Scan() {
 			line := stderr.Text()
             log.Debug().Msg(line)
 			progressChan <- updateEvent(currentEvent, line)
-            log.Debug().Msg("Wait for stderr line")
 		}
-        log.Debug().Msg("stderr depleted")
 		err := stderr.Err()
 		if err != nil {
 			log.Debug().Msgf("error encountered while scanning stderr: %v", err)
