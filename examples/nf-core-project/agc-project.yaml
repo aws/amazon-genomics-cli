@@ -29,6 +29,8 @@ data:
     readOnly: true
   - location: s3://nf-core-awsmegatests
     readOnly: true
+  - location: s3://healthai-public-assets-us-east-1
+    readOnly: true
 contexts:
   bigMemCtx:
     instanceTypes:                     # Standard types plus r5.8xlarge due to memory requirements of some workflows like sarek
