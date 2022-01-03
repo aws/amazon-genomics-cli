@@ -27,7 +27,7 @@ func executeCdkCommand(appDir string, commandArgs []string, executionName string
 
 func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, tmpDir string, executionName string) (ProgressStream, error) {
 	log.Debug().Msgf("executeCDKCommand(%s, %v)", appDir, commandArgs)
-	cmdArgs := append([]string{"run", "cdk", "--"}, commandArgs...)
+	cmdArgs := append([]string{"run", "cdk", "--", "-v", "-v", "-v"}, commandArgs...)
 	cmd := execCommand("npm", cmdArgs...)
 	cmd.Dir = appDir
 
@@ -35,7 +35,7 @@ func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, t
     // anywhere by default. It does not inherit our streams. This is a problem
     // because sometimes the CDK needs to dialog interactively with the user to
     // e.g. get MFA codes. So we make sure to forward along important output
-    // and send input ourselves from our stdin in processCommandIO.
+    // and do our own prompting in processCommandIO.
 
 	progressChan, wait, err := processCommandIO(cmd, executionName)
 	if err != nil {
@@ -71,8 +71,7 @@ func processCommandIO(cmd *exec.Cmd, executionName string) (chan ProgressEvent, 
     if err := cmd.Start(); err != nil {
 		return nil, nil, fmt.Errorf("couldn't execute CDK deploy command: %w", err)
 	}
-	progressChan, wait := processOutputs(bufio.NewScanner(stdout), bufio.NewScanner(stderr), executionName)
-    processInputs(stdin, executionName, wait)
+	progressChan, wait := processOutputs(bufio.NewScanner(stdout), bufio.NewScanner(stderr), stdin, executionName)
 	return progressChan, wait, nil
 }
 
@@ -85,58 +84,7 @@ func deleteCDKOutputDir(cdkOutputDir string) {
 	}
 }
 
-func processInputs(stdin io.WriteCloser, executionName string, wait *sync.WaitGroup) {
-	wait.Add(1)
-	go func() {
-        defer wait.Done()
-        err := copyStream(stdin, os.Stdin)
-        if err != nil {
-			log.Debug().Msgf("error encountered while copying stdin: %v", err)
-		}
-    }()
-}
-
-func copyStream(copyTo io.WriteCloser, copyFrom io.ReadCloser) (error) {
-    // Copy from copyFrom to copyTo without blocking when there's nothing to read.
-    // TODO: May need to use two goroutines and a channel like <https://stackoverflow.com/a/27210020>
-    b := make([]byte, 1)
-	for {
-        // Try to get a byte
-		nRead, err := copyFrom.Read(b)
-		if err == io.EOF {
-            // This is what we expect if we don't have a stdin ourselves.
-            // Make sure to pass along the closed-ness of the stream.
-            return copyTo.Close()
-		}
-        if err != nil {
-			return err
-		}
-        totalWritten := 0
-	    if (nRead > 0) {
-            for {
-                // Spin until we can put the byte down or we get that the
-                // destination stream is closed.
-                nWritten, err := copyTo.Write(b)
-                if err == io.ErrClosedPipe {
-                    // This is what we expect if the process is done.
-                    // TODO: We can't put the byte we are holding back into standard input, so it will be lost.
-                    // Don't close the source stream; we may need it later.
-                    return nil
-                }
-                if err != nil {
-                    return err
-                }
-                totalWritten += nWritten
-                if totalWritten >= nRead {
-                    break
-                }
-            }
-        }
-	}
-    return copyTo.Close()
-}
-
-func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName string) (chan ProgressEvent, *sync.WaitGroup) {
+func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.WriteCloser, executionName string) (chan ProgressEvent, *sync.WaitGroup) {
 	var wait sync.WaitGroup
 	wait.Add(2)
 	progressChan := make(chan ProgressEvent)
@@ -145,14 +93,43 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName 
 	}
 	go func() {
 		defer wait.Done()
+        // We can't just scan through lines, because the MFA prompt is a partial line and we need to see it.
+        // So scan runes instead and do our own line buffering
+        stdout.Split(bufio.ScanRunes)
+        line := ""
+        log.Debug().Msg("Wait for stdout character")
 		for stdout.Scan() {
-            line := stdout.Text()
-			log.Debug().Msg(line)
-            if strings.HasPrefix(line, "MFA token for") {
-                // CDK may make MFA prompts here, so we need to forward them to the user
-                fmt.Printf("%s\n", line)
+            line += stdout.Text()
+            if strings.HasSuffix(line, "\n") {
+			    // We got a whole line at this character
+                log.Debug().Msg(line[:len(line)-1])
+                line = ""
             }
+            if strings.HasSuffix(line, ": ") && strings.HasPrefix(line, "MFA token for") {
+                // CDK may make MFA prompts here, so we need to forward them to the user
+                fmt.Printf("%s", line)
+                line = ""
+                // And we need to read and pass along a code.
+                var reply string
+                fmt.Scanln(&reply)
+                _, err := stdin.Write([]byte(reply + "\n"))
+                if err != nil {
+                    log.Debug().Msgf("error encountered while forwarding MFA code: %v", err)
+                } else {
+                    log.Debug().Msg("Sent MFA code")
+                }
+                // We only need to send one MFA code
+                err = stdin.Close()
+                if err != nil {
+                    log.Debug().Msgf("error encountered while closing CDK input stream: %v", err)
+                }
+            }
+            log.Debug().Msg("Wait for stdout character")
 		}
+        if line != "" {
+            log.Debug().Msg(line)
+        }
+        log.Debug().Msg("stdout depleted")
 		err := stdout.Err()
 		if err != nil {
 			log.Debug().Msgf("error encountered while scanning stdout: %v", err)
@@ -160,10 +137,14 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName 
 	}()
 	go func() {
 		defer wait.Done()
+        log.Debug().Msg("Wait for stderr line")
 		for stderr.Scan() {
 			line := stderr.Text()
+            log.Debug().Msg(line)
 			progressChan <- updateEvent(currentEvent, line)
+            log.Debug().Msg("Wait for stderr line")
 		}
+        log.Debug().Msg("stderr depleted")
 		err := stderr.Err()
 		if err != nil {
 			log.Debug().Msgf("error encountered while scanning stderr: %v", err)
