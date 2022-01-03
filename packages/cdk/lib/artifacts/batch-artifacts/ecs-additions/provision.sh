@@ -13,17 +13,6 @@ BASEDIR=`dirname $0`
 
 printenv
 
-# start ssm-agent
-if [[ $OS =~ "amzn1" ]]; then
-    start amazon-ssm-agent
-elif [[ $OS =~ "amzn2" ]]; then
-    systemctl enable amazon-ssm-agent
-    systemctl start amazon-ssm-agent
-else
-    echo "unsupported os: $os"
-    exit 100
-fi
-
 function ecs() {
     
     if [[ $OS =~ "amzn1" ]]; then

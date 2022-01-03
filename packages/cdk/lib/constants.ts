@@ -25,7 +25,6 @@ packages:
 - btrfs-progs
 - sed
 - git
-- amazon-ssm-agent
 - unzip
 - amazon-cloudwatch-agent
 
