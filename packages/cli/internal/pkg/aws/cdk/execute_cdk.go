@@ -117,7 +117,9 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
                 } else {
                     log.Debug().Msg("Sent MFA code")
                 }
-                // We only need to send one MFA code
+                // We only need to send at most one MFA code, and if we don't
+                // close its standard input we get stuck when the CDK is done
+                // with its work.
                 err = stdin.Close()
                 if err != nil {
                     log.Debug().Msgf("error encountered while closing CDK input stream: %v", err)
