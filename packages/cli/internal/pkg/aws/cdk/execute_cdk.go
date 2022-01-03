@@ -27,7 +27,7 @@ func executeCdkCommand(appDir string, commandArgs []string, executionName string
 
 func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, tmpDir string, executionName string) (ProgressStream, error) {
 	log.Debug().Msgf("executeCDKCommand(%s, %v)", appDir, commandArgs)
-	cmdArgs := append([]string{"run", "cdk", "--", "-v", "-v", "-v"}, commandArgs...)
+	cmdArgs := append([]string{"run", "cdk", "--"}, commandArgs...)
 	cmd := execCommand("npm", cmdArgs...)
 	cmd.Dir = appDir
 
