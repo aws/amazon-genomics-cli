@@ -10,15 +10,15 @@ var mkDirTemp = os.MkdirTemp
 
 func (client Client) DeployApp(appDir string, context []string, executionName string) (ProgressStream, error) {
 	tmpDir, _ := mkDirTemp(appDir, "cdk-output")
-    // The temp directory defaults to 700 permissions, which can prevent Docker
-    // from mounting directories under it, which can prevent the CDK's bundling
-    // process from working, with errors like:
-    // docker: Error response from daemon: error while creating mount source path '...': mkdir ...: permission denied.
-    // So we need to change the permissions
-    err := os.Chmod(tmpDir, 0755)
-    if err != nil {
-        return nil, err
-    }
+	// The temp directory defaults to 700 permissions, which can prevent Docker
+	// from mounting directories under it, which can prevent the CDK's bundling
+	// process from working, with errors like:
+	// docker: Error response from daemon: error while creating mount source path '...': mkdir ...: permission denied.
+	// So we need to change the permissions
+	err := os.Chmod(tmpDir, 0755)
+	if err != nil {
+		return nil, err
+	}
 	cmdArgs := []string{
 		"deploy",
 		"--all",
