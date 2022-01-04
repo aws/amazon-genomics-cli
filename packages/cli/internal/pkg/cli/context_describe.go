@@ -59,6 +59,7 @@ func (o *describeContextOpts) Execute() (types.Context, error) {
 		MaxVCpus:             info.MaxVCpus,
 		RequestSpotInstances: info.IsSpot,
 		Output:               types.OutputLocation{Url: info.BucketLocation},
+		WesEndpoint:          types.WesEndpoint{Url: info.WesUrl},
 	}, nil
 }
 
