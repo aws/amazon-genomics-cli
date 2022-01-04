@@ -112,12 +112,21 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
 				// immediately clobber our prompt.
 				fmt.Printf("\n%s\n\n", line)
 				line = ""
+
+				oldStepDescription := currentEvent.StepDescription
+				currentEvent.StepDescription = "Waiting for MFA..."
+				progressChan <- *currentEvent
+
 				// And we need to read and pass along a code.
 				var reply string
 				fmt.Scanln(&reply)
+
+				currentEvent.StepDescription = oldStepDescription
+				progressChan <- *currentEvent
+
 				_, err := stdin.Write([]byte(reply + "\n"))
 				if err != nil {
-					log.Debug().Msgf("error encountered while forwarding MFA code: %v", err)
+					log.Error().Msgf("error encountered while forwarding MFA code: %v", err)
 				} else {
 					log.Debug().Msg("Sent MFA code")
 				}
@@ -126,7 +135,7 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
 				// with its work.
 				err = stdin.Close()
 				if err != nil {
-					log.Debug().Msgf("error encountered while closing CDK input stream: %v", err)
+					log.Error().Msgf("error encountered while closing CDK input stream: %v", err)
 				}
 			}
 		}
@@ -136,7 +145,7 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
 		}
 		err := stdout.Err()
 		if err != nil {
-			log.Debug().Msgf("error encountered while scanning stdout: %v", err)
+			log.Error().Msgf("error encountered while scanning stdout: %v", err)
 		}
 	}()
 	go func() {
@@ -147,7 +156,7 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
 		}
 		err := stderr.Err()
 		if err != nil {
-			log.Debug().Msgf("error encountered while scanning stderr: %v", err)
+			log.Error().Msgf("error encountered while scanning stderr: %v", err)
 		}
 	}()
 	return progressChan, &wait
