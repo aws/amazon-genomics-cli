@@ -51,7 +51,7 @@ func CdkClient(profile string) *cdk.Client {
 func CfnClient(profile string) *cfn.Client {
 	initClientMap(profile)
 	if _, ok := profileClients[profile][clientCfn]; !ok {
-		cfg := getProfileConfig(profile)
+		cfg := GetProfileConfig(profile)
 		profileClients[profile][clientCfn] = cfn.New(cfg)
 	}
 
@@ -61,7 +61,7 @@ func CfnClient(profile string) *cfn.Client {
 func CwlClient(profile string) *cwl.Client {
 	initClientMap(profile)
 	if _, ok := profileClients[profile][clientCwl]; !ok {
-		cfg := getProfileConfig(profile)
+		cfg := GetProfileConfig(profile)
 		profileClients[profile][clientCwl] = cwl.New(cfg)
 	}
 
@@ -71,7 +71,7 @@ func CwlClient(profile string) *cwl.Client {
 func S3Client(profile string) *s3.Client {
 	initClientMap(profile)
 	if _, ok := profileClients[profile][clientS3]; !ok {
-		cfg := getProfileConfig(profile)
+		cfg := GetProfileConfig(profile)
 		profileClients[profile][clientS3] = s3.New(cfg)
 	}
 
@@ -81,7 +81,7 @@ func S3Client(profile string) *s3.Client {
 func SsmClient(profile string) *ssm.Client {
 	initClientMap(profile)
 	if _, ok := profileClients[profile][clientSsm]; !ok {
-		cfg := getProfileConfig(profile)
+		cfg := GetProfileConfig(profile)
 		profileClients[profile][clientSsm] = ssm.New(cfg)
 	}
 
@@ -91,7 +91,7 @@ func SsmClient(profile string) *ssm.Client {
 func StsClient(profile string) *sts.Client {
 	initClientMap(profile)
 	if _, ok := profileClients[profile][clientSts]; !ok {
-		cfg := getProfileConfig(profile)
+		cfg := GetProfileConfig(profile)
 		profileClients[profile][clientSts] = sts.NewClient(cfg)
 	}
 
@@ -102,7 +102,7 @@ func StsClient(profile string) *sts.Client {
 func DdbClient(profile string) *ddb.Client {
 	initClientMap(profile)
 	if _, ok := profileClients[profile][clientDdb]; !ok {
-		cfg := getProfileConfig(profile)
+		cfg := GetProfileConfig(profile)
 		profileClients[profile][clientDdb] = ddb.New(cfg)
 	}
 
@@ -113,7 +113,7 @@ func DdbClient(profile string) *ddb.Client {
 func BatchClient(profile string) *batch.Client {
 	initClientMap(profile)
 	if _, ok := profileClients[profile][clientBatch]; !ok {
-		cfg := getProfileConfig(profile)
+		cfg := GetProfileConfig(profile)
 		profileClients[profile][clientBatch] = batch.New(cfg)
 	}
 
@@ -124,7 +124,7 @@ func BatchClient(profile string) *batch.Client {
 func EcrClient(profile string) *ecr.Client {
 	initClientMap(profile)
 	if _, ok := profileClients[profile][clientEcr]; !ok {
-		cfg := getProfileConfig(profile)
+		cfg := GetProfileConfig(profile)
 		profileClients[profile][clientEcr] = ecr.New(cfg)
 	}
 
@@ -134,7 +134,7 @@ func EcrClient(profile string) *ecr.Client {
 
 func Region(profile string) string {
 	initClientMap(profile)
-	cfg := getProfileConfig(profile)
+	cfg := GetProfileConfig(profile)
 	return cfg.Region
 }
 
@@ -144,7 +144,7 @@ func initClientMap(profile string) {
 	}
 }
 
-func getProfileConfig(profile string) aws.Config {
+func GetProfileConfig(profile string) aws.Config {
 	if _, ok := profileConfigs[profile]; !ok {
 		cfg, err := loadConfig(context.Background(),
 			config.WithSharedConfigProfile(profile),
