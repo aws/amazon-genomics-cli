@@ -24,29 +24,14 @@ func (m *Manager) RunWorkflow(contextName, workflowName, argumentsUrl string) (s
 	m.parseInputToArguments()
 	m.setContextStackInfo(contextName)
 	m.setWesUrl()
-    if m.err != nil {
-		return "", fmt.Errorf("unable to set WES URL: %w", m.err)
-	}
 	m.setWesClient()
-    if m.err != nil {
-		return "", fmt.Errorf("unable to set WES client: %w", m.err)
-	}
 	m.saveAttachments()
-    if m.err != nil {
-		return "", fmt.Errorf("unable to save attachments: %w", m.err)
-	}
 	m.setWorkflowParameters()
-    if m.err != nil {
-		return "", fmt.Errorf("unable to set workflow parameters: %w", m.err)
-	}
 	defer m.cleanUpAttachments()
 	m.runWorkflow()
-    if m.err != nil {
-		return "", fmt.Errorf("unable to run workflow: %w", m.err)
-	}
 	m.recordWorkflowRun(workflowName, contextName)
 	if m.err != nil {
-		return "", fmt.Errorf("unable to record workflow run: %w", m.err)
+		return "", fmt.Errorf("unable to run workflow: %w", m.err)
 	}
 	return m.runId, nil
 }
