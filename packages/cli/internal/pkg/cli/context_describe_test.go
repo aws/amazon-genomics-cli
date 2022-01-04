@@ -28,7 +28,7 @@ func TestDescribeContextOpts_Execute(t *testing.T) {
 				Name:           testContextName1,
 				Status:         "STARTED",
 				Output:         types.OutputLocation{Url: "s3://some-bucket/project/TestProject/context/test-context-name-1"},
-				WesAPIEndpoint: types.WesAPIEndpoint{Url: "https://wes.execute-api.us-east-2.amazonaws.com/prod/ga4gh/wes/v1"},
+				WesEndpoint:    types.WesEndpoint{Url: "https://wes.execute-api.us-east-2.amazonaws.com/prod/ga4gh/wes/v1"},
 			},
 			setupMocks: func(opts *describeContextOpts) {
 				opts.ctxManager.(*contextmocks.MockContextManager).EXPECT().Info(testContextName1).Return(context.Detail{
