@@ -42,7 +42,6 @@ var (
 		}
 		return f.Name(), nil
 	}
-	chdir = os.Chdir
 )
 
 //nolint:structcheck
@@ -173,13 +172,6 @@ func (m *Manager) validateContextIsDeployed(contextName string) {
 	}
 }
 
-func (m *Manager) chdirIntoProject() {
-	if m.err != nil {
-		return
-	}
-	m.err = chdir(m.Project.GetLocation())
-}
-
 func (m *Manager) setWorkflowSpec(workflowName string) {
 	if m.err != nil {
 		return
@@ -212,7 +204,10 @@ func (m *Manager) packWorkflowFiles() {
 	if m.err != nil {
 		return
 	}
-	m.packPath, m.err = compressToTmp(m.parsedSourceURL.Path)
+	projectLocation := m.Project.GetLocation()
+	workflowPath := m.parsedSourceURL.Path
+	path := filepath.Join(projectLocation, workflowPath)
+	m.packPath, m.err = compressToTmp(path)
 }
 
 func (m *Manager) setOutputBucket() {

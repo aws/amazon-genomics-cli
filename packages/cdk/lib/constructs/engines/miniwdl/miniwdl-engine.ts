@@ -1,12 +1,13 @@
-import { Construct, RemovalPolicy } from "monocdk";
-import { JobDefinition, PlatformCapabilities } from "monocdk/aws-batch";
-import { IVpc } from "monocdk/aws-ec2";
-import { AccessPoint, FileSystem, PerformanceMode } from "monocdk/aws-efs";
-import { FargatePlatformVersion } from "monocdk/aws-ecs";
+import { RemovalPolicy } from "aws-cdk-lib";
+import { JobDefinition, PlatformCapabilities } from "@aws-cdk/aws-batch-alpha";
+import { IVpc } from "aws-cdk-lib/aws-ec2";
+import { AccessPoint, FileSystem, PerformanceMode } from "aws-cdk-lib/aws-efs";
+import { FargatePlatformVersion } from "aws-cdk-lib/aws-ecs";
 import { Batch } from "../../batch";
 import { Engine, EngineProps } from "../engine";
 import { EngineJobDefinition } from "../engine-job-definition";
 import { createEcrImage } from "../../../util";
+import { Construct } from "constructs";
 
 export interface MiniWdlEngineProps extends EngineProps {
   readonly engineBatch: Batch;

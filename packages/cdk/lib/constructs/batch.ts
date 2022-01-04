@@ -1,6 +1,6 @@
-import { Construct, Fn, Names, Stack } from "monocdk";
-import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "monocdk/aws-batch";
-import { CfnLaunchTemplate, InstanceType, IVpc } from "monocdk/aws-ec2";
+import { Fn, Names, Stack } from "aws-cdk-lib";
+import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "@aws-cdk/aws-batch-alpha";
+import { CfnLaunchTemplate, InstanceType, IVpc } from "aws-cdk-lib/aws-ec2";
 import {
   CfnInstanceProfile,
   Grant,
@@ -12,9 +12,11 @@ import {
   PolicyStatement,
   Role,
   ServicePrincipal,
-} from "monocdk/aws-iam";
+} from "aws-cdk-lib/aws-iam";
 import { getInstanceTypesForBatch } from "../util/instance-types";
-import { batchArn } from "../util";
+import { batchArn, ec2Arn } from "../util";
+import { APP_NAME, APP_TAG_KEY } from "../../lib/constants";
+import { Construct } from "constructs";
 
 export interface ComputeOptions {
   /**
@@ -118,14 +120,29 @@ export class Batch extends Construct {
   }
 
   private renderEc2Role(managedPolicies?: IManagedPolicy[]): IRole {
+    const volumeArn = ec2Arn(this, "volume");
+
     return new Role(this, "BatchRole", {
       assumedBy: new ServicePrincipal("ec2.amazonaws.com"),
       inlinePolicies: {
         "ebs-autoscaling": new PolicyDocument({
           statements: [
             new PolicyStatement({
-              actions: ["ec2:CreateTags", "ec2:DescribeVolumes", "ec2:CreateVolume", "ec2:AttachVolume", "ec2:DeleteVolume", "ec2:ModifyInstanceAttribute"],
-              resources: ["*"],
+              actions: ["ec2:DescribeVolumes", "ec2:CreateVolume", "ec2:CreateTags"],
+              resources: [volumeArn],
+            }),
+            new PolicyStatement({
+              actions: ["ec2:AttachVolume", "ec2:ModifyInstanceAttribute"],
+              resources: [ec2Arn(this, "instance"), volumeArn],
+            }),
+            new PolicyStatement({
+              actions: ["ec2:DeleteVolume"],
+              resources: [volumeArn],
+              conditions: {
+                StringEquals: {
+                  [`aws:ResourceTag/${APP_TAG_KEY}`]: APP_NAME,
+                },
+              },
             }),
           ],
         }),

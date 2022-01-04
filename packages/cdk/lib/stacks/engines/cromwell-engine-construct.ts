@@ -1,19 +1,20 @@
-import { RemovalPolicy, Construct } from "monocdk";
-import { Aws } from "monocdk";
-import { IVpc } from "monocdk/aws-ec2";
-import { FargateTaskDefinition, LogDriver } from "monocdk/aws-ecs";
+import { RemovalPolicy } from "aws-cdk-lib";
+import { Aws } from "aws-cdk-lib";
+import { IVpc } from "aws-cdk-lib/aws-ec2";
+import { FargateTaskDefinition, LogDriver } from "aws-cdk-lib/aws-ecs";
 import { ApiProxy, SecureService } from "../../constructs";
-import { IRole } from "monocdk/aws-iam";
+import { IRole } from "aws-cdk-lib/aws-iam";
 import { createEcrImage, renderPythonLambda, renderServiceWithTaskDefinition } from "../../util";
-import { Bucket } from "monocdk/aws-s3";
-import { FileSystem } from "monocdk/aws-efs";
+import { Bucket } from "aws-cdk-lib/aws-s3";
+import { FileSystem } from "aws-cdk-lib/aws-efs";
 import { EngineOptions, ServiceContainer } from "../../types";
-import { LogGroup, ILogGroup } from "monocdk/aws-logs";
+import { LogGroup, ILogGroup } from "aws-cdk-lib/aws-logs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
-import { IJobQueue } from "monocdk/aws-batch";
+import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { wesAdapterSourcePath } from "../../constants";
+import { Construct } from "constructs";
 
 export interface CromwellEngineConstructProps extends EngineOptions {
   /**

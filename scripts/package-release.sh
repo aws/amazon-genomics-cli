@@ -20,3 +20,11 @@ cat > ${RELEASE_DIR}/build.json <<HERE
   "commit": "${commit}"
 }
 HERE
+
+cat > ${RELEASE_DIR}/nightly-build.json <<HERE
+{
+  "name": "amazon-genomics-cli",
+  "version": "nightly-build",
+  "commit": "${commit}"
+}
+HERE

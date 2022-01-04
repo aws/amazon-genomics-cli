@@ -37,6 +37,17 @@ The Amazon Genomics CLI is written in Go.
 To manage and install Go versions, we use [goenv](https://github.com/syndbg/goenv). Follow the installation
 instructions [here](https://github.com/syndbg/goenv/blob/master/INSTALL.md).
 
+Once goenv is installed, use it to install the version of Go required by the
+Amazon Genomics CLI build process, so that it will be available when the build
+process invokes goenv's `go` shim:
+
+```bash
+goenv install
+```
+
+You will need to do this step again whenever the required version of Go is
+changed.
+
 #### Node
 
 Amazon Genomics CLI makes use of the AWS CDK to deploy infrastructure into an AWS account. Our CDK code is written in TypeScript.

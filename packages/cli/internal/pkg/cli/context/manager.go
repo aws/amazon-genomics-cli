@@ -65,6 +65,7 @@ type Manager struct {
 	Ssm       ssm.Interface
 	ecrClient ecr.Interface
 	imageRefs map[string]ecr.ImageReference
+	region    string
 
 	baseProps
 	contextProps
@@ -85,11 +86,10 @@ var showExecution = cdk.ShowExecution
 
 func (m *Manager) getEnvironmentVars() []string {
 	var environmentVars []string
-
 	for imageName := range m.imageRefs {
 		environmentVars = append(environmentVars,
 			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", imageName, m.imageRefs[imageName].RegistryId),
-			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.imageRefs[imageName].Region),
+			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.region),
 			fmt.Sprintf("ECR_%s_TAG=%s", imageName, m.imageRefs[imageName].ImageTag),
 			fmt.Sprintf("ECR_%s_REPOSITORY=%s", imageName, m.imageRefs[imageName].RepositoryName),
 		)
@@ -120,6 +120,7 @@ func NewManager(profile string) *Manager {
 		baseProps: baseProps{homeDir: homeDir},
 		imageRefs: environment.CommonImages,
 		ecrClient: aws.EcrClient(profile),
+		region:    aws.Region(profile),
 	}
 }
 
@@ -189,26 +190,6 @@ func (m *Manager) setOutputBucket() {
 	m.outputBucket, m.err = m.Ssm.GetOutputBucket()
 	if m.err != nil {
 		m.err = actionableerror.FindSuggestionForError(m.err, actionableerror.AwsErrorMessageToSuggestedActionMap)
-	}
-}
-
-func (m *Manager) setTaskContext(contextName string) {
-	if m.err != nil {
-		return
-	}
-
-	m.contextEnv = contextEnvironment{
-		ProjectName:          m.projectSpec.Name,
-		ContextName:          contextName,
-		UserId:               m.userId,
-		UserEmail:            m.userEmail,
-		OutputBucketName:     m.outputBucket,
-		ArtifactBucketName:   m.artifactBucket,
-		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
-		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
-		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
-		MaxVCpus:             m.contextSpec.MaxVCpus,
-		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
 	}
 }
 

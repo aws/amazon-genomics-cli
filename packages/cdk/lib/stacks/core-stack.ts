@@ -1,10 +1,12 @@
-import { CfnOutput, RemovalPolicy, Stack, StackProps } from "monocdk";
-import { AttributeType, BillingMode, ITable, ProjectionType, Table } from "monocdk/aws-dynamodb";
-import { StringParameter, IParameter } from "monocdk/aws-ssm";
-import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, Vpc } from "monocdk/aws-ec2";
-import { Bucket, BucketEncryption, IBucket } from "monocdk/aws-s3";
+import { CfnOutput, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
+import { AttributeType, BillingMode, ITable, ProjectionType, Table } from "aws-cdk-lib/aws-dynamodb";
+import { StringParameter, IParameter } from "aws-cdk-lib/aws-ssm";
+import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
+import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME } from "../constants";
+import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
+import * as path from "path";
 
 export interface ParameterProps {
   /**
@@ -30,6 +32,10 @@ export interface CoreStackProps extends StackProps {
    * Name of S3 bucket to create or import
    */
   bucketName: string;
+  /**
+   * Key used to determine uniqueness of assets.
+   */
+  idempotencyKey: string;
   /**
    * Whether the bucket should be created or imported using bucketName
    *
@@ -63,6 +69,14 @@ export class CoreStack extends Stack {
     this.vpc = this.renderVpc(props.vpcId);
     this.table = this.renderTable();
     this.bucket = this.renderBucket(props.bucketName, props.createNewBucket);
+
+    new BucketDeployment(this, "BatchArtifacts", {
+      sources: [Source.asset(path.join(__dirname, "../artifacts"))],
+      destinationBucket: this.bucket,
+      metadata: {
+        "idempotency-key": props.idempotencyKey,
+      },
+    });
 
     this.addParameter({ name: VPC_PARAMETER_NAME, value: this.vpc.vpcId, description: `VPC ID for ${PRODUCT_NAME}` });
     props.parameters?.forEach((parameterProps) => this.addParameter(parameterProps));
