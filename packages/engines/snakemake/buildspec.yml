@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    # These variables may be over-ridden as appropriate by the CI/CD pipeline
+    SNAKEMAKE_IMAGE_NAME: "snakemake"
+    SNAKEMAKE_VERSION: "6.12.3 "
+
+phases:
+  pre_build:
+    commands:
+      - SNAKEMAKE_IMAGE_URI=${SNAKEMAKE_IMAGE_NAME}:${SNAKEMAKE_VERSION}
+  build:
+    commands:
+      - docker build --build-arg SNAKEMAKE_VERSION=${SNAKEMAKE_VERSION} -t ${SNAKEMAKE_IMAGE_URI} ./
+  post_build:
+    commands:
+      - docker save -o snakemake_image.tar ${SNAKEMAKE_IMAGE_URI}
+
+artifacts:
+  files:
+    - snakemake_image.tar
