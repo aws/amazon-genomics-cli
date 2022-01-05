@@ -173,6 +173,7 @@ It creates AGC resources in AWS.
 			}
 			return nil
 		}),
+		ValidArgsFunction: NewContextAutoComplete().GetContextAutoComplete(),
 	}
 	cmd.Flags().BoolVar(&vars.deployAll, deployContextAllFlag, false, deployContextAllDescription)
 	cmd.Flags().StringSliceVarP(&vars.contexts, contextFlag, contextFlagShort, nil, deployContextDescription)
