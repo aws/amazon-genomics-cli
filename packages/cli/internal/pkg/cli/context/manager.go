@@ -87,8 +87,16 @@ var showExecution = cdk.ShowExecution
 var silentExecution = cdk.SilentExecution
 
 func (m *Manager) getEnvironmentVars() []string {
+	// Different engines will need different environment variables to define
+	// their Docker images.
+	engine := m.contextEnv.EngineName
+	// Each engine has its own section in imageRefs, and for now we assume they
+	// all care about a WES adapter image.
+	var relevantImageKeys []string
+	relevantImageKeys = append(relevantImageKeys, strings.ToUpper(engine))
+	relevantImageKeys = append(relevantImageKeys, environment.WesImageKey)
 	var environmentVars []string
-	for imageName := range m.imageRefs {
+	for _, imageName := range relevantImageKeys {
 		environmentVars = append(environmentVars,
 			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", imageName, m.imageRefs[imageName].RegistryId),
 			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.region),

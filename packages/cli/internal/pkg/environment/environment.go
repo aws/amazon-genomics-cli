@@ -15,43 +15,51 @@ const DefaultNextflowTag = "21.04.3"
 const DefaultWesTag = "0.1.0"
 const DefaultMiniwdlTag = "v0.1.11"
 const DefaultSnakemakeTag = "internal-fork"
+const DefaultToilTag = "v6.0.0"
 
 const WesImageKey = "WES"
 const CromwellImageKey = "CROMWELL"
 const NextflowImageKey = "NEXTFLOW"
 const MiniwdlImageKey = "MINIWDL"
 const SnakemakeImageKey = "SNAKEMAKE"
+const ToilImageKey = "TOIL"
 
 var CommonImages = map[string]ecr.ImageReference{
 	WesImageKey: {
 		RegistryId:     LookUpEnvOrDefault("ECR_WES_ACCOUNT_ID", DefaultEcrRegistry),
 		Region:         LookUpEnvOrDefault("ECR_WES_REGION", DefaultEcrRegion),
-		RepositoryName: "aws/wes-release",
+		RepositoryName: LookUpEnvOrDefault("ECR_WES_REPOSITORY", "aws/wes-release"),
 		ImageTag:       LookUpEnvOrDefault("ECR_WES_TAG", DefaultWesTag),
 	},
 	CromwellImageKey: {
 		RegistryId:     LookUpEnvOrDefault("ECR_CROMWELL_ACCOUNT_ID", DefaultEcrRegistry),
 		Region:         LookUpEnvOrDefault("ECR_CROMWELL_REGION", DefaultEcrRegion),
-		RepositoryName: "aws/cromwell-mirror",
+		RepositoryName: LookUpEnvOrDefault("ECR_CROMWELL_REPOSITORY", "aws/cromwell-mirror"),
 		ImageTag:       LookUpEnvOrDefault("ECR_CROMWELL_TAG", DefaultCromwellTag),
 	},
 	NextflowImageKey: {
 		RegistryId:     LookUpEnvOrDefault("ECR_NEXTFLOW_ACCOUNT_ID", DefaultEcrRegistry),
 		Region:         LookUpEnvOrDefault("ECR_NEXTFLOW_REGION", DefaultEcrRegion),
-		RepositoryName: "aws/nextflow-mirror",
+		RepositoryName: LookUpEnvOrDefault("ECR_NEXTFLOW_REPOSITORY", "aws/nextflow-mirror"),
 		ImageTag:       LookUpEnvOrDefault("ECR_NEXTFLOW_TAG", DefaultNextflowTag),
 	},
 	MiniwdlImageKey: {
 		RegistryId:     LookUpEnvOrDefault("ECR_MINIWDL_ACCOUNT_ID", DefaultEcrRegistry),
 		Region:         LookUpEnvOrDefault("ECR_MINIWDL_REGION", DefaultEcrRegion),
-		RepositoryName: "aws/miniwdl-mirror",
+		RepositoryName: LookUpEnvOrDefault("ECR_MINIWDL_REPOSITORY", "aws/miniwdl-mirror"),
 		ImageTag:       LookUpEnvOrDefault("ECR_MINIWDL_TAG", DefaultMiniwdlTag),
 	},
 	SnakemakeImageKey: {
 		RegistryId:     LookUpEnvOrDefault("ECR_SNAKEMAKE_ACCOUNT_ID", DefaultEcrRegistry),
 		Region:         LookUpEnvOrDefault("ECR_SNAKEMAKE_REGION", DefaultEcrRegion),
-		RepositoryName: "aws/snakemake-mirror",
+		RepositoryName: LookUpEnvOrDefault("ECR_SNAKEMAKE_REPOSITORY", "aws/snakemake-mirror"),
 		ImageTag:       LookUpEnvOrDefault("ECR_SNAKEMAKE_TAG", DefaultSnakemakeTag),
+	},
+	ToilImageKey: {
+		RegistryId:     LookUpEnvOrDefault("ECR_TOIL_ACCOUNT_ID", DefaultEcrRegistry),
+		Region:         LookUpEnvOrDefault("ECR_TOIL_REGION", DefaultEcrRegion),
+		RepositoryName: LookUpEnvOrDefault("ECR_TOIL_REPOSITORY", "aws/toil-mirror"),
+		ImageTag:       LookUpEnvOrDefault("ECR_TOIL_TAG", DefaultMiniwdlTag),
 	},
 }
 

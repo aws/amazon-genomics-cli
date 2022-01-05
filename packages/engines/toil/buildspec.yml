@@ -1,0 +1,20 @@
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    TOIL_IMAGE_NAME: "toil"
+phases:
+  pre_build:
+    commands:
+      - TOIL_IMAGE_URI=${TOIL_IMAGE_NAME}:latest
+  build:
+    commands:
+      - docker build -t ${TOIL_IMAGE_URI} ./
+  post_build:
+    commands:
+      - docker save -o toil_image.tar ${TOIL_IMAGE_URI}
+
+artifacts:
+  files:
+    - toil_image.tar

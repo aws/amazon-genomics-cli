@@ -9,6 +9,7 @@ import { CromwellEngineConstruct } from "./engines/cromwell-engine-construct";
 import { NextflowEngineConstruct } from "./engines/nextflow-engine-construct";
 import { MiniwdlEngineConstruct } from "./engines/miniwdl-engine-construct";
 import { SnakemakeEngineConstruct } from "./engines/snakemake-engine-construct";
+import { ToilEngineConstruct } from "./engines/toil-engine-construct";
 
 export interface ContextStackProps extends StackProps {
   readonly contextParameters: ContextAppParameters;
@@ -55,6 +56,9 @@ export class ContextStack extends Stack {
         }
         this.renderSnakemakeStack(props);
         break;
+      case "toil":
+        this.renderToilStack(props);
+        break;
       default:
         throw Error(`Engine '${engineName}' is not supported`);
     }
@@ -64,6 +68,9 @@ export class ContextStack extends Stack {
     const batchProps = this.getCromwellBatchProps(props);
     const batchStack = this.renderBatchStack(batchProps);
 
+    // Cromwell submits workflow jobs to a single on-demand or spot queue. It
+    // has a server that runs elsewhere in a Fargate service, and also a WES
+    // adapter lambda.
     let jobQueue;
     if (props.contextParameters.requestSpotInstances) {
       jobQueue = batchStack.batchSpot.jobQueue;
@@ -82,6 +89,9 @@ export class ContextStack extends Stack {
     const batchProps = this.getNextflowBatchProps(props);
     const batchStack = this.renderBatchStack(batchProps);
 
+    // Nextflow submits workflow head jobs to an on demand queue, and
+    // optionally workflow jobs to a spot queue. There is no server, just an
+    // adapter lambda.
     let jobQueue, headQueue;
     if (props.contextParameters.requestSpotInstances) {
       jobQueue = batchStack.batchSpot.jobQueue;
@@ -99,8 +109,31 @@ export class ContextStack extends Stack {
   }
 
   private renderMiniwdlStack(props: ContextStackProps) {
+    // Miniwdl's engine construct takes care of setting up its own Batch
+    // queues.
     const commonEngineProps = this.getCommonEngineProps(props);
     new MiniwdlEngineConstruct(this, ENGINE_MINIWDL, {
+      ...commonEngineProps,
+    }).outputToParent();
+  }
+
+  private renderToilStack(props: ContextStackProps) {
+    const batchProps = this.getToilBatchProps(props);
+    const batchStack = this.renderBatchStack(batchProps);
+
+    // Toil submits workflow jobs to a single on-demand or spot queue. It
+    // has a server that runs elsewhere in a Fargate service, and speaks WES
+    // itself.
+    let jobQueue;
+    if (props.contextParameters.requestSpotInstances) {
+      jobQueue = batchStack.batchSpot.jobQueue;
+    } else {
+      jobQueue = batchStack.batchOnDemand.jobQueue;
+    }
+
+    const commonEngineProps = this.getCommonEngineProps(props);
+    new ToilEngineConstruct(this, "toil", {
+      jobQueue,
       ...commonEngineProps,
     }).outputToParent();
   }
@@ -111,6 +144,8 @@ export class ContextStack extends Stack {
 
     return {
       ...commonBatchProps,
+      // We only use one stack for the Cromwell jobs. The server lives in
+      // Fargate and doesn't run in either of these.
       createSpotBatch: requestSpotInstances,
       createOnDemandBatch: !requestSpotInstances,
     };
@@ -140,6 +175,19 @@ export class ContextStack extends Stack {
       createSpotBatch: requestSpotInstances,
       createOnDemandBatch: true,
       parent: this,
+    };
+  }
+
+  private getToilBatchProps(props: ContextStackProps) {
+    const commonBatchProps = this.getCommonBatchProps(props);
+    const { requestSpotInstances } = props.contextParameters;
+
+    return {
+      ...commonBatchProps,
+      // We only use one Batch from the stack for the Toil jobs. The server
+      // lives in Fargate and doesn't run in either of these.
+      createSpotBatch: requestSpotInstances,
+      createOnDemandBatch: !requestSpotInstances,
     };
   }
 
