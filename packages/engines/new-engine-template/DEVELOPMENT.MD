@@ -9,7 +9,7 @@ There are 3 things that must be completed in this section.
 1. Update the `$PATH` with the new engine.
 
 ## \<engine-name\>.aws.sh
-This is the entroypoint script which will execute the workflows. There are again ##### MODIFY ####### and #### END MODIFY ###### marked areas to customize this entroypoint script 
+This is the entrypoint script which will execute the workflows. There are again ##### MODIFY ####### and #### END MODIFY ###### marked areas to customize this entroypoint script 
 to work with the new engine.
 
 ## buildspec.yml
