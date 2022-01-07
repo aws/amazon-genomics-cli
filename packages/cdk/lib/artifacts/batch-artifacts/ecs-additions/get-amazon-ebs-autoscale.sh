@@ -98,6 +98,34 @@ function latest() {
     echo $ebs_autoscale_version > ./amazon-ebs-autoscale/VERSION
 }
 
+function s3CopyWithRetry() {
+    local s3_path=$1
+    # destination must be the path to a file and not just the directory you want the file in
+    local destination=$2
+
+    for i in {1..5};
+    do
+        if [[ $s3_path =~ s3://([^/]+)/(.+) ]]; then
+            bucket="${BASH_REMATCH[1]}"
+            key="${BASH_REMATCH[2]}"
+            content_length=$(aws s3api head-object --bucket "$bucket" --key "$key" --query 'ContentLength')
+        else
+            echo "$s3_path is not an S3 path with a bucket and key. aborting"
+            exit 1
+        fi
+        
+        aws s3 cp --no-progress "$s3_path" "$destination" &&
+        [[ $(LC_ALL=C ls -dn -- "$destination" | awk '{print $5; exit}') -eq "$content_length" ]] &&
+        break || echo "attempt $i to copy $s3_path failed";
+
+        if [ "$i" -eq 5 ]; then
+            echo "failed to copy $s3_path after $i attempts. aborting"
+            exit 2
+        fi
+        sleep $((7 * $i))
+    done
+}
+
 function release() {
     # retrieve the version of amazon-ebs-autoscale from the latest upstream disbribution 
     # release of aws-genomics-workflows
@@ -110,7 +138,7 @@ function release() {
     if [[ "$ARTIFACT_ROOT_URL" =~ ^http.* ]]; then
         curl -LO $ARTIFACT_ROOT_URL/amazon-ebs-autoscale.tgz
     elif [[ "$ARTIFACT_ROOT_URL" =~ ^s3.* ]]; then
-        aws s3 cp --no-progress $ARTIFACT_ROOT_URL/amazon-ebs-autoscale.tgz .
+        s3CopyWithRetry $ARTIFACT_ROOT_URL/amazon-ebs-autoscale.tgz ./amazon-ebs-autoscale.tgz
     else
         echo "unrecognized protocol in $ARTIFACT_ROOT_URL for release()"
         exit 1
@@ -130,7 +158,7 @@ function dist_release() {
     fi
 
     if [[ "$ARTIFACT_ROOT_URL" =~ ^s3.* ]]; then
-        aws s3 cp --no-progress $ARTIFACT_ROOT_URL/amazon-ebs-autoscale.tgz .
+        s3CopyWithRetry $ARTIFACT_ROOT_URL/amazon-ebs-autoscale.tgz ./amazon-ebs-autoscale.tgz
     else
         echo "unrecognized protocol in $ARTIFACT_ROOT_URL for dist_release()"
         exit 1
