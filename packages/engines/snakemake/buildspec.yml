@@ -13,6 +13,8 @@ phases:
       - SNAKEMAKE_IMAGE_URI=${SNAKEMAKE_IMAGE_NAME}:${SNAKEMAKE_VERSION}
   build:
     commands:
+      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 680431765560.dkr.ecr.us-west-2.amazonaws.com
+      - docker pull 680431765560.dkr.ecr.us-west-2.amazonaws.com/aws/agc-snakemake:latest 
       - docker build --build-arg SNAKEMAKE_VERSION=${SNAKEMAKE_VERSION} -t ${SNAKEMAKE_IMAGE_URI} ./packages/engines/snakemake
   post_build:
     commands:
