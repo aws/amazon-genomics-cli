@@ -37,7 +37,7 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
     },
     {
       name: "installed-artifacts/s3-root-url",
-      value: `s3://${bucketName}/batch-artifacts`,
+      value: `s3://${bucketName}/artifacts/batch-artifacts`,
       description: "S3 root url for batch assets",
     },
   ],
