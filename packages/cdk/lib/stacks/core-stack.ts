@@ -73,6 +73,8 @@ export class CoreStack extends Stack {
     new BucketDeployment(this, "BatchArtifacts", {
       sources: [Source.asset(path.join(__dirname, "../artifacts"))],
       destinationBucket: this.bucket,
+      destinationKeyPrefix: "artifacts",
+      prune: false,
       metadata: {
         "idempotency-key": props.idempotencyKey,
       },
