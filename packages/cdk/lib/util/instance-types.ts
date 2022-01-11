@@ -176,6 +176,10 @@ const unLaunchedInstanceTypesByRegion: { [key in string]: { [key in string]: boo
 
 export const getInstanceTypesForBatch = (instanceTypes: InstanceType[] | undefined, computeType: ComputeResourceType, region?: string): InstanceType[] => {
   if (instanceTypes && instanceTypes.length > 0) {
+    const armBased = instanceTypes.filter((instanceType) => isInstanceTypeArmBased(instanceType.toString()));
+    if (armBased) {
+      console.warn("Using ARM based instance type");
+    }
     return instanceTypes;
   }
 
@@ -189,4 +193,12 @@ const isInstanceTypeSupported = (instanceType: string, region?: string): boolean
     return false;
   }
   return true;
+};
+
+const isInstanceTypeArmBased = (instanceType: string): boolean => {
+  const instanceTypeFamily = instanceType.split(".")[0];
+  if (instanceTypeFamily.includes("g")) {
+    return true;
+  }
+  return false;
 };
