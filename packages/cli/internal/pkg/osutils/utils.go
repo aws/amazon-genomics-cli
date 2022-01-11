@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 )
 

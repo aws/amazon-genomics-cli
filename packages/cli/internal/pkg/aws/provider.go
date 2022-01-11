@@ -2,7 +2,6 @@ package aws
 
 import (
 	"context"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/batch"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"

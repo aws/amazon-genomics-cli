@@ -6,7 +6,6 @@ package contextmocks
 
 import (
 	reflect "reflect"
-
 	context "github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	gomock "github.com/golang/mock/gomock"
 )

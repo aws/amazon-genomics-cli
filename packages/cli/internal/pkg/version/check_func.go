@@ -4,7 +4,6 @@ import (
 	"context"
 	"strings"
 	"time"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"

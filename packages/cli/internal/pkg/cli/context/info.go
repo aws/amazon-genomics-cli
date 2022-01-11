@@ -2,7 +2,6 @@ package context
 
 import (
 	"reflect"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 )
 

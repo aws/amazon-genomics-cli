@@ -1,7 +1,6 @@
 package slices
 
 import "sort"
-
 // DeDuplicateStrings sorts and de-duplicates a slice of strings
 func DeDuplicateStrings(strs []string) []string {
 	if len(strs) == 0 {

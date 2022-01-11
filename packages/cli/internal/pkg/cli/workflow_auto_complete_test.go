@@ -3,7 +3,6 @@ package cli
 import (
 	"errors"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	workflowmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/workflow"
 	"github.com/golang/mock/gomock"

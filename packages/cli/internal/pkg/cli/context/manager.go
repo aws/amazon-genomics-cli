@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"

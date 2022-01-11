@@ -3,7 +3,6 @@ package context
 import (
 	"fmt"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation/types"

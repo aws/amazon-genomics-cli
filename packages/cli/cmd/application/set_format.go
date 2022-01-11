@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	"github.com/rs/zerolog/log"
 )

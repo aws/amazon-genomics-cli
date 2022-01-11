@@ -3,7 +3,6 @@ package context
 import (
 	"errors"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/stretchr/testify/assert"

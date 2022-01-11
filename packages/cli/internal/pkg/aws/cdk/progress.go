@@ -4,7 +4,6 @@ import (
 	"context"
 	"sync"
 	"time"
-
 	"github.com/cheggaaa/pb/v3"
 	"github.com/rs/zerolog/log"
 )

@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 )
 

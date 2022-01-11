@@ -8,7 +8,6 @@ import (
 	context "context"
 	reflect "reflect"
 	regexp "regexp"
-
 	batch "github.com/aws/amazon-genomics-cli/internal/pkg/aws/batch"
 	cdk "github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	cfn "github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"

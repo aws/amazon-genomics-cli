@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"path/filepath"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"

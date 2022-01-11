@@ -3,7 +3,6 @@ package clierror
 import (
 	"errors"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/stretchr/testify/assert"
 )

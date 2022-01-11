@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 	"time"
-
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 )

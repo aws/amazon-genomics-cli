@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/batch"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"

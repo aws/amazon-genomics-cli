@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"time"
-
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/rs/zerolog/log"
 	wes "github.com/rsc/wes_client"

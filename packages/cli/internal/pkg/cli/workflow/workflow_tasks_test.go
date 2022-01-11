@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"testing"
 	"time"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ddb"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"

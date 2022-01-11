@@ -8,7 +8,6 @@ import (
 	"io/fs"
 	"path/filepath"
 	"testing"
-
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

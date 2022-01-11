@@ -3,7 +3,6 @@ package context
 import (
 	"fmt"
 	"path/filepath"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 )
 

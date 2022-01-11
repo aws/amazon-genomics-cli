@@ -6,7 +6,6 @@ package cli
 import (
 	"fmt"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"
 	"github.com/golang/mock/gomock"

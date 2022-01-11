@@ -2,7 +2,6 @@ package option
 
 import (
 	"os"
-
 	"github.com/antihax/optional"
 	wes "github.com/rsc/wes_client"
 )

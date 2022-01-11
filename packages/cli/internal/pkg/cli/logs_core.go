@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"sync"
 	"time"
-
 	"github.com/araddon/dateparse"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"

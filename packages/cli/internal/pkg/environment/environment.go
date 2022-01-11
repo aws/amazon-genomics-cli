@@ -2,7 +2,6 @@ package environment
 
 import (
 	"os"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 )
 

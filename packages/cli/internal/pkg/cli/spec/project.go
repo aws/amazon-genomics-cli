@@ -2,7 +2,6 @@ package spec
 
 import (
 	"fmt"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 )
 

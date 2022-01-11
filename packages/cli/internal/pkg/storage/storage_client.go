@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
-
 	"github.com/spf13/afero"
 )
 

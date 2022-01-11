@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/types"
 	managermocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/manager"

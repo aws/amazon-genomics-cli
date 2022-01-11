@@ -3,7 +3,6 @@ package cli
 import (
 	"fmt"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/types"

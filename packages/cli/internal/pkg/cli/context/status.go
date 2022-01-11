@@ -1,9 +1,7 @@
 package context
 
 import "github.com/aws/aws-sdk-go-v2/service/cloudformation/types"
-
 type Status string
-
 const (
 	StatusStarted    Status = "STARTED"
 	StatusStopped    Status = "STOPPED"

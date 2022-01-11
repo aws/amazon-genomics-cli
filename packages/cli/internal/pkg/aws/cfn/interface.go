@@ -3,7 +3,6 @@ package cfn
 import (
 	"context"
 	"regexp"
-
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation/types"
 )

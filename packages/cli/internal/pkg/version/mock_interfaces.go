@@ -8,7 +8,6 @@ import (
 	context "context"
 	reflect "reflect"
 	time "time"
-
 	s3 "github.com/aws/aws-sdk-go-v2/service/s3"
 	gomock "github.com/golang/mock/gomock"
 )

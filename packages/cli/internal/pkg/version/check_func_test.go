@@ -3,7 +3,6 @@ package version
 import (
 	"testing"
 	"time"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/stretchr/testify/suite"
 )

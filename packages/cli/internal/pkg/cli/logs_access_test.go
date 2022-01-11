@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"testing"
 	"time"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"

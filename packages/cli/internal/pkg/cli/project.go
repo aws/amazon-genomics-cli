@@ -6,7 +6,6 @@ package cli
 import (
 	"fmt"
 	"regexp"
-
 	"github.com/aws/amazon-genomics-cli/cmd/application/template"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/group"
 	"github.com/spf13/cobra"

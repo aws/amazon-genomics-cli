@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"

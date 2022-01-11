@@ -6,7 +6,6 @@ package cli
 import (
 	"os"
 	"strings"
-
 	"github.com/spf13/cobra"
 )
 

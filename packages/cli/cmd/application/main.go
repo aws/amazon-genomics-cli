@@ -6,12 +6,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path"
-	"path/filepath"
-	"strings"
-	"time"
-
 	"github.com/aws/amazon-genomics-cli/cmd/application/template"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
@@ -24,6 +18,11 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
+	"os"
+	"path"
+	"path/filepath"
+	"strings"
+	"time"
 )
 
 const hugoFrontMatterTemplate = `---

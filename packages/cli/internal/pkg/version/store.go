@@ -2,7 +2,6 @@ package version
 
 import (
 	"time"
-
 	"github.com/rs/zerolog/log"
 )
 

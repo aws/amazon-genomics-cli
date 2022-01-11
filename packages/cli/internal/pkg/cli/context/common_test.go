@@ -2,7 +2,6 @@ package context
 
 import (
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"

@@ -7,7 +7,6 @@ package color
 import (
 	"os"
 	"strings"
-
 	"github.com/AlecAivazis/survey/v2/core"
 	"github.com/fatih/color"
 )

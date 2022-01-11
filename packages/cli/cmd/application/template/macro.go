@@ -6,7 +6,6 @@ package template
 
 import (
 	"strings"
-
 	termcolor "github.com/aws/amazon-genomics-cli/internal/pkg/term/color"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"

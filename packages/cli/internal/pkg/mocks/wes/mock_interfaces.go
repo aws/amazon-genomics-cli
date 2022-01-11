@@ -7,7 +7,6 @@ package wesmocks
 import (
 	context "context"
 	reflect "reflect"
-
 	option "github.com/aws/amazon-genomics-cli/internal/pkg/wes/option"
 	gomock "github.com/golang/mock/gomock"
 	wes_client "github.com/rsc/wes_client"

@@ -6,7 +6,6 @@ package cli
 import (
 	"fmt"
 	"path/filepath"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"

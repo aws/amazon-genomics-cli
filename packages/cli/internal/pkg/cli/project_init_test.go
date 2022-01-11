@@ -9,7 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"

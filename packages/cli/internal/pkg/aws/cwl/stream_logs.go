@@ -3,7 +3,6 @@ package cwl
 import (
 	"context"
 	"time"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/util"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/aws-sdk-go-v2/aws"

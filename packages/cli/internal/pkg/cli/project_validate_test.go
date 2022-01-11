@@ -3,7 +3,6 @@ package cli
 import (
 	"fmt"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
 	"github.com/golang/mock/gomock"

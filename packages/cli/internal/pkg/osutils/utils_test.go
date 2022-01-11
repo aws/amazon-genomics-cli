@@ -3,7 +3,6 @@ package osutils
 import (
 	"errors"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"
 	"github.com/golang/mock/gomock"

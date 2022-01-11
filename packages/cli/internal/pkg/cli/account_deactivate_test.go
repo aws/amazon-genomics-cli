@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"regexp"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/stretchr/testify/assert"
 )

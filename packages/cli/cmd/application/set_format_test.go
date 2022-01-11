@@ -3,7 +3,6 @@ package main
 import (
 	"reflect"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/format"
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"

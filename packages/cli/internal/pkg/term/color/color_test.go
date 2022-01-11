@@ -5,7 +5,6 @@ package color
 
 import (
 	"testing"
-
 	"github.com/AlecAivazis/survey/v2/core"
 	"github.com/fatih/color"
 	"github.com/stretchr/testify/require"

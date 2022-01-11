@@ -3,7 +3,6 @@ package config
 import (
 	"io/fs"
 	"testing"
-
 	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"

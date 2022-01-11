@@ -2,7 +2,6 @@ package wes
 
 import (
 	"context"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/wes/option"
 	"github.com/rs/zerolog/log"
 	wes "github.com/rsc/wes_client"

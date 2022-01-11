@@ -2,7 +2,6 @@ package cdk
 
 import (
 	"os"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 )
 

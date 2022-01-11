@@ -3,7 +3,6 @@ package awsresources
 import (
 	"fmt"
 	"path"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 )
 

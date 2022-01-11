@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/rs/zerolog/log"
 )

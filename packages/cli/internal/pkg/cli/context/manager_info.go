@@ -2,7 +2,6 @@ package context
 
 import (
 	"errors"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"

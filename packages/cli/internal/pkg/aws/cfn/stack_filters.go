@@ -1,12 +1,10 @@
 package cfn
 
 import "github.com/aws/aws-sdk-go-v2/service/cloudformation/types"
-
 type StackOptions struct {
 	activeStack    bool
 	queryableStack bool
 }
-
 var stackDefinitions = map[types.StackStatus]StackOptions{
 	types.StackStatusCreateInProgress:                        {activeStack: true, queryableStack: false},
 	types.StackStatusCreateComplete:                          {activeStack: true, queryableStack: true},
@@ -31,7 +29,6 @@ var stackDefinitions = map[types.StackStatus]StackOptions{
 }
 var ActiveStacksFilter []types.StackStatus
 var QueryableStacksMap map[types.StackStatus]bool
-
 func init() {
 	QueryableStacksMap = make(map[types.StackStatus]bool)
 	for stackStatus, stackOptions := range stackDefinitions {

@@ -2,7 +2,6 @@ package cli
 
 import (
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"

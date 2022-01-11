@@ -5,7 +5,6 @@ package template
 
 import (
 	"fmt"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/group"
 	"github.com/spf13/cobra"
 )

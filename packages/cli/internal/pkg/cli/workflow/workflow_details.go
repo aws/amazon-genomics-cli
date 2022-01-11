@@ -1,7 +1,6 @@
 package workflow
 
 import "github.com/rsc/wes_client"
-
 type Details struct {
 	Name         string
 	TypeLanguage string
@@ -16,7 +15,6 @@ type InstanceSummary struct {
 	State        string
 	InProject    bool
 }
-
 func (i *InstanceSummary) IsInstanceRunning() bool {
 	return i.State == string(wes_client.RUNNING) || i.State == string(wes_client.INITIALIZING)
 }

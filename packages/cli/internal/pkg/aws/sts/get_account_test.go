@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"testing"
-
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 	"github.com/stretchr/testify/assert"
 )

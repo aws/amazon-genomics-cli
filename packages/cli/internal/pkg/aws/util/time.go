@@ -2,7 +2,6 @@ package util
 
 import (
 	"time"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 )
 

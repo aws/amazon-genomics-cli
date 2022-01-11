@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"testing"
 	"time"
-
 	"github.com/aws/aws-sdk-go-v2/service/batch"
 	"github.com/aws/aws-sdk-go-v2/service/batch/types"
 	"github.com/stretchr/testify/assert"

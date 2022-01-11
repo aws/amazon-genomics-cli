@@ -5,7 +5,6 @@ import (
 	_ "embed"
 	"fmt"
 	"io/ioutil"
-
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/yaml.v3"
 )

@@ -2,7 +2,6 @@ package context
 
 import (
 	"strconv"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
 )
 

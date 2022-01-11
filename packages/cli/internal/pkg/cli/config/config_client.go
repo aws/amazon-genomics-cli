@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 )
 

@@ -3,7 +3,6 @@ package workflow
 import (
 	"errors"
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"

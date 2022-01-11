@@ -2,7 +2,6 @@ package cli
 
 import (
 	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/types"
 	"github.com/stretchr/testify/assert"
 )

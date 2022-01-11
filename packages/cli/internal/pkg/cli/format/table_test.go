@@ -5,7 +5,6 @@ import (
 	"strings"
 	"testing"
 	"text/tabwriter"
-
 	"github.com/stretchr/testify/assert"
 )
 

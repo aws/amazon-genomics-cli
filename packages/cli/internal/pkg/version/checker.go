@@ -2,7 +2,6 @@ package version
 
 import (
 	"time"
-
 	"github.com/blang/semver/v4"
 )
 

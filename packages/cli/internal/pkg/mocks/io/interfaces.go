@@ -2,7 +2,6 @@ package iomocks
 
 import (
 	"io/fs"
-
 	"github.com/rs/zerolog"
 )
 

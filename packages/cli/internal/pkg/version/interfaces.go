@@ -3,7 +3,6 @@ package version
 import (
 	"context"
 	"time"
-
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 

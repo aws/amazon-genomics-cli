@@ -4,7 +4,6 @@ import (
 	"context"
 	"testing"
 	"time"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
 	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
 	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"

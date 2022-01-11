@@ -6,7 +6,6 @@ package managermocks
 
 import (
 	reflect "reflect"
-
 	workflow "github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	gomock "github.com/golang/mock/gomock"
 )

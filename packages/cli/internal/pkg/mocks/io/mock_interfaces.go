@@ -7,7 +7,6 @@ package iomocks
 import (
 	fs "io/fs"
 	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
 	zerolog "github.com/rs/zerolog"
 )
