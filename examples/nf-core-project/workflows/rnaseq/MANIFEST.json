@@ -1,7 +1,5 @@
 {
   "mainWorkflowURL": "https://github.com/nf-core/rnaseq.git",
-  "inputFileURLs": [
-    "inputs.json"
-  ],
-  "engineOptions": "-resume"
+  "inputFileURLs": ["inputs.json"],
+  "engineOptions": "-resume -r 3.4"
 }
