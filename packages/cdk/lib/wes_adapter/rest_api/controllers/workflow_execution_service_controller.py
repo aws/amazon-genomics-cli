@@ -18,6 +18,7 @@ from amazon_genomics.wes.adapters import (
     NextflowWESAdapter,
     CromwellWESAdapter,
     MiniWdlWESAdapter,
+    SnakemakeWESAdapter,
 )
 
 
@@ -30,6 +31,13 @@ OUTPUT_DIR_S3_URI = os.getenv("OUTPUT_DIR_S3_URI")
 if ENGINE_NAME == "nextflow":
     print("Using Nextflow adapter")
     adapter = NextflowWESAdapter(
+        job_queue=JOB_QUEUE,
+        job_definition=JOB_DEFINITION,
+        engine_log_group=ENGINE_LOG_GROUP,
+    )
+elif ENGINE_NAME == "snakemake":
+    print("Using Snakemake adapter")
+    adapter = SnakemakeWESAdapter(
         job_queue=JOB_QUEUE,
         job_definition=JOB_DEFINITION,
         engine_log_group=ENGINE_LOG_GROUP,

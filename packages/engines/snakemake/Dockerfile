@@ -34,5 +34,17 @@ RUN chmod +x /opt/bin/snakemake.aws.sh
 WORKDIR /opt/work/snakemake
 RUN python3.8 setup.py install && pip3.8 install .
 
+
+# install conda 
+RUN curl -L https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh > miniconda.sh && \
+    bash miniconda.sh -b -p /opt/conda && \
+    rm miniconda.sh
+ENV PATH /opt/conda/bin:${PATH}
+
+ENV JAVA_HOME /usr/lib/jvm/jre-openjdk/
+
+RUN conda install -y -c conda-forge mamba python-devtools
+RUN pip3 install cython
+
 WORKDIR /opt/work
 ENTRYPOINT ["/opt/bin/snakemake.aws.sh"]
