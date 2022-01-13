@@ -1,4 +1,4 @@
-import { InstanceType } from "aws-cdk-lib/aws-ec2";
+import { InstanceType, InstanceArchitecture } from "aws-cdk-lib/aws-ec2";
 import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 
 // https://github.com/aws-samples/aws-genomics-workflows/blob/master/src/templates/gwfcore/gwfcore-batch.template.yaml#L145-L180
@@ -176,6 +176,10 @@ const unLaunchedInstanceTypesByRegion: { [key in string]: { [key in string]: boo
 
 export const getInstanceTypesForBatch = (instanceTypes: InstanceType[] | undefined, computeType: ComputeResourceType, region?: string): InstanceType[] => {
   if (instanceTypes && instanceTypes.length > 0) {
+    const armBasedInstances = instanceTypes.filter((instanceType) => instanceType.architecture == InstanceArchitecture.ARM_64);
+    if (armBasedInstances.length > 0) {
+      throw new Error("ARM based instance type is not supported in Amazon Genomics CLI");
+    }
     return instanceTypes;
   }
 
@@ -185,8 +189,5 @@ export const getInstanceTypesForBatch = (instanceTypes: InstanceType[] | undefin
 };
 
 const isInstanceTypeSupported = (instanceType: string, region?: string): boolean => {
-  if (region !== undefined && unLaunchedInstanceTypesByRegion[region] !== undefined && unLaunchedInstanceTypesByRegion[region][instanceType]) {
-    return false;
-  }
-  return true;
+  return !(region !== undefined && unLaunchedInstanceTypesByRegion[region] !== undefined && unLaunchedInstanceTypesByRegion[region][instanceType]);
 };
