@@ -1,50 +1,51 @@
-import { JobDefinition, PlatformCapabilities } from "@aws-cdk/aws-batch-alpha";
-import { FargatePlatformVersion } from "aws-cdk-lib/aws-ecs";
 import { Construct } from "constructs";
+import { JobDefinition, PlatformCapabilities } from "@aws-cdk/aws-batch-alpha";
 import { createEcrImage } from "../../../util";
-import { Batch } from "../../batch";
-import { Engine, EngineProps } from "../engine";
 import { EngineJobDefinition } from "../engine-job-definition";
+import { Engine, EngineProps } from "../engine";
+import { Batch } from "../../batch";
+import { FargatePlatformVersion } from "aws-cdk-lib/aws-ecs";
+import { AccessPoint } from "aws-cdk-lib/aws-efs";
 
-export interface MiniWdlEngineProps extends EngineProps {
+export interface SnakemakeEngineProps extends EngineProps {
   readonly engineBatch: Batch;
   readonly workerBatch: Batch;
 }
 
-const MINIWDL_IMAGE_DESIGNATION = "miniwdl";
+const SNAKEMAKE_IMAGE_DESIGNATION = "snakemake";
 
-export class MiniWdlEngine extends Engine {
+export class SnakemakeEngine extends Engine {
   readonly headJobDefinition: JobDefinition;
-  private readonly engineMemoryMiB = 4096;
   private readonly volumeName = "efs";
+  private readonly engineMemoryMiB = 4096;
+  public readonly fsap: AccessPoint;
 
-  constructor(scope: Construct, id: string, props: MiniWdlEngineProps) {
+  constructor(scope: Construct, id: string, props: SnakemakeEngineProps) {
     super(scope, id);
 
-    const { vpc, rootDirS3Uri, engineBatch, workerBatch } = props;
+    const { vpc, engineBatch, workerBatch } = props;
     const fileSystem = this.createFileSystem(vpc);
-    const accessPoint = this.createAccessPoint(fileSystem);
+    this.fsap = this.createAccessPoint(fileSystem);
 
     fileSystem.connections.allowDefaultPortFromAnyIpv4();
     fileSystem.grant(engineBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
     fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
-
-    this.headJobDefinition = new EngineJobDefinition(this, "MiniwdlHeadJobDef", {
+    this.headJobDefinition = new EngineJobDefinition(this, "SnakemakeHeadJobDef", {
       logGroup: this.logGroup,
       platformCapabilities: [PlatformCapabilities.FARGATE],
       container: {
         memoryLimitMiB: this.engineMemoryMiB,
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
-        image: createEcrImage(this, MINIWDL_IMAGE_DESIGNATION),
+        image: createEcrImage(this, SNAKEMAKE_IMAGE_DESIGNATION),
         platformVersion: FargatePlatformVersion.VERSION1_4,
+        command: [],
         environment: {
-          MINIWDL__AWS__FS: fileSystem.fileSystemId,
-          MINIWDL__AWS__FSAP: accessPoint.accessPointId,
-          MINIWDL__AWS__TASK_QUEUE: workerBatch.jobQueue.jobQueueArn,
-          MINIWDL_S3_OUTPUT_URI: rootDirS3Uri,
+          SM__AWS__FS: fileSystem.fileSystemId,
+          SM__AWS__FSAP: this.fsap.accessPointId,
+          SM__AWS__TASK_QUEUE: workerBatch.jobQueue.jobQueueArn,
         },
-        volumes: [this.toVolume(fileSystem, accessPoint, this.volumeName)],
+        volumes: [this.toVolume(fileSystem, this.fsap, this.volumeName)],
         mountPoints: [this.toMountPoint("/mnt/efs", this.volumeName)],
       },
     });

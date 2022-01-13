@@ -1,0 +1,18 @@
+name: SnakemakeDemo
+schemaVersion: 1
+workflows:
+  hello:
+    type:
+      language: snakemake
+      version: 1.0
+    sourceURL: workflow/hello-world
+contexts:
+  onDemandContext:
+    engines:
+      - type: snakemake
+        engine: snakemake
+  spotContext:
+    requestSpotInstances: true
+    engines:
+      - type: snakemake
+        engine: snakemake

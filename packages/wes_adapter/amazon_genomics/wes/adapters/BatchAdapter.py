@@ -70,7 +70,8 @@ class BatchAdapter(AbstractWESAdapter):
         :rtype: RunId
         """
         try:
-            self.aws_batch.terminate_job(jobId=run_id, reason=USER_CANCELLATION_REASON)
+            self.aws_batch.terminate_job(
+                jobId=run_id, reason=USER_CANCELLATION_REASON)
             return RunId(run_id)
         except Exception as e:
             traceback.print_exc()
@@ -83,10 +84,12 @@ class BatchAdapter(AbstractWESAdapter):
 
         try:
             child_jobs = self.get_child_tasks(head_job)
-            task_logs = list(map(lambda task_job: self.to_log(task_job), child_jobs))
+            task_logs = list(
+                map(lambda task_job: self.to_log(task_job), child_jobs))
         except Exception as e:
             traceback.print_exc()
-            raise InternalServerError(f"Failed to load child tasks for job {run_id}", e)
+            raise InternalServerError(
+                f"Failed to load child tasks for job {run_id}", e)
 
         return RunLog(
             run_id=run_id,
@@ -220,7 +223,8 @@ class BatchAdapter(AbstractWESAdapter):
     def to_run_status(job_id: str, job_status: str, job_status_reason: str):
         return RunStatus(
             run_id=job_id,
-            state=BatchAdapter.batch_job_wes_state(job_status, job_status_reason),
+            state=BatchAdapter.batch_job_wes_state(
+                job_status, job_status_reason),
         )
 
     @staticmethod

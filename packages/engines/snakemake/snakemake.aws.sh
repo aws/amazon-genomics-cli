@@ -20,7 +20,6 @@ ENGINE_PROJECT=$1
 shift
 ENGINE_PARAMS="$@"
 
-
 ##### MODIFY #######
 ## set your engine name and the run command for the engine 
 
@@ -39,7 +38,7 @@ function handleManifest() {
       fi
       ENGINE_OPTIONS="$(cat $MANIFEST_JSON | jq -r '.engineOptions')" 
       if [[ -n "$ENGINE_OPTIONS" ]] ; then
-         ENGINE_PARAMS="${ENGINE_OPTIONS}"
+         ENGINE_PARAMS="${ENGINE_PARAMS} ${ENGINE_OPTIONS}"
       fi
       ###### MODIFY ###### 
         ## Add arguments to your run command if there's a manifest file
@@ -49,7 +48,7 @@ function handleManifest() {
         ## You can also use custom paramaters from the manifest.json file. For example:
           ## APPEND_ARGS="$(cat $MANIFEST_JSON | jq -r '.customArgument')" will pull the value attached to the key "customArgument"
           ## from the manifest.json file if the key exists, otherwise it will make it the value "".
-        APPEND_ARGS=""
+        APPEND_ARGS="--aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID}"
         PREPEND_ARGS=""
         ## To extend the arg strings you can do the following: APPEND_ARGS="${APPEND_ARGS} --moreArgumentsHere"
         ## After updating these you can expect your engine to be run as `ENGINE_RUN_CMD PREPEND_ARGS <agc_params> APPEND_ARGS`
@@ -113,9 +112,9 @@ cd /opt/work/$GUID
 
 if [[ "$ENGINE_PROJECT" =~ ^s3://.* ]]; then
     echo "== Staging S3 Project =="
-    mkdir project
-    ENGINE_PROJECT_DIRECTORY="./project"
-    aws s3 cp --no-progress $ENGINE_PROJECT "${ENGINE_PROJECT_DIRECTORY}/" --recursive
+    ENGINE_PROJECT_DIRECTORY="."
+    echo "Copying from ${ENGINE_PROJECT} to '${ENGINE_PROJECT_DIRECTORY}/'"
+    aws s3 cp $ENGINE_PROJECT "${ENGINE_PROJECT_DIRECTORY}/"
     find $ENGINE_PROJECT_DIRECTORY -name '*.zip' -execdir unzip -o '{}' ';'
     ls -l $ENGINE_PROJECT_DIRECTORY
     MANIFEST_JSON=${ENGINE_PROJECT_DIRECTORY}/MANIFEST.json
@@ -123,13 +122,14 @@ if [[ "$ENGINE_PROJECT" =~ ^s3://.* ]]; then
      handleManifest
     else
       ENGINE_PROJECT="${ENGINE_PROJECT_DIRECTORY}"
+      ENGINE_PARAMS="${ENGINE_PARAMS}"
     fi
 fi
 echo "== Finding the project in  =="
 echo "cd ${ENGINE_PROJECT}"
 cd ${ENGINE_PROJECT}
 echo "== Running Workflow =="
-echo "$ENGINE_RUN_CMD $ENGINE_PARAMS"
+echo "${ENGINE_RUN_CMD} ${ENGINE_PARAMS}"
 $ENGINE_RUN_CMD $ENGINE_PARAMS & ENGINE_PID=$!
 
 echo "${ENGINE_NAME} pid: $ENGINE_PID"

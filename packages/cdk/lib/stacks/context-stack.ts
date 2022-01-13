@@ -8,6 +8,7 @@ import { BatchConstruct, BatchConstructProps } from "./engines/batch-construct";
 import { CromwellEngineConstruct } from "./engines/cromwell-engine-construct";
 import { NextflowEngineConstruct } from "./engines/nextflow-engine-construct";
 import { MiniwdlEngineConstruct } from "./engines/miniwdl-engine-construct";
+import { SnakemakeEngineConstruct } from "./engines/snakemake-engine-construct";
 
 export interface ContextStackProps extends StackProps {
   readonly contextParameters: ContextAppParameters;
@@ -34,6 +35,9 @@ export class ContextStack extends Stack {
         break;
       case "miniwdl":
         this.renderMiniwdlStack(props);
+        break;
+      case "snakemake":
+        this.renderSnakemakeStack(props);
         break;
       default:
         throw Error(`Engine '${engineName}' is not supported`);
@@ -81,6 +85,13 @@ export class ContextStack extends Stack {
   private renderMiniwdlStack(props: ContextStackProps) {
     const commonEngineProps = this.getCommonEngineProps(props);
     new MiniwdlEngineConstruct(this, "miniwdl", {
+      ...commonEngineProps,
+    }).outputToParent();
+  }
+
+  private renderSnakemakeStack(props: ContextStackProps) {
+    const commonEngineProps = this.getCommonEngineProps(props);
+    new SnakemakeEngineConstruct(this, "snakemake", {
       ...commonEngineProps,
     }).outputToParent();
   }
