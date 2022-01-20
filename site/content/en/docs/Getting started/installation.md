@@ -13,6 +13,13 @@ To download a specific release, see [releases page](https://github.com/aws/amazo
 
 To download the latest release navigate to https://github.com/aws/amazon-genomics-cli/releases/
 
+The latest nightly build can be accessed here: `s3://healthai-public-assets-us-east-1/amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip`
+
+You can download the nightly by running the following:
+```shell
+aws s3api get-object --bucket healthai-public-assets-us-east-1 --key amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip amazon-genomics-cli.zip
+```
+
 Once you have downloaded a release, type the following to install:
 
 ```shell
