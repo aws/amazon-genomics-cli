@@ -1,19 +1,26 @@
 import typing
+import json
 
 import time
 import os
 
 import boto3
+from amazon_genomics.wes.adapters.util.util import get_s3_object_json
+from amazon_genomics.wes.adapters.util.util import describe_batch_jobs_with_tag
 from mypy_boto3_batch import BatchClient
 from mypy_boto3_batch.type_defs import JobDetailTypeDef
-from mypy_boto3_logs import CloudWatchLogsClient
 from mypy_boto3_logs.type_defs import ResultFieldTypeDef
-
+from mypy_boto3_resourcegroupstaggingapi import ResourceGroupsTaggingAPIClient
+from mypy_boto3_s3 import S3Client
 from amazon_genomics.wes.adapters.BatchAdapter import BatchAdapter
 from rest_api.models import (
     WorkflowTypeVersion,
     ServiceInfo,
 )
+
+
+SM_PARENT_TAG_KEY = "AWS_BATCH_PARENT_JOB_ID"
+SM_OUTPUT_FILE_NAME = "outputs.json"
 
 
 class SnakemakeWESAdapter(BatchAdapter):
@@ -25,15 +32,19 @@ class SnakemakeWESAdapter(BatchAdapter):
         self,
         job_queue: str,
         job_definition: str,
-        engine_log_group: str,
+        output_dir_s3_uri: str,
         aws_batch: BatchClient = None,
-        aws_logs: CloudWatchLogsClient = None,
+        aws_tags: ResourceGroupsTaggingAPIClient = None,
+        aws_s3: S3Client = None,
         logger=None,
     ):
         super().__init__(job_queue, job_definition, aws_batch, logger)
-        self.engine_log_group = engine_log_group
-        self.aws_logs: CloudWatchLogsClient = aws_logs or boto3.client(
-            "logs", region_name=os.environ["AWS_REGION"]
+        self.output_dir_s3_uri = output_dir_s3_uri
+        self.aws_tags: ResourceGroupsTaggingAPIClient = aws_tags or boto3.client(
+            "resourcegroupstaggingapi", region_name=os.environ["AWS_REGION"]
+        )
+        self.aws_s3: S3Client = aws_s3 or boto3.client(
+            "s3", region_name=os.environ["AWS_REGION"]
         )
 
     def command(
@@ -55,12 +66,20 @@ class SnakemakeWESAdapter(BatchAdapter):
     def get_child_tasks(
         self, head_job: JobDetailTypeDef
     ) -> typing.List[JobDetailTypeDef]:
-        # TODO: implement finding child tasks for snakemake
-        return []
+        return describe_batch_jobs_with_tag(
+            tag_key=SM_PARENT_TAG_KEY,
+            tag_value=head_job["jobId"],
+            aws_batch=self.aws_batch,
+            aws_tags=self.aws_tags,
+        )
 
-    def get_task_outputs(self, task: JobDetailTypeDef):
-        # TODO: implement finding task outputs for snakemake
-        return {}
+    def get_task_outputs(self, head_job: JobDetailTypeDef):
+        # TODO: update implementation based on executor s3 write changes
+        job_id = head_job.get("jobId")
+        bucket, folder = self.output_dir_s3_uri.split("/", 2)[-1].split("/", 1)
+        output_file_key = f"{folder}/{job_id}/{SM_OUTPUT_FILE_NAME}"
+        output = get_s3_object_json(bucket, output_file_key, aws_s3=self.aws_s3)
+        return {"id": job_id, "outputs": output}
 
     @property
     def workflow_type_versions(self):
