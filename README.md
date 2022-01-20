@@ -20,6 +20,8 @@ For full documentation, please refer to our [docs](https://aws.github.io/amazon-
 
 All releases can be accessed on our releases [page](https://github.com/aws/amazon-genomics-cli/releases).
 
+Nightly build can be accessed here: `s3://healthai-public-assets-us-east-1/amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip`
+
 ## Development
 
 To build from source you will need to ensure the following prerequisites are met.
