@@ -16,6 +16,12 @@ const (
 )
 
 const (
+	SilentFlag            = "silent"
+	SilentFlagShort       = "s"
+	SilentFlagDescription = "Suppresses all diagnostic information."
+)
+
+const (
 	FormatFlag            = "format"
 	FormatFlagDescription = "Format option for output. Valid options are: text, table"
 )

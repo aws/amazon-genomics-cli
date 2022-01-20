@@ -114,6 +114,20 @@ func (mr *MockCdkClientMockRecorder) ShowExecution(progressEvents interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShowExecution", reflect.TypeOf((*MockCdkClient)(nil).ShowExecution), progressEvents)
 }
 
+// SilentExecution mocks base method.
+func (m *MockCdkClient) SilentExecution(progressEvents []cdk.ProgressStream) []cdk.Result {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SilentExecution", progressEvents)
+	ret0, _ := ret[0].([]cdk.Result)
+	return ret0
+}
+
+// SilentExecution indicates an expected call of SilentExecution.
+func (mr *MockCdkClientMockRecorder) SilentExecution(progressEvents interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SilentExecution", reflect.TypeOf((*MockCdkClient)(nil).SilentExecution), progressEvents)
+}
+
 // MockS3Client is a mock of S3Client interface.
 type MockS3Client struct {
 	ctrl     *gomock.Controller
