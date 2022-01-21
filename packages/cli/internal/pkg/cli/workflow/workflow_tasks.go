@@ -14,7 +14,7 @@ type Task struct {
 	JobId     string
 	StartTime *time.Time
 	StopTime  *time.Time
-	ExitCode  int
+	ExitCode  string
 }
 
 type RunLog struct {
@@ -90,7 +90,7 @@ func (m *Manager) getTasks() ([]Task, error) {
 			JobId:     nameParts[1],
 			StartTime: parseLogTime(taskLog.StartTime),
 			StopTime:  parseLogTime(taskLog.EndTime),
-			ExitCode:  int(taskLog.ExitCode),
+			ExitCode:  taskLog.ExitCode,
 		}
 	}
 
