@@ -20,6 +20,7 @@ const (
 )
 
 var Verbose bool
+var Silent bool
 
 // ApplicationConsoleLogger generates a zerolog Logger that pretty prints text (not JSON) to STDERR.
 //

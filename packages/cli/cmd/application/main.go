@@ -5,6 +5,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -95,10 +96,13 @@ func buildRootCmd() *cobra.Command {
 		Example: `
   Displays the help menu for the specified sub-command.
   /code $ agc account --help`,
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			setLoggingLevel()
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := setLoggingLevel(); err != nil {
+				return err
+			}
 			setFormatter(formatVars)
 			checkCliVersion()
+			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if vars.docPath != "" {
@@ -128,6 +132,7 @@ func buildRootCmd() *cobra.Command {
 	cmd.SetUsageTemplate(template.RootUsage)
 
 	cmd.PersistentFlags().BoolVarP(&logging.Verbose, cli.VerboseFlag, cli.VerboseFlagShort, false, cli.VerboseFlagDescription)
+	cmd.PersistentFlags().BoolVarP(&logging.Silent, cli.SilentFlag, cli.SilentFlagShort, false, cli.SilentFlagDescription)
 	cmd.PersistentFlags().StringVar(&formatVars.format, cli.FormatFlag, "", cli.FormatFlagDescription)
 	cmd.Flags().StringVar(&vars.docPath, "docs", "", "generate markdown documenting the CLI to the specified path")
 	cmd.Flag("docs").Hidden = true
@@ -156,9 +161,16 @@ func checkCliVersion() {
 	}
 }
 
-func setLoggingLevel() {
-	if !logging.Verbose {
+func setLoggingLevel() error {
+	if logging.Verbose && logging.Silent {
+		return errors.New("cannot use both verbose and silent flags")
+	}
+
+	if logging.Silent {
+		zerolog.SetGlobalLevel(zerolog.NoLevel)
+	} else if !logging.Verbose {
 		// global level is trace by default so if not verbose we want info level
 		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
+	return nil
 }
