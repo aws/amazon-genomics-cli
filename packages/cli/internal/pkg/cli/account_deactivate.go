@@ -19,8 +19,6 @@ import (
 )
 
 const (
-	appTagKey                      = "application-name"
-	appTagValue                    = "agc"
 	deactivateForceFlag            = "force"
 	deactivateForceShortFlag       = "f"
 	deactivateForceFlagDescription = `Force account deactivation by removing all resources associated with AGC.
