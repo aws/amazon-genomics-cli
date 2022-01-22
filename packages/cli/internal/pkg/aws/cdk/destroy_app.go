@@ -1,6 +1,7 @@
 package cdk
 
 import (
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 )
 
@@ -10,6 +11,7 @@ func (client Client) DestroyApp(appDir string, context []string, executionName s
 		"destroy",
 		"--all",
 		"--force",
+		"--toolkit-stack-name", awsresources.RenderBootstrapStackName(),
 		"--profile", client.profile,
 		"--output", tmpDir,
 	}

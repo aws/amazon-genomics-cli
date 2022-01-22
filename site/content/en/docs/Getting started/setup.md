@@ -23,8 +23,6 @@ Amazon Genomics CLI uses AWS CDK to deploy infrastructure. Activating an account
 CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defined infrastructure. Full details are available
 [here](https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html).
 
-you can skip CDK Bootstrapping with `--skip-bootstrap`. 
-
 
 ## Define a username
 

@@ -58,11 +58,10 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 	logging.Verbose = true
 
 	testCases := map[string]struct {
-		vpcId         string
-		bucketName    string
-		skipBootstrap bool
-		setupMocks    func(*testing.T) mockClients
-		expectedErr   error
+		vpcId       string
+		bucketName  string
+		setupMocks  func(*testing.T) mockClients
+		expectedErr error
 	}{
 		"generated bucket with no default VPC": {
 			bucketName: "",
@@ -152,23 +151,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 			},
 			expectedErr: fmt.Errorf("some bucket exists error"),
 		},
-		"activate without cdk bootstrap": {
-			bucketName:    testAccountBucketName,
-			vpcId:         "",
-			skipBootstrap: true,
-			setupMocks: func(t *testing.T) mockClients {
-				mocks := createMocks(t)
-				defer close(mocks.progressStream)
-				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				vars := []string{
-					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
-					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-					fmt.Sprintf("AGC_VERSION=%s", version.Version),
-				}
-				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
-				return mocks
-			},
-		},
 		"deploy error": {
 			bucketName: testAccountBucketName,
 			vpcId:      "",
@@ -212,9 +194,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 			defer mocks.ctrl.Finish()
 			opts := &accountActivateOpts{
 				accountActivateVars: accountActivateVars{
-					bucketName:    tc.bucketName,
-					vpcId:         tc.vpcId,
-					skipBootstrap: tc.skipBootstrap,
+					bucketName: tc.bucketName,
+					vpcId:      tc.vpcId,
 				},
 				stsClient: mocks.stsMock,
 				s3Client:  mocks.s3Mock,
