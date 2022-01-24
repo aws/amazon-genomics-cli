@@ -23,7 +23,7 @@ const (
 	testRunId     = "test-run-id"
 	testTaskName  = "test-task-name"
 	testTaskJobId = "test-task-job-id"
-	testExitCode  = 0
+	testExitCode  = "0"
 )
 
 var (
