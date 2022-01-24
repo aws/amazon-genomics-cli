@@ -8,8 +8,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-
-	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 )
 
 func CompressToTmp(srcPath string) (string, error) {
@@ -28,11 +26,7 @@ func CompressToTmp(srcPath string) (string, error) {
 
 func writeToZipRecursive(writer *zip.Writer, rootPath string) error {
 	// Expand home directory path
-	expandedRootPath, err := osutils.ExpandHomeDir(rootPath)
-	if err != nil {
-		return err
-	}
-	return filepath.WalkDir(expandedRootPath, func(currentPath string, dirEntry fs.DirEntry, err error) error {
+	return filepath.WalkDir(rootPath, func(currentPath string, dirEntry fs.DirEntry, err error) error {
 		if dirEntry == nil {
 			// There are several use cases when it can happen:
 			// 1. provided path doesn't exist
@@ -40,7 +34,7 @@ func writeToZipRecursive(writer *zip.Writer, rootPath string) error {
 			return fmt.Errorf("file '%s' doesn't exist", currentPath)
 		}
 		if !dirEntry.IsDir() {
-			return writeFileToZip(writer, expandedRootPath, currentPath)
+			return writeFileToZip(writer, rootPath, currentPath)
 		}
 		return nil
 	})

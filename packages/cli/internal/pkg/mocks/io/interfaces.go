@@ -20,6 +20,7 @@ type Zip interface {
 
 type Tmp interface {
 	Write(namePattern, content string) (string, error)
+	TempDir(dir, pattern string) (name string, err error)
 }
 
 type FileReader interface {

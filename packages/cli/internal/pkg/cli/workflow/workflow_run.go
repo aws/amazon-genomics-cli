@@ -12,8 +12,8 @@ func (m *Manager) RunWorkflow(contextName, workflowName, argumentsUrl string) (s
 	m.setOutputBucket()
 	m.parseWorkflowLocation()
 	if m.isUploadRequired() {
+		m.setBaseObjectKey(contextName, workflowName)
 		m.packWorkflowFiles()
-		m.setObjectKey(contextName, workflowName)
 		m.uploadWorkflowToS3()
 		m.cleanUpWorkflow()
 	}

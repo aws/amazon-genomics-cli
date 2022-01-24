@@ -168,6 +168,21 @@ func (m *MockTmp) EXPECT() *MockTmpMockRecorder {
 	return m.recorder
 }
 
+// TempDir mocks base method.
+func (m *MockTmp) TempDir(dir, pattern string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TempDir", dir, pattern)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TempDir indicates an expected call of TempDir.
+func (mr *MockTmpMockRecorder) TempDir(dir, pattern interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TempDir", reflect.TypeOf((*MockTmp)(nil).TempDir), dir, pattern)
+}
+
 // Write mocks base method.
 func (m *MockTmp) Write(namePattern, content string) (string, error) {
 	m.ctrl.T.Helper()
