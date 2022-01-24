@@ -21,9 +21,10 @@ func NewInputClient(S3 s3.Interface) *InputInstance {
 }
 
 var (
-	ioutilReadFile = ioutil.ReadFile
-	jsonUnmarshall = json.Unmarshal
-	jsonMarshall   = json.Marshal
+	ioutilReadFile  = ioutil.ReadFile
+	ioutilWriteFile = ioutil.WriteFile
+	jsonUnmarshall  = json.Unmarshal
+	jsonMarshall    = json.Marshal
 )
 
 func (ic *InputInstance) UpdateInputReferencesAndUploadToS3(initialProjectDirectory string, tempProjectDirectory string, bucketName string, baseS3Key string) error {
@@ -72,7 +73,6 @@ func (ic *InputInstance) updateInputsInFile(initialProjectDirectory string, inpu
 			}
 
 			updatedInputReferenceFile[key] = strings.Join(updatedReferences, ",")
-			break
 		case []interface{}:
 			var updatedRef []interface{}
 
@@ -95,18 +95,19 @@ func (ic *InputInstance) updateInputsInFile(initialProjectDirectory string, inpu
 				updatedRef = append(updatedRef, val)
 			}
 
-			updatedInputReferenceFile[key] = updatedReferences
-			break
+			updatedInputReferenceFile[key] = updatedRef
 		default:
 			updatedInputReferenceFile[key] = value
-			break
 		}
 	}
 	marshalledData, err := jsonMarshall(updatedInputReferenceFile)
 	if err != nil {
 		return err
 	}
-	ioutil.WriteFile(fileLocation, marshalledData, 0644)
+	err = ioutilWriteFile(fileLocation, marshalledData, 0644)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

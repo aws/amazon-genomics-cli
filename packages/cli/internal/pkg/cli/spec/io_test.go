@@ -393,7 +393,6 @@ func TestFromJson(t *testing.T) {
 					if bytes != nil {
 						return errors.New("unmarshallError")
 					}
-					manifest = Manifest{MainWorkflowUrl: "some url"}
 					return nil
 				}
 			},

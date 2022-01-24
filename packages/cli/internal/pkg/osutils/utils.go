@@ -69,10 +69,10 @@ func CopyFileRecursivelyToLocation(destinationDir string, sourceDir string) erro
 		}
 		if !dirEntry.IsDir() {
 			srcFile, err := osOpen(currentPath)
-			defer srcFile.Close()
 			if err != nil {
 				return err
 			}
+			defer srcFile.Close()
 
 			relativePath := fmt.Sprintf("%s/%s", destinationDir, dirEntry.Name())
 			dstFile, err := osCreate(relativePath)
@@ -80,6 +80,9 @@ func CopyFileRecursivelyToLocation(destinationDir string, sourceDir string) erro
 				return err
 			}
 			_, err = ioCopy(dstFile, srcFile)
+			if err != nil {
+				return err
+			}
 		}
 		return nil
 	})
