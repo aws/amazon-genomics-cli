@@ -3,6 +3,7 @@ package iomocks
 import (
 	"io/fs"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/rs/zerolog"
 )
 
@@ -12,6 +13,7 @@ type OS interface {
 	MkdirTemp(dir, pattern string) (string, error)
 	RemoveAll(path string) error
 	UserHomeDir() (string, error)
+	Stat(name string) (fs.FileInfo, error)
 }
 
 type Zip interface {
@@ -37,4 +39,13 @@ type Format interface {
 
 type Log interface {
 	Info() *zerolog.Event
+}
+
+type Spec interface {
+	FromJson(manifestFilePath string) (spec.Manifest, error)
+}
+
+type Json interface {
+	Unmarshal(data []byte, v interface{}) error
+	Marshal(v interface{}) ([]byte, error)
 }

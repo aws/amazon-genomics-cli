@@ -35,7 +35,7 @@ func (ic *InputInstance) UpdateInputReferencesAndUploadToS3(initialProjectDirect
 
 	manifest, err := ReadManifestInDirectory(tempProjectDirectory)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	for _, inputLocation := range manifest.InputFileUrls {
@@ -51,7 +51,7 @@ func (ic *InputInstance) UpdateInputReferencesAndUploadToS3(initialProjectDirect
 			return actionableerror.New(err, fmt.Sprintf("Please validate that the input JSON file %s exists", inputLocation))
 		}
 
-		err = ic.updateInputsInFile(initialProjectDirectory, inputFile, tempProjectDirectory, bucketName, baseS3Key, fileLocation)
+		err = ic.updateInputsInFile(initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation)
 		if err != nil {
 			return err
 		}
@@ -60,7 +60,7 @@ func (ic *InputInstance) UpdateInputReferencesAndUploadToS3(initialProjectDirect
 	return nil
 }
 
-func (ic *InputInstance) updateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, projectDirectory string, bucketName string, baseS3Key string, fileLocation string) error {
+func (ic *InputInstance) updateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string, fileLocation string) error {
 	var updatedInputReferenceFile = make(map[string]interface{})
 	for key, value := range inputFile {
 		var inputReferences []string
