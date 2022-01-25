@@ -299,3 +299,40 @@ func (mr *MockStorageClientMockRecorder) WriteFromString(url, data interface{}) 
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteFromString", reflect.TypeOf((*MockStorageClient)(nil).WriteFromString), url, data)
 }
+
+// MockInputClient is a mock of InputClient interface.
+type MockInputClient struct {
+	ctrl     *gomock.Controller
+	recorder *MockInputClientMockRecorder
+}
+
+// MockInputClientMockRecorder is the mock recorder for MockInputClient.
+type MockInputClientMockRecorder struct {
+	mock *MockInputClient
+}
+
+// NewMockInputClient creates a new mock instance.
+func NewMockInputClient(ctrl *gomock.Controller) *MockInputClient {
+	mock := &MockInputClient{ctrl: ctrl}
+	mock.recorder = &MockInputClientMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockInputClient) EXPECT() *MockInputClientMockRecorder {
+	return m.recorder
+}
+
+// UpdateInputReferencesAndUploadToS3 mocks base method.
+func (m *MockInputClient) UpdateInputReferencesAndUploadToS3(initialProjectDirectory, tempProjectDirectory, bucketName, baseS3Key string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateInputReferencesAndUploadToS3", initialProjectDirectory, tempProjectDirectory, bucketName, baseS3Key)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateInputReferencesAndUploadToS3 indicates an expected call of UpdateInputReferencesAndUploadToS3.
+func (mr *MockInputClientMockRecorder) UpdateInputReferencesAndUploadToS3(initialProjectDirectory, tempProjectDirectory, bucketName, baseS3Key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInputReferencesAndUploadToS3", reflect.TypeOf((*MockInputClient)(nil).UpdateInputReferencesAndUploadToS3), initialProjectDirectory, tempProjectDirectory, bucketName, baseS3Key)
+}
