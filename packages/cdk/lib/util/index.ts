@@ -12,8 +12,9 @@ import { IRole } from "aws-cdk-lib/aws-iam";
 import { LogConfiguration, LogDriver as BatchLogDriver } from "@aws-cdk/aws-batch-alpha";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { PythonFunction } from "@aws-cdk/aws-lambda-python-alpha";
-import { Runtime } from "aws-cdk-lib/aws-lambda";
+import { Runtime, Function, Code } from "aws-cdk-lib/aws-lambda";
 import { Duration } from "aws-cdk-lib";
+import {Bucket} from "aws-cdk-lib/aws-s3";
 
 export const getContext = (node: Node, key: string): string => {
   const context = getContextOrDefault(node, key, undefined);
@@ -124,9 +125,13 @@ export const renderPythonLambda = (
   codePath: string,
   environment: Record<string, string>
 ): PythonFunction => {
-  return new PythonFunction(scope, id, {
+  const account: string = process.env.CDK_DEFAULT_ACCOUNT!;
+  const region: string = process.env.CDK_DEFAULT_REGION!;
+  const bucketName = `${APP_NAME}-${account}-${region}`;
+  return new Function(scope, id, {
     vpc,
-    entry: codePath,
+    code: Code.fromBucket(Bucket.fromBucketName(scope, "WesAdapter", bucketName), "wes/wes_adapter.zip"),
+    handler: "index.handler",
     runtime: Runtime.PYTHON_3_9,
     environment,
     role,

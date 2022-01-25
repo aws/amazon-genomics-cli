@@ -35,6 +35,8 @@ install_cdk () {
     mkdir -p "$BASE_DIR/cdk"
     cp "$SCRIPT_DIR/cdk.tgz" "$BASE_DIR/cdk"
     (cd "$BASE_DIR/cdk" && tar -xzf ./cdk.tgz --strip-components=1 && npm ci --silent)
+    mkdir -p "$BASE_DIR/wes"
+    mv "$BASE_DIR/cdk/lib/wes_adapter/wes_adapter.zip" "$BASE_DIR/wes/wes_adapter.zip"
 }
 
 install_cli && install_cdk && echo "Installation complete. Once \$PATH variable has been adjusted, run 'agc --help' to get started!"
