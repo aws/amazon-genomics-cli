@@ -83,7 +83,6 @@ type ProgressResult struct {
 
 var displayProgressBar = cdk.DisplayProgressBar
 var showExecution = cdk.ShowExecution
-var silentExecution = cdk.SilentExecution
 
 func (m *Manager) getEnvironmentVars() []string {
 	var environmentVars []string
@@ -267,8 +266,6 @@ func (m *Manager) processExecution(allProgressStreams []cdk.ProgressStream, desc
 	var cdkResults []cdk.Result
 	if logging.Verbose {
 		cdkResults = showExecution(allProgressStreams)
-	} else if logging.Silent {
-		cdkResults = silentExecution(allProgressStreams)
 	} else {
 		cdkResults = displayProgressBar(description, allProgressStreams)
 	}
