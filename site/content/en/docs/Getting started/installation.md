@@ -13,6 +13,8 @@ To download a specific release, see [releases page](https://github.com/aws/amazo
 
 To download the latest release navigate to https://github.com/aws/amazon-genomics-cli/releases/
 
+Once you have downloaded a release, type the following to install:
+
 The latest nightly build can be accessed here: `s3://healthai-public-assets-us-east-1/amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip`
 
 You can download the nightly by running the following:
@@ -20,8 +22,6 @@ You can download the nightly by running the following:
 ```shell
 aws s3api get-object --bucket healthai-public-assets-us-east-1 --key amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip amazon-genomics-cli.zip
 ```
-
-Once you have downloaded a release, type the following to install:
 
 ```shell
 unzip amazon-genomics-cli-<version>.zip
@@ -64,7 +64,6 @@ Commands
 Flags
       --format string   Format option for output. Valid options are: text, table (default "text")
   -h, --help            help for agc
-  -s, --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
       --version         version for agc
 Examples
@@ -107,7 +106,7 @@ Amazon Genomics CLI can generate shell completion scripts that enable 'Tab' comp
 Command completion is optional and not required to use Amazon Genomics CLI. To generate a completion script you can use:
 
 ```shell
- agc completion <shell>
+ agc generate <shell>
 ``` 
 
 where "shell" is one of:
