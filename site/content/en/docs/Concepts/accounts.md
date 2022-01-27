@@ -90,6 +90,10 @@ as VPC NAT gateways and VPC Endpoints. If you no longer use Amazon Genomics CLI 
 wish to remove the S3 bucket along with its objects as well as the [CloudWatch](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/index.html) logs produced by Amazon Genomics CLI. These are retained
 by default so that you can view workflow results and logs even after deactivation.
 
+However, if you with to have this infrastructure remain deployed, you are able to significantly reduce ongoing costs by using `agc account activate --publicSubnets`.
+This prevents the creation of private subnets with NAT gateways, and the use of VPC endpoints, both of which have associated ongoing costs.
+However please note that **you must also set `publicSubnets: true` in your `agc-config.yaml` if you choose to use this option**.
+
 ### Network traffic
 
 When running genomics workflows, network traffic can become a significant expense when the traffic is routed

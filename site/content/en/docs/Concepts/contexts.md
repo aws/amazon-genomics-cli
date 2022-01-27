@@ -106,6 +106,23 @@ contexts:
         engine: nextflow
 ```
 
+### Public Subnets
+
+In the interest of saving money, in particular if you intend to have the AGC stack deployed for a long period, you may choose to deploy in "public subnet" mode.
+To do this, you must first set up the core stack using `aws configure --publicSubnets`, which will disable the creation of the NAT gateway and VPC endpoints which present an ongoing cost unrelated to your use of compute resources.
+After you have done this, you must also set `publicSubnets: true` in all contexts you use:
+```yaml
+contexts:
+  someCtx:
+    publicSubnets: true
+    engines:
+      - type: nextflow
+        engine: nextflow
+```
+
+This ensures that the AWS batch instances are deployed into a public subnet, which has no additional cost associated with it.
+However note that while these instances are given a security group that will block all incoming traffic, this is not as secure as using the default private subnet mode.
+
 ## Context Commands
 
 A full reference of context commands is [here]( {{< relref "../Reference/agc_context" >}} )
