@@ -1,6 +1,6 @@
 import { getEnvNumber, getEnvBoolOrDefault, getEnvString, getEnvStringListOrDefault, getEnvStringOrDefault } from "./";
-import { InstanceType } from "monocdk/aws-ec2";
-import { ConstructNode } from "monocdk";
+import { InstanceType } from "aws-cdk-lib/aws-ec2";
+import { Node } from "constructs";
 import { ServiceContainer } from "../types";
 
 const oneCpuUnit = 1024;
@@ -85,8 +85,12 @@ export class ContextAppParameters {
    * This will result in significantly lower ongoing costs when no job is running.
    */
   public readonly publicSubnets?: boolean;
+  /**
+   * AGC version being deployed.
+   */
+  public readonly agcVersion: string;
 
-  constructor(node: ConstructNode) {
+  constructor(node: Node) {
     const instanceTypeStrings = getEnvStringListOrDefault(node, "BATCH_COMPUTE_INSTANCE_TYPES");
 
     this.projectName = getEnvString(node, "PROJECT");
@@ -112,6 +116,7 @@ export class ContextAppParameters {
     this.instanceTypes = instanceTypeStrings ? instanceTypeStrings.map((instanceType) => new InstanceType(instanceType.trim())) : undefined;
 
     this.publicSubnets = getEnvBoolOrDefault(node, "PUBLIC_SUBNETS", false);
+    this.agcVersion = getEnvString(node, "AGC_VERSION");
   }
 
   public getContextBucketPath(): string {

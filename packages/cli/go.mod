@@ -34,7 +34,11 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/xeipuuv/gojsonschema v1.2.0
 	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f
+<<<<<<< HEAD
 	golang.org/x/tools v0.1.9 // indirect
+=======
+	golang.org/x/tools v0.1.8 // indirect
+>>>>>>> a6cc9904cd2d1899f7f64bf3c024a242c1a33749
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )

@@ -1,20 +1,21 @@
-import { Construct, Stack, Aws } from "monocdk";
-import { Bucket, IBucket } from "monocdk/aws-s3";
+import { Stack, Aws } from "aws-cdk-lib";
+import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import { ApiProxy, Batch } from "../../constructs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
-import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "monocdk/aws-iam";
-import { ILogGroup } from "monocdk/aws-logs";
+import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "aws-cdk-lib/aws-iam";
+import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
-import { InstanceType, IVpc } from "monocdk/aws-ec2";
+import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { LAUNCH_TEMPLATE } from "../../constants";
-import { ComputeResourceType } from "monocdk/aws-batch";
-import { BucketOperations } from "../../../common/BucketOperations";
+import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
+import { BucketOperations } from "../../common/BucketOperations";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
 import { renderPythonLambda } from "../../util";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
 import { EngineOptions } from "../../types";
 import { wesAdapterSourcePath } from "../../constants";
+import { Construct } from "constructs";
 
 export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -31,9 +32,9 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     const params = props.contextParameters;
     const rootDirS3Uri = params.getEngineBucketPath();
 
-    this.batchHead = this.renderBatch("HeadBatch", vpc, contextParameters.instanceTypes, ComputeResourceType.FARGATE);
+    this.batchHead = this.renderBatch("HeadBatch", vpc, contextParameters, ComputeResourceType.FARGATE);
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
-    this.batchWorkers = this.renderBatch("TaskBatch", vpc, contextParameters.instanceTypes, workerComputeType);
+    this.batchWorkers = this.renderBatch("TaskBatch", vpc, contextParameters, workerComputeType);
 
     this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
     this.batchHead.role.addToPrincipalPolicy(
@@ -113,11 +114,12 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     }
   }
 
-  private renderBatch(id: string, vpc: IVpc, instanceTypes?: InstanceType[], computeType?: ComputeResourceType): Batch {
+  private renderBatch(id: string, vpc: IVpc, appParams: ContextAppParameters, computeType?: ComputeResourceType): Batch {
     return new Batch(this, id, {
       vpc,
-      instanceTypes,
       computeType,
+      instanceTypes: appParams.instanceTypes,
+      maxVCpus: appParams.maxVCpus,
       launchTemplateData: LAUNCH_TEMPLATE,
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: Stack.of(this).tags.tagValues(),

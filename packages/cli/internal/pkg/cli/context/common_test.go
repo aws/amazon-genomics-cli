@@ -44,7 +44,7 @@ var (
 			},
 			testContextName3: {
 				Engines: []spec.Engine{
-					{Type: "wdl", Engine: "cromwell"},
+					{Type: "nextflow", Engine: "nextflow"},
 				},
 			},
 		},
@@ -58,6 +58,7 @@ type mockClients struct {
 	cfnMock         *awsmocks.MockCfnClient
 	ssmMock         *awsmocks.MockSsmClient
 	configMock      *storagemocks.MockConfigClient
+	ecrClientMock   *awsmocks.MockEcrClient
 	progressStream1 cdk.ProgressStream
 	progressStream2 cdk.ProgressStream
 }
@@ -72,6 +73,7 @@ func createMocks(t *testing.T) mockClients {
 		cfnMock:         awsmocks.NewMockCfnClient(ctrl),
 		ssmMock:         awsmocks.NewMockSsmClient(ctrl),
 		configMock:      storagemocks.NewMockConfigClient(ctrl),
+		ecrClientMock:   awsmocks.NewMockEcrClient(ctrl),
 		progressStream1: make(cdk.ProgressStream),
 		progressStream2: make(cdk.ProgressStream),
 	}

@@ -1,6 +1,7 @@
 package spec
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -349,6 +350,80 @@ workflows:
 		t.Run(name, func(t *testing.T) {
 			err := ValidateProject([]byte(tt.yaml))
 			assert.EqualError(t, err, tt.errMessage)
+		})
+	}
+}
+
+func TestFromJson(t *testing.T) {
+	backupReadFile, backupJsonUnmarshall := readFile, jsonUnmarshal
+	defer func() {
+		readFile = backupReadFile
+		jsonUnmarshal = backupJsonUnmarshall
+	}()
+
+	happyFilePath := "my/file/path"
+	tests := map[string]struct {
+		setupMocks func()
+		input      string
+		errMessage string
+	}{
+		"success": {
+			setupMocks: func() {
+				readFile = func(filePath string) ([]byte, error) {
+					if filePath != happyFilePath {
+						return []byte{}, errors.New("filePathError")
+					}
+					return []byte{}, nil
+				}
+				jsonUnmarshal = func(bytes []byte, manifest interface{}) error {
+					return nil
+				}
+			},
+			input: happyFilePath,
+		},
+		"read fail": {
+			setupMocks: func() {
+				readFile = func(filePath string) ([]byte, error) {
+					if filePath != happyFilePath {
+						return []byte{}, errors.New("filePathError")
+					}
+					return []byte{}, nil
+				}
+				jsonUnmarshal = func(bytes []byte, manifest interface{}) error {
+					if bytes != nil {
+						return errors.New("unmarshallError")
+					}
+					return nil
+				}
+			},
+			input:      "bad path",
+			errMessage: "filePathError",
+		},
+		"unmarshall fail": {
+			setupMocks: func() {
+				readFile = func(filePath string) ([]byte, error) {
+					if filePath != happyFilePath {
+						return []byte{}, errors.New("filePathError")
+					}
+					return []byte{}, nil
+				}
+				jsonUnmarshal = func(bytes []byte, manifest interface{}) error {
+					return errors.New("unmarshallError")
+				}
+
+			},
+			input:      happyFilePath,
+			errMessage: "unmarshallError",
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			tt.setupMocks()
+			_, err := FromJson(tt.input)
+			if err != nil {
+				assert.EqualError(t, err, tt.errMessage)
+			}
 		})
 	}
 }

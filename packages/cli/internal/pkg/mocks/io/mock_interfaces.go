@@ -8,6 +8,7 @@ import (
 	fs "io/fs"
 	reflect "reflect"
 
+	spec "github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	gomock "github.com/golang/mock/gomock"
 	zerolog "github.com/rs/zerolog"
 )
@@ -92,6 +93,21 @@ func (mr *MockOSMockRecorder) RemoveAll(path interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveAll", reflect.TypeOf((*MockOS)(nil).RemoveAll), path)
 }
 
+// Stat mocks base method.
+func (m *MockOS) Stat(name string) (fs.FileInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Stat", name)
+	ret0, _ := ret[0].(fs.FileInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Stat indicates an expected call of Stat.
+func (mr *MockOSMockRecorder) Stat(name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stat", reflect.TypeOf((*MockOS)(nil).Stat), name)
+}
+
 // UserHomeDir mocks base method.
 func (m *MockOS) UserHomeDir() (string, error) {
 	m.ctrl.T.Helper()
@@ -166,6 +182,21 @@ func NewMockTmp(ctrl *gomock.Controller) *MockTmp {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockTmp) EXPECT() *MockTmpMockRecorder {
 	return m.recorder
+}
+
+// TempDir mocks base method.
+func (m *MockTmp) TempDir(dir, pattern string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TempDir", dir, pattern)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TempDir indicates an expected call of TempDir.
+func (mr *MockTmpMockRecorder) TempDir(dir, pattern interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TempDir", reflect.TypeOf((*MockTmp)(nil).TempDir), dir, pattern)
 }
 
 // Write mocks base method.
@@ -332,4 +363,94 @@ func (m *MockLog) Info() *zerolog.Event {
 func (mr *MockLogMockRecorder) Info() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Info", reflect.TypeOf((*MockLog)(nil).Info))
+}
+
+// MockSpec is a mock of Spec interface.
+type MockSpec struct {
+	ctrl     *gomock.Controller
+	recorder *MockSpecMockRecorder
+}
+
+// MockSpecMockRecorder is the mock recorder for MockSpec.
+type MockSpecMockRecorder struct {
+	mock *MockSpec
+}
+
+// NewMockSpec creates a new mock instance.
+func NewMockSpec(ctrl *gomock.Controller) *MockSpec {
+	mock := &MockSpec{ctrl: ctrl}
+	mock.recorder = &MockSpecMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockSpec) EXPECT() *MockSpecMockRecorder {
+	return m.recorder
+}
+
+// FromJson mocks base method.
+func (m *MockSpec) FromJson(manifestFilePath string) (spec.Manifest, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FromJson", manifestFilePath)
+	ret0, _ := ret[0].(spec.Manifest)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FromJson indicates an expected call of FromJson.
+func (mr *MockSpecMockRecorder) FromJson(manifestFilePath interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FromJson", reflect.TypeOf((*MockSpec)(nil).FromJson), manifestFilePath)
+}
+
+// MockJson is a mock of Json interface.
+type MockJson struct {
+	ctrl     *gomock.Controller
+	recorder *MockJsonMockRecorder
+}
+
+// MockJsonMockRecorder is the mock recorder for MockJson.
+type MockJsonMockRecorder struct {
+	mock *MockJson
+}
+
+// NewMockJson creates a new mock instance.
+func NewMockJson(ctrl *gomock.Controller) *MockJson {
+	mock := &MockJson{ctrl: ctrl}
+	mock.recorder = &MockJsonMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockJson) EXPECT() *MockJsonMockRecorder {
+	return m.recorder
+}
+
+// Marshal mocks base method.
+func (m *MockJson) Marshal(v interface{}) ([]byte, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Marshal", v)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Marshal indicates an expected call of Marshal.
+func (mr *MockJsonMockRecorder) Marshal(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Marshal", reflect.TypeOf((*MockJson)(nil).Marshal), v)
+}
+
+// Unmarshal mocks base method.
+func (m *MockJson) Unmarshal(data []byte, v interface{}) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Unmarshal", data, v)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Unmarshal indicates an expected call of Unmarshal.
+func (mr *MockJsonMockRecorder) Unmarshal(data, v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Unmarshal", reflect.TypeOf((*MockJson)(nil).Unmarshal), data, v)
 }

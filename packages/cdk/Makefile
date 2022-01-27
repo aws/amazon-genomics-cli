@@ -15,4 +15,4 @@ init:
 	npm ci --silent
 
 release:
-	npm pack --silent | xargs -I '{}' mv {} cdk.tgz
+	npm shrinkwrap && npm pack --silent | xargs -I '{}' mv {} cdk.tgz

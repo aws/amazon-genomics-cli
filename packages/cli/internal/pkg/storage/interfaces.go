@@ -33,3 +33,7 @@ type ConfigClient interface {
 	GetFormat() (string, error)
 	SetFormat(format string) error
 }
+
+type InputClient interface {
+	UpdateInputReferencesAndUploadToS3(initialProjectDirectory string, tempProjectDirectory string, bucketName string, baseS3Key string) error
+}

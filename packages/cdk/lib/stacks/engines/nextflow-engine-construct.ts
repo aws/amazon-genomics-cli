@@ -1,15 +1,16 @@
-import { Aws, Construct } from "monocdk";
+import { Aws } from "aws-cdk-lib";
 import { NextflowEngine } from "../../constructs/engines/nextflow/nextflow-engine";
 import { renderPythonLambda } from "../../util";
 import { EngineOptions } from "../../types";
-import { Bucket } from "monocdk/aws-s3";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 import { ApiProxy } from "../../constructs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
-import { ILogGroup } from "monocdk/aws-logs";
-import { IJobQueue } from "monocdk/aws-batch";
+import { ILogGroup } from "aws-cdk-lib/aws-logs";
+import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
 import { wesAdapterSourcePath } from "../../constants";
+import { Construct } from "constructs";
 
 export interface NextflowEngineConstructProps extends EngineOptions {
   /**

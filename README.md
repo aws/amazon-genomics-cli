@@ -20,6 +20,8 @@ For full documentation, please refer to our [docs](https://aws.github.io/amazon-
 
 All releases can be accessed on our releases [page](https://github.com/aws/amazon-genomics-cli/releases).
 
+The latest nightly build can be accessed here: `s3://healthai-public-assets-us-east-1/amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip`
+
 ## Development
 
 To build from source you will need to ensure the following prerequisites are met.
@@ -36,6 +38,17 @@ The Amazon Genomics CLI is written in Go.
 
 To manage and install Go versions, we use [goenv](https://github.com/syndbg/goenv). Follow the installation
 instructions [here](https://github.com/syndbg/goenv/blob/master/INSTALL.md).
+
+Once goenv is installed, use it to install the version of Go required by the
+Amazon Genomics CLI build process, so that it will be available when the build
+process invokes goenv's `go` shim:
+
+```bash
+goenv install
+```
+
+You will need to do this step again whenever the required version of Go is
+changed.
 
 #### Node
 

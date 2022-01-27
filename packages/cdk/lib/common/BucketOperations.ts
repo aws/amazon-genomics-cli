@@ -1,13 +1,14 @@
-import { Arn, Construct } from "monocdk";
-import { Bucket, IBucket } from "monocdk/aws-s3";
-import { IRole } from "monocdk/aws-iam";
+import { Arn, ArnFormat } from "aws-cdk-lib";
+import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
+import { IRole } from "aws-cdk-lib/aws-iam";
+import { Construct } from "constructs";
 
 export class BucketOperations {
   private static readonly importedBuckets: Record<string, IBucket> = {};
 
   public static grantBucketAccess(scope: Construct, role: IRole, bucketArns: string[], readOnly?: boolean): void {
     bucketArns.forEach((bucketArn) => {
-      const arnComponents = Arn.parse(bucketArn);
+      const arnComponents = Arn.split(bucketArn, ArnFormat.SLASH_RESOURCE_NAME);
       const bucketName = arnComponents.resource;
       const bucketPrefix = arnComponents.resourceName;
       const bucket = this.importBucket(scope, `${bucketName}Bucket`, bucketName);

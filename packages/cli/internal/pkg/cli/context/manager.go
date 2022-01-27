@@ -1,17 +1,20 @@
 package context
 
 import (
+	"fmt"
 	"net/url"
 	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ssm"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
@@ -55,11 +58,14 @@ type listProps struct {
 }
 
 type Manager struct {
-	Cdk     cdk.Interface
-	Cfn     cfn.Interface
-	Project storage.ProjectClient
-	Config  storage.ConfigClient
-	Ssm     ssm.Interface
+	Cdk       cdk.Interface
+	Cfn       cfn.Interface
+	Project   storage.ProjectClient
+	Config    storage.ConfigClient
+	Ssm       ssm.Interface
+	ecrClient ecr.Interface
+	imageRefs map[string]ecr.ImageReference
+	region    string
 
 	baseProps
 	contextProps
@@ -77,6 +83,20 @@ type ProgressResult struct {
 
 var displayProgressBar = cdk.DisplayProgressBar
 var showExecution = cdk.ShowExecution
+
+func (m *Manager) getEnvironmentVars() []string {
+	var environmentVars []string
+	for imageName := range m.imageRefs {
+		environmentVars = append(environmentVars,
+			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", imageName, m.imageRefs[imageName].RegistryId),
+			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.region),
+			fmt.Sprintf("ECR_%s_TAG=%s", imageName, m.imageRefs[imageName].ImageTag),
+			fmt.Sprintf("ECR_%s_REPOSITORY=%s", imageName, m.imageRefs[imageName].RepositoryName),
+		)
+	}
+
+	return environmentVars
+}
 
 func NewManager(profile string) *Manager {
 	projectClient, err := storage.NewProjectClient()
@@ -98,6 +118,9 @@ func NewManager(profile string) *Manager {
 		Config:    configClient,
 		Ssm:       aws.SsmClient(profile),
 		baseProps: baseProps{homeDir: homeDir},
+		imageRefs: environment.CommonImages,
+		ecrClient: aws.EcrClient(profile),
+		region:    aws.Region(profile),
 	}
 }
 
@@ -170,26 +193,6 @@ func (m *Manager) setOutputBucket() {
 	}
 }
 
-func (m *Manager) setTaskContext(contextName string) {
-	if m.err != nil {
-		return
-	}
-
-	m.contextEnv = contextEnvironment{
-		ProjectName:          m.projectSpec.Name,
-		ContextName:          contextName,
-		UserId:               m.userId,
-		UserEmail:            m.userEmail,
-		OutputBucketName:     m.outputBucket,
-		ArtifactBucketName:   m.artifactBucket,
-		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
-		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
-		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
-		MaxVCpus:             m.contextSpec.MaxVCpus,
-		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
-	}
-}
-
 func (m *Manager) setContextEnv(contextName string) {
 	if m.err != nil {
 		return
@@ -218,6 +221,22 @@ func (m *Manager) setContextEnv(contextName string) {
 		EngineName:        context.Engines[0].Engine,
 		EngineDesignation: context.Engines[0].Engine,
 	}
+}
+func (m *Manager) validateImage() {
+	if m.err != nil {
+		return
+	}
+
+	imageRef, imageRefExists := m.imageRefs[strings.ToUpper(m.contextEnv.EngineName)]
+	if !imageRefExists {
+		m.err = actionableerror.New(
+			fmt.Errorf("the engine name in your context file '%s' does not exist", m.contextEnv.EngineName),
+			"Please check your agc config file for the engine you have supplied",
+		)
+		return
+	}
+
+	m.err = m.ecrClient.VerifyImageExists(imageRef)
 }
 
 func (m *Manager) readConfig() {

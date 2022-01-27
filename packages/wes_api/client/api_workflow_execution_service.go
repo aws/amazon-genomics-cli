@@ -16,7 +16,6 @@ import (
 	_neturl "net/url"
 	"os"
 	"strings"
-
 	"github.com/antihax/optional"
 )
 

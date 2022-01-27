@@ -74,9 +74,9 @@ func (o *deployContextOpts) validateSuppliedContexts(contextList []string) error
 		return err
 	}
 
-	for _, context := range contextList {
-		if _, ok := ctxList[context]; !ok {
-			return fmt.Errorf("the provided context '%s' is not defined in the agc-project.yaml file", context)
+	for _, contextName := range contextList {
+		if _, ok := ctxList[contextName]; !ok {
+			return fmt.Errorf("the provided context '%s' is not defined in the agc-project.yaml file", contextName)
 		}
 	}
 
@@ -173,6 +173,7 @@ It creates AGC resources in AWS.
 			}
 			return nil
 		}),
+		ValidArgsFunction: NewContextAutoComplete().GetContextAutoComplete(),
 	}
 	cmd.Flags().BoolVar(&vars.deployAll, deployContextAllFlag, false, deployContextAllDescription)
 	cmd.Flags().StringSliceVarP(&vars.contexts, contextFlag, contextFlagShort, nil, deployContextDescription)

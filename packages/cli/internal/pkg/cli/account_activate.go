@@ -13,9 +13,9 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -51,14 +51,11 @@ type accountActivateOpts struct {
 }
 
 func newAccountActivateOpts(vars accountActivateVars) (*accountActivateOpts, error) {
-	imageRefs := environment.CommonImages
 	return &accountActivateOpts{
 		accountActivateVars: vars,
-		imageRefs:           imageRefs,
 		stsClient:           aws.StsClient(profile),
 		s3Client:            aws.S3Client(profile),
 		cdkClient:           cdk.NewClient(profile),
-		ecrClient:           aws.EcrClient(profile),
 		region:              aws.Region(profile),
 	}, nil
 }
@@ -78,15 +75,10 @@ func (o *accountActivateOpts) Execute() error {
 		return err
 	}
 
-	for _, imageRef := range o.imageRefs {
-		if err := o.ecrClient.VerifyImageExists(imageRef); err != nil {
-			return err
-		}
-	}
-
 	environmentVars := []string{
 		fmt.Sprintf("AGC_BUCKET_NAME=%s", o.bucketName),
 		fmt.Sprintf("CREATE_AGC_BUCKET=%t", !exists),
+<<<<<<< HEAD
 		fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", o.publicSubnets),
 
 		fmt.Sprintf("ECR_WES_ACCOUNT_ID=%s", o.imageRefs[environment.WesImageKey].RegistryId),
@@ -108,6 +100,9 @@ func (o *accountActivateOpts) Execute() error {
 		fmt.Sprintf("ECR_MINIWDL_REGION=%s", o.imageRefs[environment.MiniwdlImageKey].Region),
 		fmt.Sprintf("ECR_MINIWDL_TAG=%s", o.imageRefs[environment.MiniwdlImageKey].ImageTag),
 		fmt.Sprintf("ECR_MINIWDL_REPOSITORY=%s", o.imageRefs[environment.MiniwdlImageKey].RepositoryName),
+=======
+		fmt.Sprintf("AGC_VERSION=%s", version.Version),
+>>>>>>> a6cc9904cd2d1899f7f64bf3c024a242c1a33749
 	}
 	if o.vpcId != "" {
 		environmentVars = append(environmentVars, fmt.Sprintf("VPC_ID=%s", o.vpcId))

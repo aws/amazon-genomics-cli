@@ -35,9 +35,10 @@ func (m *Manager) getStreamsForCdkDeployments(contexts []string) ([]cdk.Progress
 	var contextsWithStreams []string
 	for _, contextName := range contexts {
 		m.readContextSpec(contextName)
-		m.setCdkConfigurationForDeployment(contextName)
+		m.setCdkConfigurationForDeployment()
 		m.clearCdkContext(contextDir)
 		m.setContextEnv(contextName)
+		m.validateImage()
 
 		progressStream := m.deployContext(contextName)
 		if progressStream != nil {
@@ -51,12 +52,11 @@ func (m *Manager) getStreamsForCdkDeployments(contexts []string) ([]cdk.Progress
 	return progressStreams, contextsWithStreams
 }
 
-func (m *Manager) setCdkConfigurationForDeployment(contextName string) {
+func (m *Manager) setCdkConfigurationForDeployment() {
 	m.setDataBuckets()
 	m.setOutputBucket()
 	m.setArtifactUrl()
 	m.setArtifactBucket()
-	m.setTaskContext(contextName)
 }
 
 func (m *Manager) clearCdkContext(appDir string) {
@@ -72,7 +72,8 @@ func (m *Manager) deployContext(contextName string) cdk.ProgressStream {
 		return nil
 	}
 
-	progressStream, err := m.Cdk.DeployApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), m.contextEnv.ToEnvironmentList(), contextName)
+	deploymentVars := append(m.contextEnv.ToEnvironmentList(), m.getEnvironmentVars()...)
+	progressStream, err := m.Cdk.DeployApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), deploymentVars, contextName)
 
 	if err != nil {
 		m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: err})

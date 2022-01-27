@@ -1,0 +1,20 @@
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    <ENGINE-NAME>_IMAGE_NAME: "<engine-name>"
+phases:
+  pre_build:
+    commands:
+      - <ENGINE-NAME>_IMAGE_URI=${<ENGINE-NAME>_IMAGE_NAME}:latest
+  build:
+    commands:
+      - docker build -t ${<ENGINE-NAME>_IMAGE_URI} ./
+  post_build:
+    commands:
+      - docker save -o <ENGINE-NAME>_image.tar ${<ENGINE-NAME>_IMAGE_URI}
+
+artifacts:
+  files:
+    - <ENGINE-NAME>_image.tar

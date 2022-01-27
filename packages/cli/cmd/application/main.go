@@ -143,10 +143,10 @@ func checkCliVersion() {
 		return
 	}
 	if result.LatestVersion != result.CurrentVersion {
-		log.Info().Msgf("New version of agc available. Current version is '%s'. The latest version is '%s'", result.CurrentVersion, result.LatestVersion)
+		log.Info().Msgf("New version of agc available. Current version is '%s'. The latest version is '%s'. Please consider upgrading to the latest version by following https://aws.github.io/amazon-genomics-cli/docs/getting-started/installation/ ", result.CurrentVersion, result.LatestVersion)
 	}
 	if result.CurrentVersionDeprecated {
-		log.Warn().Msgf("The current version was deprecated with message: %s. Please consider upgrading Amazon Genomics CLI.", strings.TrimSpace(result.CurrentVersionDeprecationMessage))
+		log.Warn().Msgf("The current version was deprecated with message: %s. Please consider upgrading Amazon Genomics CLI by following https://aws.github.io/amazon-genomics-cli/docs/getting-started/installation/ ", strings.TrimSpace(result.CurrentVersionDeprecationMessage))
 	}
 	if len(result.NewerVersionHighlights) > 0 {
 		log.Info().Msgf("Highlights from newer versions:")
