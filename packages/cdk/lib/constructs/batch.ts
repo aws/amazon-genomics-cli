@@ -159,17 +159,20 @@ export class Batch extends Construct {
   }
 
   private renderComputeEnvironment(options: ComputeOptions): IComputeEnvironment {
+    console.log(`publicSubnets: ${JSON.stringify(options.publicSubnets)}`);
     const computeType = options.computeType || defaultComputeType;
+    const subnets = {
+      // Even if we use public subnets, CDK will assign security groups that don't allow inbound
+      subnetType: options.publicSubnets ? SubnetType.PUBLIC : SubnetType.PRIVATE_WITH_NAT,
+    };
+    console.log(`subnets: ${JSON.stringify(subnets)}`);
     if (computeType == ComputeResourceType.FARGATE || computeType == ComputeResourceType.FARGATE_SPOT) {
       return new ComputeEnvironment(this, "ComputeEnvironment", {
         computeResources: {
           vpc: options.vpc,
           type: computeType,
           maxvCpus: options.maxVCpus,
-          vpcSubnets: {
-            // Even if we use public subnets, CDK will assign security groups that don't allow inbound
-            subnetType: options.publicSubnets ? SubnetType.PUBLIC : SubnetType.PRIVATE_WITH_NAT,
-          },
+          vpcSubnets: subnets,
         },
       });
     }
@@ -197,6 +200,7 @@ export class Batch extends Construct {
           launchTemplateName: launchTemplate.launchTemplateName!,
         },
         computeResourcesTags: options.resourceTags,
+        vpcSubnets: subnets,
       },
     });
   }

@@ -75,6 +75,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					[]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
+						fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
 						fmt.Sprintf("AGC_VERSION=%s", version.Version),
 					},
 					"activate").Return(mocks.progressStream, nil)
@@ -103,6 +104,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					[]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
+						fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
 						fmt.Sprintf("AGC_VERSION=%s", version.Version),
 					},
 					"activate").Return(mocks.progressStream, nil)
@@ -121,6 +123,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					[]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
+						fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
 						fmt.Sprintf("AGC_VERSION=%s", version.Version),
 					},
 					"activate").Return(mocks.progressStream, nil)
@@ -137,6 +140,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				baseVars := []string{
 					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
+					fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
 					fmt.Sprintf("AGC_VERSION=%s", version.Version),
 				}
 				mocks.cdkMock.EXPECT().DeployApp(
@@ -166,6 +170,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					[]string{
 						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 						fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
+						fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
 						fmt.Sprintf("AGC_VERSION=%s", version.Version),
 					},
 					"activate").Return(nil, fmt.Errorf("some deploy error"))

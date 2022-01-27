@@ -69,9 +69,9 @@ func deleteCDKOutputDir(cdkOutputDir string) {
 	if cdkOutputDir == "" {
 		return
 	}
-	//if err := osRemoveAll(cdkOutputDir); err != nil {
-	//	log.Error().Err(err).Msgf("tried to delete output from cdk from location '%s' but failed", cdkOutputDir)
-	//}
+	if err := osRemoveAll(cdkOutputDir); err != nil {
+		log.Error().Err(err).Msgf("tried to delete output from cdk from location '%s' but failed", cdkOutputDir)
+	}
 }
 
 func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName string) (chan ProgressEvent, *sync.WaitGroup) {
