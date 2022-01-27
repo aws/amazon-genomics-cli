@@ -78,31 +78,7 @@ func (o *accountActivateOpts) Execute() error {
 	environmentVars := []string{
 		fmt.Sprintf("AGC_BUCKET_NAME=%s", o.bucketName),
 		fmt.Sprintf("CREATE_AGC_BUCKET=%t", !exists),
-<<<<<<< HEAD
-		fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", o.publicSubnets),
-
-		fmt.Sprintf("ECR_WES_ACCOUNT_ID=%s", o.imageRefs[environment.WesImageKey].RegistryId),
-		fmt.Sprintf("ECR_WES_REGION=%s", o.imageRefs[environment.WesImageKey].Region),
-		fmt.Sprintf("ECR_WES_TAG=%s", o.imageRefs[environment.WesImageKey].ImageTag),
-		fmt.Sprintf("ECR_WES_REPOSITORY=%s", o.imageRefs[environment.WesImageKey].RepositoryName),
-
-		fmt.Sprintf("ECR_CROMWELL_ACCOUNT_ID=%s", o.imageRefs[environment.CromwellImageKey].RegistryId),
-		fmt.Sprintf("ECR_CROMWELL_REGION=%s", o.imageRefs[environment.CromwellImageKey].Region),
-		fmt.Sprintf("ECR_CROMWELL_TAG=%s", o.imageRefs[environment.CromwellImageKey].ImageTag),
-		fmt.Sprintf("ECR_CROMWELL_REPOSITORY=%s", o.imageRefs[environment.CromwellImageKey].RepositoryName),
-
-		fmt.Sprintf("ECR_NEXTFLOW_ACCOUNT_ID=%s", o.imageRefs[environment.NextflowImageKey].RegistryId),
-		fmt.Sprintf("ECR_NEXTFLOW_REGION=%s", o.imageRefs[environment.NextflowImageKey].Region),
-		fmt.Sprintf("ECR_NEXTFLOW_TAG=%s", o.imageRefs[environment.NextflowImageKey].ImageTag),
-		fmt.Sprintf("ECR_NEXTFLOW_REPOSITORY=%s", o.imageRefs[environment.NextflowImageKey].RepositoryName),
-
-		fmt.Sprintf("ECR_MINIWDL_ACCOUNT_ID=%s", o.imageRefs[environment.MiniwdlImageKey].RegistryId),
-		fmt.Sprintf("ECR_MINIWDL_REGION=%s", o.imageRefs[environment.MiniwdlImageKey].Region),
-		fmt.Sprintf("ECR_MINIWDL_TAG=%s", o.imageRefs[environment.MiniwdlImageKey].ImageTag),
-		fmt.Sprintf("ECR_MINIWDL_REPOSITORY=%s", o.imageRefs[environment.MiniwdlImageKey].RepositoryName),
-=======
 		fmt.Sprintf("AGC_VERSION=%s", version.Version),
->>>>>>> a6cc9904cd2d1899f7f64bf3c024a242c1a33749
 	}
 	if o.vpcId != "" {
 		environmentVars = append(environmentVars, fmt.Sprintf("VPC_ID=%s", o.vpcId))
