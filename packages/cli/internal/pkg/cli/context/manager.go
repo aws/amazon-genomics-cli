@@ -65,7 +65,8 @@ type Manager struct {
 	contextProps
 	infoProps
 	listProps
-	err error
+	err             error
+	progressResults []ProgressResult
 }
 
 type ProgressResult struct {
