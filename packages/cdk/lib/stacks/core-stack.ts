@@ -1,7 +1,7 @@
 import { CfnOutput, RemovalPolicy, Stack, StackProps } from "monocdk";
 import { AttributeType, BillingMode, ITable, ProjectionType, Table } from "monocdk/aws-dynamodb";
 import { StringParameter, IParameter } from "monocdk/aws-ssm";
-import {GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, Vpc, VpcProps} from "monocdk/aws-ec2";
+import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, Vpc } from "monocdk/aws-ec2";
 import { Bucket, BucketEncryption, IBucket } from "monocdk/aws-s3";
 import { Construct } from "constructs";
 import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME } from "../constants";
@@ -67,6 +67,7 @@ export class CoreStack extends Stack {
   constructor(scope: Construct, id: string, props: CoreStackProps) {
     super(scope, id, props);
 
+    console.error(`Params: ${JSON.stringify(props)}`);
     this.vpc = this.renderVpc(props.vpcId, props.publicSubnets);
     this.table = this.renderTable();
     this.bucket = this.renderBucket(props.bucketName, props.createNewBucket);
@@ -78,19 +79,22 @@ export class CoreStack extends Stack {
   }
 
   private renderVpc(vpcId?: string, publicSubnets?: boolean): IVpc {
+    console.error(`Public? ${JSON.stringify(publicSubnets)}`);
     if (vpcId) {
       return Vpc.fromLookup(this, "Vpc", { vpcId });
     }
 
     const vpc = new Vpc(this, "Vpc", {
-      gatewayEndpoints: publicSubnets ? {} : {
-          S3Endpoint: { service: GatewayVpcEndpointAwsService.S3 },
-        },
-      subnetConfiguration: publicSubnets ? Vpc.DEFAULT_SUBNETS_NO_NAT : Vpc.DEFAULT_SUBNETS
+      gatewayEndpoints: publicSubnets
+        ? {}
+        : {
+            S3Endpoint: { service: GatewayVpcEndpointAwsService.S3 },
+          },
+      subnetConfiguration: publicSubnets ? Vpc.DEFAULT_SUBNETS_NO_NAT : Vpc.DEFAULT_SUBNETS,
     });
 
     if (!publicSubnets) {
-      const subnetSelection = {subnets: vpc.privateSubnets, onePerAz: true};
+      const subnetSelection = { subnets: vpc.privateSubnets, onePerAz: true };
       vpc.addInterfaceEndpoint(`${PRODUCT_NAME}LogsEndpoint`, {
         service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.logs`),
         subnets: subnetSelection,

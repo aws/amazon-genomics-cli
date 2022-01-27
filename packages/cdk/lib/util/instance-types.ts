@@ -1,4 +1,4 @@
-import { InstanceType } from "monocdk/aws-ec2";
+import { InstanceType } from "aws-"
 import { ComputeResourceType } from "monocdk/aws-batch";
 
 // https://github.com/aws-samples/aws-genomics-workflows/blob/master/src/templates/gwfcore/gwfcore-batch.template.yaml#L145-L180

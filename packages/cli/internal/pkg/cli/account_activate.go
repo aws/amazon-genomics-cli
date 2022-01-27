@@ -87,7 +87,7 @@ func (o *accountActivateOpts) Execute() error {
 	environmentVars := []string{
 		fmt.Sprintf("AGC_BUCKET_NAME=%s", o.bucketName),
 		fmt.Sprintf("CREATE_AGC_BUCKET=%t", !exists),
-		fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", !exists),
+		fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", o.publicSubnets),
 
 		fmt.Sprintf("ECR_WES_ACCOUNT_ID=%s", o.imageRefs[environment.WesImageKey].RegistryId),
 		fmt.Sprintf("ECR_WES_REGION=%s", o.imageRefs[environment.WesImageKey].Region),
