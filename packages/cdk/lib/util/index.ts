@@ -14,7 +14,7 @@ import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { PythonFunction } from "@aws-cdk/aws-lambda-python-alpha";
 import { Runtime, Function, Code } from "aws-cdk-lib/aws-lambda";
 import { Duration } from "aws-cdk-lib";
-import {Bucket} from "aws-cdk-lib/aws-s3";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 
 export const getContext = (node: Node, key: string): string => {
   const context = getContextOrDefault(node, key, undefined);
