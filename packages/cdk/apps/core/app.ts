@@ -16,6 +16,31 @@ const vpcId = getContextOrDefault<Maybe<string>>(app.node, "VPC_ID");
 const bucketName = getContextOrDefault(app.node, `${APP_ENV_NAME}_BUCKET_NAME`, `${APP_NAME}-${account}-${region}`);
 const createNewBucket = getContextOrDefault(app.node, `CREATE_${APP_ENV_NAME}_BUCKET`, "true").toLowerCase() == "true";
 
+const stackParameters = [
+  {
+    name: "bucket",
+    value: bucketName,
+    description: "S3 bucket which contains outputs, intermediate results, and other project-specific data",
+  },
+  {
+    name: "installed-artifacts/s3-root-url",
+    value: `s3://${bucketName}/artifacts/batch-artifacts`,
+    description: "S3 root url for batch assets",
+  },
+];
+
+// If user specified custom tags, add them to the stack parameters, so they will be persisted in SSM Parameter Store.
+const customTagsJsonString = getContextOrDefault<Maybe<string>>(app.node, "CUSTOM_TAGS");
+let customTagsMap = {};
+if (customTagsJsonString) {
+  stackParameters.push({
+    name: "customTags",
+    value: customTagsJsonString,
+    description: "JSON string of custom tags to be used to tag all AGC infrastructure",
+  });
+  customTagsMap = JSON.parse(customTagsJsonString);
+}
+
 new CoreStack(app, `${PRODUCT_NAME}-Core`, {
   vpcId,
   bucketName,
@@ -28,17 +53,7 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
   tags: {
     [APP_TAG_KEY]: APP_NAME,
     [AGC_VERSION_KEY]: agcVersion,
+    ...customTagsMap, // Add tags here so all infra in the core stack will be tagged as well.
   },
-  parameters: [
-    {
-      name: "bucket",
-      value: bucketName,
-      description: "S3 bucket which contains outputs, intermediate results, and other project-specific data",
-    },
-    {
-      name: "installed-artifacts/s3-root-url",
-      value: `s3://${bucketName}/artifacts/batch-artifacts`,
-      description: "S3 root url for batch assets",
-    },
-  ],
+  parameters: stackParameters,
 });

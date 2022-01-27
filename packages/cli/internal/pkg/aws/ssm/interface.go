@@ -9,6 +9,7 @@ import (
 type Interface interface {
 	GetOutputBucket() (string, error)
 	GetCommonParameter(parameterSuffix string) (string, error)
+	GetCustomTags() string
 }
 
 type ssmInterface interface {

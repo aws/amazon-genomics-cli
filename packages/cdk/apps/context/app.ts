@@ -33,5 +33,6 @@ new ContextStack(app, `${PRODUCT_NAME}-Context-${contextParameters.projectName}-
     [USER_ID_TAG_KEY]: contextParameters.userId,
     [USER_EMAIL_TAG_KEY]: contextParameters.userEmail,
     [AGC_VERSION_KEY]: contextParameters.agcVersion,
+    ...contextParameters.customTags,
   },
 });

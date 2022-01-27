@@ -356,6 +356,20 @@ func (mr *MockSsmClientMockRecorder) GetOutputBucket() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutputBucket", reflect.TypeOf((*MockSsmClient)(nil).GetOutputBucket))
 }
 
+// GetCustomTags mocks base method.
+func (m *MockSsmClient) GetCustomTags() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCustomTags")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetCustomTags indicates an expected call of GetOutputBucket.
+func (mr *MockSsmClientMockRecorder) GetCustomTags() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCustomTags", reflect.TypeOf((*MockSsmClient)(nil).GetCustomTags))
+}
+
 // MockCfnClient is a mock of CfnClient interface.
 type MockCfnClient struct {
 	ctrl     *gomock.Controller
