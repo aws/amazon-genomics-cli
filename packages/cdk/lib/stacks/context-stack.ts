@@ -100,6 +100,7 @@ export class ContextStack extends Stack {
     const { contextParameters } = props;
     return {
       vpc: this.vpc,
+      
       contextParameters,
     };
   }

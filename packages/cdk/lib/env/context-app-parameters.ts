@@ -79,6 +79,12 @@ export class ContextAppParameters {
    * The types of EC2 instances that may be launched in the compute environment.
    */
   public readonly instanceTypes?: InstanceType[];
+  /**
+   * If true, put EC2 instances into public subnets instead of private subnets. This should be used in conjunction
+   * with the ENV_PUBLIC_SUBNETS option
+   * This will result in significantly lower ongoing costs when no job is running.
+   */
+  public readonly publicSubnets?: boolean;
 
   constructor(node: ConstructNode) {
     const instanceTypeStrings = getEnvStringListOrDefault(node, "BATCH_COMPUTE_INSTANCE_TYPES");
@@ -104,6 +110,8 @@ export class ContextAppParameters {
     this.maxVCpus = getEnvNumber(node, "MAX_V_CPUS");
     this.requestSpotInstances = getEnvBoolOrDefault(node, "REQUEST_SPOT_INSTANCES", false)!;
     this.instanceTypes = instanceTypeStrings ? instanceTypeStrings.map((instanceType) => new InstanceType(instanceType.trim())) : undefined;
+
+    this.publicSubnets = getEnvBoolOrDefault(node, "PUBLIC_SUBNETS", false);
   }
 
   public getContextBucketPath(): string {

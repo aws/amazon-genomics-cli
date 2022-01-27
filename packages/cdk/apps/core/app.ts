@@ -13,11 +13,13 @@ const region: string = process.env.CDK_DEFAULT_REGION!;
 const vpcId = getContextOrDefault<Maybe<string>>(app.node, "VPC_ID");
 const bucketName = getContextOrDefault(app.node, `${APP_ENV_NAME}_BUCKET_NAME`, `${APP_NAME}-${account}-${region}`);
 const createNewBucket = getContextOrDefault(app.node, `CREATE_${APP_ENV_NAME}_BUCKET`, "true").toLowerCase() == "true";
+const publicSubnets = getContextOrDefault(app.node, `${APP_ENV_NAME}_PUBLIC_SUBNETS`, "false").toLowerCase() == "true";
 
 new CoreStack(app, `${PRODUCT_NAME}-Core`, {
   vpcId,
   bucketName,
   createNewBucket,
+  publicSubnets,
   env: {
     account,
     region,
