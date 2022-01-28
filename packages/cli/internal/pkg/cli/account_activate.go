@@ -30,6 +30,7 @@ A new VPC will be created if not specified.`
 	cdkCoreDir   = ".agc/cdk/apps/core"
 	bucketPrefix = "agc"
 	activateKey  = "activate"
+	bootstrapKey = "bootstrap"
 )
 
 type accountActivateVars struct {
@@ -81,7 +82,18 @@ func (o *accountActivateOpts) Execute() error {
 		environmentVars = append(environmentVars, fmt.Sprintf("VPC_ID=%s", o.vpcId))
 	}
 
-	return o.deployCoreInfrastructure(environmentVars)
+	homeDir, err := osutils.DetermineHomeDir()
+	if err != nil {
+		return err
+	}
+
+	cdkAppPath := filepath.Join(homeDir, cdkCoreDir)
+	err = o.cdkBootstrap(cdkAppPath, environmentVars)
+	if err != nil {
+		return err
+	}
+
+	return o.deployCoreInfrastructure(cdkAppPath, environmentVars)
 }
 
 func (o accountActivateOpts) generateDefaultBucket() (string, error) {
@@ -92,17 +104,23 @@ func (o accountActivateOpts) generateDefaultBucket() (string, error) {
 	return generateBucketName(account, o.region), nil
 }
 
-func (o accountActivateOpts) deployCoreInfrastructure(environmentVars []string) error {
-	homeDir, err := osutils.DetermineHomeDir()
+func (o accountActivateOpts) cdkBootstrap(cdkAppPath string, environmentVars []string) error {
+	progressStream, err := o.cdkClient.Bootstrap(cdkAppPath, environmentVars, bootstrapKey)
 	if err != nil {
 		return err
 	}
+	return displayProgress(progressStream, "Bootstrapping CDK...")
+}
 
-	cdkAppPath := filepath.Join(homeDir, cdkCoreDir)
+func (o accountActivateOpts) deployCoreInfrastructure(cdkAppPath string, environmentVars []string) error {
 	progressStream, err := o.cdkClient.DeployApp(cdkAppPath, environmentVars, activateKey)
 	if err != nil {
 		return err
 	}
+	return displayProgress(progressStream, "Activating account...")
+}
+
+func displayProgress(progressStream cdk.ProgressStream, displayMsg string) error {
 	if logging.Verbose {
 		var lastEvent cdk.ProgressEvent
 		for event := range progressStream {
@@ -115,7 +133,7 @@ func (o accountActivateOpts) deployCoreInfrastructure(environmentVars []string) 
 			lastEvent = event
 		}
 	} else {
-		return progressStream.DisplayProgress("Activating account...")
+		return progressStream.DisplayProgress(displayMsg)
 	}
 	return nil
 }

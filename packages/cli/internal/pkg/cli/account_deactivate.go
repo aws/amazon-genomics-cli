@@ -10,15 +10,15 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
 const (
-	appTagKey                      = "application-name"
-	appTagValue                    = "agc"
 	deactivateForceFlag            = "force"
 	deactivateForceShortFlag       = "f"
 	deactivateForceFlagDescription = `Force account deactivation by removing all resources associated with AGC.
@@ -53,7 +53,8 @@ func (o *accountDeactivateOpts) LoadStacks() error {
 }
 
 func (o *accountDeactivateOpts) Validate() error {
-	if !o.force && len(o.stacks) > 1 {
+	// core and bootstrap stacks are expected
+	if !o.force && len(o.stacks) > 2 {
 		return actionableerror.New(
 			errors.New("one or more contexts are still deployed"),
 			"use --force to destroy deployed contexts as well",
@@ -64,13 +65,19 @@ func (o *accountDeactivateOpts) Validate() error {
 
 func (o *accountDeactivateOpts) Execute() error {
 	stackDeletionTrackers := make(map[string]chan cfn.DeletionResult)
+	bootstrapStackName := awsresources.RenderBootstrapStackName()
+	var bootstrapStackId string
 	for _, stack := range o.stacks {
-		log.Debug().Msgf("Deleting stack '%s'", stack.Name)
-		tracker, err := o.cfnClient.DeleteStack(stack.Id)
-		if err != nil {
-			return err
+		if stack.Name == bootstrapStackName {
+			bootstrapStackId = stack.Id
+		} else {
+			log.Debug().Msgf("Deleting stack '%s'", stack.Name)
+			tracker, err := o.cfnClient.DeleteStack(stack.Id)
+			if err != nil {
+				return err
+			}
+			stackDeletionTrackers[stack.Name] = tracker
 		}
-		stackDeletionTrackers[stack.Name] = tracker
 	}
 
 	for stackName, tracker := range stackDeletionTrackers {
@@ -79,6 +86,20 @@ func (o *accountDeactivateOpts) Execute() error {
 			return fmt.Errorf("failed to delete stack '%s: %w", stackName, deletionResult.Error)
 		}
 		log.Debug().Msgf("Stack '%s' has been successfully deleted!", stackName)
+	}
+
+	// delete last, the bootstrap stack owns the cfn-exec role cloudformation assumes to delete other stack resources
+	if bootstrapStackId != "" {
+		log.Debug().Msgf("Deleting stack '%s'", bootstrapStackName)
+		tracker, err := o.cfnClient.DeleteStack(bootstrapStackId)
+		if err != nil {
+			return err
+		}
+		deletionResult := <-tracker
+		if deletionResult.Error != nil {
+			return fmt.Errorf("failed to delete stack '%s: %w", bootstrapStackName, deletionResult.Error)
+		}
+		log.Debug().Msgf("Stack '%s' has been successfully deleted!", bootstrapStackName)
 	}
 
 	return nil
@@ -96,7 +117,7 @@ func (o *accountDeactivateOpts) getApplicationStacks() ([]cfn.Stack, error) {
 		if err != nil {
 			return nil, err
 		}
-		if tags[appTagKey] == appTagValue {
+		if tags[constants.AppTagKey] == constants.AppTagValue {
 			filteredStacks = append(filteredStacks, stack)
 		}
 	}

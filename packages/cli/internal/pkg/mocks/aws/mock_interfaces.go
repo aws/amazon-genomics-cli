@@ -56,6 +56,21 @@ func (mr *MockCdkClientMockRecorder) ClearContext(appDir interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearContext", reflect.TypeOf((*MockCdkClient)(nil).ClearContext), appDir)
 }
 
+// Bootstrap mocks base method.
+func (m *MockCdkClient) Bootstrap(appDir string, context []string, executionName string) (cdk.ProgressStream, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Bootstrap", appDir, context, executionName)
+	ret0, _ := ret[0].(cdk.ProgressStream)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Bootstrap indicates an expected call of Bootstrap.
+func (mr *MockCdkClientMockRecorder) Bootstrap(appDir, context, executionName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bootstrap", reflect.TypeOf((*MockCdkClient)(nil).Bootstrap), appDir, context, executionName)
+}
+
 // DeployApp mocks base method.
 func (m *MockCdkClient) DeployApp(appDir string, context []string, executionName string) (cdk.ProgressStream, error) {
 	m.ctrl.T.Helper()
