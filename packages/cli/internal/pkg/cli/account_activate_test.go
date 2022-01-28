@@ -70,15 +70,14 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				defer close(mocks.progressStream)
 				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
 				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
-				mocks.cdkMock.EXPECT().DeployApp(
-					gomock.Any(),
-					[]string{
-						fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
-						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-						fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
-						fmt.Sprintf("AGC_VERSION=%s", version.Version),
-					},
-					"activate").Return(mocks.progressStream, nil)
+				vars := []string{
+					fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
+					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
+					fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 			vpcId: "",
@@ -99,15 +98,14 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				mocks.cdkMock.EXPECT().DeployApp(
-					gomock.Any(),
-					[]string{
-						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
-						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-						fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
-						fmt.Sprintf("AGC_VERSION=%s", version.Version),
-					},
-					"activate").Return(mocks.progressStream, nil)
+				vars := []string{
+					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
+					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
+					fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 		},
@@ -118,15 +116,14 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
-				mocks.cdkMock.EXPECT().DeployApp(
-					gomock.Any(),
-					[]string{
-						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
-						fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
-						fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
-						fmt.Sprintf("AGC_VERSION=%s", version.Version),
-					},
-					"activate").Return(mocks.progressStream, nil)
+				vars := []string{
+					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
+					fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
+					fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 		},
@@ -137,16 +134,15 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				baseVars := []string{
+				vars := []string{
 					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
 					fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
 					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+					fmt.Sprintf("VPC_ID=%s", testAccountVpcId),
 				}
-				mocks.cdkMock.EXPECT().DeployApp(
-					gomock.Any(),
-					append(baseVars, fmt.Sprintf("VPC_ID=%s", testAccountVpcId)),
-					"activate").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 		},
@@ -164,19 +160,37 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 			vpcId:      "",
 			setupMocks: func(t *testing.T) mockClients {
 				mocks := createMocks(t)
+				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
+				vars := []string{
+					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
+					fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
+					fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(
-					gomock.Any(),
-					[]string{
-						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
-						fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
-						fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
-						fmt.Sprintf("AGC_VERSION=%s", version.Version),
-					},
-					"activate").Return(nil, fmt.Errorf("some deploy error"))
+					gomock.Any(), vars, "activate").Return(nil, fmt.Errorf("some deploy error"))
 				return mocks
 			},
 			expectedErr: fmt.Errorf("some deploy error"),
+		},
+		"bootstrap error": {
+			bucketName: testAccountBucketName,
+			vpcId:      "",
+			setupMocks: func(t *testing.T) mockClients {
+				mocks := createMocks(t)
+				vars := []string{
+					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
+					fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
+					fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", false),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+				}
+				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(nil, fmt.Errorf("some bootstrap error"))
+				return mocks
+			},
+			expectedErr: fmt.Errorf("some bootstrap error"),
 		},
 	}
 

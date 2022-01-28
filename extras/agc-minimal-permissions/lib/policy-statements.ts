@@ -183,6 +183,7 @@ export class AgcPermissions {
             actions: actions(svc,
                 "GetBucketPolicy",
                 "GetBucketTagging",
+                "GetBucketLocation",
                 "GetEncryptionConfiguration",
                 "ListBucket",
                 "GetObject",
@@ -209,23 +210,6 @@ export class AgcPermissions {
               this.arn({service: svc, region: "", account: "", resource: "agc-*"})
             ],
           })]
-    }
-
-    s3CDK() : PolicyStatement[] {
-        const svc = "s3";
-        return [new PolicyStatement({
-            effect: Effect.ALLOW,
-            actions: actions(svc,
-                "ListBucket",
-                "GetObject",
-                "GetBucketLocation",
-                "PutObject",
-                "DeleteObject",
-            ),
-            resources: [
-              this.arn({service: svc, region: "", account: "", resource: "cdktoolkit-*"}),
-            ],
-        })]
     }
 
     dynamodbCreate() : PolicyStatement[] {
@@ -446,7 +430,7 @@ export class AgcPermissions {
                 "UntagResource",
             ),
             resources: [
-                this.arn({service: "cloudformation", region: "*", resource: "stack", resourceName: "CDKToolkit*"}),
+                this.arn({service: "cloudformation", region: "*", resource: "stack", resourceName: "Agc-CDKToolkit*"}),
             ]
         })
     }

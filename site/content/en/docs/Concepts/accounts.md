@@ -44,6 +44,8 @@ A full reference of the account commands is [here]( {{< relref "../Reference/agc
 You can activate an account using `agc account activate`. An account must be activated before any contexts can be deployed
 or workflows run. 
 
+Activating an account will also bootstrap the AWS Environment for CDK app deployments.
+
 Amazon Genomics CLI requires an S3 bucket to store workflow results and associated information. If you prefer to use an existing bucket
 you can use the form  `agc account activate --bucket my-existing-bucket`. If you do this the AWS [IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html) role used to run
 Amazon Genomics CLI must be able to write to that bucket.

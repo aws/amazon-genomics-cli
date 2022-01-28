@@ -14,6 +14,8 @@ const (
 	testDeactivateStackId1   = "test-deactivate-stack-id-1"
 	testDeactivateStackName2 = "test-deactivate-stack-name-2"
 	testDeactivateStackId2   = "test-deactivate-stack-id-2"
+	testDeactivateStackName3 = "test-deactivate-stack-name-3"
+	testDeactivateStackId3   = "test-deactivate-stack-id-3"
 )
 
 var (
@@ -24,6 +26,10 @@ var (
 	testDeactivateStack2 = cfn.Stack{
 		Name: testDeactivateStackName2,
 		Id:   testDeactivateStackId2,
+	}
+	testDeactivateStack3 = cfn.Stack{
+		Name: testDeactivateStackName3,
+		Id:   testDeactivateStackId3,
 	}
 )
 
@@ -92,12 +98,15 @@ func TestAccountDeactivateOpts_Validate(t *testing.T) {
 		"single stack without force no error": {
 			stacks: []cfn.Stack{testDeactivateStack1},
 		},
-		"many stacks with force no error": {
-			force:  true,
+		"two stacks without force no error": {
 			stacks: []cfn.Stack{testDeactivateStack1, testDeactivateStack2},
 		},
+		"many stacks with force no error": {
+			force:  true,
+			stacks: []cfn.Stack{testDeactivateStack1, testDeactivateStack2, testDeactivateStack3},
+		},
 		"too many stacks without force error": {
-			stacks:      []cfn.Stack{testDeactivateStack1, testDeactivateStack2},
+			stacks:      []cfn.Stack{testDeactivateStack1, testDeactivateStack2, testDeactivateStack3},
 			expectedErr: true,
 		},
 	}
