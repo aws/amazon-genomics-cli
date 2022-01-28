@@ -1,3 +1,6 @@
 {
-  "app": "npx -p typescript -p ts-node ts-node --prefer-ts-exts app.ts"
+  "app": "npx -p typescript -p ts-node ts-node --prefer-ts-exts app.ts",
+  "context": {
+    "@aws-cdk/core:bootstrapQualifier": "agc"
+  }
 }
