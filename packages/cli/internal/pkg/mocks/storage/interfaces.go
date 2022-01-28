@@ -11,6 +11,3 @@ type ConfigClient interface {
 type StorageClient interface {
 	storage.StorageClient
 }
-type InputClient interface {
-	storage.InputClient
-}

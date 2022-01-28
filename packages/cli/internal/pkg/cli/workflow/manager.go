@@ -20,7 +20,6 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/zipfile"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/wes"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/wes/option"
@@ -29,13 +28,9 @@ import (
 )
 
 var (
-	compressToTmp                 = zipfile.CompressToTmp
-	workflowZip                   = "workflow.zip"
-	removeFile                    = os.Remove
-	removeAll                     = os.RemoveAll
-	createTempDir                 = ioutil.TempDir
-	copyFileRecursivelyToLocation = osutils.CopyFileRecursivelyToLocation
-	writeToTmp                    = func(namePattern, content string) (string, error) {
+	compressToTmp = zipfile.CompressToTmp
+	removeFile    = os.Remove
+	writeToTmp    = func(namePattern, content string) (string, error) {
 		f, err := ioutil.TempFile("", namePattern)
 		if err != nil {
 			return "", err
@@ -58,8 +53,8 @@ type baseProps struct {
 
 //nolint:structcheck
 type s3Props struct {
-	bucketName      string
-	baseWorkflowKey string
+	bucketName string
+	objectKey  string
 }
 
 //nolint:structcheck
@@ -114,15 +109,14 @@ type workflowOutputProps struct {
 }
 
 type Manager struct {
-	Project     storage.ProjectClient
-	Config      storage.ConfigClient
-	S3          s3.Interface
-	Ssm         ssm.Interface
-	Cfn         cfn.Interface
-	Ddb         ddb.Interface
-	Storage     storage.StorageClient
-	InputClient storage.InputClient
-	WesFactory  func(url string) (wes.Interface, error)
+	Project    storage.ProjectClient
+	Config     storage.ConfigClient
+	S3         s3.Interface
+	Ssm        ssm.Interface
+	Cfn        cfn.Interface
+	Ddb        ddb.Interface
+	Storage    storage.StorageClient
+	WesFactory func(url string) (wes.Interface, error)
 
 	wes wes.Interface
 	baseProps
@@ -150,17 +144,15 @@ func NewManager(profile string) *Manager {
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to create config client for workflow manager")
 	}
-	s3 := aws.S3Client(profile)
 	return &Manager{
-		Project:     projectClient,
-		Config:      configClient,
-		Ssm:         aws.SsmClient(profile),
-		Cfn:         aws.CfnClient(profile),
-		S3:          s3,
-		Ddb:         aws.DdbClient(profile),
-		Storage:     storageClient,
-		InputClient: storage.NewInputClient(s3),
-		WesFactory:  func(url string) (wes.Interface, error) { return wes.New(url, profile) },
+		Project:    projectClient,
+		Config:     configClient,
+		Ssm:        aws.SsmClient(profile),
+		Cfn:        aws.CfnClient(profile),
+		S3:         aws.S3Client(profile),
+		Ddb:        aws.DdbClient(profile),
+		Storage:    storageClient,
+		WesFactory: func(url string) (wes.Interface, error) { return wes.New(url, profile) },
 	}
 }
 
@@ -215,34 +207,7 @@ func (m *Manager) packWorkflowFiles() {
 	projectLocation := m.Project.GetLocation()
 	workflowPath := m.parsedSourceURL.Path
 	path := filepath.Join(projectLocation, workflowPath)
-
-	dir, err := createTempDir("", "workflow_*")
-	if err != nil {
-		m.err = err
-		return
-	}
-	defer func() {
-		err = removeAll(dir)
-		if err != nil {
-			log.Warn().Msgf("Failed to delete temporary folder '%s'", m.packPath)
-		}
-	}()
-
-	err = copyFileRecursivelyToLocation(dir, path)
-	if err != nil {
-		log.Error().Err(err)
-		m.err = err
-		return
-	}
-
-	err = m.InputClient.UpdateInputReferencesAndUploadToS3(path, dir, m.bucketName, m.baseWorkflowKey)
-	if err != nil {
-		log.Error().Err(err)
-		m.err = err
-		return
-	}
-
-	m.packPath, m.err = compressToTmp(dir)
+	m.packPath, m.err = compressToTmp(path)
 }
 
 func (m *Manager) setOutputBucket() {
@@ -252,11 +217,11 @@ func (m *Manager) setOutputBucket() {
 	m.bucketName, m.err = m.Ssm.GetOutputBucket()
 }
 
-func (m *Manager) setBaseObjectKey(contextName, workflowName string) {
+func (m *Manager) setObjectKey(contextName, workflowName string) {
 	if m.err != nil {
 		return
 	}
-	m.baseWorkflowKey = awsresources.RenderBucketContextKey(m.projectSpec.Name, m.userId, contextName, "workflow", workflowName)
+	m.objectKey = awsresources.RenderBucketContextKey(m.projectSpec.Name, m.userId, contextName, "workflow", workflowName, "workflow.zip")
 }
 
 func (m *Manager) calculateFinalLocation() {
@@ -264,7 +229,7 @@ func (m *Manager) calculateFinalLocation() {
 		return
 	}
 	if m.isLocal {
-		m.workflowUrl = fmt.Sprintf("s3://%s/%s/%s", m.bucketName, m.baseWorkflowKey, workflowZip)
+		m.workflowUrl = fmt.Sprintf("s3://%s/%s", m.bucketName, m.objectKey)
 	} else {
 		m.workflowUrl = m.workflowSpec.SourceURL
 	}
@@ -274,7 +239,7 @@ func (m *Manager) uploadWorkflowToS3() {
 	if m.err != nil {
 		return
 	}
-	m.err = m.S3.UploadFile(m.bucketName, fmt.Sprintf("%s/%s", m.baseWorkflowKey, workflowZip), m.packPath)
+	m.err = m.S3.UploadFile(m.bucketName, m.objectKey, m.packPath)
 }
 
 func (m *Manager) readInput(inputUrl string) {
