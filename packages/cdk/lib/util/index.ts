@@ -11,10 +11,6 @@ import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { IRole } from "aws-cdk-lib/aws-iam";
 import { LogConfiguration, LogDriver as BatchLogDriver } from "@aws-cdk/aws-batch-alpha";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
-import { PythonFunction } from "@aws-cdk/aws-lambda-python-alpha";
-import { Runtime, Function, Code } from "aws-cdk-lib/aws-lambda";
-import { Duration } from "aws-cdk-lib";
-import { Bucket } from "aws-cdk-lib/aws-s3";
 
 export const getContext = (node: Node, key: string): string => {
   const context = getContextOrDefault(node, key, undefined);
@@ -116,25 +112,3 @@ export function batchArn(scope: Construct, resource: string, resourcePrefix = "*
 export function ec2Arn(scope: Construct, resource: string, resourcePrefix = "*"): string {
   return Arn.format({ resource: `${resource}/${resourcePrefix}`, service: "ec2" }, Stack.of(scope));
 }
-
-export const renderPythonLambda = (
-  scope: Construct,
-  id: string,
-  vpc: IVpc,
-  role: IRole,
-  codePath: string,
-  environment: Record<string, string>
-): PythonFunction => {
-  const account: string = process.env.CDK_DEFAULT_ACCOUNT!;
-  const region: string = process.env.CDK_DEFAULT_REGION!;
-  const bucketName = `${APP_NAME}-${account}-${region}`;
-  return new Function(scope, id, {
-    vpc,
-    code: Code.fromBucket(Bucket.fromBucketName(scope, "WesAdapter", bucketName), "wes/wes_adapter.zip"),
-    handler: "index.handler",
-    runtime: Runtime.PYTHON_3_9,
-    environment,
-    role,
-    timeout: Duration.seconds(60),
-  });
-};

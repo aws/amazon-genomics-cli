@@ -7,7 +7,7 @@ import { Construct } from "constructs";
 import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME } from "../constants";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import * as path from "path";
-import * as os from "os";
+import { homedir } from "os";
 
 export interface ParameterProps {
   /**
@@ -82,7 +82,7 @@ export class CoreStack extends Stack {
     });
 
     new BucketDeployment(this, "WesAdapter", {
-      sources: [Source.asset(path.join(os.homedir(), ".agc", "wes"))],
+      sources: [Source.asset(path.join(homedir(), ".agc", "wes"))],
       destinationBucket: this.bucket,
       destinationKeyPrefix: "wes",
       prune: true,

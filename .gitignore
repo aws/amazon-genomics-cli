@@ -11,5 +11,3 @@ vendor
 /site/content/en/docs/Reference/agc*
 /dist/
 *.zip
-/packages/cdk/lib/wes_adapter/package
-/packages/cdk/lib/wes_adapter/wes_adapter

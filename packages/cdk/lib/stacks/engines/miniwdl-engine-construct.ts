@@ -11,10 +11,8 @@ import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { BucketOperations } from "../../common/BucketOperations";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
-import { renderPythonLambda } from "../../util";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
 import { EngineOptions } from "../../types";
-import { wesAdapterSourcePath } from "../../constants";
 import { Construct } from "constructs";
 
 export class MiniwdlEngineConstruct extends EngineConstruct {
@@ -131,7 +129,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
   }
 
   private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, rootDirS3Uri }) {
-    return renderPythonLambda(this, "MiniWDLWesAdapterLambda", vpc, role, wesAdapterSourcePath, {
+    return super.renderPythonLambda(this, "MiniWDLWesAdapterLambda", vpc, role, {
       ENGINE_NAME: "miniwdl",
       JOB_QUEUE: jobQueueArn,
       JOB_DEFINITION: jobDefinitionArn,

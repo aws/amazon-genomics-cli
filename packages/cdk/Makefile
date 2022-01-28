@@ -15,6 +15,4 @@ init:
 	npm ci --silent
 
 release:
-	cd ./lib/wes_adapter/ && ./install.sh
-	cd ../..
 	npm shrinkwrap && npm pack --silent | xargs -I '{}' mv {} cdk.tgz

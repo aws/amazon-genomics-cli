@@ -9,7 +9,10 @@ from mypy_boto3_batch import BatchClient
 from mypy_boto3_resourcegroupstaggingapi import ResourceGroupsTaggingAPIClient
 from mypy_boto3_s3 import S3Client
 
-from amazon_genomics.wes.adapters.MiniWdlWESAdapter import MiniWdlWESAdapter, MINIWDL_OUTPUT_FILE_NAME
+from amazon_genomics.wes.adapters.MiniWdlWESAdapter import (
+    MiniWdlWESAdapter,
+    MINIWDL_OUTPUT_FILE_NAME,
+)
 from amazon_genomics.wes.adapters.NextflowWESAdapter import NextflowWESAdapter
 from .test_BatchAdapter import generate_batch_job
 
@@ -48,7 +51,7 @@ def adapter(aws_batch, aws_tags, aws_s3) -> MiniWdlWESAdapter:
         output_dir_s3_uri=output_dir_s3_uri,
         aws_batch=aws_batch,
         aws_tags=aws_tags,
-        aws_s3=aws_s3
+        aws_s3=aws_s3,
     )
 
 
@@ -111,40 +114,25 @@ def test_get_child_tasks_query_submission_failed(
         adapter.get_child_tasks(job)
 
 
-def test_get_task_output(
-    aws_s3: S3Client, adapter: MiniWdlWESAdapter
-):
+def test_get_task_output(aws_s3: S3Client, adapter: MiniWdlWESAdapter):
     job = generate_batch_job()
     job_output = {"workflow.output": "somefile.zip"}
 
     aws_s3.get_object.return_value = mock_s3_object(job_output)
 
-    assert adapter.get_task_outputs(job) == {
-        "id": job_id,
-        "outputs": job_output
-    }
+    assert adapter.get_task_outputs(job) == {"id": job_id, "outputs": job_output}
 
 
-def test_get_task_output_no_file(
-    aws_s3: S3Client, adapter: MiniWdlWESAdapter
-):
+def test_get_task_output_no_file(aws_s3: S3Client, adapter: MiniWdlWESAdapter):
     job = generate_batch_job()
     aws_s3.get_object.side_effect = ClientError(
-        error_response={
-            'Error': {'Code': "NoSuchKey"}
-        },
-        operation_name="GetObject"
+        error_response={"Error": {"Code": "NoSuchKey"}}, operation_name="GetObject"
     )
 
-    assert adapter.get_task_outputs(job) == {
-        "id": job_id,
-        "outputs": None
-    }
+    assert adapter.get_task_outputs(job) == {"id": job_id, "outputs": None}
 
 
-def test_get_task_output_exception(
-    aws_s3: S3Client, adapter: MiniWdlWESAdapter
-):
+def test_get_task_output_exception(aws_s3: S3Client, adapter: MiniWdlWESAdapter):
     job = generate_batch_job()
     aws_s3.get_object.side_effect = Exception()
 
@@ -154,10 +142,5 @@ def test_get_task_output_exception(
 
 def mock_s3_object(obj):
     body_encoded = json.dumps(obj).encode()
-    body = StreamingBody(
-        io.BytesIO(body_encoded),
-        len(body_encoded)
-    )
-    return {
-        "Body": body
-    }
+    body = StreamingBody(io.BytesIO(body_encoded), len(body_encoded))
+    return {"Body": body}
