@@ -64,6 +64,7 @@ Commands
 Flags
       --format string   Format option for output. Valid options are: text, table (default "text")
   -h, --help            help for agc
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
       --version         version for agc
 Examples
@@ -106,7 +107,7 @@ Amazon Genomics CLI can generate shell completion scripts that enable 'Tab' comp
 Command completion is optional and not required to use Amazon Genomics CLI. To generate a completion script you can use:
 
 ```shell
- agc generate <shell>
+ agc completion <shell>
 ``` 
 
 where "shell" is one of:
