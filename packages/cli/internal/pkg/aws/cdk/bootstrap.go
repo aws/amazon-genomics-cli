@@ -30,7 +30,10 @@ func (client Client) Bootstrap(appDir string, context []string, executionName st
 		if strings.HasPrefix(c, customTagsKey) {
 			jsonStr := strings.TrimPrefix(c, customTagsKey)
 			tagsMap := make(map[string]interface{})
-			json.Unmarshal([]byte(jsonStr), &tagsMap)
+			err := json.Unmarshal([]byte(jsonStr), &tagsMap)
+			if err != nil {
+				return nil, err
+			}
 			for k, v := range tagsMap {
 				cmdArgs = append(cmdArgs, "--tags", fmt.Sprintf("%s=%s", k, v))
 			}
