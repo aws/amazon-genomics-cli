@@ -107,8 +107,13 @@ if [ "$GUID" = "/" ]; then
 fi
 
 # Make the directory we will work in
+<<<<<<< HEAD
 mkdir -p /mnt/efs/snakemake/$GUID
 cd /mnt/efs/snakemake/$GUID
+=======
+mkdir -p /mnt/efs/$GUID
+cd /mnt/efs/$GUID
+>>>>>>> Added second example
 
 if [[ "$ENGINE_PROJECT" =~ ^s3://.* ]]; then
     echo "== Staging S3 Project =="
@@ -123,10 +128,14 @@ if [[ "$ENGINE_PROJECT" =~ ^s3://.* ]]; then
     else
       ENGINE_PROJECT="${ENGINE_PROJECT_DIRECTORY}"
 <<<<<<< HEAD
+<<<<<<< HEAD
       ENGINE_PARAMS="${ENGINE_PARAMS} --aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID}  --aws-batch-efs-project-path=snakemake/$GUID --latency-wait 30"
 =======
       ENGINE_PARAMS="${ENGINE_PARAMS}"
 >>>>>>> Created WES adapter and CDK for snakemake + added example workflow + engine script updates for bugs
+=======
+      ENGINE_PARAMS="${ENGINE_PARAMS} --aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID}  --aws_batch_efs_project_path=/mnt/efs/snakemake/$GUID"
+>>>>>>> Added second example
     fi
 fi
 echo "== Finding the project in  =="

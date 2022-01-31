@@ -46,5 +46,5 @@ RUN python3.8 setup.py install && pip3.8 install .
 COPY snakemake.aws.sh /opt/bin/snakemake.aws.sh
 RUN chmod +x /opt/bin/snakemake.aws.sh
 
-WORKDIR /opt/work
-ENTRYPOINT ["/opt/bin/snakemake.aws.sh"]
+WORKDIR /mnt/efs
+ENTRYPOINT ["/mnt/efs/snakemake.aws.sh"]
