@@ -6,6 +6,11 @@ workflows:
       language: snakemake
       version: 1.0
     sourceURL: workflow/hello-world
+  sequencing:
+    type:
+      language: snakemake
+      version: 1.0
+    sourceURL: workflow/sequencing
 contexts:
   onDemandContext:
     engines:

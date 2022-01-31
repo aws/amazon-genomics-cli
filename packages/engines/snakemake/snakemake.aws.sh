@@ -48,7 +48,7 @@ function handleManifest() {
         ## You can also use custom paramaters from the manifest.json file. For example:
           ## APPEND_ARGS="$(cat $MANIFEST_JSON | jq -r '.customArgument')" will pull the value attached to the key "customArgument"
           ## from the manifest.json file if the key exists, otherwise it will make it the value "".
-        APPEND_ARGS="--aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID}"
+        APPEND_ARGS="--aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID} --aws_batch_efs_project_path=/mnt/efs/snakemake/$GUID"
         PREPEND_ARGS=""
         ## To extend the arg strings you can do the following: APPEND_ARGS="${APPEND_ARGS} --moreArgumentsHere"
         ## After updating these you can expect your engine to be run as `ENGINE_RUN_CMD PREPEND_ARGS <agc_params> APPEND_ARGS`
@@ -97,18 +97,18 @@ trap "cleanup" EXIT
 
 
 # AWS Batch places multiple jobs on an instance
-# To avoid file path clobbering use the JobID and JobAttempt
+# To avoid file path clobbering use the JobID
 # to create a unique path. This is important if /opt/work
 # is mapped to a filesystem external to the container
-GUID="$AWS_BATCH_JOB_ID/$AWS_BATCH_JOB_ATTEMPT"
+GUID="$AWS_BATCH_JOB_ID"
 
 if [ "$GUID" = "/" ]; then
     GUID=`date | md5sum | cut -d " " -f 1`
 fi
 
 # Make the directory we will work in
-mkdir -p /opt/work/$GUID
-cd /opt/work/$GUID
+mkdir -p /mnt/efs/$GUID
+cd /mnt/efs/$GUID
 
 if [[ "$ENGINE_PROJECT" =~ ^s3://.* ]]; then
     echo "== Staging S3 Project =="
@@ -122,7 +122,7 @@ if [[ "$ENGINE_PROJECT" =~ ^s3://.* ]]; then
      handleManifest
     else
       ENGINE_PROJECT="${ENGINE_PROJECT_DIRECTORY}"
-      ENGINE_PARAMS="${ENGINE_PARAMS}"
+      ENGINE_PARAMS="${ENGINE_PARAMS} --aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID}  --aws_batch_efs_project_path=/mnt/efs/snakemake/$GUID"
     fi
 fi
 echo "== Finding the project in  =="
