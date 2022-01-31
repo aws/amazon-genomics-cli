@@ -1,6 +1,5 @@
 import { Aws } from "aws-cdk-lib";
 import { NextflowEngine } from "../../constructs/engines/nextflow/nextflow-engine";
-import { renderPythonLambda } from "../../util";
 import { EngineOptions } from "../../types";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { ApiProxy } from "../../constructs";
@@ -9,7 +8,6 @@ import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
-import { wesAdapterSourcePath } from "../../constants";
 import { Construct } from "constructs";
 
 export interface NextflowEngineConstructProps extends EngineOptions {
@@ -85,7 +83,7 @@ export class NextflowEngineConstruct extends EngineConstruct {
   }
 
   private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, engineLogGroupName }) {
-    return renderPythonLambda(this, "NextflowWesAdapterLambda", vpc, role, wesAdapterSourcePath, {
+    return super.renderPythonLambda(this, "NextflowWesAdapterLambda", vpc, role, {
       ENGINE_NAME: "nextflow",
       JOB_QUEUE: jobQueueArn,
       JOB_DEFINITION: jobDefinitionArn,

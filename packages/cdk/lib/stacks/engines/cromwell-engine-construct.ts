@@ -4,7 +4,7 @@ import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { FargateTaskDefinition, LogDriver } from "aws-cdk-lib/aws-ecs";
 import { ApiProxy, SecureService } from "../../constructs";
 import { IRole } from "aws-cdk-lib/aws-iam";
-import { createEcrImage, renderPythonLambda, renderServiceWithTaskDefinition } from "../../util";
+import { createEcrImage, renderServiceWithTaskDefinition } from "../../util";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { FileSystem } from "aws-cdk-lib/aws-efs";
 import { EngineOptions, ServiceContainer } from "../../types";
@@ -13,7 +13,6 @@ import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
 import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
-import { wesAdapterSourcePath } from "../../constants";
 import { Construct } from "constructs";
 
 export interface CromwellEngineConstructProps extends EngineOptions {
@@ -125,7 +124,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
   }
 
   private renderAdapterLambda({ vpc, role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint }) {
-    return renderPythonLambda(this, "CromwellWesAdapterLambda", vpc, role, wesAdapterSourcePath, {
+    return super.renderPythonLambda(this, "CromwellWesAdapterLambda", vpc, role, {
       ENGINE_NAME: "cromwell",
       ENGINE_ENDPOINT: engineEndpoint,
       ENGINE_LOG_GROUP: engineLogGroupName,

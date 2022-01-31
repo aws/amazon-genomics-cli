@@ -7,6 +7,7 @@ import { Construct } from "constructs";
 import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME } from "../constants";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import * as path from "path";
+import { homedir } from "os";
 
 export interface ParameterProps {
   /**
@@ -78,6 +79,13 @@ export class CoreStack extends Stack {
       metadata: {
         "idempotency-key": props.idempotencyKey,
       },
+    });
+
+    new BucketDeployment(this, "WesAdapter", {
+      sources: [Source.asset(path.join(homedir(), ".agc", "wes"))],
+      destinationBucket: this.bucket,
+      destinationKeyPrefix: "wes",
+      prune: true,
     });
 
     this.addParameter({ name: VPC_PARAMETER_NAME, value: this.vpc.vpcId, description: `VPC ID for ${PRODUCT_NAME}` });
