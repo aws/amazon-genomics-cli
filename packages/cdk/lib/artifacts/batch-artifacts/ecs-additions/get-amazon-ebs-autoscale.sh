@@ -4,6 +4,7 @@ set -x
 
 INSTALL_VERSION=dist_release
 FILESYSTEM=btrfs
+INITIAL_SIZE=200
 
 USAGE=$(cat <<EOF
 Retrieve and install Amazon EBS Autoscale
@@ -53,7 +54,11 @@ while (( "$#" )); do
             shift 2
             ;;
         -f|--file-system)
-            FILE_SYSTEM=$2
+            FILESYSTEM=$2
+            shift 2
+            ;;
+        -s|--initial-size)
+            INITIAL_SIZE=$2
             shift 2
             ;;
         -h|--help)
@@ -122,7 +127,7 @@ function s3CopyWithRetry() {
             echo "failed to copy $s3_path after $i attempts. aborting"
             exit 2
         fi
-        sleep $((7 * $i))
+        sleep $((7 * i))
     done
 }
 
@@ -172,6 +177,7 @@ function install() {
     #   EBS_AUTOSCALE_FILESYSTEM
 
     local filesystem=${1:-btrfs}
+    local initial_size=${2:-200}
     local docker_storage_driver=btrfs
 
     case $filesystem in
@@ -189,7 +195,7 @@ function install() {
     
     cp -au /var/lib/docker /var/lib/docker.bk
     rm -rf /var/lib/docker/*
-    sh /opt/amazon-ebs-autoscale/install.sh -d /dev/xvdba -f $filesystem -m /var/lib/docker > /var/log/ebs-autoscale-install.log 2>&1
+    sh /opt/amazon-ebs-autoscale/install.sh -d /dev/xvdba -f "$filesystem" -s "$initial_size" -m /var/lib/docker > /var/log/ebs-autoscale-install.log 2>&1
 
     awk -v docker_storage_options="$docker_storage_options" \
         '{ sub(/DOCKER_STORAGE_OPTIONS=.*/, docker_storage_options); print }' \
@@ -205,4 +211,4 @@ function install() {
 cd /opt
 $INSTALL_VERSION
 
-install $FILESYSTEM
+install "$FILESYSTEM" "$INITIAL_SIZE"

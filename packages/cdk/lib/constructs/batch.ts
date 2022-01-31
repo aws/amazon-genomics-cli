@@ -163,6 +163,10 @@ export class Batch extends Construct {
       });
     }
 
+    /*
+     * TAKE NOTE! If you change the launch template you will need to destroy any existing contexts and deploy. A CDK update won't
+     * be enough to trigger an update of the Batch compute environment to use the new template.
+     */
     const launchTemplate = options.launchTemplateData
       ? new CfnLaunchTemplate(this, "LaunchTemplate", {
           launchTemplateName: Names.uniqueId(this),
