@@ -71,6 +71,12 @@ export interface BatchProps extends ComputeOptions {
    * @default - No additional policies are added to the role
    */
   awsPolicyNames?: string[];
+
+  /**
+   * Use this if you need to pass the name of the workflow orchestrator to the LaunchTemplate so that `provision.sh` is
+   * aware of the engine orchestrating the workflow tasks.
+   */
+  workflowOrchestrator?: string;
 }
 
 const defaultComputeType = ComputeResourceType.ON_DEMAND;

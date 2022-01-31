@@ -61,16 +61,15 @@ ARTIFACT_S3_ROOT_URL=$(\
 
 
 # retrieve and install amazon-ebs-autoscale
-private initial_size=200
-if [ "$WORKFLOW_ORCHESTRATOR" == "miniwdl" ]; then
-    initial_size=50
+if [ "$WORKFLOW_ORCHESTRATOR" != "miniwdl" ]; then
+  initial_ebs_size=200
+  cd /opt
+  sh $BASEDIR/get-amazon-ebs-autoscale.sh \
+      --install-version dist_release \
+      --artifact-root-url "$ARTIFACT_S3_ROOT_URL" \
+      --file-system btrfs \
+      --initial-size "$initial_ebs_size"
 fi
-cd /opt
-sh $BASEDIR/get-amazon-ebs-autoscale.sh \
-    --install-version dist_release \
-    --artifact-root-url $ARTIFACT_S3_ROOT_URL \
-    --file-system btrfs \
-    --initial-size $initial_size
 
 # common provisioning for all workflow orchestrators
 cd /opt

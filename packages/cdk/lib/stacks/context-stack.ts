@@ -2,7 +2,7 @@ import { Stack, StackProps } from "aws-cdk-lib";
 import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
 import { getCommonParameter } from "../util";
-import { VPC_PARAMETER_NAME } from "../constants";
+import { ENGINE_CROMWELL, ENGINE_MINIWDL, ENGINE_NEXTFLOW, VPC_PARAMETER_NAME } from "../constants";
 import { ContextAppParameters } from "../env";
 import { BatchConstruct, BatchConstructProps } from "./engines/batch-construct";
 import { CromwellEngineConstruct } from "./engines/cromwell-engine-construct";
@@ -26,13 +26,13 @@ export class ContextStack extends Stack {
     const { engineName } = contextParameters;
 
     switch (engineName) {
-      case "cromwell":
+      case ENGINE_CROMWELL:
         this.renderCromwellStack(props);
         break;
-      case "nextflow":
+      case ENGINE_NEXTFLOW:
         this.renderNextflowStack(props);
         break;
-      case "miniwdl":
+      case ENGINE_MINIWDL:
         this.renderMiniwdlStack(props);
         break;
       default:
@@ -52,7 +52,7 @@ export class ContextStack extends Stack {
     }
 
     const commonEngineProps = this.getCommonEngineProps(props);
-    new CromwellEngineConstruct(this, "cromwell", {
+    new CromwellEngineConstruct(this, ENGINE_CROMWELL, {
       jobQueue,
       ...commonEngineProps,
     }).outputToParent();
@@ -71,7 +71,7 @@ export class ContextStack extends Stack {
     }
 
     const commonEngineProps = this.getCommonEngineProps(props);
-    new NextflowEngineConstruct(this, "nextflow", {
+    new NextflowEngineConstruct(this, ENGINE_NEXTFLOW, {
       ...commonEngineProps,
       jobQueue,
       headQueue,
@@ -80,7 +80,7 @@ export class ContextStack extends Stack {
 
   private renderMiniwdlStack(props: ContextStackProps) {
     const commonEngineProps = this.getCommonEngineProps(props);
-    new MiniwdlEngineConstruct(this, "miniwdl", {
+    new MiniwdlEngineConstruct(this, ENGINE_MINIWDL, {
       ...commonEngineProps,
     }).outputToParent();
   }
