@@ -13,6 +13,12 @@ export const VPC_PARAMETER_NAME = "vpc";
 
 export const wesAdapterSourcePath = path.resolve(path.join(__dirname, "./wes_adapter"));
 
+/**
+ * WARNING! Changing the content of the launch template user data WILL NOT cause the redeployment of any AWS Batch
+ * compute environments that use the template. Ensure you create a new Compute Environment by, for example, running:
+ * agc context destroy --all
+ * agc context deploy <context-name>
+ */
 export const LAUNCH_TEMPLATE = `MIME-Version: 1.0
 Content-Type: multipart/mixed; boundary="==MYBOUNDARY=="
 
