@@ -238,7 +238,7 @@ class BatchAdapter(AbstractWESAdapter):
             start_time=start_time,
             end_time=end_time,
             stdout=job_details["container"].get("logStreamName"),
-            exit_code= ("" if exitCode == None else str(exitCode)),
+            exit_code=("" if exitCode == None else str(exitCode)),
         )
 
 
