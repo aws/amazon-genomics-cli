@@ -76,10 +76,7 @@ class SnakemakeWESAdapter(BatchAdapter):
                 "--cores all",
                 "--aws-batch-workflow-role {}".format(self.workflow_role),
                 "--aws-batch-task-queue {}".format(self.task_queue),
-                "--default-remote-provider S3",
-                "--default-remote-prefix {}/test".format(
-                    self.output_dir_s3_uri),
-                "--no-shared-fs"
+                "--aws-batch-fsap-id {}".format(self.fsap_id)
             ]
         )
         delimiter = " "

@@ -48,7 +48,7 @@ function handleManifest() {
         ## You can also use custom paramaters from the manifest.json file. For example:
           ## APPEND_ARGS="$(cat $MANIFEST_JSON | jq -r '.customArgument')" will pull the value attached to the key "customArgument"
           ## from the manifest.json file if the key exists, otherwise it will make it the value "".
-        APPEND_ARGS="--aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID} --aws_batch_efs_project_path=/mnt/efs/snakemake/$GUID"
+        APPEND_ARGS="--aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID} --aws-batch-efs-project-path=snakemake/$GUID"
         PREPEND_ARGS=""
         ## To extend the arg strings you can do the following: APPEND_ARGS="${APPEND_ARGS} --moreArgumentsHere"
         ## After updating these you can expect your engine to be run as `ENGINE_RUN_CMD PREPEND_ARGS <agc_params> APPEND_ARGS`
@@ -107,8 +107,8 @@ if [ "$GUID" = "/" ]; then
 fi
 
 # Make the directory we will work in
-mkdir -p /mnt/efs/$GUID
-cd /mnt/efs/$GUID
+mkdir -p /mnt/efs/snakemake/$GUID
+cd /mnt/efs/snakemake/$GUID
 
 if [[ "$ENGINE_PROJECT" =~ ^s3://.* ]]; then
     echo "== Staging S3 Project =="
