@@ -122,7 +122,7 @@ if [[ "$ENGINE_PROJECT" =~ ^s3://.* ]]; then
      handleManifest
     else
       ENGINE_PROJECT="${ENGINE_PROJECT_DIRECTORY}"
-      ENGINE_PARAMS="${ENGINE_PARAMS} --aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID}  --aws_batch_efs_project_path=/mnt/efs/snakemake/$GUID"
+      ENGINE_PARAMS="${ENGINE_PARAMS} --aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID}  --aws-batch-efs-project-path=snakemake/$GUID --latency-wait 30"
     fi
 fi
 echo "== Finding the project in  =="
