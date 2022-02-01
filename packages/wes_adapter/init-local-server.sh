@@ -1,6 +1,11 @@
 #! /bin/bash
 
-python3 -m venv ./venv
+if ! hash python3.9; then
+    echo "python3.9 is not installed"
+    exit 1
+fi
 
-./venv/bin/pip install waitress
-./venv/bin/pip install -r requirements.txt
+python3.9 -m venv ./venv
+
+./venv/bin/pip3.9 install waitress
+./venv/bin/pip3.9 install -r requirements.txt

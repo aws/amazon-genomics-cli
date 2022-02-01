@@ -4,7 +4,7 @@ all: build format test
 
 build:
 	rm -rf ./dist && mkdir ./dist
-	pip3 install -r requirements.txt --target ./dist
+	python3.9 -m pip install -r requirements.txt --target ./dist
 
 format:
 	./format-code.sh
