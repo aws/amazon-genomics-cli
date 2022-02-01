@@ -8,4 +8,4 @@ export AWS_DEFAULT_REGION=us-west-2
 export AWS_REGION=us-west-2
 
 echo "Starting local WES endpoint at http://localhost:80/ga4gh/wes/v1/ui/"
-./venv/bin/python3.9 ./local-server.py
+./venv/bin/python ./local-server.py
