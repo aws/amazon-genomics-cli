@@ -89,6 +89,8 @@ Once you've installed all the dependencies listed here, run `make init` to autom
 
 We use `make` to build, test and deploy artifacts. To build and test issue the `make` command from the project root.
 
+If you're experiencing build issues, try running `go clean --cache` in the project root to clean up your local go build cache. Then try to run `make init` then `make` again. This should ideally resolve it.
+
 ### Running Development Code
 
 To run against a development version of Amazon Genomics CLI, first build your relevant changes and then run `./scripts/run-dev.sh`. This will
