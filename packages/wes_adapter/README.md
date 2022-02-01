@@ -13,7 +13,7 @@ This code could be run locally
 
 ## Step 1
 
-Run `./init-local-server.sh`, this will create a venv and install the packages required for WES Lambda to run
+Run `make init`, this will create a venv and install the packages required for WES Lambda to run
 
 ## Step 2
 
@@ -29,3 +29,15 @@ export ENGINE_LOG_GROUP=
 ## Step 3
 
 Execute `./start-local-server.sh` and navigate your browser to http://localhost:80/ga4gh/wes/v1/ui/
+
+# Make release
+
+To run `make release`, you need to have python3.9 installed. 
+There are several ways to install python3.9, the easiest way is to download installer from
+https://www.python.org/downloads/.
+
+## Mac OS
+Mac users can install python with homebrew by running `brew install python@3.9`.
+
+## Linux
+Linux's users can install python with apt-get by running `apt-get install python3.9`.
