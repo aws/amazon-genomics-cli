@@ -150,6 +150,7 @@ task CramToBamTask {
     # disks: "local-disk " + select_first([disk_space_gb, disk_size]) + if use_ssd then " SSD" else " HDD"
     disks: "local-disk"
     preemptible: select_first([preemptible_attempts, 3])
+    awsBatchRetryAttempts: select_first([preemptible_attempts, 3])
  }
   output {
     File output_bam = "~{sample_name}.bam"
@@ -221,6 +222,7 @@ task HaplotypeCaller {
     # disks: "local-disk " + select_first([disk_space_gb, disk_size]) + if use_ssd then " SSD" else " HDD"
     disks: "local-disk"
     preemptible: select_first([preemptible_attempts, 3])
+    awsBatchRetryAttempts: select_first([preemptible_attempts, 3])
   }
   output {
     File output_vcf = "~{output_filename}"
@@ -258,6 +260,7 @@ task MergeGVCFs {
     memory: machine_mem_gb + " GB"
     disks: "local-disk " + select_first([disk_space_gb, 100]) + if use_ssd then " SSD" else " HDD"
     preemptible: select_first([preemptible_attempts, 3])
+    awsBatchRetryAttempts: select_first([preemptible_attempts, 3])
   }
   output {
     File output_vcf = "~{output_filename}"
