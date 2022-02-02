@@ -1,12 +1,11 @@
 import { Aws, Stack } from "aws-cdk-lib";
 import { SnakemakeEngine } from "../../constructs/engines/snakemake/snakemake-engine";
-import { renderPythonLambda } from "../../util";
 import { EngineOptions } from "../../types";
 import { ApiProxy, Batch } from "../../constructs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
-import { LAUNCH_TEMPLATE, wesAdapterSourcePath } from "../../constants";
+import { LAUNCH_TEMPLATE } from "../../constants";
 import { Construct } from "constructs";
 import { IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { IVpc } from "aws-cdk-lib/aws-ec2";
@@ -86,7 +85,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       workflowRoleArn: this.batchHead.role.roleArn,
       taskQueueArn: this.batchWorkers.jobQueue.jobQueueArn,
       fsapId: this.snakemakeEngine.fsap.accessPointId,
-      outputBucket: params.outputBucketName,
+      outputBucket: params.getEngineBucketPath(),
     });
     this.adapterLogGroup = lambda.logGroup;
 
@@ -133,7 +132,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
   }
 
   private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, taskQueueArn, workflowRoleArn, fsapId, outputBucket }) {
-    return renderPythonLambda(this, "SnakemakeWesAdapterLambda", vpc, role, wesAdapterSourcePath, {
+    return super.renderPythonLambda(this, "SnakemakeWesAdapterLambda", vpc, role, {
       ENGINE_NAME: "snakemake",
       JOB_QUEUE: jobQueueArn,
       JOB_DEFINITION: jobDefinitionArn,
@@ -141,6 +140,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       WORKFLOW_ROLE: workflowRoleArn,
       FSAP_ID: fsapId,
       OUTPUT_DIR_S3_URI: outputBucket,
+      TIME: Date.now().toString()
     });
   }
 }

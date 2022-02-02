@@ -1,11 +1,11 @@
 import typing
 import json
 
-import time
+
 import os
 
 import boto3
-from amazon_genomics.wes.adapters.util.util import get_s3_object_json
+from botocore.exceptions import ClientError
 from amazon_genomics.wes.adapters.util.util import describe_batch_jobs_with_tag
 from mypy_boto3_batch import BatchClient
 from mypy_boto3_batch.type_defs import JobDetailTypeDef
@@ -76,7 +76,7 @@ class SnakemakeWESAdapter(BatchAdapter):
                 "--cores all",
                 "--aws-batch-workflow-role {}".format(self.workflow_role),
                 "--aws-batch-task-queue {}".format(self.task_queue),
-                "--aws-batch-fsap-id {}".format(self.fsap_id)
+                "--aws-batch-fsap-id {}".format(self.fsap_id),
             ]
         )
         delimiter = " "
@@ -101,9 +101,21 @@ class SnakemakeWESAdapter(BatchAdapter):
         job_id = head_job.get("jobId")
         bucket, folder = self.output_dir_s3_uri.split("/", 2)[-1].split("/", 1)
         output_file_key = f"{folder}/{job_id}/{SM_OUTPUT_FILE_NAME}"
-        output = get_s3_object_json(
-            bucket, output_file_key, aws_s3=self.aws_s3)
+        output = self.get_s3_object_json(
+            bucket=bucket, output_file_key=output_file_key)
         return {"id": job_id, "outputs": output}
+
+    def get_s3_object_json(self, bucket, output_file_key):
+        try:
+            output_object = self.aws_s3.get_object(
+                Bucket=bucket, Key=output_file_key)
+            return json.load(output_object["Body"])
+        except ClientError as ex:
+            if ex.response["Error"]["Code"] == "NoSuchKey":
+                self.logger.warn(f"No object found")
+                return None
+            else:
+                raise ex
 
     @property
     def workflow_type_versions(self):

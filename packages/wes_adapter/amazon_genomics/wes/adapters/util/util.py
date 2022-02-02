@@ -31,13 +31,12 @@ def describe_batch_jobs_with_tag(tag_key, tag_value, aws_batch, aws_tags):
 
 
 def job_id_from_arn(job_arn: str) -> str:
-    return job_arn[job_arn.rindex("/") + 1:]
+    return job_arn[job_arn.rindex("/") + 1 :]
 
 
 def get_s3_object_json(self, bucket, output_file_key, aws_s3):
     try:
-        output_object = aws_s3.get_object(
-            Bucket=bucket, Key=output_file_key)
+        output_object = aws_s3.get_object(Bucket=bucket, Key=output_file_key)
         return json.load(output_object["Body"])
     except ClientError as ex:
         if ex.response["Error"]["Code"] == "NoSuchKey":

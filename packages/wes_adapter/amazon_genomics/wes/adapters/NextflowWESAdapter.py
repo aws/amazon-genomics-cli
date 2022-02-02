@@ -145,11 +145,9 @@ class NextflowWESAdapter(BatchAdapter):
             time.sleep(1)
             response = self.aws_logs.get_query_results(queryId=query_id)
         if response["status"] != "Complete":
-            raise InternalServerError(
-                "Logs query for child tasks was not successful")
+            raise InternalServerError("Logs query for child tasks was not successful")
 
-        results = list(
-            map(lambda result: to_dict(result), response["results"]))
+        results = list(map(lambda result: to_dict(result), response["results"]))
         return results
 
 

@@ -28,8 +28,8 @@ export class SnakemakeEngine extends Engine {
     this.fsap = this.createAccessPoint(fileSystem);
 
     fileSystem.connections.allowDefaultPortFromAnyIpv4();
-    fileSystem.grant(engineBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
-    fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
+    fileSystem.grant(engineBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems", "elasticfilesystem:DescribeAccessPoints");
+    fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems", "elasticfilesystem:DescribeAccessPoints");
     this.headJobDefinition = new EngineJobDefinition(this, "SnakemakeHeadJobDef", {
       logGroup: this.logGroup,
       platformCapabilities: [PlatformCapabilities.FARGATE],

@@ -39,7 +39,7 @@ elif ENGINE_NAME == "snakemake":
     adapter = SnakemakeWESAdapter(
         job_queue=JOB_QUEUE,
         job_definition=JOB_DEFINITION,
-        output_dir_s3_uri=OUTPUT_DIR_S3_URI
+        output_dir_s3_uri=OUTPUT_DIR_S3_URI,
     )
 
 elif ENGINE_NAME == "cromwell":
