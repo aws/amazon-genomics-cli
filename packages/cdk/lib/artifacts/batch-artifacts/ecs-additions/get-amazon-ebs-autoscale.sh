@@ -4,6 +4,7 @@ set -x
 
 INSTALL_VERSION=dist_release
 FILESYSTEM=btrfs
+INITIAL_SIZE=200
 
 USAGE=$(cat <<EOF
 Retrieve and install Amazon EBS Autoscale
@@ -53,7 +54,11 @@ while (( "$#" )); do
             shift 2
             ;;
         -f|--file-system)
-            FILE_SYSTEM=$2
+            FILESYSTEM=$2
+            shift 2
+            ;;
+        -s|--initial-size)
+            INITIAL_SIZE=$2
             shift 2
             ;;
         -h|--help)
@@ -122,7 +127,7 @@ function s3CopyWithRetry() {
             echo "failed to copy $s3_path after $i attempts. aborting"
             exit 2
         fi
-        sleep $((7 * $i))
+        sleep $((7 * i))
     done
 }
 
