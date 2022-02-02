@@ -1,5 +1,3 @@
-import * as path from "path";
-
 export const PRODUCT_NAME = "Agc";
 export const APP_NAME = "agc";
 export const APP_ENV_NAME = "AGC";
@@ -14,5 +12,3 @@ export const VPC_PARAMETER_NAME = "vpc";
 export const ENGINE_CROMWELL = "cromwell";
 export const ENGINE_MINIWDL = "miniwdl";
 export const ENGINE_NEXTFLOW = "nextflow";
-
-export const wesAdapterSourcePath = path.resolve(path.join(__dirname, "./wes_adapter"));
