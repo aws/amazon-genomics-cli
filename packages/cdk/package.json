@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
-  },
   "scripts": {
     "build": "tsc",
     "format": "prettier --write '{**/*,*}.{ts,tsx}'",
