@@ -51,3 +51,8 @@ func (c *Client) GetRunLog(ctx context.Context, runId string) (wes.RunLog, error
 	runLog, _, err := c.wes.WorkflowExecutionServiceApi.GetRunLog(ctx, runId)
 	return runLog, err
 }
+
+func (c *Client) GetRunLogData(ctx context.Context, runId string, dataUrl string) (string, error) {
+	runLogData, _, err := c.wes.WorkflowExecutionServiceApi.GetRunLogData(ctx, runId, dataUrl)
+	return runLogData, err
+}

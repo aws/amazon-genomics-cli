@@ -9,6 +9,7 @@ type StatusManager interface {
 
 type TasksManager interface {
 	GetRunLog(runId string) (RunLog, error)
+	GetRunLogData(runId string, dataUrl string) (string, error)
 	GetWorkflowTasks(runId string) ([]Task, error)
 	StatusWorkflowByName(workflowName string, numInstances int) ([]InstanceSummary, error)
 }

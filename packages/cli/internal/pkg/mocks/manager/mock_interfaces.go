@@ -49,6 +49,21 @@ func (mr *MockWorkflowManagerMockRecorder) GetRunLog(runId interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRunLog", reflect.TypeOf((*MockWorkflowManager)(nil).GetRunLog), runId)
 }
 
+// GetRunLogData mocks base method.
+func (m *MockWorkflowManager) GetRunLogData(runId string, dataUrl string) (str, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRunLogData", runId, dataUrl)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRunLogData indicates an expected call of GetRunLogData.
+func (mr *MockWorkflowManagerMockRecorder) GetRunLogData(runId interface{}, dataUrl interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRunLogData", reflect.TypeOf((*MockWorkflowManager)(nil).GetRunLogData), runId, dataUrl)
+}
+
 // GetWorkflowTasks mocks base method.
 func (m *MockWorkflowManager) GetWorkflowTasks(runId string) ([]workflow.Task, error) {
 	m.ctrl.T.Helper()
