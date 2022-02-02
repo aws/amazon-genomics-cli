@@ -12,7 +12,7 @@ format:
 	npm run format
 
 init: 
-	npm ci --silent
+	npm ci --loglevel error
 
 release:
 	npm shrinkwrap && npm pack --silent | xargs -I '{}' mv {} cdk.tgz
