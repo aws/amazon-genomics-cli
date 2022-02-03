@@ -2,12 +2,13 @@ import { Stack, StackProps } from "aws-cdk-lib";
 import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
 import { getCommonParameter } from "../util";
-import { ENGINE_CROMWELL, ENGINE_MINIWDL, ENGINE_NEXTFLOW, VPC_PARAMETER_NAME } from "../constants";
+import { ENGINE_CROMWELL, ENGINE_MINIWDL, ENGINE_NEXTFLOW, ENGINE_SNAKEMAKE, VPC_PARAMETER_NAME } from "../constants";
 import { ContextAppParameters } from "../env";
 import { BatchConstruct, BatchConstructProps } from "./engines/batch-construct";
 import { CromwellEngineConstruct } from "./engines/cromwell-engine-construct";
 import { NextflowEngineConstruct } from "./engines/nextflow-engine-construct";
 import { MiniwdlEngineConstruct } from "./engines/miniwdl-engine-construct";
+import { SnakemakeEngineConstruct } from "./engines/snakemake-engine-construct";
 
 export interface ContextStackProps extends StackProps {
   readonly contextParameters: ContextAppParameters;
@@ -34,6 +35,9 @@ export class ContextStack extends Stack {
         break;
       case ENGINE_MINIWDL:
         this.renderMiniwdlStack(props);
+        break;
+      case ENGINE_SNAKEMAKE:
+        this.renderSnakemakeStack(props);
         break;
       default:
         throw Error(`Engine '${engineName}' is not supported`);
@@ -94,6 +98,13 @@ export class ContextStack extends Stack {
       createSpotBatch: requestSpotInstances,
       createOnDemandBatch: !requestSpotInstances,
     };
+  }
+
+  private renderSnakemakeStack(props: ContextStackProps) {
+    const commonEngineProps = this.getCommonEngineProps(props);
+    new SnakemakeEngineConstruct(this, ENGINE_SNAKEMAKE, {
+      ...commonEngineProps,
+    }).outputToParent();
   }
 
   private getCommonBatchProps(props: ContextStackProps) {

@@ -12,3 +12,4 @@ export const VPC_PARAMETER_NAME = "vpc";
 export const ENGINE_CROMWELL = "cromwell";
 export const ENGINE_MINIWDL = "miniwdl";
 export const ENGINE_NEXTFLOW = "nextflow";
+export const ENGINE_SNAKEMAKE = "snakemake";

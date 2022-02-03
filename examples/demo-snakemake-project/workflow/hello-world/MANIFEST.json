@@ -1,0 +1,4 @@
+{
+  "mainWorkflowURL": ".",
+  "engineOptions": "-j 10 --use-conda"
+}
