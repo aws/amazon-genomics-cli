@@ -5,10 +5,10 @@ set -x
 
 export OS=`uname -r`
 BASEDIR=`dirname $0`
+INITIAL_EBS_SIZE="${$1:-200}"
 
 # Expected environment variables
-#   GWFCORE_NAMESPACE
-#   ARTIFACT_S3_ROOT_URL
+#   ARTIFACT_S3_ROOT_URL (obtained from SSM parameter store)
 #   WORKFLOW_ORCHESTRATOR (OPTIONAL)
 
 printenv
@@ -62,11 +62,14 @@ ARTIFACT_S3_ROOT_URL=$(\
 
 
 # retrieve and install amazon-ebs-autoscale
-cd /opt
-sh $BASEDIR/get-amazon-ebs-autoscale.sh \
-    --install-version dist_release \
-    --artifact-root-url $ARTIFACT_S3_ROOT_URL \
-    --file-system btrfs
+if [ "$WORKFLOW_ORCHESTRATOR" != "miniwdl" ]; then
+  cd /opt
+  sh $BASEDIR/get-amazon-ebs-autoscale.sh \
+      --install-version dist_release \
+      --artifact-root-url "$ARTIFACT_S3_ROOT_URL" \
+      --file-system btrfs \
+      --initial-size "$INITIAL_EBS_SIZE"
+fi
 
 # common provisioning for all workflow orchestrators
 cd /opt

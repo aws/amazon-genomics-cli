@@ -6,7 +6,7 @@ import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, Managed
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
 import { IVpc } from "aws-cdk-lib/aws-ec2";
-import { LAUNCH_TEMPLATE } from "../../constants";
+import { ENGINE_MINIWDL } from "../../constants";
 import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { BucketOperations } from "../../common/BucketOperations";
 import { ContextAppParameters } from "../../env";
@@ -14,6 +14,7 @@ import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
 import { EngineOptions } from "../../types";
 import { Construct } from "constructs";
+import { LaunchTemplateData } from "../../constructs/launch-template-data";
 
 export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -118,9 +119,10 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       computeType,
       instanceTypes: appParams.instanceTypes,
       maxVCpus: appParams.maxVCpus,
-      launchTemplateData: LAUNCH_TEMPLATE,
+      launchTemplateData: LaunchTemplateData.renderLaunchTemplateData(ENGINE_MINIWDL),
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: Stack.of(this).tags.tagValues(),
+      workflowOrchestrator: ENGINE_MINIWDL,
     });
   }
 
@@ -130,7 +132,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
 
   private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, rootDirS3Uri }) {
     return super.renderPythonLambda(this, "MiniWDLWesAdapterLambda", vpc, role, {
-      ENGINE_NAME: "miniwdl",
+      ENGINE_NAME: ENGINE_MINIWDL,
       JOB_QUEUE: jobQueueArn,
       JOB_DEFINITION: jobDefinitionArn,
       OUTPUT_DIR_S3_URI: rootDirS3Uri,
