@@ -5,7 +5,7 @@ import { EngineJobDefinition } from "../engine-job-definition";
 import { Engine, EngineProps } from "../engine";
 import { Batch } from "../../batch";
 import { FargatePlatformVersion } from "aws-cdk-lib/aws-ecs";
-import { AccessPoint } from "aws-cdk-lib/aws-efs";
+import { AccessPoint, FileSystem } from "aws-cdk-lib/aws-efs";
 
 export interface SnakemakeEngineProps extends EngineProps {
   readonly engineBatch: Batch;
@@ -19,17 +19,18 @@ export class SnakemakeEngine extends Engine {
   private readonly volumeName = "efs";
   private readonly engineMemoryMiB = 4096;
   public readonly fsap: AccessPoint;
+  public readonly fileSystem: FileSystem;
 
   constructor(scope: Construct, id: string, props: SnakemakeEngineProps) {
     super(scope, id);
 
     const { vpc, engineBatch, workerBatch } = props;
-    const fileSystem = this.createFileSystem(vpc);
-    this.fsap = this.createAccessPoint(fileSystem);
+    this.fileSystem = this.createFileSystem(vpc);
+    this.fsap = this.createAccessPoint(this.fileSystem);
 
-    fileSystem.connections.allowDefaultPortFromAnyIpv4();
-    fileSystem.grant(engineBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems", "elasticfilesystem:DescribeAccessPoints");
-    fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems", "elasticfilesystem:DescribeAccessPoints");
+    this.fileSystem.connections.allowDefaultPortFromAnyIpv4();
+    this.fileSystem.grant(engineBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
+    this.fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
     this.headJobDefinition = new EngineJobDefinition(this, "SnakemakeHeadJobDef", {
       logGroup: this.logGroup,
       platformCapabilities: [PlatformCapabilities.FARGATE],
@@ -41,11 +42,12 @@ export class SnakemakeEngine extends Engine {
         platformVersion: FargatePlatformVersion.VERSION1_4,
         command: [],
         environment: {
-          SM__AWS__FS: fileSystem.fileSystemId,
+          SM__AWS__FS: this.fileSystem.fileSystemId,
           SM__AWS__FSAP: this.fsap.accessPointId,
           SM__AWS__TASK_QUEUE: workerBatch.jobQueue.jobQueueArn,
+          SM_S3_OUTPUT_URI: props.rootDirS3Uri
         },
-        volumes: [this.toVolume(fileSystem, this.fsap, this.volumeName)],
+        volumes: [this.toVolume(this.fileSystem, this.fsap, this.volumeName)],
         mountPoints: [this.toMountPoint("/mnt/efs", this.volumeName)],
       },
     });

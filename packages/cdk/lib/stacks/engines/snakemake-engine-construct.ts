@@ -33,6 +33,19 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
     this.batchWorkers = this.renderBatch("TaskBatch", vpc, contextParameters, workerComputeType);
 
+    this.snakemakeEngine = new SnakemakeEngine(this, "SnakemakeEngine", {
+      vpc: props.vpc,
+      engineBatch: this.batchHead,
+      workerBatch: this.batchWorkers,
+      rootDirS3Uri: params.getEngineBucketPath(),
+    });
+
+    this.batchHead.role.addToPrincipalPolicy(
+      new PolicyStatement({
+        actions: ["elasticfilesystem:DescribeAccessPoints"],
+        resources: [this.snakemakeEngine.fileSystem.fileSystemArn, this.snakemakeEngine.fsap.accessPointArn],
+      })
+    );
     this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
     this.batchHead.role.addToPrincipalPolicy(
       new PolicyStatement({
@@ -47,12 +60,6 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
         resources: [this.batchHead.role.roleArn],
       })
     );
-    this.snakemakeEngine = new SnakemakeEngine(this, "SnakemakeEngine", {
-      vpc: props.vpc,
-      engineBatch: this.batchHead,
-      workerBatch: this.batchWorkers,
-      rootDirS3Uri: params.getEngineBucketPath(),
-    });
 
     const adapterRole = new Role(this, "SnakemakeAdapterRole", {
       assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
