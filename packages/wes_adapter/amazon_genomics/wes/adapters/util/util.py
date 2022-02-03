@@ -26,4 +26,4 @@ def describe_batch_jobs_with_tag(tag_key, tag_value, aws_batch, aws_tags):
 
 
 def job_id_from_arn(job_arn: str) -> str:
-    return job_arn[job_arn.rindex("/") + 1 :]
+    return job_arn[job_arn.rindex("/") + 1:]

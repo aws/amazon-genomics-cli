@@ -20,7 +20,7 @@ from rest_api.models import (
 
 
 SM_PARENT_TAG_KEY = "AWS_BATCH_PARENT_JOB_ID"
-SM_OUTPUT_FILE_NAME = "outputs.json"
+SM_OUTPUT_FILE_NAME = "sm_output.txt"
 
 TASK_QUEUE = os.getenv("TASK_QUEUE")
 WORKFLOW_ROLE = os.getenv("WORKFLOW_ROLE")
@@ -66,7 +66,6 @@ class SnakemakeWESAdapter(BatchAdapter):
     ):
         engine_params_to_pass = []
         if workflow_engine_parameters is not None:
-            print("The engine parameters are {}".format(workflow_engine_parameters))
             engine_params_to_pass.append(workflow_engine_parameters)
 
         engine_params_to_pass.extend(
@@ -96,17 +95,23 @@ class SnakemakeWESAdapter(BatchAdapter):
         )
 
     def get_task_outputs(self, head_job: JobDetailTypeDef):
-        # TODO: update implementation based on executor s3 write changes
         job_id = head_job.get("jobId")
         bucket, folder = self.output_dir_s3_uri.split("/", 2)[-1].split("/", 1)
         output_file_key = f"{folder}/{job_id}/{SM_OUTPUT_FILE_NAME}"
-        output = self.get_s3_object_json(bucket=bucket, output_file_key=output_file_key)
+        outputs = self.get_outputs_from_s3_file(
+            bucket=bucket, output_file_key=output_file_key
+        )
+        output = {"snakemake_output": outputs}
         return {"id": job_id, "outputs": output}
 
-    def get_s3_object_json(self, bucket, output_file_key):
+    def get_outputs_from_s3_file(self, bucket, output_file_key):
         try:
-            output_object = self.aws_s3.get_object(Bucket=bucket, Key=output_file_key)
-            return json.load(output_object["Body"])
+            output_object = self.aws_s3.get_object(
+                Bucket=bucket, Key=output_file_key)
+            output = []
+            for line in output_object["Body"].iter_lines():
+                output.append(line.decode("utf-8"))
+            return output
         except ClientError as ex:
             if ex.response["Error"]["Code"] == "NoSuchKey":
                 self.logger.warn(f"No object found")

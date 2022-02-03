@@ -34,7 +34,7 @@ function handleManifest() {
       # Get correct url of project root location
       ENGINE_PROJECT="$(cat $MANIFEST_JSON | jq -r '.mainWorkflowURL')"
       if [[ $ENGINE_PROJECT != *"://"* ]] ; then
-        ENGINE_PROJECT="${ENGINE_PROJECT_DIRECTORY}/${ENGINE_PROJECT}"
+        ENGINE_PROJECT="${ENGINE_PROJECT}"
       fi
       ENGINE_OPTIONS="$(cat $MANIFEST_JSON | jq -r '.engineOptions')" 
       if [[ -n "$ENGINE_OPTIONS" ]] ; then
@@ -67,6 +67,23 @@ function handleManifest() {
       if [[ "$MODIFIED_PARAMS" = true ]] ; then
         echo "Updated engine params are ${ENGINE_PARAMS}"
       fi
+}
+
+function s3CopyWithRetry() {
+  local local=$1
+  local s3Location=$2
+  for i in {1..5};
+    do
+        echo "attempt $i at copying $local to $s3Location/$local"
+        aws s3 cp $local "$s3Location/$local" --exclude ".*"
+        S3_EXIT_CODE=$?
+        [[ S3_EXIT_CODE -eq 0 ]] &&
+        break || echo "attempt $i at copying $local to $s3Location/$local failed";
+        if [ "$i" -eq 5 ]; then
+            echo "failed to sync efs to $s3Location/$local after $i attempts. aborting"
+        fi
+        sleep $((7 * $i))
+    done
 }
 
 function cleanup() {
@@ -136,3 +153,13 @@ echo "${ENGINE_NAME} pid: $ENGINE_PID"
 jobs
 echo "waiting .."
 wait $ENGINE_PID
+echo "Snakmake outputs are:"
+snakemake -S
+snakemake --list-output -q >> temp_output.txt
+echo "copying outputs efs with s3"
+set -f
+for outputFile in $(cat temp_output.txt); do
+    s3CopyWithRetry "$outputFile" "${SM_S3_OUTPUT_URI}/${GUID}"
+    echo "${SM_S3_OUTPUT_URI}/${GUID}/$outputFile" >> sm_output.txt
+done
+s3CopyWithRetry "sm_output.txt" "${SM_S3_OUTPUT_URI}/${GUID}"
