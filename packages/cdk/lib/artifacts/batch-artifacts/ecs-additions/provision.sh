@@ -3,9 +3,10 @@
 set -e
 set -x
 
-export OS=`uname -r`
-BASEDIR=`dirname $0`
-INITIAL_EBS_SIZE="${$1:-200}"
+OS=$(uname -r)
+export OS
+BASEDIR=$(dirname "$0")
+INITIAL_EBS_SIZE="${1:-200}"
 
 echo OS = "$OS"
 echo BASEDIR = "$BASEDIR"
