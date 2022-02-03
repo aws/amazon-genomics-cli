@@ -67,7 +67,7 @@ function getArtifactRoot(){
           --query 'Parameter.Value' \
           --output text \
   )
-  return "$url"
+  echo "$url"
 }
 
 function errorOrInt() {
@@ -86,9 +86,9 @@ set +e
 ecs disable
 set -e
 
-ARTIFACT_S3_ROOT_URL=getArtifactRoot
+ARTIFACT_S3_ROOT_URL=$(getArtifactRoot)
 if [[ -v ${ARTIFACT_S3_ROOT_URL} ]]; then
-    echo "ARTIFACT_S3_ROOT_URL not found, trying again" && sleep 5 && ARTIFACT_S3_ROOT_URL=getArtifactRoot
+    echo "ARTIFACT_S3_ROOT_URL not found, trying again" && sleep 5 && ARTIFACT_S3_ROOT_URL=$(getArtifactRoot)
 fi
 echo "ARTIFACT_S3_ROOT_URL = $ARTIFACT_S3_ROOT_URL"
 
