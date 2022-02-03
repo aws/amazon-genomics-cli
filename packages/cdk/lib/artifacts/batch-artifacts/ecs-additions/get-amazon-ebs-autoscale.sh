@@ -3,8 +3,11 @@ set -e
 set -x
 
 INSTALL_VERSION=dist_release
+echo "INSTALL_VERSION = $INSTALL_VERSION"
 FILESYSTEM=btrfs
+echo "FILESYSTEM = $FILESYSTEM"
 INITIAL_SIZE=200
+echo "INITIAL_SIZE = $INITIAL_SIZE"
 
 USAGE=$(cat <<EOF
 Retrieve and install Amazon EBS Autoscale
@@ -83,30 +86,32 @@ eval set -- "$PARAMS"
 
 
 function develop() {
-    # retrieve the current development version of amazon-ebs-autoscale
-    # WARNING may not be fully tested or stable
+    echo "retrieving the current development version of amazon-ebs-autoscale WARNING may not be fully tested or stable"
     git clone https://github.com/awslabs/amazon-ebs-autoscale.git
     cd /opt/amazon-ebs-autoscale
     git checkout master
 }
 
 function latest() {
-    # retrive the latest released version of amazon-ebs-autoscale
     # recommended if you want instances to stay up to date with upstream updates
-    local ebs_autoscale_version=$(curl --silent "https://api.github.com/repos/awslabs/amazon-ebs-autoscale/releases/latest" | jq -r .tag_name)
-    curl --silent -L \
+    echo "retrieving the latest released version of amazon-ebs-autoscale"
+    local ebs_autoscale_version
+    ebs_autoscale_version=$(curl --silent --fail --retry 3 --retry-connrefused "https://api.github.com/repos/awslabs/amazon-ebs-autoscale/releases/latest" | jq -r .tag_name)
+    echo "ebs_autoscale_version = $ebs_autoscale_version"
+    curl --silent --fail --retry 3 --retry-connrefused  -L \
         "https://github.com/awslabs/amazon-ebs-autoscale/archive/${ebs_autoscale_version}.tar.gz" \
         -o ./amazon-ebs-autoscale.tar.gz 
 
     tar -xzvf ./amazon-ebs-autoscale.tar.gz
     mv ./amazon-ebs-autoscale*/ ./amazon-ebs-autoscale
-    echo $ebs_autoscale_version > ./amazon-ebs-autoscale/VERSION
+    echo "$ebs_autoscale_version" > ./amazon-ebs-autoscale/VERSION
 }
 
 function s3CopyWithRetry() {
     local s3_path=$1
     # destination must be the path to a file and not just the directory you want the file in
     local destination=$2
+    echo "copying $s3_path to $destination"
 
     for i in {1..5};
     do
@@ -129,55 +134,59 @@ function s3CopyWithRetry() {
         fi
         sleep $((7 * i))
     done
+    echo "copied $s3_path to $destination with return code $?"
 }
 
 function release() {
-    # retrieve the version of amazon-ebs-autoscale from the latest upstream disbribution 
-    # release of aws-genomics-workflows
+    echo "retrieving the version of amazon-ebs-autoscale from the latest upstream distribution release of aws-genomics-workflows"
 
     if [[ ! $ARTIFACT_ROOT_URL ]]; then
         echo "missing required argument: --artifact-root-url"
         exit 1
     fi
+    echo "ARTIFACT_ROOT_URL = $ARTIFACT_ROOT_URL"
 
     if [[ "$ARTIFACT_ROOT_URL" =~ ^http.* ]]; then
-        curl -LO $ARTIFACT_ROOT_URL/amazon-ebs-autoscale.tgz
+        echo "obtaining amazon-ebs-autoscale.tgz using http protocol"
+        curl --silent --fail --retry 3 --retry-connrefused -LO $ARTIFACT_ROOT_URL/amazon-ebs-autoscale.tgz
     elif [[ "$ARTIFACT_ROOT_URL" =~ ^s3.* ]]; then
-        s3CopyWithRetry $ARTIFACT_ROOT_URL/amazon-ebs-autoscale.tgz ./amazon-ebs-autoscale.tgz
+        echo "obtaining amazon-ebs-autoscale.tgz using s3 protocol"
+        s3CopyWithRetry "$ARTIFACT_ROOT_URL"/amazon-ebs-autoscale.tgz ./amazon-ebs-autoscale.tgz
     else
         echo "unrecognized protocol in $ARTIFACT_ROOT_URL for release()"
         exit 1
     fi
 
+    echo "unpacking amazon-ebs-autoscale.tgz"
     tar -xzvf amazon-ebs-autoscale.tgz
 }
 
 function dist_release() {
-    # retrieve the version of amazon-ebs-autoscale installed as an artifact with
-    # the AGC Core stack.
+    echo "retrieve the release version of amazon-ebs-autoscale installed as an artifact with the AGC Core stack."
     # recommended for a fully self-contained deployment
 
     if [[ ! $ARTIFACT_ROOT_URL ]]; then
         echo "missing required argument: --artifact-root-url"
         exit 1
     fi
+    echo "ARTIFACT_ROOT_URL = $ARTIFACT_ROOT_URL"
 
     if [[ "$ARTIFACT_ROOT_URL" =~ ^s3.* ]]; then
+        echo "obtaining amazon-ebs-autoscale.tgz using s3 protocol"
         s3CopyWithRetry $ARTIFACT_ROOT_URL/amazon-ebs-autoscale.tgz ./amazon-ebs-autoscale.tgz
     else
         echo "unrecognized protocol in $ARTIFACT_ROOT_URL for dist_release()"
         exit 1
     fi
 
+    echo "unpacking amazon-ebs-autoscale.tgz"
     tar -xzvf amazon-ebs-autoscale.tgz
 }
 
 function install() {
-    # this function expects the following environment variables
-    #   EBS_AUTOSCALE_FILESYSTEM
-
     local filesystem=${1:-btrfs}
-    local docker_storage_driver=btrfs
+    echo "ebs autoscale filesystem = $filesystem"
+    local docker_storage_driver
 
     case $filesystem in
         btrfs)
@@ -190,11 +199,16 @@ function install() {
             echo "Unsupported filesystem - $filesystem"
             exit 1
     esac
+    echo "docker_storage_driver = $docker_storage_driver"
+
     local docker_storage_options="DOCKER_STORAGE_OPTIONS=\"--storage-driver $docker_storage_driver\""
     
     cp -au /var/lib/docker /var/lib/docker.bk
     rm -rf /var/lib/docker/*
-    sh /opt/amazon-ebs-autoscale/install.sh -d /dev/xvdba -f $filesystem -m /var/lib/docker > /var/log/ebs-autoscale-install.log 2>&1
+
+    echo "installing ebs autoscale"
+    sh /opt/amazon-ebs-autoscale/install.sh -d /dev/xvdba -f "$filesystem" -m /var/lib/docker > /var/log/ebs-autoscale-install.log 2>&1
+    echo "/opt/amazon-ebs-autoscale/install.sh exited with return code $?"
 
     awk -v docker_storage_options="$docker_storage_options" \
         '{ sub(/DOCKER_STORAGE_OPTIONS=.*/, docker_storage_options); print }' \
@@ -206,8 +220,8 @@ function install() {
 
 }
 
-
+mkdir -p /opt
 cd /opt
 $INSTALL_VERSION
 
-install $FILESYSTEM
+install "$FILESYSTEM"
