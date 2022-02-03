@@ -48,7 +48,7 @@ function handleManifest() {
         ## You can also use custom paramaters from the manifest.json file. For example:
           ## APPEND_ARGS="$(cat $MANIFEST_JSON | jq -r '.customArgument')" will pull the value attached to the key "customArgument"
           ## from the manifest.json file if the key exists, otherwise it will make it the value "".
-        APPEND_ARGS="--aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID} --aws-batch-efs-project-path=snakemake/$GUID --latency-wait 30"
+        APPEND_ARGS="--aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID} --aws-batch-efs-project-path=snakemake/$GUID --latency-wait 60"
         PREPEND_ARGS=""
         ## To extend the arg strings you can do the following: APPEND_ARGS="${APPEND_ARGS} --moreArgumentsHere"
         ## After updating these you can expect your engine to be run as `ENGINE_RUN_CMD PREPEND_ARGS <agc_params> APPEND_ARGS`
@@ -122,7 +122,7 @@ if [[ "$ENGINE_PROJECT" =~ ^s3://.* ]]; then
      handleManifest
     else
       ENGINE_PROJECT="${ENGINE_PROJECT_DIRECTORY}"
-      ENGINE_PARAMS="${ENGINE_PARAMS} --aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID}  --aws-batch-efs-project-path=snakemake/$GUID --latency-wait 30"
+      ENGINE_PARAMS="${ENGINE_PARAMS} --aws-batch-tags AWS_BATCH_PARENT_JOB_ID=${AWS_BATCH_JOB_ID}  --aws-batch-efs-project-path=snakemake/$GUID --latency-wait 60"
     fi
 fi
 echo "== Finding the project in  =="

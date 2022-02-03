@@ -5,7 +5,12 @@ workflows:
     type:
       language: snakemake
       version: 1.0
-    sourceURL: workflow/hello-world
+    sourceURL: workflow/hello
+  countries:
+    type:
+      language: snakemake
+      version: 1.0
+    sourceURL: workflow/countries
 contexts:
   onDemandContext:
     engines:
