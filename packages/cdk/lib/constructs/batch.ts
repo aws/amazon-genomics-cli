@@ -152,6 +152,15 @@ export class Batch extends Construct {
             }),
           ],
         }),
+        "instance-health": new PolicyDocument({
+          statements: [
+            new PolicyStatement({
+              actions: ["autoscaling:SetInstanceHealth"],
+              // ideally this would be limited to the autoscaler for this batch stacks compute environment, but we can't know it here
+              resources: ["*"],
+            }),
+          ],
+        }),
       },
       managedPolicies: [...(managedPolicies ?? []), ManagedPolicy.fromAwsManagedPolicyName("service-role/AmazonEC2ContainerServiceforEC2Role")],
     });
