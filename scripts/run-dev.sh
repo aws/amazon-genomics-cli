@@ -26,10 +26,17 @@ run_agc_cli () {
   done
 }
 
+build_wes_adapter() {
+  mkdir -p "$HOME/.agc/wes"
+  (cd packages/wes_adapter && ./install.sh)
+  mv packages/wes_adapter/dist/wes_adapter.zip $HOME/.agc/wes/
+}
+
 echo "Setting up CDK"
 mkdir -p "$HOME/.agc/"
 mv "$HOME/.agc" "$TEMP_STORAGE"
 mkdir -p "$HOME/.agc/"
+build_wes_adapter
 echo -e "user:\n    email: $USER@amazon.com" > "$HOME/.agc/config.yaml"
 ln -sfn "${SCRIPT_DIR}/../packages/cdk/" "$HOME/.agc/"
 
