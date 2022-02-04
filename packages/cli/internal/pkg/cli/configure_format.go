@@ -34,7 +34,7 @@ func (o *formatContextOpts) Validate(args []string) error {
 	if len(args) != 1 {
 		return fmt.Errorf("a single format value must be provided")
 	}
-	format := format.FormatterType(o.formatContextVars.format)
+	format := format.FormatterType(args[0])
 	if err := format.ValidateFormatter(); err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func BuildConfigureFormatCommand() *cobra.Command {
 	vars := formatContextVars{}
 	cmd := &cobra.Command{
 		Use:   "format output_format",
-		Short: "Sets default format option for output display of AGC commands. Valid format options are 'text' and 'table'",
+		Short: "Sets default format option for output display of AGC commands. Valid format options are 'text', 'table', or 'json'",
 		Args:  cobra.ArbitraryArgs,
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
 			opts, err := newFormatContextOpts(vars)
@@ -63,7 +63,7 @@ func BuildConfigureFormatCommand() *cobra.Command {
 			if err := opts.Validate(args); err != nil {
 				return err
 			}
-			vars.format = args[0]
+			opts.format = args[0]
 			configClient, err := config.NewConfigClient()
 			if err != nil {
 				return clierror.New(configureFormatCommand, vars, err)

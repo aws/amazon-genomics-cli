@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestText_WriteStruct(t *testing.T) {
+func TestJson_WriteStruct(t *testing.T) {
 
 	tests := []struct {
 		name     string
@@ -17,7 +17,7 @@ func TestText_WriteStruct(t *testing.T) {
 		{
 			"Struct with no fields",
 			testEmptyStruct{},
-			"TESTEMPTYSTRUCT\n",
+			"{}\n",
 		},
 		{
 			"int",
@@ -27,7 +27,7 @@ func TestText_WriteStruct(t *testing.T) {
 		{
 			"string",
 			"foo bar",
-			"foo bar\n",
+			"\"foo bar\"\n",
 		},
 		{
 			"Simple fields",
@@ -36,7 +36,12 @@ func TestText_WriteStruct(t *testing.T) {
 				BStringField: "Some string",
 				CBoolField:   true,
 			},
-			"TESTSIMPLEFIELDS\t654\tSome string\ttrue\n",
+			`{
+	"AIntField": 654,
+	"BStringField": "Some string",
+	"CBoolField": true
+}
+`,
 		},
 		{
 			"Struct with collections",
@@ -60,17 +65,37 @@ func TestText_WriteStruct(t *testing.T) {
 				},
 				DSomeNumber: -88,
 			},
-			`TESTSTRUCTWITHCOLLECTIONS	This is name	-88
-TESTSIMPLEFIELDS	1	First	false
-TESTSIMPLEFIELDS	2	Second	true
-TESTEMPTYSTRUCT
-TESTEMPTYSTRUCT
+			`{
+	"AName": "This is name",
+	"BItems1": [
+		{
+			"AIntField": 1,
+			"BStringField": "First",
+			"CBoolField": false
+		},
+		{
+			"AIntField": 2,
+			"BStringField": "Second",
+			"CBoolField": true
+		}
+	],
+	"CItems2": [
+		{},
+		{}
+	],
+	"DSomeNumber": -88
+}
 `,
 		},
 		{
 			"Collection of strings",
 			[]string{"One", "Two", "Three"},
-			"One\nTwo\nThree\n",
+			`[
+	"One",
+	"Two",
+	"Three"
+]
+`,
 		},
 		{
 			"Collection of structs",
@@ -78,8 +103,16 @@ TESTEMPTYSTRUCT
 				{1, "First"},
 				{2, "Second"},
 			},
-			`TESTNESTEDSTRUCT	1	First
-TESTNESTEDSTRUCT	2	Second
+			`[
+	{
+		"AId": 1,
+		"BName": "First"
+	},
+	{
+		"AId": 2,
+		"BName": "Second"
+	}
+]
 `,
 		},
 		{
@@ -88,10 +121,22 @@ TESTNESTEDSTRUCT	2	Second
 				{1, testNestedStruct{100, "First Nested"}},
 				{2, testNestedStruct{200, "Second Nested"}},
 			},
-			`TESTSTRUCTWITHNESTEDSTRUCT	1
-TESTNESTEDSTRUCT	100	First Nested
-TESTSTRUCTWITHNESTEDSTRUCT	2
-TESTNESTEDSTRUCT	200	Second Nested
+			`[
+	{
+		"AId": 1,
+		"BSubStruct": {
+			"AId": 100,
+			"BName": "First Nested"
+		}
+	},
+	{
+		"AId": 2,
+		"BSubStruct": {
+			"AId": 200,
+			"BName": "Second Nested"
+		}
+	}
+]
 `,
 		},
 	}
@@ -99,8 +144,8 @@ TESTNESTEDSTRUCT	200	Second Nested
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			buf := new(strings.Builder)
-			textFormat := &Text{buf}
-			textFormat.Write(tt.object)
+			jsonFormat := &Json{buf}
+			jsonFormat.Write(tt.object)
 			actual := buf.String()
 			assert.Equal(t, tt.expected, actual)
 		})

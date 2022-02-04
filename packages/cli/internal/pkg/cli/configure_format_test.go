@@ -8,22 +8,29 @@ import (
 
 const (
 	textFormat    = "text"
+	tableFormat   = "table"
+	jsonFormat    = "json"
 	invalidFormat = "csv"
 )
 
 func TestFormatContextOpts_Execute(t *testing.T) {
-	mocks := createMocks(t)
-	defer mocks.ctrl.Finish()
+	tests := [3]string{textFormat, tableFormat, jsonFormat}
+	for _, format := range tests {
+		t.Run(format, func(t *testing.T) {
+			mocks := createMocks(t)
+			defer mocks.ctrl.Finish()
 
-	formatContextOpts, err := newFormatContextOpts(formatContextVars{
-		format: textFormat,
-	})
-	require.NoError(t, err)
+			formatContextOpts, err := newFormatContextOpts(formatContextVars{
+				format: format,
+			})
+			require.NoError(t, err)
 
-	mocks.configMock.EXPECT().SetFormat(textFormat).Return(nil)
-	formatContextOpts.configClient = mocks.configMock
-	err = formatContextOpts.Execute()
-	require.NoError(t, err)
+			mocks.configMock.EXPECT().SetFormat(format).Return(nil)
+			formatContextOpts.configClient = mocks.configMock
+			err = formatContextOpts.Execute()
+			require.NoError(t, err)
+		})
+	}
 }
 
 func TestFormatContextOpts_Validate_InvalidFormat(t *testing.T) {
@@ -41,15 +48,20 @@ func TestFormatContextOpts_Validate_InvalidFormat(t *testing.T) {
 }
 
 func TestFormatContextOpts_Validate_ValidFormat(t *testing.T) {
-	mocks := createMocks(t)
-	defer mocks.ctrl.Finish()
+	tests := [3]string{textFormat, tableFormat, jsonFormat}
+	for _, format := range tests {
+		t.Run(format, func(t *testing.T) {
+			mocks := createMocks(t)
+			defer mocks.ctrl.Finish()
 
-	formatContextOpts, err := newFormatContextOpts(formatContextVars{
-		format: textFormat,
-	})
-	require.NoError(t, err)
+			formatContextOpts, err := newFormatContextOpts(formatContextVars{
+				format: textFormat,
+			})
+			require.NoError(t, err)
 
-	formatContextOpts.configClient = mocks.configMock
-	err = formatContextOpts.Validate([]string{textFormat})
-	require.NoError(t, err)
+			formatContextOpts.configClient = mocks.configMock
+			err = formatContextOpts.Validate([]string{textFormat})
+			require.NoError(t, err)
+		})
+	}
 }
