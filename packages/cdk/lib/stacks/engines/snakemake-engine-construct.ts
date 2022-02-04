@@ -77,6 +77,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
             new PolicyStatement({
               actions: ["tag:GetResources"],
               resources: ["*"],
+              conditions: { "ForAllValues:StringEquals": { "aws:TagKeys": ["AWS_BATCH_PARENT_JOB_ID"] }, },
             }),
           ],
         }),
