@@ -45,7 +45,7 @@ export class SnakemakeEngine extends Engine {
           SM__AWS__FS: this.fileSystem.fileSystemId,
           SM__AWS__FSAP: this.fsap.accessPointId,
           SM__AWS__TASK_QUEUE: workerBatch.jobQueue.jobQueueArn,
-          SM_S3_OUTPUT_URI: props.rootDirS3Uri
+          SM_S3_OUTPUT_URI: props.rootDirS3Uri,
         },
         volumes: [this.toVolume(this.fileSystem, this.fsap, this.volumeName)],
         mountPoints: [this.toMountPoint("/mnt/efs", this.volumeName)],

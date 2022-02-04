@@ -15,6 +15,7 @@ import { BatchPolicies } from "../../roles/policies/batch-policies";
 import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import { BucketOperations } from "../../common/BucketOperations";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
+import { IFunction } from "aws-cdk-lib/aws-lambda";
 
 export class SnakemakeEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -34,35 +35,39 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
     this.batchWorkers = this.renderBatch("TaskBatch", vpc, contextParameters, workerComputeType);
 
-    this.snakemakeEngine = new SnakemakeEngine(this, "SnakemakeEngine", {
+    // Generate the engine that will run snakemake on batch
+    this.snakemakeEngine = this.createSnakemakeEngine(props, this.batchHead, this.batchWorkers);
+
+    // Adds necessary policies to our snakemake batch engine
+    this.attachAdditionalBatchPolicies();
+
+    // Generate the role the Wes lambda will use + add additonal policies
+    const adapterRole = this.createAdapterRole();
+    this.outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
+    this.outputBucket.grantRead(adapterRole);
+    this.batchHead.grantJobAdministration(adapterRole);
+    this.batchWorkers.grantJobAdministration(this.batchHead.role);
+    this.grantS3Permissions(contextParameters, [this.batchHead.role, this.batchWorkers.role]);
+
+    // Generate the wes lambda
+    const lambda = this.renderAdapterLambda({
       vpc: props.vpc,
-      engineBatch: this.batchHead,
-      workerBatch: this.batchWorkers,
-      rootDirS3Uri: params.getEngineBucketPath(),
+      role: adapterRole,
+      jobQueueArn: this.batchHead.jobQueue.jobQueueArn,
+      jobDefinitionArn: this.snakemakeEngine.headJobDefinition.jobDefinitionArn,
+      workflowRoleArn: this.batchHead.role.roleArn,
+      taskQueueArn: this.batchWorkers.jobQueue.jobQueueArn,
+      fsapId: this.snakemakeEngine.fsap.accessPointId,
+      outputBucket: params.getEngineBucketPath(),
     });
+    this.adapterLogGroup = lambda.logGroup;
 
-    this.batchHead.role.addToPrincipalPolicy(
-      new PolicyStatement({
-        actions: ["elasticfilesystem:DescribeAccessPoints"],
-        resources: [this.snakemakeEngine.fileSystem.fileSystemArn, this.snakemakeEngine.fsap.accessPointArn],
-      })
-    );
-    this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
-    this.batchHead.role.addToPrincipalPolicy(
-      new PolicyStatement({
-        actions: ["batch:TagResource"],
-        resources: ["*"],
-      })
-    );
+    // Generate our api gateway proxy
+    this.apiProxy = this.createApiProxy(params, lambda);
+  }
 
-    this.batchHead.role.addToPrincipalPolicy(
-      new PolicyStatement({
-        actions: ["iam:PassRole"],
-        resources: [this.batchHead.role.roleArn],
-      })
-    );
-
-    const adapterRole = new Role(this, "SnakemakeAdapterRole", {
+  private createAdapterRole(): Role {
+    return new Role(this, "SnakemakeAdapterRole", {
       assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
       managedPolicies: [ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")],
       inlinePolicies: {
@@ -77,31 +82,45 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
         }),
       },
     });
-    this.outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
-    this.outputBucket.grantRead(adapterRole);
+  }
 
-    this.batchHead.grantJobAdministration(adapterRole);
-    this.batchWorkers.grantJobAdministration(this.batchHead.role);
-
-    this.grantS3Permissions(contextParameters, [this.batchHead.role, this.batchWorkers.role]);
-
-    const lambda = this.renderAdapterLambda({
+  private createSnakemakeEngine(props: EngineOptions, batchHead: Batch, batchWorkers: Batch): SnakemakeEngine {
+    return new SnakemakeEngine(this, "SnakemakeEngine", {
       vpc: props.vpc,
-      role: adapterRole,
-      jobQueueArn: this.batchHead.jobQueue.jobQueueArn,
-      jobDefinitionArn: this.snakemakeEngine.headJobDefinition.jobDefinitionArn,
-      workflowRoleArn: this.batchHead.role.roleArn,
-      taskQueueArn: this.batchWorkers.jobQueue.jobQueueArn,
-      fsapId: this.snakemakeEngine.fsap.accessPointId,
-      outputBucket: params.getEngineBucketPath(),
+      engineBatch: batchHead,
+      workerBatch: batchWorkers,
+      rootDirS3Uri: props.contextParameters.getEngineBucketPath(),
     });
-    this.adapterLogGroup = lambda.logGroup;
+  }
 
-    this.apiProxy = new ApiProxy(this, {
+  private createApiProxy(params: ContextAppParameters, lambda: IFunction): ApiProxy {
+    return new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}SnakemakeApiProxy`,
       lambda,
       allowedAccountIds: [Aws.ACCOUNT_ID],
     });
+  }
+
+  private attachAdditionalBatchPolicies() {
+    this.batchHead.role.addToPrincipalPolicy(
+      new PolicyStatement({
+        actions: ["elasticfilesystem:DescribeAccessPoints"],
+        resources: [this.snakemakeEngine.fsap.accessPointArn],
+      })
+    );
+    this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
+    this.batchHead.role.addToPrincipalPolicy(
+      new PolicyStatement({
+        actions: ["batch:TagResource"],
+        resources: ["*"],
+      })
+    );
+    this.batchHead.role.addToPrincipalPolicy(
+      new PolicyStatement({
+        actions: ["iam:PassRole"],
+        resources: [this.batchHead.role.roleArn],
+      })
+    );
   }
 
   protected getOutputs(): EngineOutputs {
@@ -136,6 +155,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       launchTemplateData: LaunchTemplateData.renderLaunchTemplateData(ENGINE_SNAKEMAKE),
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: Stack.of(this).tags.tagValues(),
+      workflowOrchestrator: ENGINE_SNAKEMAKE,
     });
   }
 
