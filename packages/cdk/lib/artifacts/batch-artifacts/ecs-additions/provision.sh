@@ -70,13 +70,17 @@ function getArtifactRoot(){
   echo "$url"
 }
 
-function errorOrInt() {
-  echo "WARNING - received a $1 signal. Will attempt to restart ECS agent but this instance may not be correctly provisioned"
-  env
-  ecs enable
+function errorOrInt(){
+  echo "WARNING - received a $1 signal"
+
+  TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+  INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s "http://169.254.169.254/latest/meta-data/instance-id")
+
+  echo " Will attempt mark myself, $INSTANCE_ID, unhealthy so the autoscaler can start a replacement"
+  aws autoscaling set-instance-health --instance-id "$INSTANCE_ID"  --health-status Unhealthy || echo "ERROR could not mark $INSTANCE_ID unhealthy, shutting down" && shutdown now
 }
 
-# make sure that docker and ecs are running on script exit to avoid
+# make sure that docker and ecs are running on script exit or clean up on failure to avoid
 # zombie instances
 trap "ecs enable" EXIT
 trap "errorOrInt INT" INT
