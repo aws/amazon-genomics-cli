@@ -111,7 +111,7 @@ export ECR_MINIWDL_REGION=<some-value>
 export ECR_MINIWDL_TAG=<some-value>
 ```
 
-These environment variables point to the ECR account, region, and tags of the Cromwell ,Nextflow, and MINIWDL engine respectively
+These environment variables point to the ECR account, region, and tags of the Cromwell ,Nextflow, and MiniWDL engine respectively
 that will be deployed for your contexts. They are written as Systems Manager Parameter Store variables when you activate
 your Amazon Genomics CLI account region (`agc account activate`). The `./scripts/run-dev.sh` contains logic to determine the current
 dev versions of the images which you would typically use. You may also use production images, the current values of which will
