@@ -16,12 +16,6 @@ data:
   - location: s3://1000genomes
     readOnly: true
 contexts:
-  DefaultContext:
-    maxVCpus: 300
-    publicSubnets: true
-    engines:
-      - type: nextflow
-        engine: nextflow
   onDemandContext:
     engines:
       - type: nextflow
