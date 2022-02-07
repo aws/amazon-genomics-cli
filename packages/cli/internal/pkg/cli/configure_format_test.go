@@ -55,12 +55,12 @@ func TestFormatContextOpts_Validate_ValidFormat(t *testing.T) {
 			defer mocks.ctrl.Finish()
 
 			formatContextOpts, err := newFormatContextOpts(formatContextVars{
-				format: textFormat,
+				format: format,
 			})
 			require.NoError(t, err)
 
 			formatContextOpts.configClient = mocks.configMock
-			err = formatContextOpts.Validate([]string{textFormat})
+			err = formatContextOpts.Validate([]string{format})
 			require.NoError(t, err)
 		})
 	}

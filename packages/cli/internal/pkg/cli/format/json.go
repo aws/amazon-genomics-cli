@@ -19,7 +19,12 @@ func (f *Json) newLine() {
 }
 
 func (f *Json) Write(o interface{}) {
-	jsons, _ := json.MarshalIndent(o, "", "\t")
-	f.write(jsons)
-	f.newLine()
+	jsons, err := json.MarshalIndent(o, "", "\t")
+	if err != nil {
+		SetFormatter(DefaultFormat)
+		Default.Write(o)
+	} else {
+		f.write(jsons)
+		f.newLine()
+	}
 }
