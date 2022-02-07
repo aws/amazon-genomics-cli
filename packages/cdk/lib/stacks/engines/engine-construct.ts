@@ -28,12 +28,11 @@ export abstract class EngineConstruct extends Construct {
     new CfnOutput(Stack.of(this), "WesUrl", { value: outputs.wesUrl });
   }
 
-  public renderPythonLambda(scope: Construct, id: string, vpc: IVpc, role: IRole, environment: Record<string, string>): PythonFunction {
+  public renderPythonLambda(scope: Construct, id: string, role: IRole, environment: Record<string, string>): PythonFunction {
     const account: string = process.env.CDK_DEFAULT_ACCOUNT!;
     const region: string = process.env.CDK_DEFAULT_REGION!;
     const bucketName = `${APP_NAME}-${account}-${region}`;
     return new Function(scope, id, {
-      vpc,
       code: Code.fromBucket(Bucket.fromBucketName(scope, "WesAdapter", bucketName), "wes/wes_adapter.zip"),
       handler: "index.handler",
       runtime: Runtime.PYTHON_3_9,

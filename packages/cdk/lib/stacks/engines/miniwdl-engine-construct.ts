@@ -74,7 +74,6 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     this.grantS3Permissions(contextParameters);
 
     const lambda = this.renderAdapterLambda({
-      vpc: props.vpc,
       role: adapterRole,
       jobQueueArn: this.batchHead.jobQueue.jobQueueArn,
       jobDefinitionArn: this.miniwdlEngine.headJobDefinition.jobDefinitionArn,
@@ -130,8 +129,8 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     return [this.batchHead.role, this.batchWorkers.role];
   }
 
-  private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, rootDirS3Uri }) {
-    return super.renderPythonLambda(this, "MiniWDLWesAdapterLambda", vpc, role, {
+  private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, rootDirS3Uri }) {
+    return super.renderPythonLambda(this, "MiniWDLWesAdapterLambda", role, {
       ENGINE_NAME: ENGINE_MINIWDL,
       JOB_QUEUE: jobQueueArn,
       JOB_DEFINITION: jobDefinitionArn,
