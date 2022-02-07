@@ -243,6 +243,7 @@ func TestManager_Deploy(t *testing.T) {
 				ecrClient: mockClients.ecrClientMock,
 				baseProps: baseProps{homeDir: testHomeDir},
 				imageRefs: environment.CommonImages,
+				region:    "us-east-1",
 			}
 
 			progressResultList := manager.Deploy(tc.contextList)

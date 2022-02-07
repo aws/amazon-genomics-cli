@@ -228,6 +228,15 @@ func (m *Manager) validateImage() {
 	}
 
 	imageRef, imageRefExists := m.imageRefs[strings.ToUpper(m.contextEnv.EngineName)]
+
+	// Need to make a copy to override the region to use the region from the customer's profile
+	imageRef = ecr.ImageReference{
+		RegistryId:     imageRef.RegistryId,
+		Region:         m.region,
+		RepositoryName: imageRef.RepositoryName,
+		ImageTag:       imageRef.ImageTag,
+	}
+
 	if !imageRefExists {
 		m.err = actionableerror.New(
 			fmt.Errorf("the engine name in your context file '%s' does not exist", m.contextEnv.EngineName),
