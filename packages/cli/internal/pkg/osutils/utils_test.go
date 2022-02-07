@@ -148,3 +148,95 @@ func TestExpandHomeDirPositive(t *testing.T) {
 		})
 	}
 }
+
+func TestGetAndCreateRelativePath(t *testing.T) {
+	backupOsStat, backupOsIsNotExist, backupOsMkdirAll := osStat, osIsNotExist, osMkdirAll
+
+	defer func() {
+		osStat, osIsNotExist, osMkdirAll = backupOsStat, backupOsIsNotExist, backupOsMkdirAll
+	}()
+
+	var tests = map[string]struct {
+		setupMocks     func(mockUtils MockUtils)
+		currentPath    string
+		sourcePath     string
+		destinationDir string
+		errMessage     string
+		expectedOutput string
+	}{
+		"file at root": {
+			setupMocks: func(mocksUtils MockUtils) {
+				osMkdirAll = mocksUtils.mockOs.MkdirAll
+				osStat = mocksUtils.mockOs.Stat
+				osIsNotExist = mocksUtils.mockOs.IsNotExist
+				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path", gomock.Any()).Return(nil).Times(1)
+				doesNotExist := errors.New("Some error")
+				mocksUtils.mockOs.EXPECT().Stat("/some/other/path").Return(nil, doesNotExist).Times(1)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
+			},
+			currentPath:    "/some/path/to/folder/file.ext",
+			sourcePath:     "/some/path/to/folder",
+			destinationDir: "/some/other/path",
+			errMessage:     "",
+			expectedOutput: "/some/other/path/file.ext",
+		},
+		"file one level deep": {
+			setupMocks: func(mocksUtils MockUtils) {
+				osMkdirAll = mocksUtils.mockOs.MkdirAll
+				osStat = mocksUtils.mockOs.Stat
+				osIsNotExist = mocksUtils.mockOs.IsNotExist
+				doesNotExist := errors.New("Some error")
+				mocksUtils.mockOs.EXPECT().Stat("/some/other/path/subfolder").Return(nil, doesNotExist).Times(1)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
+				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path/subfolder", gomock.Any()).Return(nil).Times(1)
+			},
+			currentPath:    "/some/path/to/folder/subfolder/file.ext",
+			sourcePath:     "/some/path/to/folder",
+			destinationDir: "/some/other/path",
+			errMessage:     "",
+			expectedOutput: "/some/other/path/subfolder/file.ext",
+		},
+		"fails to create folder": {
+			setupMocks: func(mocksUtils MockUtils) {
+				osMkdirAll = mocksUtils.mockOs.MkdirAll
+				osStat = mocksUtils.mockOs.Stat
+				osIsNotExist = mocksUtils.mockOs.IsNotExist
+				doesNotExist := errors.New("Some error")
+				mocksUtils.mockOs.EXPECT().Stat("/some/other/path/subfolder").Return(nil, doesNotExist).Times(1)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
+				returnedError := errors.New("failed to create")
+				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path/subfolder", gomock.Any()).Return(returnedError).Times(1)
+			},
+			currentPath:    "/some/path/to/folder/subfolder/file.ext",
+			sourcePath:     "/some/path/to/folder",
+			destinationDir: "/some/other/path",
+			errMessage:     "failed to create",
+			expectedOutput: "/some/other/path/subfolder/file.ext",
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			mockOs := iomocks.NewMockOS(ctrl)
+			mockUtils := &MockUtils{
+				ctrl:   ctrl,
+				mockOs: mockOs,
+			}
+			tt.setupMocks(*mockUtils)
+
+			actualPath, err := getAndCreateRelativePath(tt.currentPath, tt.sourcePath, tt.destinationDir)
+			if err != nil {
+				assert.Error(t, err, tt.errMessage)
+			} else {
+				assert.Equal(t, tt.expectedOutput, actualPath)
+			}
+		})
+	}
+}
+
+type MockUtils struct {
+	ctrl   *gomock.Controller
+	mockOs *iomocks.MockOS
+}

@@ -14,6 +14,8 @@ type OS interface {
 	RemoveAll(path string) error
 	UserHomeDir() (string, error)
 	Stat(name string) (fs.FileInfo, error)
+	MkdirAll(path string, perm fs.FileMode) error
+	IsNotExist(err error) bool
 }
 
 type Zip interface {
