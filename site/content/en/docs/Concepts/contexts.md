@@ -195,7 +195,7 @@ base storage. Additionally, Cromwell is deployed with a standard EFS volume for 
 relatively small the amount of metadata will expand as more workflows are run. The volume is destroyed when the context is destroyed. An estimated
 cost for both components is available via [this link](https://calculator.aws/#/estimate?id=8ccc606c1b267e2933a6d683c0b98fcf11e4cbab)
 
-Contexts using the "miniwdl" engine use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
+Contexts using the "miniwdl" or "snakemake" engines use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
 workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use. An estimated cost assuming a
 total of 500 GB of workflow artifacts is available via [this link](https://calculator.aws/#/estimate?id=4d19b43aa86fcc3af199c425bfcc55193592cbb4)
 

@@ -15,11 +15,12 @@ to Amazon Genomics CLI through which it will submit workflows and workflow comma
 
 Currently, Amazon Genomics CLI's officially supported engines can be used to run the following workflows:
 
-| Engine                                                 | Language                                                        | Language Versions                                                                                                       | Run Mode     |
-|--------------------------------------------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|--------------|
-| [Cromwell](https://cromwell.readthedocs.io/en/stable/) | [WDL](https://openwdl.org)                                      | All versions up to 1.0                                                                                                  | Server       |
-| [Nextflow](https://www.nextflow.io)                    | [Nextflow DSL](https://www.nextflow.io/docs/latest/script.html) | Standard and DSL 2                                                                                                      | Head Process |
-| [miniwdl](https://miniwdl.readthedocs.io/en/latest/)   | [WDL](https://openwdl.org)                                      | [documented here](https://miniwdl.readthedocs.io/en/latest/runner_reference.html?highlight=errata#wdl-interoperability) | Head Process |
+| Engine                                                    | Language                                                                                   | Language Versions                                                                                                       | Run Mode     |
+|-----------------------------------------------------------|--------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|--------------|
+| [Cromwell](https://cromwell.readthedocs.io/en/stable/)    | [WDL](https://openwdl.org)                                                                 | All versions up to 1.0                                                                                                  | Server       |
+| [Nextflow](https://www.nextflow.io)                       | [Nextflow DSL](https://www.nextflow.io/docs/latest/script.html)                            | Standard and DSL 2                                                                                                      | Head Process |
+| [miniwdl](https://miniwdl.readthedocs.io/en/latest/)      | [WDL](https://openwdl.org)                                                                 | [documented here](https://miniwdl.readthedocs.io/en/latest/runner_reference.html?highlight=errata#wdl-interoperability) | Head Process |
+| [Snakemake](https://snakemake.readthedocs.io/en/stable/)  | [Snakemake](https://snakemake.readthedocs.io/en/stable/snakefiles/writing_snakefiles.html) | All versions                                                                                                            | Head Process |
 
 Overtime we plan to add additional engine and language support and provide the ability for third party developers to 
 develop engine plugins.
