@@ -81,15 +81,18 @@ runcmd:
 
 # install aws-cli v2 and copy the static binary in an easy to find location for bind-mounts into containers
 - mkdir -p /opt/aws-cli/bin
-- curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && unzip -q /tmp/awscliv2.zip -d /tmp && /tmp/aws/install -b /usr/bin && cp -a -f $(dirname $(find /usr/local/aws-cli -name 'aws' -type f))/. /opt/aws-cli/bin/
-- command -v aws || sleep 5 && curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && unzip -q /tmp/awscliv2.zip -d /tmp && /tmp/aws/install -b /usr/bin && cp -a -f $(dirname $(find /usr/local/aws-cli -name 'aws' -type f))/. /opt/aws-cli/bin/
-- command -v aws || sleep 10 && curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && unzip -q /tmp/awscliv2.zip -d /tmp && /tmp/aws/install -b /usr/bin && cp -a -f $(dirname $(find /usr/local/aws-cli -name 'aws' -type f))/. /opt/aws-cli/bin/
+- curl -s --fail --retry 3 --retry-connrefused "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && unzip -q /tmp/awscliv2.zip -d /tmp && /tmp/aws/install -b /usr/bin && cp -a -f $(dirname $(find /usr/local/aws-cli -name 'aws' -type f))/. /opt/aws-cli/bin/
+- command -v aws || sleep 5 && curl -s --fail --retry 3 --retry-connrefused "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && unzip -q /tmp/awscliv2.zip -d /tmp && /tmp/aws/install -b /usr/bin && cp -a -f $(dirname $(find /usr/local/aws-cli -name 'aws' -type f))/. /opt/aws-cli/bin/
+- command -v aws || sleep 10 && curl -s --fail --retry 3 --retry-connrefused "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && unzip -q /tmp/awscliv2.zip -d /tmp && /tmp/aws/install -b /usr/bin && cp -a -f $(dirname $(find /usr/local/aws-cli -name 'aws' -type f))/. /opt/aws-cli/bin/
 - command -v aws || echo "Unable to install AWS CLI v2"
 
 # set environment variables for provisioning
 - export ARTIFACTS_NAMESPACE=${APP_NAME}
+- echo "ARTIFACTS_NAMESPACE = $ARTIFACTS_NAMESPACE"
 - export INSTALLED_ARTIFACTS_S3_ROOT_URL=$(aws ssm get-parameter --name /\${ARTIFACTS_NAMESPACE}/_common/installed-artifacts/s3-root-url --query 'Parameter.Value' --output text)
+- echo "INSTALLED_ARTIFACTS_S3_ROOT_URL = $INSTALLED_ARTIFACTS_S3_ROOT_URL"
 - export WORKFLOW_ORCHESTRATOR=${workflowOrchestrator}
+- echo "WORKFLOW_ORCHESTRATOR = $WORKFLOW_ORCHESTRATOR"
 
 # enable ecs spot instance draining
 - echo ECS_ENABLE_SPOT_INSTANCE_DRAINING=true >> /etc/ecs/ecs.config
@@ -98,14 +101,17 @@ runcmd:
 - echo ECS_IMAGE_PULL_BEHAVIOR=prefer-cached >> /etc/ecs/ecs.config
 
 # Setup ecs additions
+- echo "setting up ecs additions"
+- mkdir -p /opt
 - cd /opt
+- echo "syncing ecs additions from $INSTALLED_ARTIFACTS_S3_ROOT_URL/ecs-additions/"
 - aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh  
 - test -f ./ecs-additions/fetch_and_run.sh || sleep 5 && aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh    
 - test -f ./ecs-additions/fetch_and_run.sh || sleep 10 && aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh    
 - test -f ./ecs-additions/fetch_and_run.sh || echo "Unable to install ecs-additions"
+- echo "running provision script"
 - /opt/ecs-additions/provision.sh
-
-- echo "successfully initiated"
+- echo "provision script completed with return code $?"
 --==MYBOUNDARY==--
 `;
   }
