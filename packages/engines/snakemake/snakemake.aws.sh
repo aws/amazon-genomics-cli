@@ -114,7 +114,7 @@ if [[ "$ENGINE_PROJECT" =~ ^s3://.* ]]; then
     echo "== Staging S3 Project =="
     ENGINE_PROJECT_DIRECTORY="."
     echo "Copying from ${ENGINE_PROJECT} to '${ENGINE_PROJECT_DIRECTORY}/'"
-    aws s3 cp $ENGINE_PROJECT "${ENGINE_PROJECT_DIRECTORY}/"
+    aws s3 cp --no-progress $ENGINE_PROJECT "${ENGINE_PROJECT_DIRECTORY}/"
     find $ENGINE_PROJECT_DIRECTORY -name '*.zip' -execdir unzip -o '{}' ';'
     ls -l $ENGINE_PROJECT_DIRECTORY
     MANIFEST_JSON=${ENGINE_PROJECT_DIRECTORY}/MANIFEST.json
