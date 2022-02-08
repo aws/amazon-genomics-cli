@@ -102,6 +102,28 @@
                   "engine": {
                     "type": "string",
                     "minLength": 1
+                  },
+                  "filesystem": {
+                    "type": "object",
+                    "items": {
+                      "properties": {
+                        "fsType": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "configuration": {
+                          "type": "object",
+                          "items": {
+                            "properties": {
+                              "provisionedThroughput": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 },
                 "required": ["type", "engine"]
