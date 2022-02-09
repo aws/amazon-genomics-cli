@@ -50,6 +50,34 @@ func (mr *MockOSMockRecorder) Chdir(dir interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Chdir", reflect.TypeOf((*MockOS)(nil).Chdir), dir)
 }
 
+// IsNotExist mocks base method.
+func (m *MockOS) IsNotExist(err error) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsNotExist", err)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsNotExist indicates an expected call of IsNotExist.
+func (mr *MockOSMockRecorder) IsNotExist(err interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsNotExist", reflect.TypeOf((*MockOS)(nil).IsNotExist), err)
+}
+
+// MkdirAll mocks base method.
+func (m *MockOS) MkdirAll(path string, perm fs.FileMode) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MkdirAll", path, perm)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// MkdirAll indicates an expected call of MkdirAll.
+func (mr *MockOSMockRecorder) MkdirAll(path, perm interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MkdirAll", reflect.TypeOf((*MockOS)(nil).MkdirAll), path, perm)
+}
+
 // MkdirTemp mocks base method.
 func (m *MockOS) MkdirTemp(dir, pattern string) (string, error) {
 	m.ctrl.T.Helper()

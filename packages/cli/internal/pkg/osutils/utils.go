@@ -12,7 +12,10 @@ import (
 )
 
 var osUserHomeDir = os.UserHomeDir
+var osMkdirAll = os.MkdirAll
 var osOpen = os.Open
+var osStat = os.Stat
+var osIsNotExist = os.IsNotExist
 var osCreate = os.Create
 var ioCopy = io.Copy
 var filepathWalkDir = filepath.WalkDir
@@ -46,9 +49,9 @@ func ExpandHomeDir(rootPath string) (string, error) {
 }
 
 func EnsureDirExistence(dirPath string) error {
-	dirStat, err := os.Stat(dirPath)
-	if os.IsNotExist(err) {
-		err := os.MkdirAll(dirPath, 0744)
+	dirStat, err := osStat(dirPath)
+	if osIsNotExist(err) {
+		err := osMkdirAll(dirPath, 0744)
 		return err
 	}
 
@@ -59,8 +62,8 @@ func EnsureDirExistence(dirPath string) error {
 	return err
 }
 
-func CopyFileRecursivelyToLocation(destinationDir string, sourceDir string) error {
-	err := filepathWalkDir(sourceDir, func(currentPath string, dirEntry fs.DirEntry, err error) error {
+func CopyFileRecursivelyToLocation(absoluteDestinationDir string, absoluteSourceDir string) error {
+	err := filepathWalkDir(absoluteSourceDir, func(currentPath string, dirEntry fs.DirEntry, err error) error {
 		if dirEntry == nil {
 			// There are several use cases when it can happen:
 			// 1. provided path doesn't exist
@@ -74,7 +77,10 @@ func CopyFileRecursivelyToLocation(destinationDir string, sourceDir string) erro
 			}
 			defer srcFile.Close()
 
-			relativePath := fmt.Sprintf("%s/%s", destinationDir, dirEntry.Name())
+			relativePath, err := getAndCreateRelativePath(currentPath, absoluteSourceDir, absoluteDestinationDir)
+			if err != nil {
+				return err
+			}
 			dstFile, err := osCreate(relativePath)
 			if err != nil {
 				return err
@@ -88,4 +94,16 @@ func CopyFileRecursivelyToLocation(destinationDir string, sourceDir string) erro
 	})
 
 	return err
+}
+
+func getAndCreateRelativePath(currentPath string, sourcePath string, destinationDir string) (string, error) {
+	newFilePath := strings.Replace(currentPath, sourcePath, "", 1)
+	relativePath := fmt.Sprintf("%s%s", destinationDir, newFilePath)
+	pathToFile := relativePath[:strings.LastIndex(relativePath, "/")]
+
+	if err := EnsureDirExistence(pathToFile); err != nil {
+		return "", err
+	}
+
+	return relativePath, nil
 }
