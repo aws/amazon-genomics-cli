@@ -29,7 +29,13 @@ func TestProjectYaml(t *testing.T) {
 					"testContext": {
 						MaxVCpus: 256,
 						Engines: []Engine{
-							{Type: "wdl", Engine: "cromwell"},
+							{
+								Type:   "wdl",
+								Engine: "cromwell",
+								Filesystem: Filesystem{
+									FSType: "S3",
+								},
+							},
 						},
 					},
 				},
@@ -61,6 +67,8 @@ contexts:
         engines:
             - type: wdl
               engine: cromwell
+              filesystem:
+                fsType: S3
 `,
 		},
 		"empty": {
@@ -86,13 +94,27 @@ schemaVersion: 0
 					"ctx1": {
 						MaxVCpus: 256,
 						Engines: []Engine{
-							{Type: "wdl", Engine: "miniwdl"},
+							{
+								Type:   "wdl",
+								Engine: "miniwdl",
+								Filesystem: Filesystem{
+									FSType:        "S3",
+									Configuration: FSConfig{FSProvisionedThroughput: 0},
+								},
+							},
 						},
 					},
 					"ctx2": {
 						MaxVCpus: 256,
 						Engines: []Engine{
-							{Type: "nextflow", Engine: "nextflow"},
+							{
+								Type:   "nextflow",
+								Engine: "nextflow",
+								Filesystem: Filesystem{
+									FSType:        "S3",
+									Configuration: FSConfig{FSProvisionedThroughput: 0},
+								},
+							},
 						},
 					},
 				},
@@ -122,11 +144,15 @@ contexts:
         engines:
             - type: wdl
               engine: miniwdl
+              filesystem:
+                fsType: S3
     ctx2:
         maxVCpus: 256
         engines:
             - type: nextflow
               engine: nextflow
+              filesystem:
+                fsType: S3
 `,
 		},
 	}
@@ -168,6 +194,27 @@ contexts:
 	})
 }
 
+func TestEngineDefaults(t *testing.T) {
+	const yamlStr = `
+name: DefaultTest
+schemaVersion: 1
+contexts:
+    context:
+        engines:
+            - type: wdl
+              engine: cromwell
+              filesystem:
+                fsType: EFS
+`
+
+	t.Run("EngineDefaults", func(t *testing.T) {
+		result := Engine{}
+		err := yaml.Unmarshal([]byte(yamlStr), &result)
+		require.NoError(t, err)
+		assert.Equal(t, result.Filesystem.Configuration.FSProvisionedThroughput, DefaultFSProvisionedThroughput)
+	})
+}
+
 func TestGetContext(t *testing.T) {
 	type args struct {
 		projectSpec Project
@@ -187,12 +234,26 @@ func TestGetContext(t *testing.T) {
 					Contexts: map[string]Context{
 						"ctx1": {
 							Engines: []Engine{
-								{Type: "wdl", Engine: "miniwdl"},
+								{
+									Type:   "wdl",
+									Engine: "miniwdl",
+									Filesystem: Filesystem{
+										FSType:        "S3",
+										Configuration: FSConfig{FSProvisionedThroughput: 0},
+									},
+								},
 							},
 						},
 						"ctx2": {
 							Engines: []Engine{
-								{Type: "nextflow", Engine: "nextflow"},
+								{
+									Type:   "nextflow",
+									Engine: "nextflow",
+									Filesystem: Filesystem{
+										FSType:        "S3",
+										Configuration: FSConfig{FSProvisionedThroughput: 0},
+									},
+								},
 							},
 						},
 					},
@@ -209,12 +270,26 @@ func TestGetContext(t *testing.T) {
 					Contexts: map[string]Context{
 						"ctx1": {
 							Engines: []Engine{
-								{Type: "wdl", Engine: "miniwdl"},
+								{
+									Type:   "wdl",
+									Engine: "miniwdl",
+									Filesystem: Filesystem{
+										FSType:        "S3",
+										Configuration: FSConfig{FSProvisionedThroughput: 0},
+									},
+								},
 							},
 						},
 						"ctx2": {
 							Engines: []Engine{
-								{Type: "nextflow", Engine: "nextflow"},
+								{
+									Type:   "nextflow",
+									Engine: "nextflow",
+									Filesystem: Filesystem{
+										FSType:        "S3",
+										Configuration: FSConfig{FSProvisionedThroughput: 0},
+									},
+								},
 							},
 						},
 					},
@@ -223,7 +298,14 @@ func TestGetContext(t *testing.T) {
 			},
 			expectedContext: Context{
 				Engines: []Engine{
-					{Type: "wdl", Engine: "miniwdl"},
+					{
+						Type:   "wdl",
+						Engine: "miniwdl",
+						Filesystem: Filesystem{
+							FSType:        "S3",
+							Configuration: FSConfig{FSProvisionedThroughput: 0},
+						},
+					},
 				},
 			},
 		},

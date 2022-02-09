@@ -46,6 +46,10 @@ export class ContextAppParameters {
    */
   public readonly engineName: string;
   /**
+   * Name of the filesystem to use.
+   */
+  public readonly filesystemType?: string;
+  /**
    * Name of the engine ECR image.
    */
   public readonly engineDesignation: string;
@@ -98,6 +102,7 @@ export class ContextAppParameters {
     this.readWriteBucketArns = getEnvStringListOrDefault(node, "READ_WRITE_BUCKET_ARNS");
 
     this.engineName = getEnvString(node, "ENGINE_NAME");
+    this.filesystemType = getEnvStringOrDefault(node, "FILESYSTEM_TYPE", this.getDefaultFilesystem());
     this.engineDesignation = getEnvString(node, "ENGINE_DESIGNATION");
     this.engineHealthCheckPath = getEnvStringOrDefault(node, "ENGINE_HEALTH_CHECK_PATH", "/engine/v1/status")!;
     this.callCachingEnabled = getEnvBoolOrDefault(node, "CALL_CACHING_ENABLED", true)!;
@@ -150,5 +155,23 @@ export class ContextAppParameters {
         ...additionalEnvVars,
       },
     };
+  }
+
+  public getDefaultFilesystem(): string {
+    let defFilesystem: string;
+    switch (this.engineName) {
+      case "cromwell":
+        defFilesystem = "S3";
+        break;
+      case "nextflow":
+        defFilesystem = "S3";
+        break;
+      case "miniwdl":
+        defFilesystem = "EFS";
+        break;
+      default:
+        throw Error(`Engine '${this.engineName}' is not supported`);
+    }
+    return defFilesystem;
   }
 }
