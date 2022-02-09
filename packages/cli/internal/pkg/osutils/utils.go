@@ -62,8 +62,8 @@ func EnsureDirExistence(dirPath string) error {
 	return err
 }
 
-func CopyFileRecursivelyToLocation(destinationDir string, sourceDir string) error {
-	err := filepathWalkDir(sourceDir, func(currentPath string, dirEntry fs.DirEntry, err error) error {
+func CopyFileRecursivelyToLocation(absoluteDestinationDir string, absoluteSourceDir string) error {
+	err := filepathWalkDir(absoluteSourceDir, func(currentPath string, dirEntry fs.DirEntry, err error) error {
 		if dirEntry == nil {
 			// There are several use cases when it can happen:
 			// 1. provided path doesn't exist
@@ -77,7 +77,7 @@ func CopyFileRecursivelyToLocation(destinationDir string, sourceDir string) erro
 			}
 			defer srcFile.Close()
 
-			relativePath, err := getAndCreateRelativePath(currentPath, sourceDir, destinationDir)
+			relativePath, err := getAndCreateRelativePath(currentPath, absoluteSourceDir, absoluteDestinationDir)
 			if err != nil {
 				return err
 			}
@@ -97,7 +97,7 @@ func CopyFileRecursivelyToLocation(destinationDir string, sourceDir string) erro
 }
 
 func getAndCreateRelativePath(currentPath string, sourcePath string, destinationDir string) (string, error) {
-	newFilePath := strings.ReplaceAll(currentPath, sourcePath, "")
+	newFilePath := strings.Replace(currentPath, sourcePath, "", 1)
 	relativePath := fmt.Sprintf("%s%s", destinationDir, newFilePath)
 	pathToFile := relativePath[:strings.LastIndex(relativePath, "/")]
 

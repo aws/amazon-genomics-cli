@@ -196,6 +196,22 @@ func TestGetAndCreateRelativePath(t *testing.T) {
 			errMessage:     "",
 			expectedOutput: "/some/other/path/subfolder/file.ext",
 		},
+		"Duplicate sub paths aren't replaced": {
+			setupMocks: func(mocksUtils MockUtils) {
+				osMkdirAll = mocksUtils.mockOs.MkdirAll
+				osStat = mocksUtils.mockOs.Stat
+				osIsNotExist = mocksUtils.mockOs.IsNotExist
+				doesNotExist := errors.New("Some error")
+				mocksUtils.mockOs.EXPECT().Stat("/some/other/path/some/path/to/folder/subfolder").Return(nil, doesNotExist).Times(1)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
+				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path/some/path/to/folder/subfolder", gomock.Any()).Return(nil).Times(1)
+			},
+			currentPath:    "/some/path/to/folder/some/path/to/folder/subfolder/file.ext",
+			sourcePath:     "/some/path/to/folder",
+			destinationDir: "/some/other/path",
+			errMessage:     "",
+			expectedOutput: "/some/other/path/some/path/to/folder/subfolder/file.ext",
+		},
 		"fails to create folder": {
 			setupMocks: func(mocksUtils MockUtils) {
 				osMkdirAll = mocksUtils.mockOs.MkdirAll
