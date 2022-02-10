@@ -94,7 +94,7 @@ data:
 ```
 
 You can use S3 prefixes to be more restrictive about access to data. For example, if you want to allow access to the 
-`foo` folder or `my-bucket` and it's sub-folders you would declare the location as:
+`foo` folder of `my-bucket` and it's sub-folders you would declare the location as:
 
 ```yaml
 data:
