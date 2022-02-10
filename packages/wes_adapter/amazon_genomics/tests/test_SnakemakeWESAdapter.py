@@ -74,11 +74,14 @@ def test_get_child_tasks_in_progress(
 
 def test_get_task_output(aws_s3: S3Client, adapter: SnakemakeWESAdapter):
     job = generate_batch_job()
-    job_output = {"workflow.output": "somefile.zip"}
+    job_output = "somefile.zip"
 
     aws_s3.get_object.return_value = mock_s3_object(job_output)
 
-    assert adapter.get_task_outputs(job) == {"id": job_id, "outputs": job_output}
+    assert adapter.get_task_outputs(job) == {
+        "id": job_id,
+        "outputs": {"snakemake_output": ['"somefile.zip"']},
+    }
 
 
 def test_get_task_output_no_file(aws_s3: S3Client, adapter: SnakemakeWESAdapter):
@@ -87,7 +90,10 @@ def test_get_task_output_no_file(aws_s3: S3Client, adapter: SnakemakeWESAdapter)
         error_response={"Error": {"Code": "NoSuchKey"}}, operation_name="GetObject"
     )
 
-    assert adapter.get_task_outputs(job) == {"id": job_id, "outputs": None}
+    assert adapter.get_task_outputs(job) == {
+        "id": job_id,
+        "outputs": {"snakemake_output": None},
+    }
 
 
 def test_get_task_output_exception(aws_s3: S3Client, adapter: SnakemakeWESAdapter):

@@ -106,8 +106,7 @@ class SnakemakeWESAdapter(BatchAdapter):
 
     def get_outputs_from_s3_file(self, bucket, output_file_key):
         try:
-            output_object = self.aws_s3.get_object(
-                Bucket=bucket, Key=output_file_key)
+            output_object = self.aws_s3.get_object(Bucket=bucket, Key=output_file_key)
             output = []
             for line in output_object["Body"].iter_lines():
                 output.append(line.decode("utf-8"))
