@@ -50,7 +50,7 @@ func (mr *MockWorkflowManagerMockRecorder) GetRunLog(runId interface{}) *gomock.
 }
 
 // GetRunLogData mocks base method.
-func (m *MockWorkflowManager) GetRunLogData(runId string, dataUrl string) (str, error) {
+func (m *MockWorkflowManager) GetRunLogData(runId string, dataUrl string) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetRunLogData", runId, dataUrl)
 	ret0, _ := ret[0].(string)
