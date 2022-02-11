@@ -4,7 +4,7 @@ import { StringParameter, IParameter } from "aws-cdk-lib/aws-ssm";
 import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
-import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME, WES_KEY_PARAMATER_NAME, WES_BUCKET_NAME } from "../constants";
+import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME, WES_KEY_PARAMETER_NAME, WES_BUCKET_NAME } from "../constants";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import * as path from "path";
 import { homedir } from "os";
@@ -88,7 +88,7 @@ export class CoreStack extends Stack {
 
     new CfnOutput(this, WES_BUCKET_NAME, { value: asset.s3BucketName, exportName: WES_BUCKET_NAME });
     // key cannot be a cfn output as it would block updates if some contexts are already deployed
-    this.addParameter({ name: WES_KEY_PARAMATER_NAME, value: asset.s3ObjectKey, description: "The s3 key for the wes_adapter zip file" });
+    this.addParameter({ name: WES_KEY_PARAMETER_NAME, value: asset.s3ObjectKey, description: "The s3 key for the wes_adapter zip file" });
 
     this.addParameter({ name: VPC_PARAMETER_NAME, value: this.vpc.vpcId, description: `VPC ID for ${PRODUCT_NAME}` });
     props.parameters?.forEach((parameterProps) => this.addParameter(parameterProps));

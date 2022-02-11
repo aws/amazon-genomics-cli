@@ -4,7 +4,7 @@ import { Construct } from "constructs";
 import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { IRole } from "aws-cdk-lib/aws-iam";
 import { PythonFunction } from "@aws-cdk/aws-lambda-python-alpha";
-import { WES_BUCKET_NAME, WES_KEY_PARAMATER_NAME } from "../../constants";
+import { WES_BUCKET_NAME, WES_KEY_PARAMETER_NAME } from "../../constants";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { getCommonParameter } from "../../util";
@@ -34,7 +34,7 @@ export abstract class EngineConstruct extends Construct {
     const region: string = process.env.CDK_DEFAULT_REGION!;
     return new Function(scope, id, {
       vpc,
-      code: Code.fromBucket(Bucket.fromBucketName(scope, "WesAdapter", Fn.importValue(WES_BUCKET_NAME)), getCommonParameter(this, WES_KEY_PARAMATER_NAME)),
+      code: Code.fromBucket(Bucket.fromBucketName(scope, "WesAdapter", Fn.importValue(WES_BUCKET_NAME)), getCommonParameter(this, WES_KEY_PARAMETER_NAME)),
       handler: "index.handler",
       runtime: Runtime.PYTHON_3_9,
       environment,
