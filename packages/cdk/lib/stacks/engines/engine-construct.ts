@@ -30,8 +30,6 @@ export abstract class EngineConstruct extends Construct {
   }
 
   public renderPythonLambda(scope: Construct, id: string, vpc: IVpc, role: IRole, environment: Record<string, string>): PythonFunction {
-    const account: string = process.env.CDK_DEFAULT_ACCOUNT!;
-    const region: string = process.env.CDK_DEFAULT_REGION!;
     return new Function(scope, id, {
       vpc,
       code: Code.fromBucket(Bucket.fromBucketName(scope, "WesAdapter", Fn.importValue(WES_BUCKET_NAME)), getCommonParameter(this, WES_KEY_PARAMETER_NAME)),
