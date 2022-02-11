@@ -8,6 +8,8 @@ export const USER_ID_TAG_KEY = `${APP_NAME}-user-id`;
 export const USER_EMAIL_TAG_KEY = `${APP_NAME}-user-email`;
 export const AGC_VERSION_KEY = `${APP_NAME}-version`;
 export const VPC_PARAMETER_NAME = "vpc";
+export const WES_KEY_PARAMETER_NAME = "WesAdapterZipKeyParameter";
+export const WES_BUCKET_NAME = "WesAdapterZipBucket";
 
 export const ENGINE_CROMWELL = "cromwell";
 export const ENGINE_MINIWDL = "miniwdl";
