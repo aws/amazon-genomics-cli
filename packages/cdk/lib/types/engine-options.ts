@@ -1,6 +1,7 @@
 import { RoleProps } from "aws-cdk-lib/aws-iam";
 import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { ContextAppParameters } from "../env";
+import { Size } from "aws-cdk-lib";
 
 export type PolicyOptions = Pick<RoleProps, "inlinePolicies" | "managedPolicies">;
 
@@ -15,6 +16,10 @@ export interface EngineOptions {
    * VPC to run resources in.
    */
   readonly vpc: IVpc;
+  /**
+   * Filesystem provisioned throughput to use for EFS.
+   */
+  readonly iops: Size;
   /**
    * Parameters determined by the context.
    */

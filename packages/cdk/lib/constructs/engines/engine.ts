@@ -1,8 +1,8 @@
 import { ILogGroup, LogGroup } from "aws-cdk-lib/aws-logs";
 import { Construct } from "constructs";
 import { IVpc } from "aws-cdk-lib/aws-ec2";
-import { AccessPoint, FileSystem, PerformanceMode } from "aws-cdk-lib/aws-efs";
-import { RemovalPolicy } from "aws-cdk-lib";
+import { AccessPoint, FileSystem, PerformanceMode, ThroughputMode } from "aws-cdk-lib/aws-efs";
+import { RemovalPolicy, Size } from "aws-cdk-lib";
 import { MountPoint, Volume } from "aws-cdk-lib/aws-ecs";
 
 export interface EngineProps {
@@ -59,9 +59,11 @@ export class Engine extends Construct {
     });
   }
 
-  protected createFileSystem(vpc: IVpc): FileSystem {
+  protected createFileSystem(vpc: IVpc, iops: Size): FileSystem {
     return new FileSystem(this, "FileSystem", {
       vpc: vpc,
+      provisionedThroughputPerSecond: iops,
+      throughputMode: ThroughputMode.PROVISIONED,
       encrypted: true,
       performanceMode: PerformanceMode.MAX_IO,
       removalPolicy: RemovalPolicy.DESTROY,

@@ -98,8 +98,8 @@ schemaVersion: 0
 								Type:   "wdl",
 								Engine: "miniwdl",
 								Filesystem: Filesystem{
-									FSType:        "S3",
-									Configuration: FSConfig{FSProvisionedThroughput: 0},
+									FSType:        "EFS",
+									Configuration: FSConfig{FSProvisionedThroughput: 50},
 								},
 							},
 						},
@@ -111,9 +111,17 @@ schemaVersion: 0
 								Type:   "nextflow",
 								Engine: "nextflow",
 								Filesystem: Filesystem{
-									FSType:        "S3",
-									Configuration: FSConfig{FSProvisionedThroughput: 0},
+									FSType: "S3",
 								},
+							},
+						},
+					},
+					"ctx3": {
+						MaxVCpus: 256,
+						Engines: []Engine{
+							{
+								Type:   "nextflow",
+								Engine: "nextflow",
 							},
 						},
 					},
@@ -145,7 +153,9 @@ contexts:
             - type: wdl
               engine: miniwdl
               filesystem:
-                fsType: S3
+                fsType: EFS
+                configuration:
+                    provisionedThroughput: 50
     ctx2:
         maxVCpus: 256
         engines:
@@ -153,6 +163,11 @@ contexts:
               engine: nextflow
               filesystem:
                 fsType: S3
+    ctx3:
+        maxVCpus: 256
+        engines:
+            - type: nextflow
+              engine: nextflow
 `,
 		},
 	}
@@ -204,14 +219,14 @@ contexts:
             - type: wdl
               engine: cromwell
               filesystem:
-                fsType: EFS
+                fsType: S3
 `
 
 	t.Run("EngineDefaults", func(t *testing.T) {
-		result := Engine{}
+		result := Filesystem{}
 		err := yaml.Unmarshal([]byte(yamlStr), &result)
 		require.NoError(t, err)
-		assert.Equal(t, result.Filesystem.Configuration.FSProvisionedThroughput, DefaultFSProvisionedThroughput)
+		assert.Equal(t, result.Configuration.FSProvisionedThroughput, DefaultFSProvisionedThroughput)
 	})
 }
 
@@ -238,8 +253,8 @@ func TestGetContext(t *testing.T) {
 									Type:   "wdl",
 									Engine: "miniwdl",
 									Filesystem: Filesystem{
-										FSType:        "S3",
-										Configuration: FSConfig{FSProvisionedThroughput: 0},
+										FSType:        "EFS",
+										Configuration: FSConfig{FSProvisionedThroughput: 1},
 									},
 								},
 							},
@@ -250,8 +265,7 @@ func TestGetContext(t *testing.T) {
 									Type:   "nextflow",
 									Engine: "nextflow",
 									Filesystem: Filesystem{
-										FSType:        "S3",
-										Configuration: FSConfig{FSProvisionedThroughput: 0},
+										FSType: "S3",
 									},
 								},
 							},
@@ -274,8 +288,8 @@ func TestGetContext(t *testing.T) {
 									Type:   "wdl",
 									Engine: "miniwdl",
 									Filesystem: Filesystem{
-										FSType:        "S3",
-										Configuration: FSConfig{FSProvisionedThroughput: 0},
+										FSType:        "EFS",
+										Configuration: FSConfig{FSProvisionedThroughput: 1},
 									},
 								},
 							},
@@ -286,8 +300,7 @@ func TestGetContext(t *testing.T) {
 									Type:   "nextflow",
 									Engine: "nextflow",
 									Filesystem: Filesystem{
-										FSType:        "S3",
-										Configuration: FSConfig{FSProvisionedThroughput: 0},
+										FSType: "S3",
 									},
 								},
 							},
@@ -302,8 +315,8 @@ func TestGetContext(t *testing.T) {
 						Type:   "wdl",
 						Engine: "miniwdl",
 						Filesystem: Filesystem{
-							FSType:        "S3",
-							Configuration: FSConfig{FSProvisionedThroughput: 0},
+							FSType:        "EFS",
+							Configuration: FSConfig{FSProvisionedThroughput: 1},
 						},
 					},
 				},

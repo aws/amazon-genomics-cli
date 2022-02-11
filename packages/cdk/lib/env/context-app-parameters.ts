@@ -46,9 +46,13 @@ export class ContextAppParameters {
    */
   public readonly engineName: string;
   /**
-   * Name of the filesystem to use.
+   * Name of the filesystem type to use (e.g. EFS, S3).
    */
   public readonly filesystemType?: string;
+  /**
+   * Name of the filesystem type to use (e.g. EFS, S3).
+   */
+  public readonly fsProvisionedThroughput?: number;
   /**
    * Name of the engine ECR image.
    */
@@ -103,6 +107,7 @@ export class ContextAppParameters {
 
     this.engineName = getEnvString(node, "ENGINE_NAME");
     this.filesystemType = getEnvStringOrDefault(node, "FILESYSTEM_TYPE", this.getDefaultFilesystem());
+    this.fsProvisionedThroughput = getEnvNumber(node, "FS_PROVISIONED_THROUGHPUT");
     this.engineDesignation = getEnvString(node, "ENGINE_DESIGNATION");
     this.engineHealthCheckPath = getEnvStringOrDefault(node, "ENGINE_HEALTH_CHECK_PATH", "/engine/v1/status")!;
     this.callCachingEnabled = getEnvBoolOrDefault(node, "CALL_CACHING_ENABLED", true)!;
@@ -167,6 +172,9 @@ export class ContextAppParameters {
         defFilesystem = "S3";
         break;
       case "miniwdl":
+        defFilesystem = "EFS";
+        break;
+      case "snakemake":
         defFilesystem = "EFS";
         break;
       default:

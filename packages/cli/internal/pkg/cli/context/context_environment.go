@@ -17,10 +17,12 @@ type contextEnvironment struct {
 	UserEmail        string
 	OutputBucketName string
 
-	EngineName            string
-	EngineDesignation     string
-	EngineRepository      string
-	EngineHealthCheckPath string
+	EngineName              string
+	FilesystemType          string
+	FSProvisionedThroughput int
+	EngineDesignation       string
+	EngineRepository        string
+	EngineHealthCheckPath   string
 
 	AdapterName        string
 	AdapterDesignation string
@@ -44,10 +46,12 @@ func (input contextEnvironment) ToEnvironmentList() []string {
 		"OUTPUT_BUCKET": input.OutputBucketName,
 		"AGC_VERSION":   version.Version,
 
-		"ENGINE_NAME":              input.EngineName,
-		"ENGINE_DESIGNATION":       input.EngineDesignation,
-		"ENGINE_REPOSITORY":        input.EngineRepository,
-		"ENGINE_HEALTH_CHECK_PATH": input.EngineHealthCheckPath,
+		"ENGINE_NAME":               input.EngineName,
+		"FILESYSTEM_TYPE":           input.FilesystemType,
+		"FS_PROVISIONED_THROUGHPUT": strconv.Itoa(input.FSProvisionedThroughput),
+		"ENGINE_DESIGNATION":        input.EngineDesignation,
+		"ENGINE_REPOSITORY":         input.EngineRepository,
+		"ENGINE_HEALTH_CHECK_PATH":  input.EngineHealthCheckPath,
 
 		"ADAPTER_NAME":        input.AdapterName,
 		"ADAPTER_DESIGNATION": input.AdapterDesignation,

@@ -5,10 +5,12 @@ import { createEcrImage } from "../../../util";
 import { Batch } from "../../batch";
 import { Engine, EngineProps } from "../engine";
 import { EngineJobDefinition } from "../engine-job-definition";
+import { Size } from "aws-cdk-lib";
 
 export interface MiniWdlEngineProps extends EngineProps {
   readonly engineBatch: Batch;
   readonly workerBatch: Batch;
+  readonly iops: Size;
 }
 
 const MINIWDL_IMAGE_DESIGNATION = "miniwdl";
@@ -21,8 +23,8 @@ export class MiniWdlEngine extends Engine {
   constructor(scope: Construct, id: string, props: MiniWdlEngineProps) {
     super(scope, id);
 
-    const { vpc, rootDirS3Uri, engineBatch, workerBatch } = props;
-    const fileSystem = this.createFileSystem(vpc);
+    const { vpc, iops, rootDirS3Uri, engineBatch, workerBatch } = props;
+    const fileSystem = this.createFileSystem(vpc, iops);
     const accessPoint = this.createAccessPoint(fileSystem);
 
     fileSystem.connections.allowDefaultPortFromAnyIpv4();

@@ -3,7 +3,7 @@ package spec
 import "fmt"
 
 const DefaultMaxVCpus = 256
-const DefaultFSProvisionedThroughput = 0
+const DefaultFSProvisionedThroughput = 1
 
 type FSConfig struct {
 	FSProvisionedThroughput int `yaml:"provisionedThroughput"`
@@ -34,10 +34,13 @@ func (filesystem *Filesystem) UnmarshalYAML(unmarshal func(interface{}) error) e
 
 	*filesystem = Filesystem(defaults)
 	switch filesystem.FSType {
-	case "S3", "EFS", "":
+	case "EFS", "":
+		return nil
+	case "S3":
+		filesystem.Configuration.FSProvisionedThroughput = 0
 		return nil
 	default:
-		return fmt.Errorf("filesystem %s is invalid. Options are `S3` and `EFS`", filesystem.FSType)
+		return fmt.Errorf("filesystem '%s' is invalid. Options are `S3` and `EFS`", filesystem.FSType)
 	}
 }
 
