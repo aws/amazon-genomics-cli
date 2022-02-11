@@ -1,5 +1,6 @@
 /.idea/
 /output/
+*.vscode
 codebuild_build.sh
 .DS_Store
 venv
