@@ -48,7 +48,7 @@ jobs:
           working-directory: packages/cli/
 
           # Optional: golangci-lint command line arguments.
-          # args: --issues-exit-code=0
+          args: --timeout=5m0s
 
           # Optional: show only new issues if it's a pull request. The default value is `false`.
           # only-new-issues: true

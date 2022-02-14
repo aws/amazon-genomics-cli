@@ -3,12 +3,16 @@ package spec
 import (
 	"bytes"
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/yaml.v3"
 )
+
+var readFile = ioutil.ReadFile
+var jsonUnmarshal = json.Unmarshal
 
 //go:embed project_schema.json
 var projectSchema string
@@ -36,6 +40,19 @@ func FromYaml(specFilePath string) (Project, error) {
 		return Project{}, err
 	}
 	return projectSpec, nil
+}
+
+func FromJson(manifestFilePath string) (Manifest, error) {
+	bytes, err := readFile(manifestFilePath)
+	if err != nil {
+		return Manifest{}, err
+	}
+
+	var manifest Manifest
+	if err := jsonUnmarshal(bytes, &manifest); err != nil {
+		return Manifest{}, err
+	}
+	return manifest, nil
 }
 
 func ValidateProject(yamlBytes []byte) error {

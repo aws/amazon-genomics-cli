@@ -119,14 +119,13 @@ func (o *destroyContextOpts) validateContexts() error {
 
 func (o *destroyContextOpts) destroyContexts(contexts []string) []destroyResult {
 	results := make([]destroyResult, len(contexts))
-	for i, contextName := range contexts {
-		log.Debug().Msgf("Destroying context '%s'", contextName)
-		// TODO: Run in parallel once CDK resolves race condition causing context bleed
-		//       https://github.com/aws/aws-cdk/issues/14350
-		func(ctxManager context.Interface, i int, contextName string) {
-			results[i].contextName = contextName
-			results[i].err = ctxManager.Destroy(contextName, true)
-		}(o.ctxManagerFactory(), i, contextName)
+	destroyInfos := o.ctxManagerFactory().Destroy(contexts)
+
+	for index, destroyInfo := range destroyInfos {
+		results[index] = destroyResult{
+			err:         destroyInfo.Err,
+			contextName: destroyInfo.Context,
+		}
 	}
 	return results
 }

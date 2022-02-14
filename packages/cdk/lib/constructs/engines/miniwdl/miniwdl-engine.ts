@@ -1,12 +1,10 @@
-import { Construct, RemovalPolicy } from "monocdk";
-import { JobDefinition, PlatformCapabilities } from "monocdk/aws-batch";
-import { IVpc } from "monocdk/aws-ec2";
-import { AccessPoint, FileSystem, PerformanceMode } from "monocdk/aws-efs";
-import { FargatePlatformVersion } from "monocdk/aws-ecs";
+import { JobDefinition, PlatformCapabilities } from "@aws-cdk/aws-batch-alpha";
+import { FargatePlatformVersion } from "aws-cdk-lib/aws-ecs";
+import { Construct } from "constructs";
+import { createEcrImage } from "../../../util";
 import { Batch } from "../../batch";
 import { Engine, EngineProps } from "../engine";
 import { EngineJobDefinition } from "../engine-job-definition";
-import { createEcrImage } from "../../../util";
 
 export interface MiniWdlEngineProps extends EngineProps {
   readonly engineBatch: Batch;
@@ -17,6 +15,7 @@ const MINIWDL_IMAGE_DESIGNATION = "miniwdl";
 
 export class MiniWdlEngine extends Engine {
   readonly headJobDefinition: JobDefinition;
+  private readonly engineMemoryMiB = 4096;
   private readonly volumeName = "efs";
 
   constructor(scope: Construct, id: string, props: MiniWdlEngineProps) {
@@ -34,6 +33,7 @@ export class MiniWdlEngine extends Engine {
       logGroup: this.logGroup,
       platformCapabilities: [PlatformCapabilities.FARGATE],
       container: {
+        memoryLimitMiB: this.engineMemoryMiB,
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
         image: createEcrImage(this, MINIWDL_IMAGE_DESIGNATION),
@@ -44,50 +44,9 @@ export class MiniWdlEngine extends Engine {
           MINIWDL__AWS__TASK_QUEUE: workerBatch.jobQueue.jobQueueArn,
           MINIWDL_S3_OUTPUT_URI: rootDirS3Uri,
         },
-        volumes: [this.toVolume(fileSystem, accessPoint)],
-        mountPoints: [this.toMountPoint("/mnt/efs")],
+        volumes: [this.toVolume(fileSystem, accessPoint, this.volumeName)],
+        mountPoints: [this.toMountPoint("/mnt/efs", this.volumeName)],
       },
-    });
-  }
-
-  private toMountPoint(containerPath: string) {
-    return {
-      sourceVolume: this.volumeName,
-      containerPath: containerPath,
-      readOnly: false,
-    };
-  }
-
-  private toVolume(fileSystem: FileSystem, accessPoint: AccessPoint) {
-    return {
-      name: this.volumeName,
-      efsVolumeConfiguration: {
-        fileSystemId: fileSystem.fileSystemId,
-        transitEncryption: "ENABLED",
-        authorizationConfig: {
-          accessPointId: accessPoint.accessPointId,
-          iam: "ENABLED",
-        },
-      },
-    };
-  }
-
-  private createAccessPoint(fileSystem: FileSystem) {
-    return new AccessPoint(this, "AccessPoint", {
-      fileSystem: fileSystem,
-      posixUser: {
-        uid: "0",
-        gid: "0",
-      },
-    });
-  }
-
-  private createFileSystem(vpc: IVpc) {
-    return new FileSystem(this, "FileSystem", {
-      vpc: vpc,
-      encrypted: true,
-      performanceMode: PerformanceMode.MAX_IO,
-      removalPolicy: RemovalPolicy.DESTROY,
     });
   }
 }

@@ -1,17 +1,22 @@
 package context
 
 import (
+	"fmt"
 	"net/url"
 	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ssm"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/rs/zerolog/log"
 )
@@ -53,17 +58,44 @@ type listProps struct {
 }
 
 type Manager struct {
-	Cdk     cdk.Interface
-	Cfn     cfn.Interface
-	Project storage.ProjectClient
-	Config  storage.ConfigClient
-	Ssm     ssm.Interface
+	Cdk       cdk.Interface
+	Cfn       cfn.Interface
+	Project   storage.ProjectClient
+	Config    storage.ConfigClient
+	Ssm       ssm.Interface
+	ecrClient ecr.Interface
+	imageRefs map[string]ecr.ImageReference
+	region    string
 
 	baseProps
 	contextProps
 	infoProps
 	listProps
-	err error
+	err             error
+	progressResults []ProgressResult
+}
+
+type ProgressResult struct {
+	Context string
+	Outputs []string
+	Err     error
+}
+
+var displayProgressBar = cdk.DisplayProgressBar
+var showExecution = cdk.ShowExecution
+
+func (m *Manager) getEnvironmentVars() []string {
+	var environmentVars []string
+	for imageName := range m.imageRefs {
+		environmentVars = append(environmentVars,
+			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", imageName, m.imageRefs[imageName].RegistryId),
+			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.region),
+			fmt.Sprintf("ECR_%s_TAG=%s", imageName, m.imageRefs[imageName].ImageTag),
+			fmt.Sprintf("ECR_%s_REPOSITORY=%s", imageName, m.imageRefs[imageName].RepositoryName),
+		)
+	}
+
+	return environmentVars
 }
 
 func NewManager(profile string) *Manager {
@@ -71,7 +103,7 @@ func NewManager(profile string) *Manager {
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to create Project client for context manager")
 	}
-	homeDir, err := config.DetermineHomeDir()
+	homeDir, err := osutils.DetermineHomeDir()
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to determine home directory")
 	}
@@ -86,6 +118,9 @@ func NewManager(profile string) *Manager {
 		Config:    configClient,
 		Ssm:       aws.SsmClient(profile),
 		baseProps: baseProps{homeDir: homeDir},
+		imageRefs: environment.CommonImages,
+		ecrClient: aws.EcrClient(profile),
+		region:    aws.Region(profile),
 	}
 }
 
@@ -158,26 +193,6 @@ func (m *Manager) setOutputBucket() {
 	}
 }
 
-func (m *Manager) setTaskContext(contextName string) {
-	if m.err != nil {
-		return
-	}
-
-	m.contextEnv = contextEnvironment{
-		ProjectName:          m.projectSpec.Name,
-		ContextName:          contextName,
-		UserId:               m.userId,
-		UserEmail:            m.userEmail,
-		OutputBucketName:     m.outputBucket,
-		ArtifactBucketName:   m.artifactBucket,
-		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
-		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
-		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
-		MaxVCpus:             m.contextSpec.MaxVCpus,
-		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
-	}
-}
-
 func (m *Manager) setContextEnv(contextName string) {
 	if m.err != nil {
 		return
@@ -207,6 +222,31 @@ func (m *Manager) setContextEnv(contextName string) {
 		EngineDesignation: context.Engines[0].Engine,
 	}
 }
+func (m *Manager) validateImage() {
+	if m.err != nil {
+		return
+	}
+
+	imageRef, imageRefExists := m.imageRefs[strings.ToUpper(m.contextEnv.EngineName)]
+
+	// Need to make a copy to override the region to use the region from the customer's profile
+	imageRef = ecr.ImageReference{
+		RegistryId:     imageRef.RegistryId,
+		Region:         m.region,
+		RepositoryName: imageRef.RepositoryName,
+		ImageTag:       imageRef.ImageTag,
+	}
+
+	if !imageRefExists {
+		m.err = actionableerror.New(
+			fmt.Errorf("the engine name in your context file '%s' does not exist", m.contextEnv.EngineName),
+			"Please check your agc config file for the engine you have supplied",
+		)
+		return
+	}
+
+	m.err = m.ecrClient.VerifyImageExists(imageRef)
+}
 
 func (m *Manager) readConfig() {
 	if m.err != nil {
@@ -217,4 +257,26 @@ func (m *Manager) readConfig() {
 		return
 	}
 	m.userEmail, m.err = m.Config.GetUserEmailAddress()
+}
+
+func (m *Manager) readProjectInformation() {
+	if m.err != nil {
+		return
+	}
+	m.readProjectSpec()
+	m.readConfig()
+}
+
+func (m *Manager) processExecution(allProgressStreams []cdk.ProgressStream, description string) {
+	if len(allProgressStreams) == 0 {
+		return
+	}
+
+	var cdkResults []cdk.Result
+	if logging.Verbose {
+		cdkResults = showExecution(allProgressStreams)
+	} else {
+		cdkResults = displayProgressBar(description, allProgressStreams)
+	}
+	m.progressResults = append(m.progressResults, cdkResultsToContextResults(cdkResults)...)
 }

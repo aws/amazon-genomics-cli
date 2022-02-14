@@ -1,5 +1,5 @@
 VERSION := $(shell git describe --always --tags)
-PACKAGES := $(shell ls -d ${PWD}/packages/*/ | grep -v -E "(vendor|api)")
+PACKAGES := $(shell ls -d ${PWD}/packages/*/ | grep -v -E "(vendor|api|engines)")
 
 .PHONY: test build build-cli release release-cli release-cdk $(PACKAGES)
 
@@ -19,7 +19,7 @@ build: build-cli
 build-cli:
 	(cd packages/cli; $(MAKE) build)
 
-release: release-cli release-cdk
+release: release-cli release-cdk release-wes
 	./scripts/package-release.sh
 
 release-cli:
@@ -27,6 +27,9 @@ release-cli:
 
 release-cdk:
 	(cd packages/cdk; $(MAKE) release)
+
+release-wes:
+	(cd packages/wes_adapter; $(MAKE) release)
 
 init:
 	go env -w GOPROXY=direct

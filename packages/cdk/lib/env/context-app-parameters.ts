@@ -1,6 +1,6 @@
 import { getEnvNumber, getEnvBoolOrDefault, getEnvString, getEnvStringListOrDefault, getEnvStringOrDefault } from "./";
-import { InstanceType } from "monocdk/aws-ec2";
-import { ConstructNode } from "monocdk";
+import { InstanceType } from "aws-cdk-lib/aws-ec2";
+import { Node } from "constructs";
 import { ServiceContainer } from "../types";
 
 const oneCpuUnit = 1024;
@@ -79,8 +79,12 @@ export class ContextAppParameters {
    * The types of EC2 instances that may be launched in the compute environment.
    */
   public readonly instanceTypes?: InstanceType[];
+  /**
+   * AGC version being deployed.
+   */
+  public readonly agcVersion: string;
 
-  constructor(node: ConstructNode) {
+  constructor(node: Node) {
     const instanceTypeStrings = getEnvStringListOrDefault(node, "BATCH_COMPUTE_INSTANCE_TYPES");
 
     this.projectName = getEnvString(node, "PROJECT");
@@ -104,6 +108,8 @@ export class ContextAppParameters {
     this.maxVCpus = getEnvNumber(node, "MAX_V_CPUS");
     this.requestSpotInstances = getEnvBoolOrDefault(node, "REQUEST_SPOT_INSTANCES", false)!;
     this.instanceTypes = instanceTypeStrings ? instanceTypeStrings.map((instanceType) => new InstanceType(instanceType.trim())) : undefined;
+
+    this.agcVersion = getEnvString(node, "AGC_VERSION");
   }
 
   public getContextBucketPath(): string {

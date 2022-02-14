@@ -1,20 +1,18 @@
-import { Repository } from "monocdk/aws-ecr";
-import { CloudMapOptions, ContainerImage, LogDriver, TaskDefinition } from "monocdk/aws-ecs";
-import { StringParameter } from "monocdk/aws-ssm";
+import { Repository } from "aws-cdk-lib/aws-ecr";
+import { CloudMapOptions, ContainerImage, LogDriver, TaskDefinition } from "aws-cdk-lib/aws-ecs";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import { Maybe, ServiceContainer } from "../types";
-import { Arn, Construct, ConstructNode, Stack } from "monocdk";
+import { Arn, Stack } from "aws-cdk-lib";
+import { Construct, Node } from "constructs";
 import { APP_NAME } from "../constants";
 import { SecureService } from "../constructs";
-import { Protocol } from "monocdk/aws-elasticloadbalancingv2";
-import { IVpc } from "monocdk/aws-ec2";
-import { IRole } from "monocdk/aws-iam";
-import { LogConfiguration, LogDriver as BatchLogDriver } from "monocdk/aws-batch";
-import { ILogGroup } from "monocdk/aws-logs";
-import { PythonFunction } from "monocdk/aws-lambda-python";
-import { Runtime } from "monocdk/aws-lambda";
-import { Duration } from "monocdk";
+import { Protocol } from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import { IVpc } from "aws-cdk-lib/aws-ec2";
+import { IRole } from "aws-cdk-lib/aws-iam";
+import { LogConfiguration, LogDriver as BatchLogDriver } from "@aws-cdk/aws-batch-alpha";
+import { ILogGroup } from "aws-cdk-lib/aws-logs";
 
-export const getContext = (node: ConstructNode, key: string): string => {
+export const getContext = (node: Node, key: string): string => {
   const context = getContextOrDefault(node, key, undefined);
   if (!context) {
     throw Error(`Context cannot be null for key '${key}'`);
@@ -22,7 +20,7 @@ export const getContext = (node: ConstructNode, key: string): string => {
   return context;
 };
 
-export const getContextOrDefault = <T extends Maybe<string>>(node: ConstructNode, key: string, defaultValue?: T): T => {
+export const getContextOrDefault = <T extends Maybe<string>>(node: Node, key: string, defaultValue?: T): T => {
   const value = node.tryGetContext(key);
   return !value || value == "" ? defaultValue : value;
 };
@@ -36,11 +34,11 @@ export const getProjectParameter = (scope: Construct, project: string, keySuffix
 };
 
 export const createEcrImage = (scope: Construct, designation: string): ContainerImage => {
-  const propertyPrefix = `${designation}/ecr-repo`;
-  const accountId = getCommonParameter(scope, `${propertyPrefix}/account`);
-  const region = getCommonParameter(scope, `${propertyPrefix}/region`);
-  const tag = getCommonParameter(scope, `${propertyPrefix}/tag`);
-  const repositoryName = getCommonParameter(scope, `${propertyPrefix}/repository`);
+  const engineName = designation.toUpperCase();
+  const accountId = getContext(scope.node, `ECR_${engineName}_ACCOUNT_ID`);
+  const region = getContext(scope.node, `ECR_${engineName}_REGION`);
+  const tag = getContext(scope.node, `ECR_${engineName}_TAG`);
+  const repositoryName = getContext(scope.node, `ECR_${engineName}_REPOSITORY`);
   const ecrArn = `arn:aws:ecr:${region}:${accountId}:repository/${repositoryName}`;
   const repository = Repository.fromRepositoryAttributes(scope, repositoryName, {
     repositoryName,
@@ -110,20 +108,7 @@ export function renderBatchLogConfiguration(scope: Construct, logGroup: ILogGrou
 export function batchArn(scope: Construct, resource: string, resourcePrefix = "*"): string {
   return Arn.format({ resource: `${resource}/${resourcePrefix}`, service: "batch" }, Stack.of(scope));
 }
-export const renderPythonLambda = (
-  scope: Construct,
-  id: string,
-  vpc: IVpc,
-  role: IRole,
-  codePath: string,
-  environment: Record<string, string>
-): PythonFunction => {
-  return new PythonFunction(scope, id, {
-    vpc,
-    entry: codePath,
-    runtime: Runtime.PYTHON_3_9,
-    environment,
-    role,
-    timeout: Duration.seconds(60),
-  });
-};
+
+export function ec2Arn(scope: Construct, resource: string, resourcePrefix = "*"): string {
+  return Arn.format({ resource: `${resource}/${resourcePrefix}`, service: "ec2" }, Stack.of(scope));
+}

@@ -10,15 +10,17 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
 const (
-	appTagKey                      = "application-name"
-	appTagValue                    = "agc"
 	deactivateForceFlag            = "force"
 	deactivateForceShortFlag       = "f"
 	deactivateForceFlagDescription = `Force account deactivation by removing all resources associated with AGC.
@@ -35,12 +37,18 @@ type accountDeactivateOpts struct {
 	accountDeactivateVars
 	stacks    []cfn.Stack
 	cfnClient cfn.Interface
+	s3Client  s3.Interface
+	stsClient sts.Interface
+	region    string
 }
 
 func newAccountDeactivateOpts(vars accountDeactivateVars) (*accountDeactivateOpts, error) {
 	return &accountDeactivateOpts{
 		accountDeactivateVars: vars,
 		cfnClient:             aws.CfnClient(profile),
+		s3Client:              aws.S3Client(profile),
+		stsClient:             aws.StsClient(profile),
+		region:                aws.Region(profile),
 	}, nil
 }
 func (o *accountDeactivateOpts) LoadStacks() error {
@@ -53,7 +61,8 @@ func (o *accountDeactivateOpts) LoadStacks() error {
 }
 
 func (o *accountDeactivateOpts) Validate() error {
-	if !o.force && len(o.stacks) > 1 {
+	// core and bootstrap stacks are expected
+	if !o.force && len(o.stacks) > 2 {
 		return actionableerror.New(
 			errors.New("one or more contexts are still deployed"),
 			"use --force to destroy deployed contexts as well",
@@ -64,13 +73,19 @@ func (o *accountDeactivateOpts) Validate() error {
 
 func (o *accountDeactivateOpts) Execute() error {
 	stackDeletionTrackers := make(map[string]chan cfn.DeletionResult)
+	bootstrapStackName := awsresources.RenderBootstrapStackName()
+	var bootstrapStackId string
 	for _, stack := range o.stacks {
-		log.Debug().Msgf("Deleting stack '%s'", stack.Name)
-		tracker, err := o.cfnClient.DeleteStack(stack.Id)
-		if err != nil {
-			return err
+		if stack.Name == bootstrapStackName {
+			bootstrapStackId = stack.Id
+		} else {
+			log.Debug().Msgf("Deleting stack '%s'", stack.Name)
+			tracker, err := o.cfnClient.DeleteStack(stack.Id)
+			if err != nil {
+				return err
+			}
+			stackDeletionTrackers[stack.Name] = tracker
 		}
-		stackDeletionTrackers[stack.Name] = tracker
 	}
 
 	for stackName, tracker := range stackDeletionTrackers {
@@ -79,6 +94,47 @@ func (o *accountDeactivateOpts) Execute() error {
 			return fmt.Errorf("failed to delete stack '%s: %w", stackName, deletionResult.Error)
 		}
 		log.Debug().Msgf("Stack '%s' has been successfully deleted!", stackName)
+	}
+
+	// delete last, the bootstrap stack owns the cfn-exec role cloudformation assumes to delete other stack resources
+	if bootstrapStackId != "" {
+		log.Debug().Msgf("Deleting stack '%s'", bootstrapStackName)
+		tracker, err := o.cfnClient.DeleteStack(bootstrapStackId)
+		if err != nil {
+			return err
+		}
+		deletionResult := <-tracker
+		if deletionResult.Error != nil {
+			return fmt.Errorf("failed to delete stack '%s: %w", bootstrapStackName, deletionResult.Error)
+		}
+		log.Debug().Msgf("Stack '%s' has been successfully deleted!", bootstrapStackName)
+	}
+
+	if err := o.removeBootstrapBucket(); err != nil {
+		return fmt.Errorf("failed to delete bootstrap asset bucket: %w", err)
+	}
+
+	return nil
+}
+
+func (o *accountDeactivateOpts) removeBootstrapBucket() error {
+	accountId, err := o.stsClient.GetAccount()
+	if err != nil {
+		return err
+	}
+
+	bootstrapAssetBucket := awsresources.RenderBootstrapAssetBucketName(accountId, o.region)
+	exists, err := o.s3Client.BucketExists(bootstrapAssetBucket)
+	if err != nil {
+		return err
+	}
+	if exists {
+		if err := o.s3Client.EmptyBucket(bootstrapAssetBucket); err != nil {
+			return err
+		}
+		if err := o.s3Client.DeleteBucket(bootstrapAssetBucket); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -96,7 +152,7 @@ func (o *accountDeactivateOpts) getApplicationStacks() ([]cfn.Stack, error) {
 		if err != nil {
 			return nil, err
 		}
-		if tags[appTagKey] == appTagValue {
+		if tags[constants.AppTagKey] == constants.AppTagValue {
 			filteredStacks = append(filteredStacks, stack)
 		}
 	}

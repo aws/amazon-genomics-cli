@@ -24,3 +24,11 @@ func RenderBucketDataKey(projectName, userId string, suffix ...string) string {
 	args := append([]string{"project", projectName, "userid", userId, "data"}, suffix...)
 	return path.Join(args...)
 }
+
+func RenderBootstrapStackName() string {
+	return fmt.Sprintf("%s-%s", constants.ProductName, "CDKToolkit")
+}
+
+func RenderBootstrapAssetBucketName(accountId, region string) string {
+	return fmt.Sprintf("cdk-agc-assets-%s-%s", accountId, region)
+}

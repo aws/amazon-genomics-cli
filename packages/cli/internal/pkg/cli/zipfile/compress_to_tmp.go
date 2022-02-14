@@ -25,6 +25,7 @@ func CompressToTmp(srcPath string) (string, error) {
 }
 
 func writeToZipRecursive(writer *zip.Writer, rootPath string) error {
+	// Expand home directory path
 	return filepath.WalkDir(rootPath, func(currentPath string, dirEntry fs.DirEntry, err error) error {
 		if dirEntry == nil {
 			// There are several use cases when it can happen:

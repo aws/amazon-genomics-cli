@@ -14,7 +14,13 @@ type Task struct {
 	JobId     string
 	StartTime *time.Time
 	StopTime  *time.Time
-	ExitCode  int
+	ExitCode  string
+}
+
+type RunLog struct {
+	RunId string
+	State string
+	Tasks []Task
 }
 
 func (m *Manager) GetWorkflowTasks(runId string) ([]Task, error) {
@@ -30,6 +36,23 @@ func (m *Manager) GetWorkflowTasks(runId string) ([]Task, error) {
 
 	return m.getTasks()
 
+}
+
+func (m *Manager) GetRunLog(runId string) (RunLog, error) {
+	if m.err != nil {
+		return RunLog{}, m.err
+	}
+	var tasks []Task
+	tasks, m.err = m.GetWorkflowTasks(runId)
+	if m.err != nil {
+		return RunLog{}, m.err
+	}
+
+	return RunLog{
+		RunId: m.taskProps.runLog.RunId,
+		State: string(m.taskProps.runLog.State),
+		Tasks: tasks,
+	}, nil
 }
 
 func (m *Manager) setContextForRun(runId string) {
@@ -67,7 +90,7 @@ func (m *Manager) getTasks() ([]Task, error) {
 			JobId:     nameParts[1],
 			StartTime: parseLogTime(taskLog.StartTime),
 			StopTime:  parseLogTime(taskLog.EndTime),
-			ExitCode:  int(taskLog.ExitCode),
+			ExitCode:  taskLog.ExitCode,
 		}
 	}
 

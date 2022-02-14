@@ -1,8 +1,8 @@
-import { Construct } from "monocdk";
-import { Port } from "monocdk/aws-ec2";
-import { BaseService, FargatePlatformVersion, ICluster } from "monocdk/aws-ecs";
-import { NetworkLoadBalancedFargateService, NetworkLoadBalancedFargateServiceProps } from "monocdk/aws-ecs-patterns";
-import { HealthCheck, NetworkLoadBalancer } from "monocdk/aws-elasticloadbalancingv2";
+import { Construct } from "constructs";
+import { Port } from "aws-cdk-lib/aws-ec2";
+import { BaseService, FargatePlatformVersion, ICluster } from "aws-cdk-lib/aws-ecs";
+import { NetworkLoadBalancedFargateService, NetworkLoadBalancedFargateServiceProps } from "aws-cdk-lib/aws-ecs-patterns";
+import { HealthCheck, NetworkLoadBalancer } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 
 export type ServiceOptions = Omit<NetworkLoadBalancedFargateServiceProps, "publicLoadBalancer" | "platformVersion">;
 

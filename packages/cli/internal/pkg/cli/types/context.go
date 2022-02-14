@@ -8,6 +8,7 @@ type Context struct {
 	RequestSpotInstances bool
 	InstanceTypes        []InstanceType
 	Output               OutputLocation
+	WesEndpoint          WesEndpoint
 }
 
 type ContextInstance struct {
@@ -26,6 +27,10 @@ type ContextSummary struct {
 }
 
 type OutputLocation struct {
+	Url string
+}
+
+type WesEndpoint struct {
 	Url string
 }
 

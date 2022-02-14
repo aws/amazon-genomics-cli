@@ -1,5 +1,6 @@
 /.idea/
 /output/
+*.vscode
 codebuild_build.sh
 .DS_Store
 venv
@@ -10,3 +11,4 @@ vendor
 /docs/
 /site/content/en/docs/Reference/agc*
 /dist/
+*.zip
