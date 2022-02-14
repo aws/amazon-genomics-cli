@@ -9,12 +9,19 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 const (
 	contextFlag            = "context"
 	contextFlagShort       = "c"
 	contextFlagDescription = "Name of context"
+)
+
+const (
+	inputsFileFlag            = "inputsFile"
+	inputsFileFlagShort       = "i"
+	inputsFileFlagDescription = "Inputs File Path"
 )
 
 type runWorkflowVars struct {
@@ -54,7 +61,7 @@ This command prints a run Id for the created workflow instance.
 		Example: `
 Run the workflow named "example-workflow", against the "prod" context,
 using input parameters contained in file "file:///Users/ec2-user/myproj/test-args.json"
-/code $ agc workflow run example-workflow --context prod --args file:///Users/ec2-user/myproj/test-args.json`,
+/code $ agc workflow run example-workflow --context prod --inputsFile file:///Users/ec2-user/myproj/test-args.json`,
 		Args: cobra.ExactArgs(1),
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
 			vars.WorkflowName = args[0]
@@ -62,7 +69,7 @@ using input parameters contained in file "file:///Users/ec2-user/myproj/test-arg
 			if err != nil {
 				return clierror.New("workflow run", vars, err)
 			}
-			log.Info().Msgf("Running workflow. Workflow name: '%s', Arguments: '%s', Context: '%s'", opts.WorkflowName, opts.Arguments, opts.ContextName)
+			log.Info().Msgf("Running workflow. Workflow name: '%s', InputsFile: '%s', Context: '%s'", opts.WorkflowName, opts.Arguments, opts.ContextName)
 			if err := opts.Validate(); err != nil {
 				return err
 			}
@@ -75,8 +82,17 @@ using input parameters contained in file "file:///Users/ec2-user/myproj/test-arg
 		}),
 		ValidArgsFunction: NewWorkflowAutoComplete().GetWorkflowAutoComplete(),
 	}
-	cmd.Flags().StringVarP(&vars.Arguments, argsFlag, argsFlagShort, "", argsFlagDescription)
+	cmd.Flags().StringVarP(&vars.Arguments, inputsFileFlag, inputsFileFlagShort, "", inputsFileFlagDescription)
 	cmd.Flags().StringVarP(&vars.ContextName, contextFlag, contextFlagShort, "", contextFlagDescription)
+	aliasFn := func(f *pflag.FlagSet, name string) pflag.NormalizedName {
+		switch name {
+		case argsFlag:
+			name = inputsFileFlag
+			break
+		}
+		return pflag.NormalizedName(name)
+	}
+	cmd.Flags().SetNormalizeFunc(aliasFn)
 	_ = cmd.MarkFlagRequired(contextFlag)
 	_ = cmd.RegisterFlagCompletionFunc(contextFlag, NewContextAutoComplete().GetContextAutoComplete())
 	return cmd

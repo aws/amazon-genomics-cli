@@ -25,6 +25,7 @@ var (
 	ioutilWriteFile = ioutil.WriteFile
 	jsonUnmarshall  = json.Unmarshal
 	jsonMarshall    = json.Marshal
+	stat            = os.Stat
 )
 
 func (ic *InputInstance) UpdateInputReferencesAndUploadToS3(initialProjectDirectory string, tempProjectDirectory string, bucketName string, baseS3Key string) error {
@@ -51,7 +52,7 @@ func (ic *InputInstance) UpdateInputReferencesAndUploadToS3(initialProjectDirect
 			return actionableerror.New(err, fmt.Sprintf("Please validate that the input JSON file %s exists", inputLocation))
 		}
 
-		err = ic.updateInputsInFile(initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation)
+		_, err = ic.UpdateInputsInFile(initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation)
 		if err != nil {
 			return err
 		}
@@ -60,7 +61,7 @@ func (ic *InputInstance) UpdateInputReferencesAndUploadToS3(initialProjectDirect
 	return nil
 }
 
-func (ic *InputInstance) updateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string, fileLocation string) error {
+func (ic *InputInstance) UpdateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string, fileLocation string) (map[string]interface{}, error) {
 	var updatedInputReferenceFile = make(map[string]interface{})
 	for key, value := range inputFile {
 		var inputReferences []string
@@ -69,7 +70,7 @@ func (ic *InputInstance) updateInputsInFile(initialProjectDirectory string, inpu
 			inputReferences = strings.Split(typedValue, ",")
 			updatedReferences, err := ic.uploadReferencesToS3(inputReferences, initialProjectDirectory, bucketName, baseS3Key)
 			if err != nil {
-				return err
+				return nil, err
 			}
 
 			updatedInputReferenceFile[key] = strings.Join(updatedReferences, ",")
@@ -88,7 +89,7 @@ func (ic *InputInstance) updateInputsInFile(initialProjectDirectory string, inpu
 			}
 			updatedReferences, err := ic.uploadReferencesToS3(inputReferences, initialProjectDirectory, bucketName, baseS3Key)
 			if err != nil {
-				return err
+				return nil, err
 			}
 
 			for _, val := range updatedReferences {
@@ -102,14 +103,14 @@ func (ic *InputInstance) updateInputsInFile(initialProjectDirectory string, inpu
 	}
 	marshalledData, err := jsonMarshall(updatedInputReferenceFile)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	err = ioutilWriteFile(fileLocation, marshalledData, 0644)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return updatedInputReferenceFile, nil
 }
 
 func (ic *InputInstance) uploadReferencesToS3(inputLocations []string, baseDirectory string, bucketName string, baseS3Key string) ([]string, error) {
@@ -117,7 +118,7 @@ func (ic *InputInstance) uploadReferencesToS3(inputLocations []string, baseDirec
 	for index, input := range inputLocations {
 		trimmedInput := strings.TrimSpace(input)
 		inputWithDirectory := fmt.Sprintf("%s/%s", baseDirectory, trimmedInput)
-		if _, err := os.Stat(inputWithDirectory); err == nil {
+		if _, err := stat(inputWithDirectory); err == nil {
 			var formattedInputName string
 			if strings.HasPrefix(trimmedInput, "./") {
 				formattedInputName = trimmedInput[2:]
