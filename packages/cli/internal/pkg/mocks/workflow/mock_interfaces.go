@@ -65,18 +65,18 @@ func (mr *MockWorkflowManagerMockRecorder) ListWorkflows() *gomock.Call {
 }
 
 // RunWorkflow mocks base method.
-func (m *MockWorkflowManager) RunWorkflow(contextName, workflowName, argumentsUrl string) (string, error) {
+func (m *MockWorkflowManager) RunWorkflow(contextName, workflowName, argumentsUrl string, optionFileUrl string, engineOptions string) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RunWorkflow", contextName, workflowName, argumentsUrl)
+	ret := m.ctrl.Call(m, "RunWorkflow", contextName, workflowName, argumentsUrl, optionFileUrl, engineOptions)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // RunWorkflow indicates an expected call of RunWorkflow.
-func (mr *MockWorkflowManagerMockRecorder) RunWorkflow(contextName, workflowName, argumentsUrl interface{}) *gomock.Call {
+func (mr *MockWorkflowManagerMockRecorder) RunWorkflow(contextName, workflowName, argumentsUrl interface{}, optionFileUrl interface{}, engineOptions interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunWorkflow", reflect.TypeOf((*MockWorkflowManager)(nil).RunWorkflow), contextName, workflowName, argumentsUrl)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunWorkflow", reflect.TypeOf((*MockWorkflowManager)(nil).RunWorkflow), contextName, workflowName, argumentsUrl, optionFileUrl, engineOptions)
 }
 
 // StatusWorkflowAll mocks base method.
