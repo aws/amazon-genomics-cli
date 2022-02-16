@@ -2,4 +2,3 @@ from .AbstractWESAdapter import AbstractWESAdapter
 from .CromwellWESAdapter import CromwellWESAdapter
 from .NextflowWESAdapter import NextflowWESAdapter
 from .MiniWdlWESAdapter import MiniWdlWESAdapter
-from .SnakemakeWESAdapter import SnakemakeWESAdapter

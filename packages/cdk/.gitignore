@@ -13,6 +13,3 @@ cdk.context.json
 outputs.json
 cdk.tgz
 cdk-output*
-
-# Python related
-*.pyc
