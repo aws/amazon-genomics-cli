@@ -50,7 +50,7 @@ export class ContextAppParameters {
    */
   public readonly filesystemType?: string;
   /**
-   * Name of the filesystem type to use (e.g. EFS, S3).
+   * Amount of provisioned IOPS to use.
    */
   public readonly fsProvisionedThroughput?: number;
   /**

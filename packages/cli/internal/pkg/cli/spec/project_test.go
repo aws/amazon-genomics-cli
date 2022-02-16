@@ -209,27 +209,6 @@ contexts:
 	})
 }
 
-func TestEngineDefaults(t *testing.T) {
-	const yamlStr = `
-name: DefaultTest
-schemaVersion: 1
-contexts:
-    context:
-        engines:
-            - type: wdl
-              engine: cromwell
-              filesystem:
-                fsType: S3
-`
-
-	t.Run("EngineDefaults", func(t *testing.T) {
-		result := Filesystem{}
-		err := yaml.Unmarshal([]byte(yamlStr), &result)
-		require.NoError(t, err)
-		assert.Equal(t, result.Configuration.FSProvisionedThroughput, DefaultFSProvisionedThroughput)
-	})
-}
-
 func TestGetContext(t *testing.T) {
 	type args struct {
 		projectSpec Project

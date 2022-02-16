@@ -11,7 +11,7 @@ import { Size } from "aws-cdk-lib";
 export interface SnakemakeEngineProps extends EngineProps {
   readonly engineBatch: Batch;
   readonly workerBatch: Batch;
-  readonly iops: Size;
+  readonly iops?: Size;
 }
 
 const SNAKEMAKE_IMAGE_DESIGNATION = "snakemake";
@@ -27,7 +27,11 @@ export class SnakemakeEngine extends Engine {
     super(scope, id);
 
     const { vpc, iops, engineBatch, workerBatch } = props;
-    this.fileSystem = this.createFileSystem(vpc, iops);
+    if (iops?.toMebibytes() == 0 || iops == undefined) {
+      this.fileSystem = this.createFileSystemDefaultThroughput(vpc);
+    } else {
+      this.fileSystem = this.createFileSystemIOPS(vpc, iops);
+    }
     this.fsap = this.createAccessPoint(this.fileSystem);
 
     this.fileSystem.connections.allowDefaultPortFromAnyIpv4();

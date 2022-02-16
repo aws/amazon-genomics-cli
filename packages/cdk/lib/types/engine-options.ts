@@ -19,7 +19,7 @@ export interface EngineOptions {
   /**
    * Filesystem provisioned throughput to use for EFS.
    */
-  readonly iops: Size;
+  readonly iops?: Size;
   /**
    * Parameters determined by the context.
    */

@@ -1,9 +1,6 @@
 package spec
 
-import "fmt"
-
 const DefaultMaxVCpus = 256
-const DefaultFSProvisionedThroughput = 1
 
 type FSConfig struct {
 	FSProvisionedThroughput int `yaml:"provisionedThroughput"`
@@ -22,26 +19,6 @@ type Context struct {
 	RequestSpotInstances bool     `yaml:"requestSpotInstances,omitempty"`
 	MaxVCpus             int      `yaml:"maxVCpus,omitempty"`
 	Engines              []Engine `yaml:"engines"`
-}
-
-func (filesystem *Filesystem) UnmarshalYAML(unmarshal func(interface{}) error) error {
-
-	type defValFilesystem Filesystem
-	defaults := defValFilesystem{Configuration: FSConfig{FSProvisionedThroughput: DefaultFSProvisionedThroughput}}
-	if err := unmarshal(&defaults); err != nil {
-		return err
-	}
-
-	*filesystem = Filesystem(defaults)
-	switch filesystem.FSType {
-	case "EFS", "":
-		return nil
-	case "S3":
-		filesystem.Configuration.FSProvisionedThroughput = 0
-		return nil
-	default:
-		return fmt.Errorf("filesystem '%s' is invalid. Options are `S3` and `EFS`", filesystem.FSType)
-	}
 }
 
 func (context *Context) UnmarshalYAML(unmarshal func(interface{}) error) error {

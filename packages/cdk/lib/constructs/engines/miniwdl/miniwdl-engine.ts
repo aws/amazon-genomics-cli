@@ -6,11 +6,12 @@ import { Batch } from "../../batch";
 import { Engine, EngineProps } from "../engine";
 import { EngineJobDefinition } from "../engine-job-definition";
 import { Size } from "aws-cdk-lib";
+import { FileSystem } from "aws-cdk-lib/aws-efs";
 
 export interface MiniWdlEngineProps extends EngineProps {
   readonly engineBatch: Batch;
   readonly workerBatch: Batch;
-  readonly iops: Size;
+  readonly iops?: Size;
 }
 
 const MINIWDL_IMAGE_DESIGNATION = "miniwdl";
@@ -19,17 +20,22 @@ export class MiniWdlEngine extends Engine {
   readonly headJobDefinition: JobDefinition;
   private readonly engineMemoryMiB = 4096;
   private readonly volumeName = "efs";
+  readonly fileSystem: FileSystem;
 
   constructor(scope: Construct, id: string, props: MiniWdlEngineProps) {
     super(scope, id);
 
     const { vpc, iops, rootDirS3Uri, engineBatch, workerBatch } = props;
-    const fileSystem = this.createFileSystem(vpc, iops);
-    const accessPoint = this.createAccessPoint(fileSystem);
+    if (iops?.toMebibytes() == 0 || iops == undefined) {
+      this.fileSystem = this.createFileSystemDefaultThroughput(vpc);
+    } else {
+      this.fileSystem = this.createFileSystemIOPS(vpc, iops);
+    }
+    const accessPoint = this.createAccessPoint(this.fileSystem);
 
-    fileSystem.connections.allowDefaultPortFromAnyIpv4();
-    fileSystem.grant(engineBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
-    fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
+    this.fileSystem.connections.allowDefaultPortFromAnyIpv4();
+    this.fileSystem.grant(engineBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
+    this.fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
 
     this.headJobDefinition = new EngineJobDefinition(this, "MiniwdlHeadJobDef", {
       logGroup: this.logGroup,
@@ -41,12 +47,12 @@ export class MiniWdlEngine extends Engine {
         image: createEcrImage(this, MINIWDL_IMAGE_DESIGNATION),
         platformVersion: FargatePlatformVersion.VERSION1_4,
         environment: {
-          MINIWDL__AWS__FS: fileSystem.fileSystemId,
+          MINIWDL__AWS__FS: this.fileSystem.fileSystemId,
           MINIWDL__AWS__FSAP: accessPoint.accessPointId,
           MINIWDL__AWS__TASK_QUEUE: workerBatch.jobQueue.jobQueueArn,
           MINIWDL_S3_OUTPUT_URI: rootDirS3Uri,
         },
-        volumes: [this.toVolume(fileSystem, accessPoint, this.volumeName)],
+        volumes: [this.toVolume(this.fileSystem, accessPoint, this.volumeName)],
         mountPoints: [this.toMountPoint("/mnt/efs", this.volumeName)],
       },
     });

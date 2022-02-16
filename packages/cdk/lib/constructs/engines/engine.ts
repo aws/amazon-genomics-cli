@@ -59,11 +59,21 @@ export class Engine extends Construct {
     });
   }
 
-  protected createFileSystem(vpc: IVpc, iops: Size): FileSystem {
+  protected createFileSystemIOPS(vpc: IVpc, iops: Size): FileSystem {
     return new FileSystem(this, "FileSystem", {
       vpc: vpc,
       provisionedThroughputPerSecond: iops,
       throughputMode: ThroughputMode.PROVISIONED,
+      encrypted: true,
+      performanceMode: PerformanceMode.MAX_IO,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+  }
+
+  protected createFileSystemDefaultThroughput(vpc: IVpc): FileSystem {
+    return new FileSystem(this, "FileSystem", {
+      vpc: vpc,
+      throughputMode: ThroughputMode.BURSTING,
       encrypted: true,
       performanceMode: PerformanceMode.MAX_IO,
       removalPolicy: RemovalPolicy.DESTROY,
