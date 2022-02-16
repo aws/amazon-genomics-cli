@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,6 +15,8 @@ const (
 	testDeactivateStackId1   = "test-deactivate-stack-id-1"
 	testDeactivateStackName2 = "test-deactivate-stack-name-2"
 	testDeactivateStackId2   = "test-deactivate-stack-id-2"
+	testDeactivateStackName3 = "test-deactivate-stack-name-3"
+	testDeactivateStackId3   = "test-deactivate-stack-id-3"
 )
 
 var (
@@ -24,6 +27,10 @@ var (
 	testDeactivateStack2 = cfn.Stack{
 		Name: testDeactivateStackName2,
 		Id:   testDeactivateStackId2,
+	}
+	testDeactivateStack3 = cfn.Stack{
+		Name: testDeactivateStackName3,
+		Id:   testDeactivateStackId3,
 	}
 )
 
@@ -92,12 +99,15 @@ func TestAccountDeactivateOpts_Validate(t *testing.T) {
 		"single stack without force no error": {
 			stacks: []cfn.Stack{testDeactivateStack1},
 		},
-		"many stacks with force no error": {
-			force:  true,
+		"two stacks without force no error": {
 			stacks: []cfn.Stack{testDeactivateStack1, testDeactivateStack2},
 		},
+		"many stacks with force no error": {
+			force:  true,
+			stacks: []cfn.Stack{testDeactivateStack1, testDeactivateStack2, testDeactivateStack3},
+		},
 		"too many stacks without force error": {
-			stacks:      []cfn.Stack{testDeactivateStack1, testDeactivateStack2},
+			stacks:      []cfn.Stack{testDeactivateStack1, testDeactivateStack2, testDeactivateStack3},
 			expectedErr: true,
 		},
 	}
@@ -134,6 +144,26 @@ func TestAccountDeactivateOpts_Execute(t *testing.T) {
 				mocks.cfnMock.EXPECT().DeleteStack(testDeactivateStackId2).Return(testChan1, nil)
 				go func() { testChan1 <- cfn.DeletionResult{}; close(testChan1) }()
 				go func() { testChan2 <- cfn.DeletionResult{}; close(testChan2) }()
+				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
+				bucketName := awsresources.RenderBootstrapAssetBucketName(testAccountId, testAccountRegion)
+				mocks.s3Mock.EXPECT().BucketExists(bucketName).Return(true, nil)
+				mocks.s3Mock.EXPECT().EmptyBucket(bucketName).Return(nil)
+				mocks.s3Mock.EXPECT().DeleteBucket(bucketName).Return(nil)
+				return mocks
+			},
+		},
+		"delete success with no CDK asset bucket": {
+			setupMocks: func(t *testing.T) mockClients {
+				testChan1 := make(chan cfn.DeletionResult)
+				testChan2 := make(chan cfn.DeletionResult)
+				mocks := createMocks(t)
+				mocks.cfnMock.EXPECT().DeleteStack(testDeactivateStackId1).Return(testChan1, nil)
+				mocks.cfnMock.EXPECT().DeleteStack(testDeactivateStackId2).Return(testChan1, nil)
+				go func() { testChan1 <- cfn.DeletionResult{}; close(testChan1) }()
+				go func() { testChan2 <- cfn.DeletionResult{}; close(testChan2) }()
+				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
+				bucketName := awsresources.RenderBootstrapAssetBucketName(testAccountId, testAccountRegion)
+				mocks.s3Mock.EXPECT().BucketExists(bucketName).Return(false, nil)
 				return mocks
 			},
 		},
@@ -167,6 +197,9 @@ func TestAccountDeactivateOpts_Execute(t *testing.T) {
 			opts := &accountDeactivateOpts{
 				stacks:    []cfn.Stack{testDeactivateStack1, testDeactivateStack2},
 				cfnClient: mocks.cfnMock,
+				s3Client:  mocks.s3Mock,
+				stsClient: mocks.stsMock,
+				region:    testAccountRegion,
 			}
 
 			err := opts.Execute()

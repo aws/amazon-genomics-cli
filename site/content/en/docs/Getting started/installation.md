@@ -15,6 +15,14 @@ To download the latest release navigate to https://github.com/aws/amazon-genomic
 
 Once you have downloaded a release, type the following to install:
 
+The latest nightly build can be accessed here: `s3://healthai-public-assets-us-east-1/amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip`
+
+You can download the nightly by running the following:
+
+```shell
+aws s3api get-object --bucket healthai-public-assets-us-east-1 --key amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip amazon-genomics-cli.zip
+```
+
 ```shell
 unzip amazon-genomics-cli-<version>.zip
 cd amazon-genomics-cli/ 
@@ -71,6 +79,18 @@ If this doesn't work immediately, try:
 ```
 export PATH=$HOME/bin:$PATH
 ```
+
+If you are running this on MacOS, you may see this below popup window when you initially run any agc commands due to Apple's security restrictions.
+
+![alt text](https://github.com/aws/amazon-genomics-cli/blob/mac-doc/site/static/images/agc-cannot-open-popup.png?raw=true)
+
+Click Cancel and navigate to Apple's System Preferences, click Security & Privacy, then click General. Near the bottom, you will see a line indicating `"agc" was blocked from use because it is not from an identified developer.` To the right, click Allow Anyway.
+
+Now go back to the terminal and run `agc --help` again. You will see this new popup window below asking you to override the system security.
+
+![alt text](https://github.com/aws/amazon-genomics-cli/blob/mac-doc/site/static/images/agc-cannot-verify-developer-popup.png?raw=true)
+
+Click Open and now your `agc` is correctly installed.
 
 Verify that you have the latest version of Amazon Genomics CLI with:
 

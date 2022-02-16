@@ -71,6 +71,12 @@ export interface BatchProps extends ComputeOptions {
    * @default - No additional policies are added to the role
    */
   awsPolicyNames?: string[];
+
+  /**
+   * Use this if you need to pass the name of the workflow orchestrator to the LaunchTemplate so that `provision.sh` is
+   * aware of the engine orchestrating the workflow tasks.
+   */
+  workflowOrchestrator?: string;
 }
 
 const defaultComputeType = ComputeResourceType.ON_DEMAND;
@@ -146,6 +152,15 @@ export class Batch extends Construct {
             }),
           ],
         }),
+        "instance-health": new PolicyDocument({
+          statements: [
+            new PolicyStatement({
+              actions: ["autoscaling:SetInstanceHealth"],
+              // ideally this would be limited to the autoscaler for this batch stacks compute environment, but we can't know it here
+              resources: ["*"],
+            }),
+          ],
+        }),
       },
       managedPolicies: [...(managedPolicies ?? []), ManagedPolicy.fromAwsManagedPolicyName("service-role/AmazonEC2ContainerServiceforEC2Role")],
     });
@@ -163,6 +178,10 @@ export class Batch extends Construct {
       });
     }
 
+    /*
+     * TAKE NOTE! If you change the launch template you will need to destroy any existing contexts and deploy. A CDK update won't
+     * be enough to trigger an update of the Batch compute environment to use the new template.
+     */
     const launchTemplate = options.launchTemplateData
       ? new CfnLaunchTemplate(this, "LaunchTemplate", {
           launchTemplateName: Names.uniqueId(this),

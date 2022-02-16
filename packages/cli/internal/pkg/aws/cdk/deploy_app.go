@@ -3,6 +3,7 @@ package cdk
 import (
 	"os"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 )
 
@@ -24,6 +25,7 @@ func (client Client) DeployApp(appDir string, context []string, executionName st
 		"--all",
 		"--profile", client.profile,
 		"--require-approval", "never",
+		"--toolkit-stack-name", awsresources.RenderBootstrapStackName(),
 		"--output", tmpDir,
 	}
 	cmdArgs = appendContextArguments(cmdArgs, context)

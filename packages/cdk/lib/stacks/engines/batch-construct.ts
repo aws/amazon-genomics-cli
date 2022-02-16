@@ -1,12 +1,12 @@
 import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { Stack } from "aws-cdk-lib";
-import { LAUNCH_TEMPLATE } from "../../constants";
 import { Batch } from "../../constructs";
 import { ContextAppParameters } from "../../env";
 import { BucketOperations } from "../../common/BucketOperations";
 import { IRole } from "aws-cdk-lib/aws-iam";
 import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { Construct } from "constructs";
+import { LaunchTemplateData } from "../../constructs/launch-template-data";
 
 export interface BatchConstructProps {
   /**
@@ -62,7 +62,7 @@ export class BatchConstruct extends Construct {
       computeType,
       instanceTypes: appParams.instanceTypes,
       maxVCpus: appParams.maxVCpus,
-      launchTemplateData: LAUNCH_TEMPLATE,
+      launchTemplateData: LaunchTemplateData.renderLaunchTemplateData(appParams.engineName),
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: Stack.of(this).tags.tagValues(),
     });
