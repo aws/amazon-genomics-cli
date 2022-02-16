@@ -13,4 +13,5 @@ AWS=$DIST_DIR/aws
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DIST_DIR
 
+# shellcheck disable=2068
 $AWS $@
