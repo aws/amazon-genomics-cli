@@ -98,7 +98,7 @@ echo "ARTIFACT_S3_ROOT_URL = $ARTIFACT_S3_ROOT_URL"
 
 
 # retrieve and install amazon-ebs-autoscale
-if [ "$WORKFLOW_ORCHESTRATOR" != "miniwdl" && "$WORKFLOW_ORCHESTRATOR" != "snakemake" ]; then
+if [ "$WORKFLOW_ORCHESTRATOR" != "miniwdl" ] && [ "$WORKFLOW_ORCHESTRATOR" != "snakemake" ]; then
   echo "obtaining amazon-ebs-autoscale artifacts"
   cd /opt
   sh "$BASEDIR"/get-amazon-ebs-autoscale.sh \
