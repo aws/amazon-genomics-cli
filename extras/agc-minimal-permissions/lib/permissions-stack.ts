@@ -3,7 +3,8 @@ import { ManagedPolicy, PolicyDocument } from '@aws-cdk/aws-iam';
 import * as stmt from './policy-statements';
 export class AgcPermissionsStack extends cdk.Stack {
   adminPolicy: ManagedPolicy;
-  userPolicy: ManagedPolicy;
+  userPolicyPart1: ManagedPolicy;
+  userPolicyPart2: ManagedPolicy;
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -13,15 +14,18 @@ export class AgcPermissionsStack extends cdk.Stack {
       description: "managed policy for amazon genomics cli admins"
     })
 
-    let agcUserPolicy = new ManagedPolicy(this, 'agc-user-policy', {
-      description: "managed policy for amazon genomics cli users"
+    let agcUserPolicyPart1 = new ManagedPolicy(this, 'agc-user-policy-part1', {
+      description: "managed policy part 1 for amazon genomics cli users"
+    });
+
+    let agcUserPolicyPart2 = new ManagedPolicy(this, 'agc-user-policy-part2', {
+      description: "managed policy part 2 for amazon genomics cli users"
     });
 
     let perms = new stmt.AgcPermissions(this);
 
     agcAdminPolicy.addStatements(
       // explicit permissions
-      ...perms.vpc(),
       ...perms.s3Create(),
       ...perms.s3Destroy(),
       ...perms.s3Read(),
@@ -38,9 +42,13 @@ export class AgcPermissionsStack extends cdk.Stack {
       ...perms.deactivate(),
       ...perms.sts(),
       ...perms.iam(),
+<<<<<<< HEAD
   );
+=======
+    );
+>>>>>>> b7374cd (feat: release extras along with the agc package)
 
-    agcUserPolicy.addStatements(
+    agcUserPolicyPart1.addStatements(
       // poweruser + iam permissions is sufficient
       ...perms.iam(),
       ...perms.sts(),
@@ -54,6 +62,7 @@ export class AgcPermissionsStack extends cdk.Stack {
       ...perms.ssmCreate(),
       ...perms.ssmRead(),
       ...perms.ssmDestroy(),
+<<<<<<< HEAD
       ...perms.cloudformationUser(),
       ...perms.batch(),
       ...perms.ecr(),
@@ -64,10 +73,27 @@ export class AgcPermissionsStack extends cdk.Stack {
       ...perms.cloudmap(),
       ...perms.logs(),
       ...perms.route53(),
+=======
+>>>>>>> b7374cd (feat: release extras along with the agc package)
     );
 
+    agcUserPolicyPart2.addStatements(
+    // splitting user policy due to quota limit for PolicySize
+        ...perms.cloudformationUser(),
+        ...perms.batch(),
+        ...perms.ecr(),
+        ...perms.ecs(),
+        ...perms.elb(),
+        ...perms.apigw(),
+        ...perms.efs(),
+        ...perms.cloudmap(),
+        ...perms.logs(),
+        ...perms.route53(),
+    )
+
     this.adminPolicy = agcAdminPolicy;
-    this.userPolicy = agcUserPolicy;
+    this.userPolicyPart1 = agcUserPolicyPart1;
+    this.userPolicyPart2 = agcUserPolicyPart2;
 
   }
 }
