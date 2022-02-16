@@ -36,20 +36,27 @@ export class AgcPermissionsStack extends cdk.Stack {
       ...perms.cloudformationAdmin(),
       ...perms.ecr(),
       ...perms.deactivate(),
-    );
+      ...perms.sts(),
+      ...perms.iam(),
+  );
 
     agcUserPolicy.addStatements(
       // poweruser + iam permissions is sufficient
       ...perms.iam(),
-        
+      ...perms.sts(),
       ...perms.ec2(),
+      ...perms.s3Create(),
+      ...perms.s3Destroy(),
       ...perms.s3Read(),
       ...perms.s3Write(),
       ...perms.dynamodbRead(),
       ...perms.dynamodbWrite(),
+      ...perms.ssmCreate(),
       ...perms.ssmRead(),
+      ...perms.ssmDestroy(),
       ...perms.cloudformationUser(),
       ...perms.batch(),
+      ...perms.ecr(),
       ...perms.ecs(),
       ...perms.elb(),
       ...perms.apigw(),
