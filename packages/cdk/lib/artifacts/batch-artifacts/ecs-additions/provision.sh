@@ -55,7 +55,7 @@ function ecs() {
                 ;;
         esac
     else
-        echo "unsupported os: $os"
+        echo "unsupported os: $OS"
         exit 100
     fi
 }
