@@ -25,15 +25,17 @@ func TestDescribeContextOpts_Execute(t *testing.T) {
 		"valid context name": {
 			contextName: testContextName1,
 			expected: types.Context{
-				Name:   testContextName1,
-				Status: "STARTED",
-				Output: types.OutputLocation{Url: "s3://some-bucket/project/TestProject/context/test-context-name-1"},
+				Name:        testContextName1,
+				Status:      "STARTED",
+				Output:      types.OutputLocation{Url: "s3://some-bucket/project/TestProject/context/test-context-name-1"},
+				WesEndpoint: types.WesEndpoint{Url: "https://wes.execute-api.us-east-2.amazonaws.com/prod/ga4gh/wes/v1"},
 			},
 			setupMocks: func(opts *describeContextOpts) {
 				opts.ctxManager.(*contextmocks.MockContextManager).EXPECT().Info(testContextName1).Return(context.Detail{
 					Summary:        context.Summary{Name: testContextName1},
 					Status:         context.StatusStarted,
 					BucketLocation: "s3://some-bucket/project/TestProject/context/test-context-name-1",
+					WesUrl:         "https://wes.execute-api.us-east-2.amazonaws.com/prod/ga4gh/wes/v1",
 				}, nil)
 			},
 		},
@@ -67,6 +69,55 @@ func TestDescribeContextOpts_Execute(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				assert.Equal(t, tt.expected, actual)
+			}
+		})
+	}
+}
+
+func TestDescribeContextOpts_Validate(t *testing.T) {
+	testCases := map[string]struct {
+		contextName     string
+		expectedContext string
+		contextNameArgs []string
+		expectedErr     error
+	}{
+		"valid single context name": {
+			contextName:     testContextName1,
+			expectedContext: testContextName1,
+			expectedErr:     nil,
+		},
+		"valid single context arg": {
+			contextNameArgs: []string{testContextName2},
+			expectedContext: testContextName2,
+			expectedErr:     nil,
+		},
+		"both context and context arg throws error": {
+			contextName:     testContextName1,
+			contextNameArgs: []string{testContextName2},
+			expectedErr:     fmt.Errorf("either the '-c' flag or a context must be provided, but not both"),
+		},
+		"no contexts supplied": {
+			expectedErr: fmt.Errorf("a context must be provided"),
+		},
+	}
+
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			mockCtxManager := contextmocks.NewMockContextManager(ctrl)
+			opts := &describeContextOpts{
+				ctxManager:          mockCtxManager,
+				describeContextVars: describeContextVars{tt.contextName},
+			}
+
+			err := opts.Validate(tt.contextNameArgs)
+
+			if tt.expectedErr != nil {
+				assert.EqualError(t, err, tt.expectedErr.Error())
+			} else {
+				require.NoError(t, err)
+				assert.Equal(t, tt.expectedContext, opts.ContextName)
 			}
 		})
 	}

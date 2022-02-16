@@ -131,6 +131,21 @@ func (m *MockConfigClient) EXPECT() *MockConfigClientMockRecorder {
 	return m.recorder
 }
 
+// GetFormat mocks base method.
+func (m *MockConfigClient) GetFormat() (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFormat")
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFormat indicates an expected call of GetFormat.
+func (mr *MockConfigClientMockRecorder) GetFormat() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFormat", reflect.TypeOf((*MockConfigClient)(nil).GetFormat))
+}
+
 // GetUserEmailAddress mocks base method.
 func (m *MockConfigClient) GetUserEmailAddress() (string, error) {
 	m.ctrl.T.Helper()
@@ -174,6 +189,20 @@ func (m *MockConfigClient) Read() (config.Config, error) {
 func (mr *MockConfigClientMockRecorder) Read() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Read", reflect.TypeOf((*MockConfigClient)(nil).Read))
+}
+
+// SetFormat mocks base method.
+func (m *MockConfigClient) SetFormat(format string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetFormat", format)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetFormat indicates an expected call of SetFormat.
+func (mr *MockConfigClientMockRecorder) SetFormat(format interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetFormat", reflect.TypeOf((*MockConfigClient)(nil).SetFormat), format)
 }
 
 // SetUserEmailAddress mocks base method.
@@ -269,4 +298,41 @@ func (m *MockStorageClient) WriteFromString(url, data string) error {
 func (mr *MockStorageClientMockRecorder) WriteFromString(url, data interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteFromString", reflect.TypeOf((*MockStorageClient)(nil).WriteFromString), url, data)
+}
+
+// MockInputClient is a mock of InputClient interface.
+type MockInputClient struct {
+	ctrl     *gomock.Controller
+	recorder *MockInputClientMockRecorder
+}
+
+// MockInputClientMockRecorder is the mock recorder for MockInputClient.
+type MockInputClientMockRecorder struct {
+	mock *MockInputClient
+}
+
+// NewMockInputClient creates a new mock instance.
+func NewMockInputClient(ctrl *gomock.Controller) *MockInputClient {
+	mock := &MockInputClient{ctrl: ctrl}
+	mock.recorder = &MockInputClientMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockInputClient) EXPECT() *MockInputClientMockRecorder {
+	return m.recorder
+}
+
+// UpdateInputReferencesAndUploadToS3 mocks base method.
+func (m *MockInputClient) UpdateInputReferencesAndUploadToS3(initialProjectDirectory, tempProjectDirectory, bucketName, baseS3Key string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateInputReferencesAndUploadToS3", initialProjectDirectory, tempProjectDirectory, bucketName, baseS3Key)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateInputReferencesAndUploadToS3 indicates an expected call of UpdateInputReferencesAndUploadToS3.
+func (mr *MockInputClientMockRecorder) UpdateInputReferencesAndUploadToS3(initialProjectDirectory, tempProjectDirectory, bucketName, baseS3Key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInputReferencesAndUploadToS3", reflect.TypeOf((*MockInputClient)(nil).UpdateInputReferencesAndUploadToS3), initialProjectDirectory, tempProjectDirectory, bucketName, baseS3Key)
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
@@ -20,30 +21,6 @@ const (
 	testCromwellRepository = "test-cromwell-repo"
 	testNextflowRepository = "test-nextflow-repo"
 	testMiniwdlRepository  = "test-miniwdl-repo"
-)
-
-var (
-	testAccountBaseEnvVars = []string{
-		fmt.Sprintf("ECR_WES_ACCOUNT_ID=%s", testAccountId),
-		fmt.Sprintf("ECR_WES_REGION=%s", testAccountRegion),
-		fmt.Sprintf("ECR_WES_TAG=%s", testImageTag),
-		fmt.Sprintf("ECR_WES_REPOSITORY=%s", testWesRepository),
-
-		fmt.Sprintf("ECR_CROMWELL_ACCOUNT_ID=%s", testAccountId),
-		fmt.Sprintf("ECR_CROMWELL_REGION=%s", testAccountRegion),
-		fmt.Sprintf("ECR_CROMWELL_TAG=%s", testImageTag),
-		fmt.Sprintf("ECR_CROMWELL_REPOSITORY=%s", testCromwellRepository),
-
-		fmt.Sprintf("ECR_NEXTFLOW_ACCOUNT_ID=%s", testAccountId),
-		fmt.Sprintf("ECR_NEXTFLOW_REGION=%s", testAccountRegion),
-		fmt.Sprintf("ECR_NEXTFLOW_TAG=%s", testImageTag),
-		fmt.Sprintf("ECR_NEXTFLOW_REPOSITORY=%s", testNextflowRepository),
-
-		fmt.Sprintf("ECR_MINIWDL_ACCOUNT_ID=%s", testAccountId),
-		fmt.Sprintf("ECR_MINIWDL_REGION=%s", testAccountRegion),
-		fmt.Sprintf("ECR_MINIWDL_TAG=%s", testImageTag),
-		fmt.Sprintf("ECR_MINIWDL_REPOSITORY=%s", testMiniwdlRepository),
-	}
 )
 
 var (
@@ -76,14 +53,6 @@ var (
 )
 
 func TestAccountActivateOpts_Execute(t *testing.T) {
-	t.Setenv("ECR_WES_REGION", testAccountRegion)
-	t.Setenv("ECR_WES_TAG", testImageTag)
-	t.Setenv("ECR_WES_REPOSITORY", testWesRepository)
-	t.Setenv("ECR_CROMWELL_ACCOUNT_ID", testAccountId)
-	t.Setenv("ECR_CROMWELL_REGION", testAccountRegion)
-	t.Setenv("ECR_CROMWELL_TAG", testImageTag)
-	t.Setenv("ECR_CROMWELL_REPOSITORY", testCromwellRepository)
-
 	origVerbose := logging.Verbose
 	defer func() { logging.Verbose = origVerbose }()
 	logging.Verbose = true
@@ -101,13 +70,13 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				defer close(mocks.progressStream)
 				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
 				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
-				mocks.cdkMock.EXPECT().DeployApp(
-					gomock.Any(),
-					append([]string{
-						fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
-						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-					}, testAccountBaseEnvVars...)).Return(mocks.progressStream, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
+				vars := []string{
+					fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
+					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 			vpcId: "",
@@ -128,13 +97,13 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
-				mocks.cdkMock.EXPECT().DeployApp(
-					gomock.Any(),
-					append([]string{
-						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
-						fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-					}, testAccountBaseEnvVars...)).Return(mocks.progressStream, nil)
+				vars := []string{
+					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
+					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 		},
@@ -145,13 +114,13 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
-				mocks.cdkMock.EXPECT().DeployApp(
-					gomock.Any(),
-					append([]string{
-						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
-						fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
-					}, testAccountBaseEnvVars...)).Return(mocks.progressStream, nil)
+				vars := []string{
+					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
+					fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 		},
@@ -162,14 +131,14 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
-				baseVars := append([]string{
+				vars := []string{
 					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
 					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-				}, testAccountBaseEnvVars...)
-				mocks.cdkMock.EXPECT().DeployApp(
-					gomock.Any(),
-					append(baseVars, fmt.Sprintf("VPC_ID=%s", testAccountVpcId))).Return(mocks.progressStream, nil)
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+					fmt.Sprintf("VPC_ID=%s", testAccountVpcId),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
 		},
@@ -180,34 +149,42 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, fmt.Errorf("some bucket exists error"))
 				return mocks
 			},
-			expectedErr: fmt.Errorf("An error occurred while activating the account. Error was: 'some account error'"),
-		},
-		"image does not exist error": {
-			bucketName: testAccountBucketName,
-			setupMocks: func(t *testing.T) mockClients {
-				mocks := createMocks(t)
-				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(fmt.Errorf("some image error"))
-				return mocks
-			},
-			expectedErr: fmt.Errorf("An error occurred while activating the account. Error was: 'some image error'"),
+			expectedErr: fmt.Errorf("some bucket exists error"),
 		},
 		"deploy error": {
 			bucketName: testAccountBucketName,
 			vpcId:      "",
 			setupMocks: func(t *testing.T) mockClients {
 				mocks := createMocks(t)
+				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
-				mocks.ecrMock.EXPECT().VerifyImageExists(gomock.Any()).Return(nil).Times(4)
+				vars := []string{
+					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
+					fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(
-					gomock.Any(),
-					append([]string{
-						fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
-						fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
-					}, testAccountBaseEnvVars...)).Return(nil, fmt.Errorf("some deploy error"))
+					gomock.Any(), vars, "activate").Return(nil, fmt.Errorf("some deploy error"))
 				return mocks
 			},
-			expectedErr: fmt.Errorf("An error occurred while activating the account. Error was: 'some deploy error'"),
+			expectedErr: fmt.Errorf("some deploy error"),
+		},
+		"bootstrap error": {
+			bucketName: testAccountBucketName,
+			vpcId:      "",
+			setupMocks: func(t *testing.T) mockClients {
+				mocks := createMocks(t)
+				vars := []string{
+					fmt.Sprintf("AGC_BUCKET_NAME=%s", testAccountBucketName),
+					fmt.Sprintf("CREATE_AGC_BUCKET=%t", false),
+					fmt.Sprintf("AGC_VERSION=%s", version.Version),
+				}
+				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(nil, fmt.Errorf("some bootstrap error"))
+				return mocks
+			},
+			expectedErr: fmt.Errorf("some bootstrap error"),
 		},
 	}
 
@@ -230,7 +207,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 
 			err := opts.Execute()
 			if tc.expectedErr != nil {
-				assert.Error(t, err, tc.expectedErr)
+				assert.Equal(t, err, tc.expectedErr)
 			} else {
 				assert.NoError(t, err)
 			}

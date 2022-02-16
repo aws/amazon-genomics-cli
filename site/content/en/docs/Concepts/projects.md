@@ -6,6 +6,7 @@ weight: 10
 description: >
     A project defines the contexts, engines, data and workflows that make up a genomics analysis
 ---
+
 An Amazon Genomics CLI project defines the [projects]( {{< relref "projects" >}} ), [contexts]( {{< relref "contexts" >}} ), [data]( {{< relref "data" >}} ) and [workflows]( {{< relref "workflows" >}} ) that make up a genomics analysis. Each project is defined
 in a project file named `agc-project.yaml`.
 
@@ -90,6 +91,21 @@ data:
     readOnly: true
   - location: s3://1000genomes-dragen-3.7.6
     readOnly: true
+```
+
+You can use S3 prefixes to be more restrictive about access to data. For example, if you want to allow access to the 
+`foo` folder of `my-bucket` and it's sub-folders you would declare the location as:
+
+```yaml
+data:
+  - location: s3://my-bucket/foo/*
+```
+
+You can also grant access to a specific object (only) by providing the full path of the object. For example:
+
+```yaml
+data:
+  - location: s3://my-bucket/foo/object
 ```
 
 ## Commands

@@ -3,21 +3,23 @@ package cdk
 import (
 	"os"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 )
 
 var mkDirTemp = os.MkdirTemp
 
-func (client Client) DeployApp(appDir string, context []string) (ProgressStream, error) {
+func (client Client) DeployApp(appDir string, context []string, executionName string) (ProgressStream, error) {
 	tmpDir, _ := mkDirTemp(appDir, "cdk-output")
 	cmdArgs := []string{
 		"deploy",
 		"--all",
 		"--profile", client.profile,
 		"--require-approval", "never",
+		"--toolkit-stack-name", awsresources.RenderBootstrapStackName(),
 		"--output", tmpDir,
 	}
 	cmdArgs = appendContextArguments(cmdArgs, context)
-	progressStream, err := executeCdkCommandAndCleanupDirectory(appDir, cmdArgs, tmpDir)
+	progressStream, err := executeCdkCommandAndCleanupDirectory(appDir, cmdArgs, tmpDir, executionName)
 	return progressStream, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 }

@@ -1,6 +1,6 @@
-import { Construct, Fn, Names, Stack } from "monocdk";
-import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "monocdk/aws-batch";
-import { CfnLaunchTemplate, InstanceType, IVpc } from "monocdk/aws-ec2";
+import { Fn, Names, Stack } from "aws-cdk-lib";
+import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "@aws-cdk/aws-batch-alpha";
+import { CfnLaunchTemplate, InstanceType, IVpc } from "aws-cdk-lib/aws-ec2";
 import {
   CfnInstanceProfile,
   Grant,
@@ -12,9 +12,11 @@ import {
   PolicyStatement,
   Role,
   ServicePrincipal,
-} from "monocdk/aws-iam";
+} from "aws-cdk-lib/aws-iam";
 import { getInstanceTypesForBatch } from "../util/instance-types";
-import { batchArn } from "../util";
+import { batchArn, ec2Arn } from "../util";
+import { APP_NAME, APP_TAG_KEY } from "../../lib/constants";
+import { Construct } from "constructs";
 
 export interface ComputeOptions {
   /**
@@ -69,6 +71,12 @@ export interface BatchProps extends ComputeOptions {
    * @default - No additional policies are added to the role
    */
   awsPolicyNames?: string[];
+
+  /**
+   * Use this if you need to pass the name of the workflow orchestrator to the LaunchTemplate so that `provision.sh` is
+   * aware of the engine orchestrating the workflow tasks.
+   */
+  workflowOrchestrator?: string;
 }
 
 const defaultComputeType = ComputeResourceType.ON_DEMAND;
@@ -118,13 +126,37 @@ export class Batch extends Construct {
   }
 
   private renderEc2Role(managedPolicies?: IManagedPolicy[]): IRole {
+    const volumeArn = ec2Arn(this, "volume");
+
     return new Role(this, "BatchRole", {
       assumedBy: new ServicePrincipal("ec2.amazonaws.com"),
       inlinePolicies: {
         "ebs-autoscaling": new PolicyDocument({
           statements: [
             new PolicyStatement({
-              actions: ["ec2:CreateTags", "ec2:DescribeVolumes", "ec2:CreateVolume", "ec2:AttachVolume", "ec2:DeleteVolume", "ec2:ModifyInstanceAttribute"],
+              actions: ["ec2:DescribeVolumes", "ec2:CreateVolume", "ec2:CreateTags"],
+              resources: [volumeArn],
+            }),
+            new PolicyStatement({
+              actions: ["ec2:AttachVolume", "ec2:ModifyInstanceAttribute"],
+              resources: [ec2Arn(this, "instance"), volumeArn],
+            }),
+            new PolicyStatement({
+              actions: ["ec2:DeleteVolume"],
+              resources: [volumeArn],
+              conditions: {
+                StringEquals: {
+                  [`aws:ResourceTag/${APP_TAG_KEY}`]: APP_NAME,
+                },
+              },
+            }),
+          ],
+        }),
+        "instance-health": new PolicyDocument({
+          statements: [
+            new PolicyStatement({
+              actions: ["autoscaling:SetInstanceHealth"],
+              // ideally this would be limited to the autoscaler for this batch stacks compute environment, but we can't know it here
               resources: ["*"],
             }),
           ],
@@ -146,6 +178,10 @@ export class Batch extends Construct {
       });
     }
 
+    /*
+     * TAKE NOTE! If you change the launch template you will need to destroy any existing contexts and deploy. A CDK update won't
+     * be enough to trigger an update of the Batch compute environment to use the new template.
+     */
     const launchTemplate = options.launchTemplateData
       ? new CfnLaunchTemplate(this, "LaunchTemplate", {
           launchTemplateName: Names.uniqueId(this),

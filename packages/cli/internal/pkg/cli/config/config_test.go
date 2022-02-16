@@ -15,13 +15,27 @@ const (
 	testFileName       = "config.yaml"
 	expectedConfigYaml = `
 user:
-    email: my@email.com`
+    email: my@email.com
+format:
+    name: text`
 )
 
 var (
 	expectedConfig = Config{
 		User{
 			Email: "my@email.com",
+		},
+		Format{
+			Name: "text",
+		},
+	}
+
+	expectedDefaultConfig = Config{
+		User{
+			Email: "",
+		},
+		Format{
+			Name: "text",
 		},
 	}
 )
@@ -37,7 +51,7 @@ func TestConfig_ReadData(t *testing.T) {
 	readFile = mockFileReader.ReadFile
 	defer func() { readFile = origReadFile }()
 
-	configData, err := fromYaml(testFileName)
+	configData, err := configFromYaml(testFileName, defaultConfig)
 	require.NoError(t, err)
 	assert.Equal(t, expectedConfig, configData)
 }
@@ -54,6 +68,6 @@ func TestConfig_WriteData(t *testing.T) {
 	writeFile = mockFileWriter.WriteFile
 	defer func() { writeFile = origWriteFile }()
 
-	err := toYaml(testFileName, expectedConfig)
+	err := configToYaml(testFileName, expectedConfig)
 	require.NoError(t, err)
 }

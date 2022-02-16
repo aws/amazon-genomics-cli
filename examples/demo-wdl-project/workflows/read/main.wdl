@@ -18,6 +18,10 @@ task read_file {
     runtime {
         docker: "ubuntu:latest"
         memory: "4G"
+        #cromwell retry
+        awsBatchRetryAttempts: 3
+        #miniwdl retry
+        maxRetries: 3
     }
 
     output { String out = read_string( stdout() ) }

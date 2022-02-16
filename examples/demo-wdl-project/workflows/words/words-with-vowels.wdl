@@ -25,6 +25,10 @@ task FindWordsWithLetter {
 	}
 	runtime {
 		docker: "public.ecr.aws/amazonlinux/amazonlinux:2"
+		#cromwell retry
+		awsBatchRetryAttempts: 3
+		#miniwdl retry
+		maxRetries: 3
 	}
 	output { File filtered_file = "words_with_~{vowel}.txt" }
 }

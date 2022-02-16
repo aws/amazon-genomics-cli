@@ -1,6 +1,6 @@
-import { Construct } from "monocdk";
-import { JobDefinition } from "monocdk/aws-batch";
-import { IRole } from "monocdk/aws-iam";
+import { Construct } from "constructs";
+import { JobDefinition } from "@aws-cdk/aws-batch-alpha";
+import { IRole } from "aws-cdk-lib/aws-iam";
 import { createEcrImage } from "../../../util";
 import { EngineJobDefinition } from "../engine-job-definition";
 import { Engine, EngineProps } from "../engine";
@@ -8,7 +8,6 @@ import { Engine, EngineProps } from "../engine";
 export interface NextflowEngineProps extends EngineProps {
   readonly jobQueueArn: string;
   readonly taskRole: IRole;
-  readonly rootDir: string;
 }
 
 const NEXTFLOW_IMAGE_DESIGNATION = "nextflow";
@@ -27,8 +26,8 @@ export class NextflowEngine extends Engine {
         command: [],
         environment: {
           NF_JOB_QUEUE: props.jobQueueArn,
-          NF_WORKDIR: `${props.rootDir}/runs`,
-          NF_LOGSDIR: `${props.rootDir}/logs`,
+          NF_WORKDIR: `${props.rootDirS3Uri}/runs`,
+          NF_LOGSDIR: `${props.rootDirS3Uri}/logs`,
         },
         volumes: [],
       },

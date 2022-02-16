@@ -1,6 +1,5 @@
-import { RoleProps } from "monocdk/aws-iam";
-import { IJobQueue } from "monocdk/aws-batch";
-import { IVpc } from "monocdk/aws-ec2";
+import { RoleProps } from "aws-cdk-lib/aws-iam";
+import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { ContextAppParameters } from "../env";
 
 export type PolicyOptions = Pick<RoleProps, "inlinePolicies" | "managedPolicies">;
@@ -12,10 +11,6 @@ export interface EngineOptions {
    * @default - No policies are added.
    */
   policyOptions: PolicyOptions;
-  /**
-   * AWS Batch JobQueue to use for running workflows.
-   */
-  readonly jobQueue: IJobQueue;
   /**
    * VPC to run resources in.
    */

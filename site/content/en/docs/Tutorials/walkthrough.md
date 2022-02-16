@@ -89,7 +89,7 @@ agc context deploy --all
 Contexts have read-write access to a context specific prefix in the S3 bucket Amazon Genomics CLI creates during account activation. You can check this for the `myContext` context with:
 
 ```shell
-agc context describe -c myContext
+agc context describe myContext
 ```
 
 You should see something like:
@@ -97,6 +97,7 @@ You should see something like:
 ```
 CONTEXT    myContext    false    STARTED
 OUTPUTLOCATION    s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext
+WESENDPOINT	  https://a1b2c3d4.execute-api.us-east-2.amazonaws.com/prod/ga4gh/wes/v1
 ```
 
 You can add more data locations using the `data` section of the `agc-project.yaml` config file. All contexts will have an 

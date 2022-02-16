@@ -1,6 +1,10 @@
 package context
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
+)
 
 const (
 	contextDir = "context"
@@ -38,6 +42,7 @@ func (input contextEnvironment) ToEnvironmentList() []string {
 		"USER_ID":       input.UserId,
 		"USER_EMAIL":    input.UserEmail,
 		"OUTPUT_BUCKET": input.OutputBucketName,
+		"AGC_VERSION":   version.Version,
 
 		"ENGINE_NAME":              input.EngineName,
 		"ENGINE_DESIGNATION":       input.EngineDesignation,

@@ -48,10 +48,24 @@ func TestClient_GetLogs(t *testing.T) {
 			Timestamp:     aws.Int64(eventTime1.UnixNano() / 1000000),
 		},
 		{
+			EventId:       aws.String("some-id-2"),
+			IngestionTime: aws.Int64(eventTime1.UnixNano() / 1000000),
+			LogStreamName: aws.String("log-stream-2"),
+			Message:       aws.String("Hola"),
+			Timestamp:     aws.Int64(eventTime1.UnixNano() / 1000000),
+		},
+		{
 			EventId:       aws.String("some-other-id"),
 			IngestionTime: aws.Int64(eventTime2.UnixNano() / 1000000),
 			LogStreamName: aws.String("log-stream-1"),
 			Message:       aws.String("world!"),
+			Timestamp:     aws.Int64(eventTime2.UnixNano() / 1000000),
+		},
+		{
+			EventId:       aws.String("some-other-id-2"),
+			IngestionTime: aws.Int64(eventTime2.UnixNano() / 1000000),
+			LogStreamName: aws.String("log-stream-2"),
+			Message:       aws.String("mundo!"),
 			Timestamp:     aws.Int64(eventTime2.UnixNano() / 1000000),
 		},
 	}}, nil)
@@ -65,7 +79,18 @@ func TestClient_GetLogs(t *testing.T) {
 	logs, err := output.NextLogs()
 	assert.False(t, output.HasMoreLogs())
 	assert.NoError(t, err)
-	assert.Equal(t, []string{fmt.Sprintf("%s\tHello", eventTime1.Format(time.RFC1123Z)), fmt.Sprintf("%s\tworld!", eventTime2.Format(time.RFC1123Z))}, logs)
+
+	englishHelloLog, spanishHelloLog := fmt.Sprintf("%s\tHello", eventTime1.Format(time.RFC1123Z)), fmt.Sprintf("%s\tHola", eventTime1.Format(time.RFC1123Z))
+	englishWorldLog, spanishWorldLog := fmt.Sprintf("%s\tworld!", eventTime2.Format(time.RFC1123Z)), fmt.Sprintf("%s\tmundo!", eventTime2.Format(time.RFC1123Z))
+	assert.ElementsMatch(t, []string{
+		englishHelloLog,
+		englishWorldLog,
+		spanishHelloLog,
+		spanishWorldLog,
+	}, logs)
+
+	assert.Contains(t, []string{englishHelloLog, spanishHelloLog}, logs[0])
+	assert.Contains(t, []string{englishHelloLog, spanishHelloLog}, logs[2])
 }
 
 func TestClient_GetLogs_Error(t *testing.T) {

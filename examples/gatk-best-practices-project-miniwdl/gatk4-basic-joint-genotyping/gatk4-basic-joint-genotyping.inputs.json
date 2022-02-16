@@ -1,0 +1,12 @@
+{
+  "BasicJointGenotyping.input_gvcfs": [
+    "s3://1000genomes-dragen-3.7.6/data/individuals/hg38-graph-based/NA12329/NA12329.hard-filtered.gvcf.gz",
+    "s3://1000genomes-dragen-3.7.6/data/individuals/hg38-graph-based/NA06984/NA06984.hard-filtered.gvcf.gz",
+    "s3://1000genomes-dragen-3.7.6/data/individuals/hg38-graph-based/NA06989/NA06989.hard-filtered.gvcf.gz"
+  ],
+  "BasicJointGenotyping.ref_fasta": "s3://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta",
+  "BasicJointGenotyping.ref_fasta_index": "s3://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.fai",
+  "BasicJointGenotyping.ref_dict": "s3://broad-references/hg38/v0/Homo_sapiens_assembly38.dict",
+  "BasicJointGenotyping.interval_list": "s3://broad-references/hg38/v0/hg38.even.handcurated.20k.chr20_test.intervals",
+  "BasicJointGenotyping.callset_name": "Trio"
+}

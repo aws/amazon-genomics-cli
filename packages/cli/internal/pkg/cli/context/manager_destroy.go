@@ -11,13 +11,32 @@ const (
 	requiredContextPlaceholder = "placeholder"
 )
 
-func (m *Manager) Destroy(contextName string, showProgress bool) error {
-	m.readProjectSpec()
-	m.readConfig()
-	m.setContextEnv(contextName)
-	m.setContextPlaceholders()
-	m.destroyContext(contextName, showProgress)
-	return m.err
+func (m *Manager) Destroy(contexts []string) []ProgressResult {
+	m.readProjectInformation()
+
+	progressStreams, contextsWithStreams := m.getStreamsForCdkDestroys(contexts)
+
+	description := fmt.Sprintf("Destroying resources for context(s) %s", contextsWithStreams)
+	m.processExecution(progressStreams, description)
+	return m.progressResults
+}
+
+func (m *Manager) getStreamsForCdkDestroys(contexts []string) ([]cdk.ProgressStream, []string) {
+	var progressStreams []cdk.ProgressStream
+	var contextsWithStreams []string
+	for _, contextName := range contexts {
+		m.setContextEnv(contextName)
+		m.setContextPlaceholders()
+		progressStream := m.destroyContext(contextName)
+		if progressStream != nil {
+			progressStreams = append(progressStreams, progressStream)
+			contextsWithStreams = append(contextsWithStreams, contextName)
+		}
+
+		m.err = nil
+	}
+
+	return progressStreams, contextsWithStreams
 }
 
 func (m *Manager) setContextPlaceholders() {
@@ -29,10 +48,17 @@ func (m *Manager) setContextPlaceholders() {
 	m.contextEnv.ArtifactBucketName = requiredContextPlaceholder
 }
 
-func (m *Manager) destroyContext(contextName string, showProgress bool) {
-	contextCmd := func() (cdk.ProgressStream, error) {
-		return m.Cdk.DestroyApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), m.contextEnv.ToEnvironmentList())
+func (m *Manager) destroyContext(contextName string) cdk.ProgressStream {
+	if m.err != nil {
+		m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: m.err})
+		return nil
 	}
-	description := fmt.Sprintf("Destroying resources for context '%s'...", contextName)
-	m.executeCdkHelper(contextCmd, description, showProgress)
+
+	deploymentVars := append(m.contextEnv.ToEnvironmentList(), m.getEnvironmentVars()...)
+	progressStream, err := m.Cdk.DestroyApp(filepath.Join(m.homeDir, cdkAppsDirBase, contextDir), deploymentVars, contextName)
+
+	if err != nil {
+		m.progressResults = append(m.progressResults, ProgressResult{Context: contextName, Err: err})
+	}
+	return progressStream
 }
