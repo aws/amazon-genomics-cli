@@ -109,12 +109,12 @@ contexts:
 ### Public Subnets
 
 In the interest of saving money, in particular if you intend to have the AGC stack deployed for a long period, you may choose to deploy in "public subnet" mode.
-To do this, you must first set up the core stack using `aws configure --publicSubnets`, which will disable the creation of the NAT gateway and VPC endpoints which present an ongoing cost unrelated to your use of compute resources.
-After you have done this, you must also set `publicSubnets: true` in all contexts you use:
+To do this, you must first set up the core stack using `aws configure --usePublicSubnets`, which will disable the creation of the NAT gateway and VPC endpoints which present an ongoing cost unrelated to your use of compute resources.
+After you have done this, you must also set `usePublicSubnets: true` in all contexts you use:
 ```yaml
 contexts:
   someCtx:
-    publicSubnets: true
+    usePublicSubnets: true
     engines:
       - type: nextflow
         engine: nextflow
@@ -215,6 +215,8 @@ cost for both components is available via [this link](https://calculator.aws/#/e
 Contexts using the "miniwdl" engine use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
 workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use. An estimated cost assuming a
 total of 500 GB of workflow artifacts is available via [this link](https://calculator.aws/#/estimate?id=4d19b43aa86fcc3af199c425bfcc55193592cbb4)
+
+Refer to the [public subnets section](#public-subnets) if you are concerned about reducing these ongoing costs.
 
 ### Tags
 

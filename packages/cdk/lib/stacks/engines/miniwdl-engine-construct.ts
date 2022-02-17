@@ -131,11 +131,17 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
   }
 
   private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, rootDirS3Uri, vpc }) {
-    return super.renderPythonLambda(this, "MiniWDLWesAdapterLambda", role, {
-      ENGINE_NAME: ENGINE_MINIWDL,
-      JOB_QUEUE: jobQueueArn,
-      JOB_DEFINITION: jobDefinitionArn,
-      OUTPUT_DIR_S3_URI: rootDirS3Uri,
-    }, vpc);
+    return super.renderPythonLambda(
+      this,
+      "MiniWDLWesAdapterLambda",
+      role,
+      {
+        ENGINE_NAME: ENGINE_MINIWDL,
+        JOB_QUEUE: jobQueueArn,
+        JOB_DEFINITION: jobDefinitionArn,
+        OUTPUT_DIR_S3_URI: rootDirS3Uri,
+      },
+      vpc
+    );
   }
 }

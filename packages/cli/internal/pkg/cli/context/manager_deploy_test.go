@@ -2,9 +2,6 @@ package context
 
 import (
 	"fmt"
-	"path/filepath"
-	"testing"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
@@ -12,6 +9,8 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"path/filepath"
+	"testing"
 )
 
 func TestManager_Deploy(t *testing.T) {
@@ -207,11 +206,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
-<<<<<<< HEAD
-				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(36), testContextName1).Return(nil, fmt.Errorf("some context error"))
-=======
-				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(39), testContextName1).Return(nil, fmt.Errorf("some context error"))
->>>>>>> 2cf7b2ed2666f6640f19c7c6c935028b2c56e3d5
+				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(40), testContextName1).Return(nil, fmt.Errorf("some context error"))
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["CROMWELL"]).Return(nil)
 				return mockClients
 			},

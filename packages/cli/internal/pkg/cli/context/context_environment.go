@@ -34,7 +34,7 @@ type contextEnvironment struct {
 	MaxVCpus            int
 
 	RequestSpotInstances bool
-	PublicSubnets        bool
+	UsePublicSubnets     bool
 }
 
 func (input contextEnvironment) ToEnvironmentList() []string {
@@ -61,6 +61,6 @@ func (input contextEnvironment) ToEnvironmentList() []string {
 		"BATCH_COMPUTE_INSTANCE_TYPES": input.InstanceTypes,
 		"MAX_V_CPUS":                   strconv.Itoa(input.MaxVCpus),
 		"REQUEST_SPOT_INSTANCES":       strconv.FormatBool(input.RequestSpotInstances),
-		"PUBLIC_SUBNETS":               strconv.FormatBool(input.PublicSubnets),
+		"PUBLIC_SUBNETS":               strconv.FormatBool(input.UsePublicSubnets),
 	})
 }

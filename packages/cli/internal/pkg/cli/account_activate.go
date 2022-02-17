@@ -80,7 +80,7 @@ func (o *accountActivateOpts) Execute() error {
 	environmentVars := []string{
 		fmt.Sprintf("AGC_BUCKET_NAME=%s", o.bucketName),
 		fmt.Sprintf("CREATE_AGC_BUCKET=%t", !exists),
-		fmt.Sprintf("AGC_PUBLIC_SUBNETS=%t", o.publicSubnets),
+		fmt.Sprintf("AGC_USE_PUBLIC_SUBNETS=%t", o.publicSubnets),
 		fmt.Sprintf("AGC_VERSION=%s", version.Version),
 	}
 	if o.vpcId != "" {

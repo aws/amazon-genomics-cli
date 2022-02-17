@@ -71,7 +71,7 @@
             "requestSpotInstances":{
               "type":"boolean"
             },
-            "publicSubnets":{
+            "usePublicSubnets":{
               "type":"boolean"
             },
             "maxVCpus":{

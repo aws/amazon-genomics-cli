@@ -11,7 +11,7 @@ type Context struct {
 	InstanceTypes        []string `yaml:"instanceTypes,omitempty"`
 	RequestSpotInstances bool     `yaml:"requestSpotInstances,omitempty"`
 	MaxVCpus             int      `yaml:"maxVCpus,omitempty"`
-	PublicSubnets        bool     `yaml:"publicSubnets,omitempty"`
+	UsePublicSubnets     bool     `yaml:"usePublicSubnets,omitempty"`
 	Engines              []Engine `yaml:"engines"`
 }
 

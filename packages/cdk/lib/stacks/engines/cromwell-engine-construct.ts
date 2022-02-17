@@ -124,14 +124,20 @@ export class CromwellEngineConstruct extends EngineConstruct {
   }
 
   private renderAdapterLambda({ role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint, vpc }) {
-    return super.renderPythonLambda(this, "CromwellWesAdapterLambda", role, {
-      ENGINE_NAME: "cromwell",
-      ENGINE_ENDPOINT: engineEndpoint,
-      ENGINE_LOG_GROUP: engineLogGroupName,
-      JOB_QUEUE: jobQueueArn,
-      PROJECT_NAME: projectName,
-      CONTEXT_NAME: contextName,
-      USER_ID: userId,
-    }, vpc);
+    return super.renderPythonLambda(
+      this,
+      "CromwellWesAdapterLambda",
+      role,
+      {
+        ENGINE_NAME: "cromwell",
+        ENGINE_ENDPOINT: engineEndpoint,
+        ENGINE_LOG_GROUP: engineLogGroupName,
+        JOB_QUEUE: jobQueueArn,
+        PROJECT_NAME: projectName,
+        CONTEXT_NAME: contextName,
+        USER_ID: userId,
+      },
+      vpc
+    );
   }
 }

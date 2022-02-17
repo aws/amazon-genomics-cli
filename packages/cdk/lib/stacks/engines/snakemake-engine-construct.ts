@@ -161,15 +161,21 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
   }
 
   private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, taskQueueArn, workflowRoleArn, fsapId, outputBucket }) {
-    return super.renderPythonLambda(this, "SnakemakeWesAdapterLambda", role, {
-      ENGINE_NAME: "snakemake",
-      JOB_QUEUE: jobQueueArn,
-      JOB_DEFINITION: jobDefinitionArn,
-      TASK_QUEUE: taskQueueArn,
-      WORKFLOW_ROLE: workflowRoleArn,
-      FSAP_ID: fsapId,
-      OUTPUT_DIR_S3_URI: outputBucket,
-      TIME: Date.now().toString(),
-    }, vpc);
+    return super.renderPythonLambda(
+      this,
+      "SnakemakeWesAdapterLambda",
+      role,
+      {
+        ENGINE_NAME: "snakemake",
+        JOB_QUEUE: jobQueueArn,
+        JOB_DEFINITION: jobDefinitionArn,
+        TASK_QUEUE: taskQueueArn,
+        WORKFLOW_ROLE: workflowRoleArn,
+        FSAP_ID: fsapId,
+        OUTPUT_DIR_S3_URI: outputBucket,
+        TIME: Date.now().toString(),
+      },
+      vpc
+    );
   }
 }

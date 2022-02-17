@@ -95,6 +95,7 @@ by default so that you can view workflow results and logs even after deactivatio
 However, if you wish to have this infrastructure remain deployed, you are able to significantly reduce ongoing costs by using `agc account activate --usePublicSubnets`.
 This prevents the creation of private subnets with NAT gateways, and the use of VPC endpoints, both of which have associated ongoing costs.
 However please note that **you must also set `usePublicSubnets: true` in your `agc-config.yaml` if you choose to use this option**.
+Please also note that this is not recommended for security-critical deployments, as it means that any edits to the stack security groups risk exposing worker nodes to the public internet.
 
 ### Network traffic
 
