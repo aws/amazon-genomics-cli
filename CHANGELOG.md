@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [1.2.0](https://github.com/aws/amazon-genomics-cli/compare/v1.1.2...v1.2.0) (2022-02-14)
+## [1.2.0](https://github.com/aws/amazon-genomics-cli/compare/v1.1.2...v1.2.0) (2022-02-17)
 
 
 ### Features
@@ -56,6 +56,7 @@ All notable changes to this project will be documented in this file. See [standa
 * Pinned running of rnaseq to version 3.4 ([5386a3c](https://github.com/aws/amazon-genomics-cli/commit/5386a3c4afd619989b61ad853d4c23aeecbe154e))
 * progress bar doesn't show any progress ([#166](https://github.com/aws/amazon-genomics-cli/issues/166)) ([9dd17ae](https://github.com/aws/amazon-genomics-cli/commit/9dd17aef9e5edee719ed1c78f9d09aa3a8b4f9c8))
 * Remove Chdir when looking for project files ([#228](https://github.com/aws/amazon-genomics-cli/issues/228)) ([3564d6f](https://github.com/aws/amazon-genomics-cli/commit/3564d6f5a2433191c3c31456f73d9b65f2cf1a87))
+* rename unassigned variable ([#329](https://github.com/aws/amazon-genomics-cli/issues/329)) ([a3c26a8](https://github.com/aws/amazon-genomics-cli/commit/a3c26a805674e717901569123df3c44683b4cdab))
 * Respect maxVCpus in miniwdl contexts ([#202](https://github.com/aws/amazon-genomics-cli/issues/202)) ([e4ad17e](https://github.com/aws/amazon-genomics-cli/commit/e4ad17efa9a3724c7dd9bc2f37430c21ebcf9d4e))
 * Return timezone information in RunLog ([#174](https://github.com/aws/amazon-genomics-cli/issues/174)) ([118e1e2](https://github.com/aws/amazon-genomics-cli/commit/118e1e24ce8b6c454d641f27129bb04d6a44cf36))
 * Revert add a global --silent flag ([#219](https://github.com/aws/amazon-genomics-cli/issues/219)) ([#279](https://github.com/aws/amazon-genomics-cli/issues/279)) ([a6cc990](https://github.com/aws/amazon-genomics-cli/commit/a6cc9904cd2d1899f7f64bf3c024a242c1a33749)), closes [#274](https://github.com/aws/amazon-genomics-cli/issues/274)

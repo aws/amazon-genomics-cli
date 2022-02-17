@@ -33,6 +33,7 @@ var (
 	workflowZip                   = "workflow.zip"
 	removeFile                    = os.Remove
 	removeAll                     = os.RemoveAll
+	osStat                        = os.Stat
 	createTempDir                 = ioutil.TempDir
 	copyFileRecursivelyToLocation = osutils.CopyFileRecursivelyToLocation
 	writeToTmp                    = func(namePattern, content string) (string, error) {
@@ -69,6 +70,7 @@ type runProps struct {
 	workflowEngine  string
 	parsedSourceURL *url.URL
 	isLocal         bool
+	path            string
 	packPath        string
 	workflowUrl     string
 	inputUrl        string
@@ -208,41 +210,58 @@ func (m *Manager) isUploadRequired() bool {
 	return m.isLocal
 }
 
-func (m *Manager) packWorkflowFiles() {
+func (m *Manager) setWorkflowPath() {
 	if m.err != nil {
 		return
 	}
 	projectLocation := m.Project.GetLocation()
 	workflowPath := m.parsedSourceURL.Path
-	path := filepath.Join(projectLocation, workflowPath)
+	m.path = filepath.Join(projectLocation, workflowPath)
+}
 
-	dir, err := createTempDir("", "workflow_*")
+func (m *Manager) packWorkflowPath() {
+	if m.err != nil {
+		return
+	}
+
+	fileInfo, err := osStat(m.path)
 	if err != nil {
 		m.err = err
 		return
 	}
-	defer func() {
-		err = removeAll(dir)
+
+	var absoluteWorkflowPath string
+	if fileInfo.IsDir() {
+		absoluteWorkflowPath, err = createTempDir("", "workflow_*")
 		if err != nil {
-			log.Warn().Msgf("Failed to delete temporary folder '%s'", m.packPath)
+			m.err = err
+			return
 		}
-	}()
+		defer func() {
+			err = removeAll(absoluteWorkflowPath)
+			if err != nil {
+				log.Warn().Msgf("Failed to delete temporary folder '%s'", m.packPath)
+			}
+		}()
 
-	err = copyFileRecursivelyToLocation(dir, path)
-	if err != nil {
-		log.Error().Err(err)
-		m.err = err
-		return
+		err = copyFileRecursivelyToLocation(absoluteWorkflowPath, m.path)
+		if err != nil {
+			log.Error().Err(err)
+			m.err = err
+			return
+		}
+
+		err = m.InputClient.UpdateInputReferencesAndUploadToS3(m.path, absoluteWorkflowPath, m.bucketName, m.baseWorkflowKey)
+		if err != nil {
+			log.Error().Err(err)
+			m.err = err
+			return
+		}
+	} else {
+		absoluteWorkflowPath = m.path
 	}
 
-	err = m.InputClient.UpdateInputReferencesAndUploadToS3(path, dir, m.bucketName, m.baseWorkflowKey)
-	if err != nil {
-		log.Error().Err(err)
-		m.err = err
-		return
-	}
-
-	m.packPath, m.err = compressToTmp(dir)
+	m.packPath, m.err = compressToTmp(absoluteWorkflowPath)
 }
 
 func (m *Manager) setOutputBucket() {
