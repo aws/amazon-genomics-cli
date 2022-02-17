@@ -55,7 +55,7 @@ function ecs() {
                 ;;
         esac
     else
-        echo "unsupported os: $os"
+        echo "unsupported os: $OS"
         exit 100
     fi
 }
@@ -98,8 +98,7 @@ echo "ARTIFACT_S3_ROOT_URL = $ARTIFACT_S3_ROOT_URL"
 
 
 # retrieve and install amazon-ebs-autoscale
-echo "WORKFLOW_ORCHESTRATOR = $WORKFLOW_ORCHESTRATOR"
-if [ "$WORKFLOW_ORCHESTRATOR" != "miniwdl" ]; then
+if [ "$WORKFLOW_ORCHESTRATOR" != "miniwdl" ] && [ "$WORKFLOW_ORCHESTRATOR" != "snakemake" ]; then
   echo "obtaining amazon-ebs-autoscale artifacts"
   cd /opt
   sh "$BASEDIR"/get-amazon-ebs-autoscale.sh \

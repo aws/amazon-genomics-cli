@@ -10,6 +10,8 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
@@ -35,12 +37,18 @@ type accountDeactivateOpts struct {
 	accountDeactivateVars
 	stacks    []cfn.Stack
 	cfnClient cfn.Interface
+	s3Client  s3.Interface
+	stsClient sts.Interface
+	region    string
 }
 
 func newAccountDeactivateOpts(vars accountDeactivateVars) (*accountDeactivateOpts, error) {
 	return &accountDeactivateOpts{
 		accountDeactivateVars: vars,
 		cfnClient:             aws.CfnClient(profile),
+		s3Client:              aws.S3Client(profile),
+		stsClient:             aws.StsClient(profile),
+		region:                aws.Region(profile),
 	}, nil
 }
 func (o *accountDeactivateOpts) LoadStacks() error {
@@ -100,6 +108,33 @@ func (o *accountDeactivateOpts) Execute() error {
 			return fmt.Errorf("failed to delete stack '%s: %w", bootstrapStackName, deletionResult.Error)
 		}
 		log.Debug().Msgf("Stack '%s' has been successfully deleted!", bootstrapStackName)
+	}
+
+	if err := o.removeBootstrapBucket(); err != nil {
+		return fmt.Errorf("failed to delete bootstrap asset bucket: %w", err)
+	}
+
+	return nil
+}
+
+func (o *accountDeactivateOpts) removeBootstrapBucket() error {
+	accountId, err := o.stsClient.GetAccount()
+	if err != nil {
+		return err
+	}
+
+	bootstrapAssetBucket := awsresources.RenderBootstrapAssetBucketName(accountId, o.region)
+	exists, err := o.s3Client.BucketExists(bootstrapAssetBucket)
+	if err != nil {
+		return err
+	}
+	if exists {
+		if err := o.s3Client.EmptyBucket(bootstrapAssetBucket); err != nil {
+			return err
+		}
+		if err := o.s3Client.DeleteBucket(bootstrapAssetBucket); err != nil {
+			return err
+		}
 	}
 
 	return nil

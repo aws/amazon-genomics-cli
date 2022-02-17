@@ -24,8 +24,9 @@ const (
 
 var (
 	workflowTypeToEngineMap = map[string]string{
-		"nextflow": "nextflow",
-		"wdl":      "cromwell",
+		"nextflow":  "nextflow",
+		"wdl":       "cromwell",
+		"snakemake": "snakemake",
 	}
 	supportedWorkflowTypes []string
 )
@@ -124,7 +125,7 @@ func (o *initProjectOpts) validateProject() error {
 func BuildProjectInitCommand() *cobra.Command {
 	vars := initProjectVars{}
 	cmd := &cobra.Command{
-		Use:   "init project_name --workflow-type {wdl|nextflow}",
+		Use:   "init project_name --workflow-type {wdl|nextflow|snakemake}",
 		Short: "Initialize current directory with a new empty AGC project for a particular workflow type.",
 		Long: `Initialize current directory with a new empty AGC project for a particular workflow type.
 Project specification file 'agc-project.yaml' will be created in the current directory.`,

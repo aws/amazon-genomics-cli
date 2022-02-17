@@ -1,5 +1,5 @@
 #! /bin/bash
-export ENGINE_NAME=nextflow # cromwell / miniwdl
+export ENGINE_NAME=nextflow # cromwell / miniwdl / snakemake / nextflow
 export JOB_QUEUE=
 export JOB_DEFINITION=
 export ENGINE_LOG_GROUP=

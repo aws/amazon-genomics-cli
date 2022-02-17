@@ -93,6 +93,7 @@ If you're experiencing build issues, try running `go clean --cache` in the proje
 
 ### Running Development Code
 
+#### Option 1. Running with development script
 To run against a development version of Amazon Genomics CLI, first build your relevant changes and then run `./scripts/run-dev.sh`. This will
 set the required environment variables and then enter into an Amazon Genomics CLI command shell.
 
@@ -105,18 +106,24 @@ export ECR_CROMWELL_TAG=<some-value>
 export ECR_NEXTFLOW_ACCOUNT_ID=<some-value>
 export ECR_NEXTFLOW_REGION=<some-value>
 export ECR_NEXTFLOW_TAG=<some-value>
-export ECR_WES_ACCOUNT_ID=<some-value>
-export ECR_WES_REGION=<some-value>
-export ECR_WES_TAG=<some-value>
+export ECR_MINIWDL_ACCOUNT_ID=<some-value>
+export ECR_MINIWDL_REGION=<some-value>
+export ECR_MINIWDL_TAG=<some-value>
 ```
 
-These environment variables point to the ECR account, region, and tags of the Cromwell engine and WES adaptor containers respectively
+These environment variables point to the ECR account, region, and tags of the Cromwell, Nextflow, and MiniWDL engine respectively
 that will be deployed for your contexts. They are written as Systems Manager Parameter Store variables when you activate
 your Amazon Genomics CLI account region (`agc account activate`). The `./scripts/run-dev.sh` contains logic to determine the current
 dev versions of the images which you would typically use. You may also use production images, the current values of which will
 be written when you activate an account with the production version of Amazon Genomics CLI. If you have customized containers that you 
 want to develop against you can specify these however you will need to make these available if you wish to make pull requests
 with code that depends on them.
+
+#### Option 2. Running with local release
+Unlike running 'run-dev.sh' script, this option will build and install a new version of Amazon Genomics CLI, replacing 
+the one installed. To run a release version of Amazon Genomics CLI from your local build, first build your changes and then run `make release`.
+This will create a release bundle `dist/` at this package root directory. Run the `install.sh` script in the `dist` folder 
+to install your local release version of Amazon Genomics CLI. After installing, you should be able to run `agc` on the terminal. 
 
 ### Building locally with CodeBuild
 

@@ -54,7 +54,7 @@ data:
     readOnly: true
   - location: s3://1000genomes-dragen-3.7.6
     readOnly: true
-  - location: s3://healthai-public-assets-us-east-1/agc-demo-data
+  - location: s3://healthai-public-assets-us-east-1/agc-demo-data/*
     readOnly: true
 contexts:
   # The on demand context uses on-demand EC2 instances which may be more expensive but will not be interrupted

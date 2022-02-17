@@ -2,6 +2,7 @@ package iomocks
 
 import (
 	"io/fs"
+	"time"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"github.com/rs/zerolog"
@@ -14,6 +15,17 @@ type OS interface {
 	RemoveAll(path string) error
 	UserHomeDir() (string, error)
 	Stat(name string) (fs.FileInfo, error)
+	MkdirAll(path string, perm fs.FileMode) error
+	IsNotExist(err error) bool
+}
+
+type FileInfo interface {
+	Name() string       // base name of the file
+	Size() int64        // length in bytes for regular files; system-dependent for others
+	Mode() fs.FileMode  // file mode bits
+	ModTime() time.Time // modification time
+	IsDir() bool        // abbreviation for Mode().IsDir()
+	Sys() interface{}   // underlying data source (can return nil)
 }
 
 type Zip interface {

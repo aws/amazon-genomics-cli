@@ -28,11 +28,23 @@ RUN curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/
 
 ENV JAVA_HOME /usr/lib/jvm/jre-openjdk/
 
-COPY snakemake.aws.sh /opt/bin/snakemake.aws.sh
-RUN chmod +x /opt/bin/snakemake.aws.sh
+# install conda
+RUN curl -L https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh > miniconda.sh && \
+    bash miniconda.sh -b -p /opt/conda && \
+    rm miniconda.sh
+ENV PATH /opt/conda/bin:${PATH}
+
+ENV JAVA_HOME /usr/lib/jvm/jre-openjdk/
+
+RUN conda install -y -c conda-forge mamba python-devtools && \
+    mamba create -q -y -c conda-forge -c bioconda -n snakemake snakemake=6.14.0
+RUN pip3 install cython
 
 WORKDIR /opt/work/snakemake
 RUN python3.8 setup.py install && pip3.8 install .
 
-WORKDIR /opt/work
+COPY snakemake.aws.sh /opt/bin/snakemake.aws.sh
+RUN chmod +x /opt/bin/snakemake.aws.sh
+
+WORKDIR /opt/bin
 ENTRYPOINT ["/opt/bin/snakemake.aws.sh"]

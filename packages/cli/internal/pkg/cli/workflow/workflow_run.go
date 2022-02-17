@@ -13,7 +13,8 @@ func (m *Manager) RunWorkflow(contextName, workflowName, argumentsUrl string) (s
 	m.parseWorkflowLocation()
 	if m.isUploadRequired() {
 		m.setBaseObjectKey(contextName, workflowName)
-		m.packWorkflowFiles()
+		m.setWorkflowPath()
+		m.packWorkflowPath()
 		m.uploadWorkflowToS3()
 		m.cleanUpWorkflow()
 	}

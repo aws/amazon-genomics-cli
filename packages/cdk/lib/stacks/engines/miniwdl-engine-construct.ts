@@ -78,6 +78,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       jobQueueArn: this.batchHead.jobQueue.jobQueueArn,
       jobDefinitionArn: this.miniwdlEngine.headJobDefinition.jobDefinitionArn,
       rootDirS3Uri: rootDirS3Uri,
+      vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
     });
     this.adapterLogGroup = lambda.logGroup;
 
@@ -129,12 +130,12 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     return [this.batchHead.role, this.batchWorkers.role];
   }
 
-  private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, rootDirS3Uri }) {
+  private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, rootDirS3Uri, vpc }) {
     return super.renderPythonLambda(this, "MiniWDLWesAdapterLambda", role, {
       ENGINE_NAME: ENGINE_MINIWDL,
       JOB_QUEUE: jobQueueArn,
       JOB_DEFINITION: jobDefinitionArn,
       OUTPUT_DIR_S3_URI: rootDirS3Uri,
-    });
+    }, vpc);
   }
 }

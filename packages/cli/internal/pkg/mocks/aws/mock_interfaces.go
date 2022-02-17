@@ -42,20 +42,6 @@ func (m *MockCdkClient) EXPECT() *MockCdkClientMockRecorder {
 	return m.recorder
 }
 
-// ClearContext mocks base method.
-func (m *MockCdkClient) ClearContext(appDir string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ClearContext", appDir)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ClearContext indicates an expected call of ClearContext.
-func (mr *MockCdkClientMockRecorder) ClearContext(appDir interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearContext", reflect.TypeOf((*MockCdkClient)(nil).ClearContext), appDir)
-}
-
 // Bootstrap mocks base method.
 func (m *MockCdkClient) Bootstrap(appDir string, context []string, executionName string) (cdk.ProgressStream, error) {
 	m.ctrl.T.Helper()
@@ -69,6 +55,20 @@ func (m *MockCdkClient) Bootstrap(appDir string, context []string, executionName
 func (mr *MockCdkClientMockRecorder) Bootstrap(appDir, context, executionName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bootstrap", reflect.TypeOf((*MockCdkClient)(nil).Bootstrap), appDir, context, executionName)
+}
+
+// ClearContext mocks base method.
+func (m *MockCdkClient) ClearContext(appDir string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClearContext", appDir)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ClearContext indicates an expected call of ClearContext.
+func (mr *MockCdkClientMockRecorder) ClearContext(appDir interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearContext", reflect.TypeOf((*MockCdkClient)(nil).ClearContext), appDir)
 }
 
 // DeployApp mocks base method.
@@ -165,6 +165,62 @@ func (m *MockS3Client) BucketExists(arg0 string) (bool, error) {
 func (mr *MockS3ClientMockRecorder) BucketExists(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BucketExists", reflect.TypeOf((*MockS3Client)(nil).BucketExists), arg0)
+}
+
+// DeleteBucket mocks base method.
+func (m *MockS3Client) DeleteBucket(bucketName string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteBucket", bucketName)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteBucket indicates an expected call of DeleteBucket.
+func (mr *MockS3ClientMockRecorder) DeleteBucket(bucketName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBucket", reflect.TypeOf((*MockS3Client)(nil).DeleteBucket), bucketName)
+}
+
+// DeleteObject mocks base method.
+func (m *MockS3Client) DeleteObject(bucketName, key string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteObject", bucketName, key)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteObject indicates an expected call of DeleteObject.
+func (mr *MockS3ClientMockRecorder) DeleteObject(bucketName, key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteObject", reflect.TypeOf((*MockS3Client)(nil).DeleteObject), bucketName, key)
+}
+
+// DeleteObjectVersion mocks base method.
+func (m *MockS3Client) DeleteObjectVersion(bucketName, key, versionId string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteObjectVersion", bucketName, key, versionId)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteObjectVersion indicates an expected call of DeleteObjectVersion.
+func (mr *MockS3ClientMockRecorder) DeleteObjectVersion(bucketName, key, versionId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteObjectVersion", reflect.TypeOf((*MockS3Client)(nil).DeleteObjectVersion), bucketName, key, versionId)
+}
+
+// EmptyBucket mocks base method.
+func (m *MockS3Client) EmptyBucket(bucketName string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EmptyBucket", bucketName)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// EmptyBucket indicates an expected call of EmptyBucket.
+func (mr *MockS3ClientMockRecorder) EmptyBucket(bucketName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EmptyBucket", reflect.TypeOf((*MockS3Client)(nil).EmptyBucket), bucketName)
 }
 
 // SyncFile mocks base method.
