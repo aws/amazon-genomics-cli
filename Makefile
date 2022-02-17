@@ -38,6 +38,7 @@ init:
 docs: build-cli
 	packages/cli/bin/local/agc --docs site/content/en/docs/Reference/
 	git submodule update --init --recursive
+	cd site/themes/docsy && git checkout 03eede2c51f62cd98e0bdf161d5a0ce24d83a5a3
 	cd site && npm install && hugo
 
 clean-docs:
@@ -47,4 +48,5 @@ clean-docs:
 start-docs: build-cli
 	packages/cli/bin/local/agc --docs site/content/en/docs/Reference/
 	git submodule update --init --recursive
+	cd site/themes/docsy && git checkout 03eede2c51f62cd98e0bdf161d5a0ce24d83a5a3
 	cd site && npm install && hugo server -D
