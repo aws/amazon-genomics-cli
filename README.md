@@ -97,23 +97,7 @@ If you're experiencing build issues, try running `go clean --cache` in the proje
 To run against a development version of Amazon Genomics CLI, first build your relevant changes and then run `./scripts/run-dev.sh`. This will
 set the required environment variables and then enter into an Amazon Genomics CLI command shell.
 
-If you want to run from development code manually, ensure you have the following environment variables set.
-
-```shell
-export ECR_CROMWELL_ACCOUNT_ID=<some-value>
-export ECR_CROMWELL_REGION=<some-value>
-export ECR_CROMWELL_TAG=<some-value>
-export ECR_NEXTFLOW_ACCOUNT_ID=<some-value>
-export ECR_NEXTFLOW_REGION=<some-value>
-export ECR_NEXTFLOW_TAG=<some-value>
-export ECR_MINIWDL_ACCOUNT_ID=<some-value>
-export ECR_MINIWDL_REGION=<some-value>
-export ECR_MINIWDL_TAG=<some-value>
-```
-
-These environment variables point to the ECR account, region, and tags of the Cromwell, Nextflow, and MiniWDL engine respectively
-that will be deployed for your contexts. They are written as Systems Manager Parameter Store variables when you activate
-your Amazon Genomics CLI account region (`agc account activate`). The `./scripts/run-dev.sh` contains logic to determine the current
+The `./scripts/run-dev.sh` contains logic to determine the current
 dev versions of the images which you would typically use. You may also use production images, the current values of which will
 be written when you activate an account with the production version of Amazon Genomics CLI. If you have customized containers that you 
 want to develop against you can specify these however you will need to make these available if you wish to make pull requests
