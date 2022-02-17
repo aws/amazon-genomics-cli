@@ -7,6 +7,11 @@ workflows:
       language: cwl
       version: v1.2
     sourceURL: workflows/hello/hello.cwl
+  nontrivial:
+    type:
+      language: cwl
+      version: v1.2
+    sourceURL: workflows/nontrivial
 contexts:
   myContext:
     engines:

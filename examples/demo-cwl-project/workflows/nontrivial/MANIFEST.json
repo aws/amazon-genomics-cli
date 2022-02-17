@@ -1,0 +1,7 @@
+{
+    "mainWorkflowURL": "nontrivial.cwl",
+    "inputFileURLs": [
+      "inputs.json"
+    ],
+    "optionsFileURL": "options.json"
+}
