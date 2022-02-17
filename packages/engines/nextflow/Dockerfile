@@ -1,6 +1,5 @@
 # use the upstream nextflow container as a base image
-ARG NEXTFLOW_VERSION
-FROM public.ecr.aws/seqera-labs/nextflow:${NEXTFLOW_VERSION} AS build
+FROM public.ecr.aws/seqera-labs/nextflow:21.04.3 AS build
 
 COPY THIRD-PARTY /opt/
 COPY LICENSE /opt/

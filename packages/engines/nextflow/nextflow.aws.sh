@@ -147,10 +147,13 @@ fi
 echo "== Running Workflow =="
 echo "nextflow run ${NEXTFLOW_PROJECT} ${NEXTFLOW_PARAMS}"
 export NXF_ANSI_LOG=false
-nextflow run $NEXTFLOW_PROJECT $NEXTFLOW_PARAMS &
-
+nextflow run $NEXTFLOW_PROJECT $NEXTFLOW_PARAMS -with-report report.html -with-trace &
 NEXTFLOW_PID=$!
 echo "nextflow pid: $NEXTFLOW_PID"
 jobs
 echo "waiting .."
 wait $NEXTFLOW_PID
+ls -f
+echo "Copying report to s3 location $NF_WORKDIR/GUID/result/report.html"
+aws s3 cp report.html $NF_WORKDIR/$GUID/result/report.html
+aws s3 cp trace.txt $NF_WORKDIR/$GUID/result/trace.html
