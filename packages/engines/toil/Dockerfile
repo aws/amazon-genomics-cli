@@ -45,7 +45,7 @@ RUN npm install -g concurrently@7.0.0
 # Install Toil
 COPY THIRD-PARTY /opt/
 
-ARG TOIL_VERSION="e9a82098629046f672aaee4c5f14f46bc67be4ce"
+ARG TOIL_VERSION="8ae548c95b6ae66ec62e946667ed58825dcb55a9"
 RUN python3 -m pip install git+https://github.com/DataBiosphere/toil.git@${TOIL_VERSION}#egg=toil[aws,cwl,server]
 
 # copy the entrypoint script to the image
