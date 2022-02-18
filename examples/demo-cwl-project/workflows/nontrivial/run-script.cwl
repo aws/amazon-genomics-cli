@@ -6,6 +6,9 @@ baseCommand: node
 hints:
   DockerRequirement:
     dockerPull: node:slim
+  ResourceRequirement:
+    coresMax: 1
+    ramMin: 2000
 inputs:
   src:
     type: File

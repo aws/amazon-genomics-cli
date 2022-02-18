@@ -19,11 +19,18 @@ steps:
       src: script_file
       arg: script_arguments
     out: [script_output]
+    
+  sort:
+    run: sort-file.cwl 
+    scatter: input_file
+    in:
+      input_file: scripts/script_output
+    out: [sorted_file]
 
   concat:
     run: concatenate-files.cwl
     in:
-      files: scripts/script_output
+      files: sort/sorted_file
     out:
       [concatenated_file]
       
