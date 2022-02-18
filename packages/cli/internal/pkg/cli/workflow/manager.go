@@ -345,13 +345,6 @@ func (m *Manager) uploadInputsToS3() {
 	m.input = updateInputs
 }
 
-func toAbsPath(basePath, somePath string) (string, error) {
-	if filepath.IsAbs(somePath) {
-		return somePath, nil
-	}
-	return filepath.Abs(filepath.Join(basePath, somePath))
-}
-
 func (m *Manager) readConfig() {
 	if m.err != nil {
 		return

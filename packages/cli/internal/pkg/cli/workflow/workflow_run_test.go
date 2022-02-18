@@ -33,13 +33,11 @@ const (
 	testInputKey             = "Workflow.variable"
 	testInputLocal           = `{"` + testInputKey + `":"` + testDataFileLocalUrl + `"}`
 	testInputS3              = `{"` + testInputKey + `":"` + testDataFileS3Url + `"}`
-	testInputLocalToS3       = `{"` + testInputKey + `":"s3://TestOutputBucket/project/TestProject1/userid/bender123/data/Workflow.variable/data.txt"}`
 	testWorkflowTypeLang     = "TypeLanguage"
 	testWorkflowTypeVer      = "TypeVersion"
 	testOutputBucket         = "TestOutputBucket"
 	testWorkflowKey          = "project/" + testProjectName + "/userid/" + testUserId + "/context/" + testContext1Name + "/workflow/" + testLocalWorkflowName
 	testWorkflowZipKey       = testWorkflowKey + "/workflow.zip"
-	testDataKey              = "project/" + testProjectName + "/userid/" + testUserId + "/data/" + testInputKey + "/" + testDataFileName
 	testWorkflowLocalUrl     = "workflow/path/file.wdl"
 	testFullWorkflowLocalUrl = testProjectFileDir + "/" + testWorkflowLocalUrl
 	testTempDir              = "/directory/workflow"

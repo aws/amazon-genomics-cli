@@ -88,7 +88,6 @@ using input parameters contained in file "file:///Users/ec2-user/myproj/test-arg
 		switch name {
 		case argsFlag:
 			name = inputsFileFlag
-			break
 		}
 		return pflag.NormalizedName(name)
 	}
