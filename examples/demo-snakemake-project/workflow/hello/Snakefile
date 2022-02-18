@@ -1,0 +1,14 @@
+rule all:
+	input:
+		expand(
+ 			"output/{greeting}.txt",
+			greeting = ['Bonjour', 'Ciao', 'Hello', 'Hola'],
+		),
+
+rule hello:
+	output:
+		"output/{greeting}.txt",
+	shell:
+		"""
+		echo "{wildcards.greeting} AGC!" > {output}
+		"""
