@@ -1,10 +1,10 @@
 import { CfnOutput, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { AttributeType, BillingMode, ITable, ProjectionType, Table } from "aws-cdk-lib/aws-dynamodb";
-import { StringParameter, IParameter } from "aws-cdk-lib/aws-ssm";
-import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
+import { IParameter, StringParameter } from "aws-cdk-lib/aws-ssm";
+import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
-import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME, WES_KEY_PARAMETER_NAME, WES_BUCKET_NAME } from "../constants";
+import { APP_NAME, PRODUCT_NAME, VPC_PARAMETER_NAME, WES_BUCKET_NAME, WES_KEY_PARAMETER_NAME } from "../constants";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import * as path from "path";
 import { homedir } from "os";
@@ -117,7 +117,14 @@ export class CoreStack extends Stack {
         : {
             S3Endpoint: { service: GatewayVpcEndpointAwsService.S3 },
           },
-      subnetConfiguration: publicSubnets ? Vpc.DEFAULT_SUBNETS_NO_NAT : Vpc.DEFAULT_SUBNETS,
+      subnetConfiguration: publicSubnets
+        ? [
+            {
+              subnetType: SubnetType.PUBLIC,
+              name: "Public",
+            },
+          ]
+        : Vpc.DEFAULT_SUBNETS,
     });
 
     if (!publicSubnets) {
