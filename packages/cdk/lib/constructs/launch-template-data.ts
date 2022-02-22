@@ -22,6 +22,9 @@ packages:
 - git
 - unzip
 - amazon-cloudwatch-agent
+- python3
+- python3-pip
+
 
 write_files:
 - permissions: '0644'
@@ -105,13 +108,20 @@ runcmd:
 - mkdir -p /opt
 - cd /opt
 - echo "syncing ecs additions from $INSTALLED_ARTIFACTS_S3_ROOT_URL/ecs-additions/"
-- aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh  
+- aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh
+- chmod 777 /var/run/docker.sock
+- chmod 777 /opt/ecs-additions/stats-cron.sh
 - test -f ./ecs-additions/fetch_and_run.sh || sleep 5 && aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh    
 - test -f ./ecs-additions/fetch_and_run.sh || sleep 10 && aws s3 sync \${INSTALLED_ARTIFACTS_S3_ROOT_URL}/ecs-additions/ ./ecs-additions && chmod a+x /opt/ecs-additions/provision.sh    
 - test -f ./ecs-additions/fetch_and_run.sh || echo "Unable to install ecs-additions"
 - echo "running provision script"
 - /opt/ecs-additions/provision.sh
 - echo "provision script completed with return code $?"
+- echo "creating cron job"
+- echo "* * * * * root bash  /opt/ecs-additions/stats-cron.sh" > /etc/cron.d/docker-stats
+- systemctl start crond
+- systemctl enable crond
+- chmod 777 /var/run/crond.pid
 --==MYBOUNDARY==--
 `;
   }

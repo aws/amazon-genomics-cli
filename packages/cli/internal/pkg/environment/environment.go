@@ -6,8 +6,8 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 )
 
-const DefaultEcrRegistry = "680431765560"
-const DefaultEcrRegion = "us-east-1"
+const DefaultEcrRegistry = "987650158744"
+const DefaultEcrRegion = "us-west-2"
 
 // TODO: Implement better tag versioning system
 const DefaultCromwellTag = "64"

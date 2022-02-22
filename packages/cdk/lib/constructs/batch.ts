@@ -184,11 +184,11 @@ export class Batch extends Construct {
      */
     const launchTemplate = options.launchTemplateData
       ? new CfnLaunchTemplate(this, "LaunchTemplate", {
-          launchTemplateName: Names.uniqueId(this),
-          launchTemplateData: {
-            userData: Fn.base64(options.launchTemplateData),
-          },
-        })
+        launchTemplateName: Names.uniqueId(this),
+        launchTemplateData: {
+          userData: Fn.base64(options.launchTemplateData),
+        },
+      })
       : undefined;
 
     const instanceProfile = new CfnInstanceProfile(this, "ComputeProfile", {
