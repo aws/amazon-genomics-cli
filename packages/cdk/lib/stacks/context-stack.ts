@@ -1,4 +1,4 @@
-import { Stack, StackProps } from "aws-cdk-lib";
+import { Size, Stack, StackProps } from "aws-cdk-lib";
 import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
 import { getCommonParameter } from "../util";
@@ -16,6 +16,7 @@ export interface ContextStackProps extends StackProps {
 
 export class ContextStack extends Stack {
   private readonly vpc: IVpc;
+  private readonly iops: Size;
 
   constructor(scope: Construct, id: string, props: ContextStackProps) {
     super(scope, id, props);
@@ -25,18 +26,33 @@ export class ContextStack extends Stack {
 
     const { contextParameters } = props;
     const { engineName } = contextParameters;
+    const { filesystemType } = contextParameters;
+    const { fsProvisionedThroughput } = contextParameters;
+    this.iops = Size.mebibytes(fsProvisionedThroughput!);
 
     switch (engineName) {
       case ENGINE_CROMWELL:
+        if (filesystemType != "S3") {
+          throw Error(`'Cromwell' requires filesystem type 'S3'`);
+        }
         this.renderCromwellStack(props);
         break;
       case ENGINE_NEXTFLOW:
+        if (filesystemType != "S3") {
+          throw Error(`'Nextflow' requires filesystem type 'S3'`);
+        }
         this.renderNextflowStack(props);
         break;
       case ENGINE_MINIWDL:
+        if (filesystemType != "EFS") {
+          throw Error(`'MiniWDL' requires filesystem type 'EFS'`);
+        }
         this.renderMiniwdlStack(props);
         break;
       case ENGINE_SNAKEMAKE:
+        if (filesystemType != "EFS") {
+          throw Error(`'Snakemake' requires filesystem type 'EFS'`);
+        }
         this.renderSnakemakeStack(props);
         break;
       default:
@@ -111,6 +127,7 @@ export class ContextStack extends Stack {
     const { contextParameters } = props;
     return {
       vpc: this.vpc,
+      iops: this.iops,
       contextParameters,
     };
   }
@@ -132,6 +149,7 @@ export class ContextStack extends Stack {
   private getCommonEngineProps(props: ContextStackProps) {
     return {
       vpc: this.vpc,
+      iops: this.iops,
       contextParameters: props.contextParameters,
       policyOptions: {
         managedPolicies: [],

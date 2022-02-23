@@ -219,8 +219,10 @@ func (m *Manager) setContextEnv(contextName string) {
 		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
 		// TODO: we default to a single engine in a context for now
 		// need to allow for multiple engines in the same context
-		EngineName:        context.Engines[0].Engine,
-		EngineDesignation: context.Engines[0].Engine,
+		EngineName:              context.Engines[0].Engine,
+		EngineDesignation:       context.Engines[0].Engine,
+		FilesystemType:          context.Engines[0].Filesystem.FSType,
+		FSProvisionedThroughput: context.Engines[0].Filesystem.Configuration.FSProvisionedThroughput,
 	}
 }
 func (m *Manager) validateImage() {

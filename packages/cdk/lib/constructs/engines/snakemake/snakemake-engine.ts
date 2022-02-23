@@ -6,10 +6,12 @@ import { Engine, EngineProps } from "../engine";
 import { Batch } from "../../batch";
 import { FargatePlatformVersion } from "aws-cdk-lib/aws-ecs";
 import { AccessPoint, FileSystem } from "aws-cdk-lib/aws-efs";
+import { Size } from "aws-cdk-lib";
 
 export interface SnakemakeEngineProps extends EngineProps {
   readonly engineBatch: Batch;
   readonly workerBatch: Batch;
+  readonly iops?: Size;
 }
 
 const SNAKEMAKE_IMAGE_DESIGNATION = "snakemake";
@@ -24,8 +26,12 @@ export class SnakemakeEngine extends Engine {
   constructor(scope: Construct, id: string, props: SnakemakeEngineProps) {
     super(scope, id);
 
-    const { vpc, engineBatch, workerBatch } = props;
-    this.fileSystem = this.createFileSystem(vpc);
+    const { vpc, iops, engineBatch, workerBatch } = props;
+    if (iops?.toMebibytes() == 0 || iops == undefined) {
+      this.fileSystem = this.createFileSystemDefaultThroughput(vpc);
+    } else {
+      this.fileSystem = this.createFileSystemIOPS(vpc, iops);
+    }
     this.fsap = this.createAccessPoint(this.fileSystem);
 
     this.fileSystem.connections.allowDefaultPortFromAnyIpv4();
