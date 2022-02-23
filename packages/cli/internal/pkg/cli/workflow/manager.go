@@ -65,19 +65,20 @@ type s3Props struct {
 
 //nolint:structcheck
 type runProps struct {
-	runId           string
-	workflowSpec    spec.Workflow
-	workflowEngine  string
-	parsedSourceURL *url.URL
-	isLocal         bool
-	path            string
-	packPath        string
-	workflowUrl     string
-	inputUrl        string
-	input           Input
-	arguments       []string
-	attachments     []string
-	workflowParams  map[string]string
+	runId                string
+	workflowSpec         spec.Workflow
+	workflowEngine       string
+	parsedSourceURL      *url.URL
+	isLocal              bool
+	path                 string
+	packPath             string
+	workflowUrl          string
+	inputUrl             string
+	input                Input
+	arguments            []string
+	attachments          []string
+	workflowParams       map[string]string
+	workflowEngineParams map[string]string
 }
 
 //nolint:structcheck
@@ -500,7 +501,8 @@ func (m *Manager) runWorkflow() {
 		option.WorkflowType(m.workflowSpec.Type.Language),
 		option.WorkflowTypeVersion(m.workflowSpec.Type.Version),
 		option.WorkflowAttachment(m.attachments),
-		option.WorkflowParams(m.workflowParams))
+		option.WorkflowParams(m.workflowParams),
+		option.WorkflowEngineParams(m.workflowEngineParams))
 }
 
 func (m *Manager) recordWorkflowRun(workflowName, contextName string) {
@@ -605,6 +607,7 @@ func (m *Manager) populateInstancesAndMapToContexts(workflowInstances []ddb.Work
 			WorkflowName: instance.WorkflowName,
 			ContextName:  instance.ContextName,
 			SubmitTime:   instance.CreatedTime,
+			Request:      instance.Request,
 		}
 		m.instances[i] = instanceSummary
 		m.instancesPerContext[key] = append(m.instancesPerContext[key], &m.instances[i])
@@ -663,6 +666,19 @@ func (m *Manager) updateInProject(instance *InstanceSummary) {
 	_, instance.InProject = m.projectSpec.Workflows[instance.WorkflowName]
 }
 
+func (m *Manager) setRequest(instance *InstanceSummary) {
+	if m.err != nil || instance == nil || instance.Request != "" {
+		return
+	}
+	testRunLog := m.taskProps.runLog
+	testReq := testRunLog.Request
+	workflowEngineParamsJsonBytes, err := json.Marshal(testReq)
+	if err != nil {
+		return
+	}
+	instance.Request = string(workflowEngineParamsJsonBytes)
+}
+
 func (m *Manager) setInstanceToStop(runId string) {
 	if m.err != nil {
 		return
@@ -705,4 +721,6 @@ func (m *Manager) setWorkflowRunLogOutputs() {
 		return
 	}
 	m.workflowRunLogOutputs = runLog.Outputs
+	workflowEngineParamsJsonBytes, err := json.Marshal(runLog.Request.WorkflowEngineParameters)
+	m.instanceSummary.Request = string(workflowEngineParamsJsonBytes)
 }

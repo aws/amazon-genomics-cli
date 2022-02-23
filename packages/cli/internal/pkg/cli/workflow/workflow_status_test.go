@@ -27,6 +27,8 @@ const (
 	testWes1Url                = "https://TestWes1Url.com/prod"
 	testWes2Url                = "https://TestWes2Url.com/prod"
 	testRunStatusUnknown       = "UNKNOWN"
+	testRequest1               = "TestRequest1"
+	testRequest2               = "TestRequest2"
 )
 
 var workflowInstance1 = ddb.WorkflowInstance{
@@ -36,6 +38,7 @@ var workflowInstance1 = ddb.WorkflowInstance{
 	ProjectName:  testProjectName,
 	UserId:       testUserId,
 	CreatedTime:  testWorkflowSubmitTime1,
+	Request:      testRequest1,
 }
 
 var workflowInstance2 = ddb.WorkflowInstance{
@@ -45,6 +48,7 @@ var workflowInstance2 = ddb.WorkflowInstance{
 	ProjectName:  testProjectName,
 	UserId:       testUserId,
 	CreatedTime:  testWorkflowSubmitTime2,
+	Request:      testRequest2,
 }
 
 var instanceSummary1 = InstanceSummary{
@@ -54,6 +58,7 @@ var instanceSummary1 = InstanceSummary{
 	SubmitTime:   testWorkflowSubmitTime1,
 	InProject:    true,
 	State:        testRunStatus1,
+	Request:      testRequest1,
 }
 
 var instanceSummary2 = InstanceSummary{
@@ -63,6 +68,7 @@ var instanceSummary2 = InstanceSummary{
 	SubmitTime:   testWorkflowSubmitTime2,
 	InProject:    true,
 	State:        testRunStatus2,
+	Request:      testRequest2,
 }
 
 type WorkflowStatusTestSuite struct {
@@ -185,6 +191,7 @@ func (s *WorkflowStatusTestSuite) TestStatusWorkflowAll_InstancesDifferentContex
 			ProjectName:  testProjectName,
 			UserId:       testUserId,
 			CreatedTime:  testWorkflowSubmitTime2,
+			Request:      testRequest1,
 		},
 	}
 	s.mockDdb.EXPECT().ListWorkflowInstances(ctx.Background(), testProjectName, testUserId, testWorkflowInstancesLimit).Return(instances, nil)
@@ -209,6 +216,7 @@ func (s *WorkflowStatusTestSuite) TestStatusWorkflowAll_InstancesDifferentContex
 				ContextName:  testContext2Name,
 				SubmitTime:   testWorkflowSubmitTime2,
 				InProject:    true,
+				Request:      testRequest1,
 				State:        testRunStatus2,
 			},
 		}

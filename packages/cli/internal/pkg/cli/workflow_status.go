@@ -70,6 +70,7 @@ func (o *workflowStatusOpts) Execute() ([]types.WorkflowInstance, error) {
 			State:         instance.State,
 			SubmittedTime: instance.SubmitTime,
 			InProject:     instance.InProject,
+			Request:       instance.Request,
 		}
 
 	}
