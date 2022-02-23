@@ -20,7 +20,7 @@ func (client Client) Bootstrap(appDir string, context []string, executionName st
 	}
 
 	// Add AGC version and custom tags to the bootstrap stack.
-	agcVersionKey := "AGC_VERSION="
+	agcVersionKey := constants.AgcVersionEnvKey + "="
 	customTagsKey := constants.CustomTagEnvKey + "="
 	for _, c := range context {
 		if strings.HasPrefix(c, agcVersionKey) {
