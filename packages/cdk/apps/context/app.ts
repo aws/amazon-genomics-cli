@@ -27,12 +27,12 @@ new ContextStack(app, `${PRODUCT_NAME}-Context-${contextParameters.projectName}-
     region,
   },
   tags: {
+    ...contextParameters.customTags, // Spread customTags first, so our reserved keys aren't overridden
     [APP_TAG_KEY]: APP_NAME,
     [PROJECT_TAG_KEY]: contextParameters.projectName,
     [CONTEXT_TAG_KEY]: contextParameters.contextName,
     [USER_ID_TAG_KEY]: contextParameters.userId,
     [USER_EMAIL_TAG_KEY]: contextParameters.userEmail,
     [AGC_VERSION_KEY]: contextParameters.agcVersion,
-    ...contextParameters.customTags,
   },
 });

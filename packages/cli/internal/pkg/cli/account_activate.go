@@ -14,6 +14,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
@@ -80,12 +81,12 @@ func (o *accountActivateOpts) Execute() error {
 	}
 
 	environmentVars := []string{
-		fmt.Sprintf("AGC_BUCKET_NAME=%s", o.bucketName),
-		fmt.Sprintf("CREATE_AGC_BUCKET=%t", !exists),
-		fmt.Sprintf("AGC_VERSION=%s", version.Version),
+		fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, o.bucketName),
+		fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, !exists),
+		fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 	}
 	if o.vpcId != "" {
-		environmentVars = append(environmentVars, fmt.Sprintf("VPC_ID=%s", o.vpcId))
+		environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.VpcIdEnvKey, o.vpcId))
 	}
 
 	if o.customTags != nil {
@@ -93,7 +94,7 @@ func (o *accountActivateOpts) Execute() error {
 		if err != nil {
 			return err
 		}
-		environmentVars = append(environmentVars, fmt.Sprintf("CUSTOM_TAGS=%s", string(jsonBytes)))
+		environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.CustomTagEnvKey, string(jsonBytes)))
 	}
 
 	homeDir, err := osutils.DetermineHomeDir()

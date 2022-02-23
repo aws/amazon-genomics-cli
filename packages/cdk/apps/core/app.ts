@@ -51,9 +51,10 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
     region,
   },
   tags: {
+    // Add tags here so all infra in the core stack will be tagged as well.
+    ...customTagsMap,
     [APP_TAG_KEY]: APP_NAME,
     [AGC_VERSION_KEY]: agcVersion,
-    ...customTagsMap, // Add tags here so all infra in the core stack will be tagged as well.
   },
   parameters: stackParameters,
 });
