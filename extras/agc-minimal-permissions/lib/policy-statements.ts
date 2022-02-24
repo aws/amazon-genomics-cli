@@ -27,7 +27,12 @@ export class AgcPermissions {
             new PolicyStatement({
                 effect: Effect.ALLOW,
                 actions: actions(svc,
-                    "*SecurityGroup*",
+                    "CreateSecurityGroup",
+                    "DeleteSecurityGroup",
+                    "AuthorizeSecurityGroupIngress",
+                    "AuthorizeSecurityGroupEgress",
+                    "RevokeSecurityGroupIngress",
+                    "RevokeSecurityGroupEgress",
                     "*LaunchTemplate*",
                     "DescribeVpnGateways",
                     "DescribeSubnets",
@@ -51,8 +56,15 @@ export class AgcPermissions {
             new PolicyStatement({
                 effect: Effect.ALLOW,
                 actions: actions(svc,
-                    "Describe*",  // required for private hosted zones
-                    "Create*",
+                    "DescribeVpcs",  // required for private hosted zones
+                    "DescribeRegions",  // required for private hosted zones
+                    "DescribeSubnets",
+                    "DescribeRouteTables",
+                    "DescribeVpnGateways",
+                    "DescribeSecurityGroups",
+                    "DescribeVpcEndpointServiceConfigurations",
+                    "CreateTags",
+                    "CreateVpcEndpointServiceConfiguration",
                     "DeleteVpcEndpointServiceConfigurations",
                     "ModifyVpcEndpointServicePermissions"
                 ),
@@ -85,7 +97,10 @@ export class AgcPermissions {
             
             effect: Effect.ALLOW,
             actions: actions(svc,
-                "Delete*",
+                "DeleteBucket",
+                "DeleteObject",
+                "DeleteObjectVersion",
+                "DeleteBucketPolicy",
             ),
             resources: [
               this.arn({service: svc, region: "", account: "", resource: "*"})
@@ -124,7 +139,8 @@ export class AgcPermissions {
                 "PutBucketPublicAccessBlock",
                 "PutBucketVersioning",
                 "PutBucketPolicy",
-                "PutObject"
+                "PutObject",
+                "PutLifecycleConfiguration",
             ),
             resources: [
               this.arn({service: svc, region: "", account: "", resource: "*"})
