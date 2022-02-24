@@ -42,11 +42,7 @@ export class AgcPermissionsStack extends cdk.Stack {
       ...perms.deactivate(),
       ...perms.sts(),
       ...perms.iam(),
-<<<<<<< HEAD
-  );
-=======
     );
->>>>>>> b7374cd (feat: release extras along with the agc package)
 
     agcUserPolicyPart1.addStatements(
       // poweruser + iam permissions is sufficient
@@ -62,19 +58,6 @@ export class AgcPermissionsStack extends cdk.Stack {
       ...perms.ssmCreate(),
       ...perms.ssmRead(),
       ...perms.ssmDestroy(),
-<<<<<<< HEAD
-      ...perms.cloudformationUser(),
-      ...perms.batch(),
-      ...perms.ecr(),
-      ...perms.ecs(),
-      ...perms.elb(),
-      ...perms.apigw(),
-      ...perms.efs(),
-      ...perms.cloudmap(),
-      ...perms.logs(),
-      ...perms.route53(),
-=======
->>>>>>> b7374cd (feat: release extras along with the agc package)
     );
 
     agcUserPolicyPart2.addStatements(

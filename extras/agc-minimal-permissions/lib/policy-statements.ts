@@ -102,6 +102,9 @@ export class AgcPermissions {
                 "GetEncryptionConfiguration",
                 "GetBucketPolicy",
                 "GetBucketLocation",
+                "ListBucket",
+                "ListObjectVersions",
+                "ListBucketVersions",
             ),
             resources: [
               this.arn({service: svc, region: "", account: "", resource: "*"})
