@@ -3,8 +3,8 @@ import { ManagedPolicy, PolicyDocument } from '@aws-cdk/aws-iam';
 import * as stmt from './policy-statements';
 export class AgcPermissionsStack extends cdk.Stack {
   adminPolicy: ManagedPolicy;
-  userPolicyPart1: ManagedPolicy;
-  userPolicyPart2: ManagedPolicy;
+  userPolicyCDK: ManagedPolicy;
+  userPolicy: ManagedPolicy;
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -14,12 +14,12 @@ export class AgcPermissionsStack extends cdk.Stack {
       description: "managed policy for amazon genomics cli admins"
     })
 
-    let agcUserPolicyPart1 = new ManagedPolicy(this, 'agc-user-policy-part1', {
-      description: "managed policy part 1 for amazon genomics cli users"
+    let agcUserPolicyCDK = new ManagedPolicy(this, 'agc-user-policy-cdk', {
+      description: "managed policy for amazon genomics cli users to run cdk"
     });
 
-    let agcUserPolicyPart2 = new ManagedPolicy(this, 'agc-user-policy-part2', {
-      description: "managed policy part 2 for amazon genomics cli users"
+    let agcUserPolicy = new ManagedPolicy(this, 'agc-user-policy', {
+      description: "managed policy part 2 for amazon genomics cli users to run agc"
     });
 
     let perms = new stmt.AgcPermissions(this);
@@ -44,39 +44,37 @@ export class AgcPermissionsStack extends cdk.Stack {
       ...perms.iam(),
     );
 
-    agcUserPolicyPart1.addStatements(
-      // poweruser + iam permissions is sufficient
+    agcUserPolicyCDK.addStatements(
       ...perms.iam(),
       ...perms.sts(),
       ...perms.ec2(),
       ...perms.s3Create(),
       ...perms.s3Destroy(),
-      ...perms.s3Read(),
       ...perms.s3Write(),
-      ...perms.dynamodbRead(),
-      ...perms.dynamodbWrite(),
       ...perms.ssmCreate(),
-      ...perms.ssmRead(),
       ...perms.ssmDestroy(),
+      ...perms.ecs(),
+      ...perms.elb(),
+      ...perms.apigw(),
+      ...perms.route53(),
+      ...perms.cloudformationUser(),
     );
 
-    agcUserPolicyPart2.addStatements(
-    // splitting user policy due to quota limit for PolicySize
-        ...perms.cloudformationUser(),
-        ...perms.batch(),
-        ...perms.ecr(),
-        ...perms.ecs(),
-        ...perms.elb(),
-        ...perms.apigw(),
-        ...perms.efs(),
-        ...perms.cloudmap(),
-        ...perms.logs(),
-        ...perms.route53(),
+    agcUserPolicy.addStatements(
+      ...perms.dynamodbRead(),
+      ...perms.dynamodbWrite(),
+      ...perms.s3Read(),
+      ...perms.ssmRead(),
+      ...perms.batch(),
+      ...perms.ecr(),
+      ...perms.efs(),
+      ...perms.cloudmap(),
+      ...perms.logs(),
     )
 
     this.adminPolicy = agcAdminPolicy;
-    this.userPolicyPart1 = agcUserPolicyPart1;
-    this.userPolicyPart2 = agcUserPolicyPart2;
+    this.userPolicyCDK = agcUserPolicyCDK;
+    this.userPolicy = agcUserPolicy;
 
   }
 }
