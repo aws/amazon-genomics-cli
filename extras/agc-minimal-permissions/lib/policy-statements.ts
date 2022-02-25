@@ -21,82 +21,6 @@ export class AgcPermissions {
         return Arn.format(components, this.stack);
     }
 
-    vpc() : PolicyStatement[] {
-        const svc = "ec2";
-        return [
-            new PolicyStatement({
-                
-                effect: Effect.ALLOW,
-                actions: actions(svc,
-                    "CreateVpc",
-                    "DeleteVpc",
-                    "CreateNatGateway",
-                    "DeleteNatGateway",
-                    "CreateSecurityGroup",
-                    "DeleteSecurityGroup",
-                    "CreateInternetGateway",
-                    "DeleteInternetGateway",
-                    "CreateRoute",
-                    "DeleteRoute",
-                    "CreateSubnet",
-                    "DeleteRouteTable",
-                    "AuthorizeSecurityGroupIngress",
-                    "AuthorizeSecurityGroupEgress",
-                    "RevokeSecurityGroupIngress",
-                    "RevokeSecurityGroupEgress",
-                    "CreateVpcEndpoint",
-                    "DeleteVpcEndpoints",
-                    "AllocateAddress",
-                    "AssociateAddress",
-                    "ReleaseAddress",
-                ),
-                resources: [
-                  this.arn({service: svc, region: "*", resource: "vpc", resourceName: "*"}),
-                  this.arn({service: svc, region: "*", resource: "natgateway", resourceName: "*"}),
-                  this.arn({service: svc, region: "*", resource: "security-group", resourceName: "*"}),
-                  this.arn({service: svc, region: "*", resource: "internet-gateway", resourceName: "*"}),
-                  this.arn({service: svc, region: "*", resource: "subnet", resourceName: "*"}),
-                  this.arn({service: svc, region: "*", resource: "route-table", resourceName: "*"}),
-                  this.arn({service: svc, region: "*", resource: "vpc-endpoint", resourceName: "*"}),
-                  this.arn({service: svc, region: "*", resource: "ipv4pool-ec2", resourceName: "*"}),
-                  this.arn({service: svc, region: "*", resource: "elastic-ip", resourceName: "*"}),
-                ],
-              }),
-            new PolicyStatement({
-                
-                effect: Effect.ALLOW,
-                actions: actions(svc,
-                    "DeleteSubnet",
-                    "CreateRouteTable",
-                    "DeleteTags",
-                    "CreateTags",
-                    "ModifyVpcAttribute",
-                    "AttachInternetGateway",
-
-                    "DescribeInternetGateways",
-                    "DescribeVpcs",
-                    "DescribeAvailabilityZones",
-                    "DescribeSecurityGroups",
-                    "DescribeAccountAttributes",
-                    "DescribeSubnets",
-                    "DescribeRouteTables",
-                    "DescribeVpcEndpointServices",
-                    "DetachInternetGateway",
-                    "DescribeVpcendpoints",
-                    "DescribeAddresses",
-                    "DescribeNatGateways",
-
-                    "ModifySubnetAttribute",
-                    "DisassociateRouteTable",
-                    "AssociateRouteTable",
-                ),
-                resources: [
-                  "*"
-                ],
-              }),
-        ]
-    }
-
     ec2() : PolicyStatement[] {
         const svc = "ec2";
         return [
@@ -109,14 +33,24 @@ export class AgcPermissions {
                     "AuthorizeSecurityGroupEgress",
                     "RevokeSecurityGroupIngress",
                     "RevokeSecurityGroupEgress",
-
                     "*LaunchTemplate*",
-                    
+                    "DescribeVpnGateways",
+                    "DescribeSubnets",
+                    "DescribeVpcs",
+                    "DescribeRouteTables",
                 ),
                 resources: [
                     this.arn({service: svc, region: "*", resource: "vpc", resourceName: "*"}),
                     this.arn({service: svc, region: "*", resource: "security-group", resourceName: "*"}),
                     this.arn({service: svc, region: "*", resource: "launch-template", resourceName: "*"}),
+                    this.arn({service: svc, region: "*", resource: "natgateway", resourceName: "*"}),
+                    this.arn({service: svc, region: "*", resource: "security-group", resourceName: "*"}),
+                    this.arn({service: svc, region: "*", resource: "internet-gateway", resourceName: "*"}),
+                    this.arn({service: svc, region: "*", resource: "subnet", resourceName: "*"}),
+                    this.arn({service: svc, region: "*", resource: "route-table", resourceName: "*"}),
+                    this.arn({service: svc, region: "*", resource: "vpc-endpoint", resourceName: "*"}),
+                    this.arn({service: svc, region: "*", resource: "ipv4pool-ec2", resourceName: "*"}),
+                    this.arn({service: svc, region: "*", resource: "elastic-ip", resourceName: "*"}),
                 ]
             }),
             new PolicyStatement({
@@ -128,10 +62,10 @@ export class AgcPermissions {
                     "DescribeRouteTables",
                     "DescribeVpnGateways",
                     "DescribeSecurityGroups",
+                    "DescribeVpcEndpointServiceConfigurations",
                     "CreateTags",
                     "CreateVpcEndpointServiceConfiguration",
                     "DeleteVpcEndpointServiceConfigurations",
-                    "DescribeVpcEndpointServiceConfigurations",
                     "ModifyVpcEndpointServicePermissions"
                 ),
                 resources: [
@@ -149,12 +83,9 @@ export class AgcPermissions {
                 effect: Effect.ALLOW,
                 actions: actions(svc,
                     "CreateBucket",
-                    "PutBucketPolicy",
-                    "PutBucketTagging",
-                    "PutEncryptionConfiguration",
                 ),
                 resources: [
-                    this.arn({service: svc, region: "", account: "", resource: "agc-*"})
+                    this.arn({service: svc, region: "", account: "", resource: "*"})
                 ],
             })
         ]
@@ -167,10 +98,12 @@ export class AgcPermissions {
             effect: Effect.ALLOW,
             actions: actions(svc,
                 "DeleteBucket",
+                "DeleteObject",
+                "DeleteObjectVersion",
                 "DeleteBucketPolicy",
             ),
             resources: [
-              this.arn({service: svc, region: "", account: "", resource: "agc-*"})
+              this.arn({service: svc, region: "", account: "", resource: "*"})
             ],
           })]
     }
@@ -181,16 +114,15 @@ export class AgcPermissions {
             
             effect: Effect.ALLOW,
             actions: actions(svc,
-                "GetBucketPolicy",
-                "GetBucketTagging",
-                "GetBucketLocation",
                 "GetEncryptionConfiguration",
+                "GetBucketPolicy",
+                "GetBucketLocation",
                 "ListBucket",
-                "GetObject",
-                "GetObjectTagging"
+                "ListObjectVersions",
+                "ListBucketVersions",
             ),
             resources: [
-              this.arn({service: svc, region: "", account: "", resource: "agc-*"})
+              this.arn({service: svc, region: "", account: "", resource: "*"})
             ],
           })]
     }
@@ -201,13 +133,17 @@ export class AgcPermissions {
             
             effect: Effect.ALLOW,
             actions: actions(svc,
+                "PutEncryptionConfiguration",
+                "PutBucketTagging",
+                "PutBucketPolicy",
+                "PutBucketPublicAccessBlock",
+                "PutBucketVersioning",
+                "PutBucketPolicy",
                 "PutObject",
-                "PutObjectTagging",
-                "DeleteObjectTagging",
-                "DeleteObject",
+                "PutLifecycleConfiguration",
             ),
             resources: [
-              this.arn({service: svc, region: "", account: "", resource: "agc-*"})
+              this.arn({service: svc, region: "", account: "", resource: "*"})
             ],
           })]
     }
@@ -295,7 +231,7 @@ export class AgcPermissions {
                 "AddTagsToResource",
             ),
             resources: [
-              this.arn({service: svc, region: "*", resource: "parameter", resourceName: "agc/*"})
+              this.arn({service: svc, region: "*", resource: "parameter", resourceName: "*"})
             ]
           })]
     }
@@ -311,7 +247,7 @@ export class AgcPermissions {
               "RemoveTagsFromResource",
             ),
             resources: [
-              this.arn({service: svc, region: "*", resource: "parameter", resourceName: "agc/*"})
+              this.arn({service: svc, region: "*", resource: "parameter", resourceName: "*"})
             ]
           })]
     }
@@ -322,16 +258,13 @@ export class AgcPermissions {
             
             effect: Effect.ALLOW,
             actions: actions(svc,
-                "Describe*",
-                //"DescribeParameters",
-                "Get*",
-                //"GetParameter",
-                //"GetParameters",
-                //"GetParametersByPath",
+                "DescribeParameters",
+                "GetParameter",
+                "GetParameters",
                 "ListTagsForResource",
             ),
             resources: [
-              this.arn({service: svc, region: "*", resource: "parameter", resourceName: "agc/*"})
+              this.arn({service: svc, region: "*", resource: "parameter", resourceName: "*"})
             ]
           })]
     }
@@ -373,7 +306,8 @@ export class AgcPermissions {
                 ),
                 resources: [
                     this.arn({service: svc, region: "", resource: "role", resourceName: "Agc-*"}),
-                    this.arn({service: svc, region: "", resource: "instance-profile", resourceName: "Agc-*"})
+                    this.arn({service: svc, region: "", resource: "instance-profile", resourceName: "Agc-*"}),
+                    this.arn({service: svc, region: "", resource: "role", resourceName: "cdk-agc-*"}),
                 ]
             }),
             new PolicyStatement({
@@ -430,7 +364,7 @@ export class AgcPermissions {
                 "UntagResource",
             ),
             resources: [
-                this.arn({service: "cloudformation", region: "*", resource: "stack", resourceName: "Agc-CDKToolkit*"}),
+                this.arn({service: "cloudformation", region: "*", resource: "stack", resourceName: "Agc-*"}),
             ]
         })
     }
@@ -810,7 +744,14 @@ export class AgcPermissions {
             new PolicyStatement({
                 effect: Effect.ALLOW,
                 actions: actions(svc,
+                    "DeleteRepository",
+                    "DescribeRepositories",
+                    "ListTagsForResource",
+                    "GetLifecyclePolicy",
+                    "CreateRepository",
                     "ListImages",
+                    "GetRepositoryPolicy",
+                    "DeleteRepository",
                 ),
                 resources: [
                     this.arn({service: svc, region: "*", account: "*", resource: "*"})
@@ -905,6 +846,22 @@ export class AgcPermissions {
                 ],
                 resources: [
                     "*"
+                ]
+            })
+        ]
+    }
+
+    sts() : PolicyStatement[] {
+        const svc = "sts";
+        return [
+            new PolicyStatement({
+                effect: Effect.ALLOW,
+                actions: actions(svc,
+                    "GetCallerIdentity",
+                    "AssumeRole"
+                ),
+                resources: [
+                   "*"
                 ]
             })
         ]
