@@ -43,6 +43,7 @@ type contextProps struct {
 	outputBucket     string
 	artifactBucket   string
 	artifactUrl      string
+	customTagsJson   string
 	contextEnv       contextEnvironment
 }
 
@@ -194,6 +195,14 @@ func (m *Manager) setOutputBucket() {
 	}
 }
 
+func (m *Manager) setCustomTags() {
+	if m.err != nil {
+		return
+	}
+
+	m.customTagsJson = m.Ssm.GetCustomTags()
+}
+
 func (m *Manager) setContextEnv(contextName string) {
 	if m.err != nil {
 		return
@@ -211,6 +220,7 @@ func (m *Manager) setContextEnv(contextName string) {
 		UserId:               m.userId,
 		UserEmail:            m.userEmail,
 		OutputBucketName:     m.outputBucket,
+		CustomTagsJson:       m.customTagsJson,
 		ArtifactBucketName:   m.artifactBucket,
 		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
 		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),

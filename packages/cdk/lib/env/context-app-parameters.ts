@@ -92,6 +92,11 @@ export class ContextAppParameters {
    */
   public readonly agcVersion: string;
 
+  /**
+   * Map of custom tags to be applied to all the infrastructure in the context.
+   */
+  public readonly customTags: { [key: string]: string };
+
   constructor(node: Node) {
     const instanceTypeStrings = getEnvStringListOrDefault(node, "BATCH_COMPUTE_INSTANCE_TYPES");
 
@@ -120,6 +125,13 @@ export class ContextAppParameters {
     this.instanceTypes = instanceTypeStrings ? instanceTypeStrings.map((instanceType) => new InstanceType(instanceType.trim())) : undefined;
 
     this.agcVersion = getEnvString(node, "AGC_VERSION");
+
+    const tagsJson = getEnvStringOrDefault(node, "CUSTOM_TAGS");
+    if (tagsJson != null) {
+      this.customTags = JSON.parse(tagsJson);
+    } else {
+      this.customTags = {};
+    }
   }
 
   public getContextBucketPath(): string {
