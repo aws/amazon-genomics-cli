@@ -2,6 +2,7 @@ package storage
 
 import (
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
@@ -52,6 +53,7 @@ const (
 	bucketName              = "s3://bucketName"
 	baseS3Key               = "some/key"
 	testFile1               = "testFile.json"
+	testFile1FullPath       = initialProjectDirectory + "/" + testFile1
 )
 
 var (
@@ -101,9 +103,10 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_WriteFileFails() {
 	inputFile := map[string]interface{}{
 		"a": 1,
 	}
-	ic.mockJson.EXPECT().Marshal(gomock.Any()).Return(nil, nil)
+	inputFileString := []byte("{\"a\":" + testFile1)
+	ic.mockJson.EXPECT().Marshal(inputFile).Return(inputFileString, nil)
 	expectedErr := errors.New("FileNotFound")
-	ic.mockFileWriter.EXPECT().WriteFile(gomock.Any(), gomock.Any(), gomock.Any()).Return(expectedErr)
+	ic.mockFileWriter.EXPECT().WriteFile(tempProjectDirectory, inputFileString, os.FileMode(0644)).Return(expectedErr)
 
 	_, err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
 	ic.Assert().Equal(err, expectedErr)
@@ -113,9 +116,9 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_UploadFileFails() {
 	inputFile := map[string]interface{}{
 		"a": testFile1,
 	}
-	ic.mockOs.EXPECT().Stat(initialProjectDirectory+"/"+testFile1).AnyTimes().Return(nil, nil)
+	ic.mockOs.EXPECT().Stat(testFile1FullPath).AnyTimes().Return(os.FileInfo(nil), nil)
 	expectedErr := errors.New("FileNotFound")
-	ic.mockS3Client.EXPECT().UploadFile(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().Return(expectedErr)
+	ic.mockS3Client.EXPECT().UploadFile("bucketName", baseS3Key+"/"+testFile1, "dir/"+testFile1).AnyTimes().Return(expectedErr)
 
 	_, err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
 	ic.Assert().Equal(err, expectedErr)
@@ -125,9 +128,9 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_MarshallFails() {
 	inputFile := map[string]interface{}{
 		"a": 1,
 	}
-	ic.mockOs.EXPECT().Stat(initialProjectDirectory+"/"+testFile1).AnyTimes().Return(nil, nil)
+	ic.mockOs.EXPECT().Stat(testFile1FullPath).AnyTimes().Return(os.FileInfo(nil), nil)
 	expectedErr := errors.New("FileNotFound")
-	ic.mockJson.EXPECT().Marshal(gomock.Any()).Return(nil, expectedErr)
+	ic.mockJson.EXPECT().Marshal(inputFile).Return(nil, expectedErr)
 
 	_, err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
 	ic.Assert().Equal(err, expectedErr)
@@ -150,12 +153,13 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_HappyCase() {
 		"e": "params",
 		"f": "s3://bucketName/some/key/testFile.json" + "," + "s3://bucketName/some/key/testFile.json",
 	}
-	ic.mockOs.EXPECT().Stat(initialProjectDirectory+"/"+testFile1).AnyTimes().Return(nil, nil)
+	ic.mockOs.EXPECT().Stat(testFile1FullPath).AnyTimes().Return(os.FileInfo(nil), nil)
 	expectedErr := errors.New("FileNotFound")
+	//Using gomock.Any() since there are a bunch of file paths that are being passed around, and this validation is anyway convered in above cases.
 	ic.mockOs.EXPECT().Stat(gomock.Any()).AnyTimes().Return(nil, expectedErr)
-	ic.mockJson.EXPECT().Marshal(gomock.Any()).Return(nil, nil)
-	ic.mockFileWriter.EXPECT().WriteFile(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
-	ic.mockS3Client.EXPECT().UploadFile(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().Return(nil)
+	ic.mockJson.EXPECT().Marshal(expectedUpdatedInputFile).Return(nil, nil)
+	ic.mockFileWriter.EXPECT().WriteFile(tempProjectDirectory, gomock.Any(), os.FileMode(0644)).Return(nil)
+	ic.mockS3Client.EXPECT().UploadFile("bucketName", gomock.Any(), gomock.Any()).AnyTimes().Return(nil)
 
 	actualUpdatedInputFile, err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
 	ic.Assert().Equal(err, nil)
