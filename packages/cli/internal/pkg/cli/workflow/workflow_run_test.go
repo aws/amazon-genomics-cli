@@ -40,6 +40,7 @@ const (
   testOutputBucket         = "TestOutputBucket"
   testWorkflowKey          = "project/" + testProjectName + "/userid/" + testUserId + "/context/" + testContext1Name + "/workflow/" + testLocalWorkflowName
   testWorkflowZipKey       = testWorkflowKey + "/workflow.zip"
+  testDataKey              = "project/" + testProjectName + "/userid/" + testUserId + "/data/" + testInputKey + "/" + testDataFileName
   testWorkflowLocalUrl     = "workflow/path/file.wdl"
   testFullWorkflowLocalUrl = testProjectFileDir + "/" + testWorkflowLocalUrl
   testTempDir              = "/directory/workflow"

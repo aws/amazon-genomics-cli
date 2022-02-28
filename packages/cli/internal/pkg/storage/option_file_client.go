@@ -35,7 +35,7 @@ func (oc *OptionInstance) UpdateOptionReferenceAndUploadToS3(initialProjectDirec
 		return err
 	}
 
-	var optionFile map[string]interface{}
+	var optionFile interface{}
 	err = jsonUnmarshall(optionsReferenceFile, &optionFile)
 	if err != nil {
 		return actionableerror.New(err, fmt.Sprintf("Please validate that the options JSON file %s exists", manifest.OptionFileUrl))
@@ -49,45 +49,44 @@ func (oc *OptionInstance) UpdateOptionReferenceAndUploadToS3(initialProjectDirec
 	return nil
 }
 
-func (oc *OptionInstance) UpdateOptionFile(initialProjectDirectory string, optionFile map[string]interface{}, bucketName string, baseS3Key string, fileLocation string) (map[string]interface{}, error) {
-	var updatedOptionReferenceFile = make(map[string]interface{})
-	for key, value := range optionFile {
-		var optionReference string
-		switch typedValue := value.(type) {
-		case string:
-			updatedReference, err := oc.uploadReferenceToS3(optionReference, initialProjectDirectory, bucketName, baseS3Key)
-			if err != nil {
-				return nil, err
-			}
-
-			updatedOptionReferenceFile[key] = updatedReference
-		case []interface{}:
-			var updatedRef []interface{}
-
-			// We only support one level deep
-			for _, val := range typedValue {
-				stringValue, ok := val.(string)
-				if !ok {
-					updatedRef = append(updatedRef, val)
-					log.Debug().Msgf("The value %#v is not a string and will not be checked if it's an options file", val)
-				} else {
-					optionReference = stringValue
-				}
-			}
-			updatedReferences, err := oc.uploadReferenceToS3(optionReference, initialProjectDirectory, bucketName, baseS3Key)
-			if err != nil {
-				return nil, err
-			}
-
-			for _, val := range updatedReferences {
-				updatedRef = append(updatedRef, val)
-			}
-
-			updatedOptionReferenceFile[key] = updatedRef
-		default:
-			updatedOptionReferenceFile[key] = value
+func (oc *OptionInstance) UpdateOptionFile(initialProjectDirectory string, optionFile interface{}, bucketName string, baseS3Key string, fileLocation string) (interface{}, error) {
+	var updatedOptionReferenceFile interface{}
+	var optionReference string
+	switch typedValue := optionFile.(type) {
+	case string:
+		optionReference = typedValue
+		updatedReference, err := oc.uploadReferenceToS3(typedValue, initialProjectDirectory, bucketName, baseS3Key)
+		if err != nil {
+			return nil, err
 		}
+
+		updatedOptionReferenceFile = updatedReference
+	case []interface{}:
+		var updatedRef []interface{}
+
+		// We only support one level deep
+		for _, val := range typedValue {
+			stringValue, ok := val.(string)
+			if !ok {
+				updatedRef = append(updatedRef, val)
+				log.Debug().Msgf("The value %#v is not a string and will not be checked if it's an options file", val)
+			} else {
+				optionReference = stringValue
+			}
+		}
+		updatedReferences, err := oc.uploadReferenceToS3(optionReference, initialProjectDirectory, bucketName, baseS3Key)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, val := range updatedReferences {
+			updatedRef = append(updatedRef, val)
+		}
+		updatedOptionReferenceFile = updatedRef
+	default:
+		updatedOptionReferenceFile = optionFile
 	}
+
 	marshalledData, err := jsonMarshall(updatedOptionReferenceFile)
 	if err != nil {
 		return nil, err

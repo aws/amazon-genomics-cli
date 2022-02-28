@@ -500,7 +500,15 @@ func (m *Manager) setWorkflowEngineParameters() {
 		log.Debug().Msgf("optionFile flag can only be used with head node engines")
 		return
 	}
-	m.workflowEngineParams["workflowOptionFile"] = filepath.Base(m.attachments[0])
+
+	namePattern := fmt.Sprintf("%s_*", filepath.Base(m.optionFileUrl))
+	optionFileName, err := writeToTmp(namePattern, m.optionFileUrl)
+	if err != nil {
+		m.err = err
+		return
+	}
+	m.attachments = append(m.attachments, optionFileName)
+	m.workflowEngineParams["workflowOptionFile"] = filepath.Base(optionFileName)
 }
 
 func (m *Manager) setWesClient() {

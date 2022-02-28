@@ -74,7 +74,7 @@ func (m *MockWorkflowManager) RunWorkflow(contextName, workflowName, argumentsUr
 }
 
 // RunWorkflow indicates an expected call of RunWorkflow.
-func (mr *MockWorkflowManagerMockRecorder) RunWorkflow(contextName, workflowName, argumentsUrl interface{}, optionFileUrl interface{}, engineOptions interface{}) *gomock.Call {
+func (mr *MockWorkflowManagerMockRecorder) RunWorkflow(contextName, workflowName, argumentsUrl interface{}, optionFileUrl interface{}, engineOptions string) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunWorkflow", reflect.TypeOf((*MockWorkflowManager)(nil).RunWorkflow), contextName, workflowName, argumentsUrl, optionFileUrl, engineOptions)
 }

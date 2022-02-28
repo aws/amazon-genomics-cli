@@ -44,6 +44,21 @@ func (oc *OptionClientTestSuite) BeforeTest(_, _ string) {
 	}
 }
 
+func (oc *OptionClientTestSuite) TestUpdateOptionsFile_Success() {
+	optionFileUrl := testFileUrl
+	expectedUpdatedOptionFile := testFileUrl
+	oc.mockOs.EXPECT().Stat(initialProjectDirectory+"/"+testFile1).AnyTimes().Return(nil, nil)
+	expectedErr := errors.New("FileNotFound")
+	oc.mockOs.EXPECT().Stat(gomock.Any()).AnyTimes().Return(nil, expectedErr)
+	oc.mockJson.EXPECT().Marshal(gomock.Any()).Return(nil, nil)
+	oc.mockFileWriter.EXPECT().WriteFile(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
+	oc.mockS3Client.EXPECT().UploadFile(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().Return(nil)
+
+	actualUpdatedOptionFile, err := oc.optionInstance.UpdateOptionFile(initialProjectDirectory, optionFileUrl, "bucketName", baseS3Key, tempProjectDirectory)
+	oc.Assert().Equal(err, nil)
+	oc.Assert().Equal(actualUpdatedOptionFile, expectedUpdatedOptionFile)
+}
+
 func (oc *OptionClientTestSuite) TestUpdateOptionReferenceAndUploadToS3_ManifestMissing() {
 	oc.mockOs.EXPECT().Stat(expectedStatDirectory).Return(nil, errors.New("some error"))
 	err := oc.optionInstance.UpdateOptionReferenceAndUploadToS3(initialProjectDirectory, tempProjectDirectory, bucketName, baseS3Key)
