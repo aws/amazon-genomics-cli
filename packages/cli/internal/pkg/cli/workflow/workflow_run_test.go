@@ -423,7 +423,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_ReadArgsFailed() {
 }
 
 func (s *WorkflowRunTestSuite) TestRunWorkflow_UploadInputFailed() {
-	errorMessage := "Upload Failed"
 	s.mockConfigClient.EXPECT().GetUserId().Return(testUserId, nil)
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	errorMessage := "cannot upload input"
@@ -444,7 +443,7 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_UploadInputFailed() {
 	_ = json.Unmarshal([]byte(testInputLocal), &testInputS3Map)
 	s.mockInputClient.EXPECT().UpdateInputsInFile(testProjectFileDir, testInputS3Map, testOutputBucket, testFilePathKey, testArgsFilePath).Return(nil, errors.New(errorMessage))
 
-	actualId, err := s.manager.RunWorkflow(testContext1Name, testS3WorkflowName, testArgumentsPath)
+	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, testArgumentsPath)
 	if s.Assert().Error(err) {
 		s.Assert().EqualError(err, testErrorPrefix+expectedInfix+errorMessage)
 		s.Assert().Empty(actualId)
