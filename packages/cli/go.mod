@@ -30,7 +30,7 @@ require (
 	github.com/rsc/wes_client v0.0.0-00010101000000-000000000000
 	github.com/spf13/afero v1.6.0
 	github.com/spf13/cobra v1.2.1
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/xeipuuv/gojsonschema v1.2.0
