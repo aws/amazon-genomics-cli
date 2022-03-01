@@ -293,7 +293,11 @@ func (m *Manager) uploadWorkflowToS3() {
 	if m.err != nil {
 		return
 	}
-	m.err = m.S3.UploadFile(m.bucketName, fmt.Sprintf("%s/%s", m.baseWorkflowKey, workflowZip), m.packPath)
+	objectKey := fmt.Sprintf("%s/%s", m.baseWorkflowKey, workflowZip)
+	m.err = m.S3.UploadFile(m.bucketName, objectKey, m.packPath)
+	if m.err != nil {
+		m.err = fmt.Errorf("unable to upload s3://%s/%s: %w", m.bucketName, objectKey, m.err)
+	}
 }
 
 func (m *Manager) readInput(inputUrl string) {
@@ -339,7 +343,7 @@ func (m *Manager) uploadInputsToS3() {
 	fileLocation := fmt.Sprintf("%s/%s", dir, m.inputUrl)
 	updateInputs, err := m.InputClient.UpdateInputsInFile(m.Project.GetLocation(), m.input, m.bucketName, objectKey, fileLocation)
 	if err != nil {
-		m.err = err
+		m.err = fmt.Errorf("unable to sync s3://%s/%s: %w", m.bucketName, objectKey, err)
 		return
 	}
 	m.input = updateInputs

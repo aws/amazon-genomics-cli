@@ -12,6 +12,7 @@ import (
 const (
 	parameterPrefix       = "/agc/_common"
 	outputBucketParameter = "bucket"
+	customTagsParameter   = "customTags"
 )
 
 func (c *Client) GetCommonParameter(parameterSuffix string) (string, error) {
@@ -31,4 +32,11 @@ func (c *Client) GetCommonParameter(parameterSuffix string) (string, error) {
 
 func (c *Client) GetOutputBucket() (string, error) {
 	return c.GetCommonParameter(outputBucketParameter)
+}
+
+func (c *Client) GetCustomTags() string {
+	// Custom tags may not exist, so ignore the error
+
+	tags, _ := c.GetCommonParameter(customTagsParameter)
+	return tags
 }

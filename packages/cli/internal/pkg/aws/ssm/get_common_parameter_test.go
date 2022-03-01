@@ -63,3 +63,15 @@ func TestClient_GetOutputBucket_ExpectedValue(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, testBucketName, actual)
 }
+
+func TestClient_GetCustomTags_ExpectedValue(t *testing.T) {
+	tags := "tags"
+	mockSsm := new(ssmMockClient)
+	client := &Client{mockSsm}
+	ctx := context.Background()
+	mockSsm.On("GetParameter", ctx, &ssm.GetParameterInput{Name: aws.String("/agc/_common/customTags")}).
+		Return(&ssm.GetParameterOutput{Parameter: &types.Parameter{Value: aws.String(tags)}}, nil)
+
+	actual := client.GetCustomTags()
+	assert.Equal(t, tags, actual)
+}

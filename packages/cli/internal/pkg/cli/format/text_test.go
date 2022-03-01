@@ -7,33 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type testEmptyStruct struct{}
-
-// field name prefix enforcing the ordering
-type testSimpleFields struct {
-	aIntField    int
-	bStringField string
-	cBoolField   bool
-}
-
-type testStructWithCollections struct {
-	aName       string
-	bItems1     []testSimpleFields
-	cItems2     []testEmptyStruct
-	dSomeNumber int
-}
-
-type testNestedStruct struct {
-	aId   int
-	bName string
-}
-
-//nolint:structcheck
-type testStructWithNestedStruct struct {
-	aId        int
-	bSubStruct testNestedStruct
-}
-
 func TestText_WriteStruct(t *testing.T) {
 
 	tests := []struct {
@@ -59,33 +32,33 @@ func TestText_WriteStruct(t *testing.T) {
 		{
 			"Simple fields",
 			testSimpleFields{
-				aIntField:    654,
-				bStringField: "Some string",
-				cBoolField:   true,
+				AIntField:    654,
+				BStringField: "Some string",
+				CBoolField:   true,
 			},
 			"TESTSIMPLEFIELDS\t654\tSome string\ttrue\n",
 		},
 		{
 			"Struct with collections",
 			testStructWithCollections{
-				aName: "This is name",
-				bItems1: []testSimpleFields{
+				AName: "This is name",
+				BItems1: []testSimpleFields{
 					{
-						aIntField:    1,
-						bStringField: "First",
-						cBoolField:   false,
+						AIntField:    1,
+						BStringField: "First",
+						CBoolField:   false,
 					},
 					{
-						aIntField:    2,
-						bStringField: "Second",
-						cBoolField:   true,
+						AIntField:    2,
+						BStringField: "Second",
+						CBoolField:   true,
 					},
 				},
-				cItems2: []testEmptyStruct{
+				CItems2: []testEmptyStruct{
 					{},
 					{},
 				},
-				dSomeNumber: -88,
+				DSomeNumber: -88,
 			},
 			`TESTSTRUCTWITHCOLLECTIONS	This is name	-88
 TESTSIMPLEFIELDS	1	First	false

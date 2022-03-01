@@ -51,19 +51,27 @@ func (p ProgressStream) DisplayProgress(description string) error {
 	return nil
 }
 
-func ShowExecution(progressStreams []ProgressStream) []Result {
+func performExecution(progressStreams []ProgressStream, showLogging bool) []Result {
 	var keyToEventMap = make(map[string]ProgressEvent)
 
 	combinedStream := combineProgressEvents(progressStreams)
 
 	for event := range combinedStream {
-		if event.LastOutput != "" {
+		if showLogging && event.LastOutput != "" {
 			log.Info().Msg(event.LastOutput)
 		}
 		keyToEventMap[event.ExecutionName] = event
 	}
 
 	return convertProgressEventsToResults(keyToEventMap, len(progressStreams))
+}
+
+func SilentExecution(progressStreams []ProgressStream) []Result {
+	return performExecution(progressStreams, false)
+}
+
+func ShowExecution(progressStreams []ProgressStream) []Result {
+	return performExecution(progressStreams, true)
 }
 
 func updateResultFromStream(stream ProgressStream, progressResult *Result, wait *sync.WaitGroup) {
