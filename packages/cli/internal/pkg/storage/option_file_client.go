@@ -54,7 +54,6 @@ func (oc *OptionInstance) UpdateOptionFile(initialProjectDirectory string, optio
 	var optionReference string
 	switch typedValue := optionFile.(type) {
 	case string:
-		optionReference = typedValue
 		updatedReference, err := oc.uploadReferenceToS3(typedValue, initialProjectDirectory, bucketName, baseS3Key)
 		if err != nil {
 			return nil, err

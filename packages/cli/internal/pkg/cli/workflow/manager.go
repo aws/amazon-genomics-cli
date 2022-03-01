@@ -387,6 +387,10 @@ func (m *Manager) uploadOptionFileToS3() {
 	}
 	fileLocation := fmt.Sprintf("%s/%s", dir, m.optionFileUrl)
 	updatedOption, err := m.OptionClient.UpdateOptionFile(m.Project.GetLocation(), m.optionFile, m.bucketName, objectKey, fileLocation)
+	if err != nil {
+		m.err = err
+		return
+	}
 	m.optionFile = updatedOption
 }
 
