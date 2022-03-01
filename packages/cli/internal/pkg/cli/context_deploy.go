@@ -118,11 +118,16 @@ func (o *deployContextOpts) deployContexts() error {
 			var actionableError *actionableerror.Error
 			if errors.As(failedDeployment.Err, &actionableError) {
 				log.Error().Err(actionableError.Cause).Msgf(actionableError.Error())
-				aggregateSuggestions = append(aggregateSuggestions, actionableError.SuggestedAction)
+				aggregateSuggestions = append(aggregateSuggestions, fmt.Sprintf("To resolve failure %d, try: %s", i+1, actionableError.SuggestedAction))
+			} else {
+				// An error occurred that we don't know how to deal with
+				// already. We can't swallow it or it will be impossible for
+				// the user to report or fix.
+				aggregateSuggestions = append(aggregateSuggestions, fmt.Sprintf("To resolve failure %d, determine the cause of: %v", i+1, failedDeployment.Err))
 			}
 		}
 
-		return actionableerror.New(fmt.Errorf("one or more contexts failed to deploy"), strings.Join(aggregateSuggestions, ", "))
+		return actionableerror.New(fmt.Errorf("%d context deployment failures", failedDeploymentsLength), strings.Join(aggregateSuggestions, "\n"))
 	}
 
 	return nil
