@@ -721,6 +721,4 @@ func (m *Manager) setWorkflowRunLogOutputs() {
 		return
 	}
 	m.workflowRunLogOutputs = runLog.Outputs
-	workflowEngineParamsJsonBytes, err := json.Marshal(runLog.Request.WorkflowEngineParameters)
-	m.instanceSummary.Request = string(workflowEngineParamsJsonBytes)
 }
