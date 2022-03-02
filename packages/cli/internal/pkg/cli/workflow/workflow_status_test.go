@@ -237,6 +237,7 @@ func (s *WorkflowStatusTestSuite) TestStatusWorkflowAll_WorkflowNotInProject() {
 			ProjectName:  testProjectName,
 			UserId:       testUserId,
 			CreatedTime:  testWorkflowSubmitTime2,
+			Request:      testRequest2,
 		},
 	}
 	s.mockDdb.EXPECT().ListWorkflowInstances(ctx.Background(), testProjectName, testUserId, testWorkflowInstancesLimit).Return(instances, nil)
@@ -258,6 +259,7 @@ func (s *WorkflowStatusTestSuite) TestStatusWorkflowAll_WorkflowNotInProject() {
 				SubmitTime:   testWorkflowSubmitTime2,
 				InProject:    false,
 				State:        testRunStatus2,
+				Request:      testRequest2,
 			},
 		}
 		s.Assert().Equal(expectedStatuses, actualStatuses)
@@ -322,6 +324,7 @@ func (s *WorkflowStatusTestSuite) TestStatusWorkflow_ErrorStatusContexts() {
 			ProjectName:  testProjectName,
 			UserId:       testUserId,
 			CreatedTime:  testWorkflowSubmitTime2,
+			Request:      testRequest2,
 		},
 	}
 	s.mockDdb.EXPECT().ListWorkflowInstances(ctx.Background(), testProjectName, testUserId, testWorkflowInstancesLimit).Return(instances, nil)
@@ -354,6 +357,7 @@ func (s *WorkflowStatusTestSuite) TestStatusWorkflow_NonActiveContexts() {
 			ProjectName:  testProjectName,
 			UserId:       testUserId,
 			CreatedTime:  testWorkflowSubmitTime2,
+			Request:      testRequest1,
 		},
 	}
 	s.mockDdb.EXPECT().ListWorkflowInstances(ctx.Background(), testProjectName, testUserId, testWorkflowInstancesLimit).Return(instances, nil)

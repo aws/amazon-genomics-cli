@@ -670,7 +670,10 @@ func (m *Manager) setRequest(instance *InstanceSummary) {
 	if m.err != nil || instance == nil || instance.Request != "" {
 		return
 	}
-	testRunLog := m.taskProps.runLog
+	testRunLog, err := m.wes.GetRunLog(context.Background(), instance.Id)
+	if err != nil {
+		return
+	}
 	testReq := testRunLog.Request
 	workflowEngineParamsJsonBytes, err := json.Marshal(testReq)
 	if err != nil {
