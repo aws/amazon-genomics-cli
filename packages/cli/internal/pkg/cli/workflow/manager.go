@@ -667,7 +667,11 @@ func (m *Manager) updateInProject(instance *InstanceSummary) {
 }
 
 func (m *Manager) setRequest(instance *InstanceSummary) {
-	if m.err != nil || instance == nil || instance.Request != "" {
+	if m.err != nil || instance == nil {
+		return
+	}
+	if instance.Request != "" {
+		log.Debug().Msgf("Instance request field is already set.")
 		return
 	}
 	testRunLog, err := m.wes.GetRunLog(context.Background(), instance.Id)
