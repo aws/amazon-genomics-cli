@@ -4,9 +4,7 @@
 package cli
 
 const (
-	argsFlag            = "args"
-	argsFlagShort       = "a"
-	argsFlagDescription = "Arguments to use."
+	argsFlag = "args"
 )
 
 const (
