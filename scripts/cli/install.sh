@@ -34,7 +34,7 @@ install_cli () {
 install_cdk () {
     mkdir -p "$BASE_DIR/cdk"
     cp "$SCRIPT_DIR/cdk.tgz" "$BASE_DIR/cdk"
-    (cd "$BASE_DIR/cdk" && tar -xzf ./cdk.tgz --strip-components=1 && npm ci --silent && npm prune --production)
+    (cd "$BASE_DIR/cdk" && tar -xzf ./cdk.tgz --strip-components=1 && npm ci --silent)
 }
 
 install_wes () {
