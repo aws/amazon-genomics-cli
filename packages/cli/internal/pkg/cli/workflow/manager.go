@@ -293,7 +293,11 @@ func (m *Manager) uploadWorkflowToS3() {
 	if m.err != nil {
 		return
 	}
-	m.err = m.S3.UploadFile(m.bucketName, fmt.Sprintf("%s/%s", m.baseWorkflowKey, workflowZip), m.packPath)
+	objectKey := fmt.Sprintf("%s/%s", m.baseWorkflowKey, workflowZip)
+	m.err = m.S3.UploadFile(m.bucketName, objectKey, m.packPath)
+	if m.err != nil {
+		m.err = fmt.Errorf("unable to upload s3://%s/%s: %w", m.bucketName, objectKey, m.err)
+	}
 }
 
 func (m *Manager) readInput(inputUrl string) {
@@ -330,42 +334,19 @@ func (m *Manager) uploadInputsToS3() {
 	if m.err != nil || m.input == nil {
 		return
 	}
-	m.input.MapInputUrls(m.uploadInputFileToS3)
-}
-
-func (m *Manager) uploadInputFileToS3(inputKey inputKey, fileUrl inputUrl) inputUrl {
-	if m.err != nil {
-		return fileUrl
-	}
-	parsedURL, err := url.Parse(fileUrl)
+	objectKey := awsresources.RenderBucketDataKey(m.projectSpec.Name, m.userId)
+	dir, err := createTempDir("", "workflow_*")
 	if err != nil {
 		m.err = err
-		return fileUrl
+		return
 	}
-	scheme := strings.ToLower(parsedURL.Scheme)
-	isLocal := scheme == "" || scheme == "file"
-	if !isLocal {
-		return fileUrl
-	}
-	objectKey := awsresources.RenderBucketDataKey(m.projectSpec.Name, m.userId, inputKey, filepath.Base(parsedURL.Path))
-	absFileUrl, err := toAbsPath(filepath.Dir(m.inputUrl), fileUrl)
+	fileLocation := fmt.Sprintf("%s/%s", dir, m.inputUrl)
+	updateInputs, err := m.InputClient.UpdateInputsInFile(m.Project.GetLocation(), m.input, m.bucketName, objectKey, fileLocation)
 	if err != nil {
-		m.err = err
-		return fileUrl
+		m.err = fmt.Errorf("unable to sync s3://%s/%s: %w", m.bucketName, objectKey, err)
+		return
 	}
-	err = m.S3.SyncFile(m.bucketName, objectKey, absFileUrl)
-	if err != nil {
-		m.err = err
-		return fileUrl
-	}
-	return fmt.Sprintf("s3://%s/%s", m.bucketName, objectKey)
-}
-
-func toAbsPath(basePath, somePath string) (string, error) {
-	if filepath.IsAbs(somePath) {
-		return somePath, nil
-	}
-	return filepath.Abs(filepath.Join(basePath, somePath))
+	m.input = updateInputs
 }
 
 func (m *Manager) readConfig() {

@@ -29,7 +29,13 @@ func TestProjectYaml(t *testing.T) {
 					"testContext": {
 						MaxVCpus: 256,
 						Engines: []Engine{
-							{Type: "wdl", Engine: "cromwell"},
+							{
+								Type:   "wdl",
+								Engine: "cromwell",
+								Filesystem: Filesystem{
+									FSType: "S3",
+								},
+							},
 						},
 					},
 				},
@@ -61,6 +67,8 @@ contexts:
         engines:
             - type: wdl
               engine: cromwell
+              filesystem:
+                fsType: S3
 `,
 		},
 		"empty": {
@@ -86,13 +94,35 @@ schemaVersion: 0
 					"ctx1": {
 						MaxVCpus: 256,
 						Engines: []Engine{
-							{Type: "wdl", Engine: "miniwdl"},
+							{
+								Type:   "wdl",
+								Engine: "miniwdl",
+								Filesystem: Filesystem{
+									FSType:        "EFS",
+									Configuration: FSConfig{FSProvisionedThroughput: 50},
+								},
+							},
 						},
 					},
 					"ctx2": {
 						MaxVCpus: 256,
 						Engines: []Engine{
-							{Type: "nextflow", Engine: "nextflow"},
+							{
+								Type:   "nextflow",
+								Engine: "nextflow",
+								Filesystem: Filesystem{
+									FSType: "S3",
+								},
+							},
+						},
+					},
+					"ctx3": {
+						MaxVCpus: 256,
+						Engines: []Engine{
+							{
+								Type:   "nextflow",
+								Engine: "nextflow",
+							},
 						},
 					},
 				},
@@ -122,7 +152,18 @@ contexts:
         engines:
             - type: wdl
               engine: miniwdl
+              filesystem:
+                fsType: EFS
+                configuration:
+                    provisionedThroughput: 50
     ctx2:
+        maxVCpus: 256
+        engines:
+            - type: nextflow
+              engine: nextflow
+              filesystem:
+                fsType: S3
+    ctx3:
         maxVCpus: 256
         engines:
             - type: nextflow
@@ -187,12 +228,25 @@ func TestGetContext(t *testing.T) {
 					Contexts: map[string]Context{
 						"ctx1": {
 							Engines: []Engine{
-								{Type: "wdl", Engine: "miniwdl"},
+								{
+									Type:   "wdl",
+									Engine: "miniwdl",
+									Filesystem: Filesystem{
+										FSType:        "EFS",
+										Configuration: FSConfig{FSProvisionedThroughput: 1},
+									},
+								},
 							},
 						},
 						"ctx2": {
 							Engines: []Engine{
-								{Type: "nextflow", Engine: "nextflow"},
+								{
+									Type:   "nextflow",
+									Engine: "nextflow",
+									Filesystem: Filesystem{
+										FSType: "S3",
+									},
+								},
 							},
 						},
 					},
@@ -209,12 +263,25 @@ func TestGetContext(t *testing.T) {
 					Contexts: map[string]Context{
 						"ctx1": {
 							Engines: []Engine{
-								{Type: "wdl", Engine: "miniwdl"},
+								{
+									Type:   "wdl",
+									Engine: "miniwdl",
+									Filesystem: Filesystem{
+										FSType:        "EFS",
+										Configuration: FSConfig{FSProvisionedThroughput: 1},
+									},
+								},
 							},
 						},
 						"ctx2": {
 							Engines: []Engine{
-								{Type: "nextflow", Engine: "nextflow"},
+								{
+									Type:   "nextflow",
+									Engine: "nextflow",
+									Filesystem: Filesystem{
+										FSType: "S3",
+									},
+								},
 							},
 						},
 					},
@@ -223,7 +290,14 @@ func TestGetContext(t *testing.T) {
 			},
 			expectedContext: Context{
 				Engines: []Engine{
-					{Type: "wdl", Engine: "miniwdl"},
+					{
+						Type:   "wdl",
+						Engine: "miniwdl",
+						Filesystem: Filesystem{
+							FSType:        "EFS",
+							Configuration: FSConfig{FSProvisionedThroughput: 1},
+						},
+					},
 				},
 			},
 		},

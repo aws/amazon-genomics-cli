@@ -48,7 +48,7 @@ jobs:
       - name: Generate Docs
         run: >
           (cd packages/cli && go mod vendor) &&
-          (cd site && mkdir -p themes && cd themes && git clone --recurse-submodules --depth 1 https://github.com/google/docsy.git && cd docsy && sudo npm install -D --save autoprefixer && sudo npm install -D --save postcss-cli) &&
+          (cd site && mkdir -p themes && cd themes && git clone --recurse-submodules --depth 1 https://github.com/google/docsy.git) &&
           make docs
 
       - name: Deploy To Pages

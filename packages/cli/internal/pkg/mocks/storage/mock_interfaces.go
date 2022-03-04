@@ -336,3 +336,18 @@ func (mr *MockInputClientMockRecorder) UpdateInputReferencesAndUploadToS3(initia
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInputReferencesAndUploadToS3", reflect.TypeOf((*MockInputClient)(nil).UpdateInputReferencesAndUploadToS3), initialProjectDirectory, tempProjectDirectory, bucketName, baseS3Key)
 }
+
+// UpdateInputsInFile mocks base method.
+func (m *MockInputClient) UpdateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, bucketName, baseS3Key, fileLocation string) (map[string]interface{}, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateInputsInFile", initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation)
+	ret0, _ := ret[0].(map[string]interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateInputsInFile indicates an expected call of UpdateInputsInFile.
+func (mr *MockInputClientMockRecorder) UpdateInputsInFile(initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInputsInFile", reflect.TypeOf((*MockInputClient)(nil).UpdateInputsInFile), initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation)
+}

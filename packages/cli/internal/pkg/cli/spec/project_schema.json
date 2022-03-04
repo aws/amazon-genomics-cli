@@ -102,6 +102,48 @@
                   "engine": {
                     "type": "string",
                     "minLength": 1
+                  },
+                  "filesystem": {
+                    "type": "object",
+                    "items": {
+                      "properties": {
+                        "fsType": {
+                          "type": "string",
+                          "minLength": 1,
+                          "enum": ["S3","EFS"]
+                        },
+                        "configuration": {
+                          "type": "object",
+                          "items": {
+                            "properties": {
+                              "provisionedThroughput": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 1024
+                              }
+                            },
+                            "required": ["provisionedThroughput"]
+                          }
+                        }
+                      }
+                    },
+                    "oneOf": [
+                      {
+                        "properties": {
+                          "fsType": {
+                            "enum": ["S3"]
+                          }
+                        },
+                        "not": {"required": ["configuration"]}
+                      },
+                      {
+                        "properties": {
+                          "fsType": {
+                            "enum": ["EFS"]
+                          }
+                        }
+                      }
+                    ]
                   }
                 },
                 "required": ["type", "engine"]

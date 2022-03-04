@@ -130,11 +130,11 @@ unique ID of that workflow instance run will be returned if the submission is su
 
 #### `workflow arguments`
 
-Workflow arguments such as options files can be specified at submission time using the `a` or `--args` flag. For
+Workflow arguments such as inputs file can be specified at submission time using the `i` or `--inputsFile` flag. For
 example:
 
 ```shell
-agc workflow run my-workflow --args inputs.json
+agc workflow run my-workflow --inputsFile inputs.json
 ```
 
 If the inputs file references local files, these will be synced with S3 and those files in S3 will be used when the workflow
