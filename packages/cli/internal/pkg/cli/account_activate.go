@@ -7,9 +7,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
@@ -33,10 +35,11 @@ A new VPC will be created if not specified.`
 	accountTagsDescription = `A list of comma separated tags to be applied to all AGC resources in this account
 (i.e. --tags "k1=v1","k2=v2"). Each key-value pair must be quoted as shown in the example,
 otherwise the parsing will fail.`
-	cdkCoreDir   = ".agc/cdk/apps/core"
-	bucketPrefix = "agc"
-	activateKey  = "activate"
-	bootstrapKey = "bootstrap"
+	cdkCoreDir    = ".agc/cdk/apps/core"
+	bucketPrefix  = "agc"
+	activateKey   = "activate"
+	bootstrapKey  = "bootstrap"
+	coreStackName = "Agc-Core"
 )
 
 type accountActivateVars struct {
@@ -51,6 +54,7 @@ type accountActivateOpts struct {
 	s3Client  s3.Interface
 	cdkClient cdk.Interface
 	ecrClient ecr.Interface
+	cfnClient cfn.Interface
 	imageRefs map[string]ecr.ImageReference
 	region    string
 }
@@ -61,40 +65,17 @@ func newAccountActivateOpts(vars accountActivateVars) (*accountActivateOpts, err
 		stsClient:           aws.StsClient(profile),
 		s3Client:            aws.S3Client(profile),
 		cdkClient:           cdk.NewClient(profile),
+		cfnClient:           aws.CfnClient(profile),
 		region:              aws.Region(profile),
 	}, nil
 }
 
 // Execute activates AGC.
 func (o *accountActivateOpts) Execute() error {
-	if o.bucketName == "" {
-		bucketName, err := o.generateDefaultBucket()
-		if err != nil {
-			return err
-		}
-		o.bucketName = bucketName
-	}
 
-	exists, err := o.s3Client.BucketExists(o.bucketName)
+	environmentVars, err := o.generateEnvVars()
 	if err != nil {
 		return err
-	}
-
-	environmentVars := []string{
-		fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, o.bucketName),
-		fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, !exists),
-		fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
-	}
-	if o.vpcId != "" {
-		environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.VpcIdEnvKey, o.vpcId))
-	}
-
-	if o.customTags != nil {
-		jsonBytes, err := json.Marshal(o.customTags)
-		if err != nil {
-			return err
-		}
-		environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.CustomTagEnvKey, string(jsonBytes)))
 	}
 
 	homeDir, err := osutils.DetermineHomeDir()
@@ -117,6 +98,64 @@ func (o accountActivateOpts) generateDefaultBucket() (string, error) {
 		return "", err
 	}
 	return generateBucketName(account, o.region), nil
+}
+
+func (o accountActivateOpts) generateEnvVars() ([]string, error) {
+	if o.bucketName == "" {
+		bucketName, err := o.generateDefaultBucket()
+		if err != nil {
+			return nil, err
+		}
+		o.bucketName = bucketName
+	}
+
+	exists, err := o.s3Client.BucketExists(o.bucketName)
+	if err != nil {
+		return nil, err
+	}
+
+	environmentVars := []string{
+		fmt.Sprintf("AGC_BUCKET_NAME=%s", o.bucketName),
+		fmt.Sprintf("CREATE_AGC_BUCKET=%t", !exists),
+		fmt.Sprintf("AGC_VERSION=%s", version.Version),
+	}
+
+	if o.customTags != nil {
+		jsonBytes, err := json.Marshal(o.customTags)
+		if err != nil {
+			return nil, err
+		}
+		environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.CustomTagEnvKey, string(jsonBytes)))
+	}
+
+	vpcId, err := o.getVpcId()
+	if err != nil {
+		return nil, err
+	}
+	if vpcId != "" {
+		environmentVars = append(environmentVars, fmt.Sprintf("VPC_ID=%s", vpcId))
+	}
+	return environmentVars, err
+}
+
+func (o accountActivateOpts) getVpcId() (string, error) {
+	if o.vpcId != "" {
+		return o.vpcId, nil
+	} else {
+		stackOutputs, err := o.cfnClient.GetStackOutputs(coreStackName)
+		if err != nil {
+			if err == cfn.StackDoesNotExistError {
+				log.Debug().Msgf("Cloudformation Stack '%s' does not exist", coreStackName)
+				return "", nil
+			} else {
+				return "", err
+			}
+		}
+		if vpcId, ok := stackOutputs["VpcId"]; ok {
+			return vpcId, nil
+		}
+	}
+	return "", nil
 }
 
 func (o accountActivateOpts) cdkBootstrap(cdkAppPath string, environmentVars []string) error {
@@ -147,6 +186,7 @@ func displayProgress(progressStream cdk.ProgressStream, displayMsg string) error
 			}
 			lastEvent = event
 		}
+		log.Info().Msg(strings.Join(lastEvent.Outputs, "\n"))
 	} else {
 		return progressStream.DisplayProgress(displayMsg)
 	}
