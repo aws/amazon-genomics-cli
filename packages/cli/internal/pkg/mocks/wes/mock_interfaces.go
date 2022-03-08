@@ -6,6 +6,7 @@ package wesmocks
 
 import (
 	context "context"
+    io "io"
 	reflect "reflect"
 
 	option "github.com/aws/amazon-genomics-cli/internal/pkg/wes/option"
@@ -52,10 +53,10 @@ func (mr *MockWesClientMockRecorder) GetRunLog(ctx, runId interface{}) *gomock.C
 }
 
 // GetRunLogData mocks base method.
-func (m *MockWesClient) GetRunLogData(ctx context.Context, runId string, dataUrl string) (string, error) {
+func (m *MockWesClient) GetRunLogData(ctx context.Context, runId string, dataUrl string) (*io.ReadCloser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetRunLogData", ctx, runId, dataUrl)
-	ret0, _ := ret[0].(string)
+	ret0, _ := ret[0].(*io.ReadCloser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

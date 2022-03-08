@@ -106,21 +106,29 @@ func (o *logsWorkflowOpts) Execute() error {
 		printRunLog(runLog)
 		// Go and fetch the run-level log text if available
 		if len(runLog.Stdout) > 0 {
-			logData, err := o.workflowManager.GetRunLogData(o.runId, runLog.Stdout)
+			logDataStream, err := o.workflowManager.GetRunLogData(o.runId, runLog.Stdout)
 			if err != nil {
 				log.Error().Msgf("Could not retrieve standard output from %s: %v", runLog.Stdout, err)
 			} else {
 				printLn("Run Standard Output:")
-				printLn(logData)
+                _, err = io.Copy(os.Stdout, logDataStream)
+                if err != nil {
+                    return err
+                }
+                printLn("")
 			}
 		}
 		if len(runLog.Stderr) > 0 {
-			logData, err := o.workflowManager.GetRunLogData(o.runId, runLog.Stderr)
+			logDataStream, err := o.workflowManager.GetRunLogData(o.runId, runLog.Stderr)
 			if err != nil {
 				log.Error().Msgf("Could not retrieve standard error from %s: %v", runLog.Stderr, err)
 			} else {
 				printLn("Run Standard Error:")
-				printLn(logData)
+				_, err = io.Copy(os.Stdout, logDataStream)
+                if err != nil {
+                    return err
+                }
+                printLn("")
 			}
 		}
 		return nil
