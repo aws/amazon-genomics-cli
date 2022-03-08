@@ -1,7 +1,7 @@
 package workflow
 
 import (
-    "io"
+	"io"
 )
 
 type StatusManager interface {

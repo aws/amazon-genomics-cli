@@ -3,6 +3,7 @@ package cli
 import (
 	"errors"
 	"fmt"
+	"io"
 	"strings"
 	"testing"
 	"time"
@@ -158,8 +159,9 @@ func TestLogsWorkflowOpts_Execute(t *testing.T) {
 					Tasks:  []workflow.Task(nil),
 					Stdout: "log/out",
 				}, nil)
+				stream := io.NopCloser(strings.NewReader("This is output"))
 				opts.workflowManager.(*managermocks.MockWorkflowManager).EXPECT().
-					GetRunLogData(testRunId, "log/out").Return("This is output", nil)
+					GetRunLogData(testRunId, "log/out").Return(&stream, nil)
 			},
 			expectedOutput: "RunId: Test Workflow Run Id\nState: COMPLETE\nTasks: No task logs available\nRun Standard Output:\nThis is output\n",
 		},
@@ -174,8 +176,9 @@ func TestLogsWorkflowOpts_Execute(t *testing.T) {
 					Tasks:  []workflow.Task(nil),
 					Stderr: "log/err",
 				}, nil)
+				stream := io.NopCloser(strings.NewReader("This is error"))
 				opts.workflowManager.(*managermocks.MockWorkflowManager).EXPECT().
-					GetRunLogData(testRunId, "log/err").Return("This is error", nil)
+					GetRunLogData(testRunId, "log/err").Return(&stream, nil)
 			},
 			expectedOutput: "RunId: Test Workflow Run Id\nState: COMPLETE\nTasks: No task logs available\nRun Standard Error:\nThis is error\n",
 		},

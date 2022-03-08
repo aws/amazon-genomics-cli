@@ -4,6 +4,7 @@
 package cli
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -111,11 +112,28 @@ func (o *logsWorkflowOpts) Execute() error {
 				log.Error().Msgf("Could not retrieve standard output from %s: %v", runLog.Stdout, err)
 			} else {
 				printLn("Run Standard Output:")
-                _, err = io.Copy(os.Stdout, logDataStream)
-                if err != nil {
-                    return err
-                }
-                printLn("")
+				// We would like to copy from logDataStream to standard output,
+				// but we can't.
+				// We aren't actually allowed to use standard output here; we
+				// must do all our output through printLn, because otherwise
+				// the test harness cannot capture it and see that we have done
+				// it, and we fail the tests.
+				// So we need to go through each line in logDataStream, and printLn it.
+				scanner := bufio.NewScanner(*logDataStream)
+				for scanner.Scan() {
+					printLn(scanner.Text())
+				}
+				err = scanner.Err()
+				// TODO: bufio's Scanner can't handle arbitrarily long lines.
+				// If it finds a line longer than 64k, it will stop with an
+				// error.
+				// We can raise the limit, but we can't get rid of the limit.
+				// To fully support arbitrarily long lines in the log, we need
+				// to come up with a better way for the test harness to collect
+				// streaming output.
+				if err != nil {
+					return err
+				}
 			}
 		}
 		if len(runLog.Stderr) > 0 {
@@ -124,11 +142,14 @@ func (o *logsWorkflowOpts) Execute() error {
 				log.Error().Msgf("Could not retrieve standard error from %s: %v", runLog.Stderr, err)
 			} else {
 				printLn("Run Standard Error:")
-				_, err = io.Copy(os.Stdout, logDataStream)
-                if err != nil {
-                    return err
-                }
-                printLn("")
+				scanner := bufio.NewScanner(*logDataStream)
+				for scanner.Scan() {
+					printLn(scanner.Text())
+				}
+				err = scanner.Err()
+				if err != nil {
+					return err
+				}
 			}
 		}
 		return nil

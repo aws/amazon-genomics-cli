@@ -6,7 +6,7 @@ package wesmocks
 
 import (
 	context "context"
-    io "io"
+	io "io"
 	reflect "reflect"
 
 	option "github.com/aws/amazon-genomics-cli/internal/pkg/wes/option"

@@ -5,6 +5,7 @@
 package managermocks
 
 import (
+	io "io"
 	reflect "reflect"
 
 	workflow "github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
@@ -50,16 +51,16 @@ func (mr *MockWorkflowManagerMockRecorder) GetRunLog(runId interface{}) *gomock.
 }
 
 // GetRunLogData mocks base method.
-func (m *MockWorkflowManager) GetRunLogData(runId string, dataUrl string) (string, error) {
+func (m *MockWorkflowManager) GetRunLogData(runId, dataUrl string) (*io.ReadCloser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetRunLogData", runId, dataUrl)
-	ret0, _ := ret[0].(string)
+	ret0, _ := ret[0].(*io.ReadCloser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetRunLogData indicates an expected call of GetRunLogData.
-func (mr *MockWorkflowManagerMockRecorder) GetRunLogData(runId interface{}, dataUrl interface{}) *gomock.Call {
+func (mr *MockWorkflowManagerMockRecorder) GetRunLogData(runId, dataUrl interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRunLogData", reflect.TypeOf((*MockWorkflowManager)(nil).GetRunLogData), runId, dataUrl)
 }

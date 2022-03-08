@@ -2,6 +2,7 @@ package workflow
 
 import (
 	"fmt"
+	"io"
 	"strings"
 	"time"
 
@@ -59,16 +60,16 @@ func (m *Manager) GetRunLog(runId string) (RunLog, error) {
 	}, nil
 }
 
-func (m *Manager) GetRunLogData(runId string, dataUrl string) (string, error) {
+func (m *Manager) GetRunLogData(runId string, dataUrl string) (*io.ReadCloser, error) {
 	if m.err != nil {
-		return "", m.err
+		return nil, m.err
 	}
-	var data string
-	data, m.err = m.wes.GetRunLogData(context.Background(), runId, dataUrl)
+	var stream *io.ReadCloser
+	stream, m.err = m.wes.GetRunLogData(context.Background(), runId, dataUrl)
 	if m.err != nil {
-		return "", m.err
+		return nil, m.err
 	}
-	return data, nil
+	return stream, nil
 }
 
 func (m *Manager) setContextForRun(runId string) {

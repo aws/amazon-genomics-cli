@@ -75,7 +75,7 @@ func (a *WorkflowExecutionServiceApiService) GetRunLogData(ctx _context.Context,
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 	// Be ready to return the body stream
-	localVarReturnValue = localVarHTTPResponse.Body
+	localVarReturnValue = &localVarHTTPResponse.Body
 
 	if localVarHTTPResponse.StatusCode >= 300 {
 		// Something has gone wrong sever-side (and this isn't a redirect)
@@ -84,12 +84,12 @@ func (a *WorkflowExecutionServiceApiService) GetRunLogData(ctx _context.Context,
 		localVarHTTPResponse.Body.Close()
 		newErr := GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: localVarHTTPResponse.Status, // Despite the name, this must be a string
 		}
-		if (err) {
+		if err != nil {
 			// Something went wrong during error download.
-			// Add that error to our error.
-			newErr.error = fmt.Errorf("Failed to download body of HTTP error %d %s response: %v", localVarHTTPResponse.StatusCode, localVarHTTPResponse.Status, err)
+			// Add that error to our error as a string.
+			newErr.error = fmt.Sprintf("Failed to download body of HTTP error %d %s response: %v", localVarHTTPResponse.StatusCode, localVarHTTPResponse.Status, err)
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		// Otherwise, we downloaded something. Maybe we can parse it as a WES-style JSON error.
@@ -98,7 +98,7 @@ func (a *WorkflowExecutionServiceApiService) GetRunLogData(ctx _context.Context,
 		if err != nil {
 			// Nope, it's not a WES-style error.
 			// Don't explain why it's not parseable, just pass along what the server said.
-			newErr.error = fmt.Errorf("Instead of log data, server sent a %d %s error with content: %s", localVarHTTPResponse.StatusCode, localVarHTTPResponse.Status, localVarBody)
+			newErr.error = fmt.Sprintf("Instead of log data, server sent a %d %s error with content: %s", localVarHTTPResponse.StatusCode, localVarHTTPResponse.Status, localVarBody)
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		// Otherwise, it is a WES-style error we can understand (even if not a normally acceptable WES error code)

@@ -2,7 +2,7 @@ package wes
 
 import (
 	"context"
-    "io"
+	"io"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/wes/option"
 	wes "github.com/rsc/wes_client"
