@@ -408,6 +408,21 @@ func (mr *MockCfnClientMockRecorder) DeleteStack(stackId interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteStack", reflect.TypeOf((*MockCfnClient)(nil).DeleteStack), stackId)
 }
 
+// DescribeStack mocks base method.
+func (m *MockCfnClient) DescribeStack(stackName string) (cfn.StackInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DescribeStack", stackName)
+	ret0, _ := ret[0].(cfn.StackInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeStack indicates an expected call of DescribeStack.
+func (mr *MockCfnClientMockRecorder) DescribeStack(stackName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeStack", reflect.TypeOf((*MockCfnClient)(nil).DescribeStack), stackName)
+}
+
 // GetStackInfo mocks base method.
 func (m *MockCfnClient) GetStackInfo(stackName string) (cfn.StackInfo, error) {
 	m.ctrl.T.Helper()

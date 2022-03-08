@@ -4,7 +4,7 @@ import { StringParameter, IParameter } from "aws-cdk-lib/aws-ssm";
 import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
-import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME, WES_KEY_PARAMETER_NAME, WES_BUCKET_NAME } from "../constants";
+import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME, WES_KEY_PARAMETER_NAME, WES_BUCKET_NAME, VPC_PARAMETER_ID } from "../constants";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import * as path from "path";
 import { homedir } from "os";
@@ -81,6 +81,9 @@ export class CoreStack extends Stack {
         "idempotency-key": props.idempotencyKey,
       },
     });
+
+    console.log("context passed in App :point_right:", this.node.tryGetContext("fromApp"));
+    new CfnOutput(this, VPC_PARAMETER_ID, { value: this.vpc.vpcId });
 
     const asset = new Asset(this, "WesAdapter", {
       path: path.join(homedir(), ".agc", "wes", "wes_adapter.zip"),
