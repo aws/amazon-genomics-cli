@@ -76,7 +76,7 @@ type runProps struct {
 	inputUrl             string
 	input                Input
 	optionFileUrl        string
-	optionFile           OptionFile
+	optionFile           map[string]string
 	engineOptions        string
 	arguments            []string
 	attachments          []string
@@ -120,16 +120,15 @@ type workflowOutputProps struct {
 }
 
 type Manager struct {
-	Project      storage.ProjectClient
-	Config       storage.ConfigClient
-	S3           s3.Interface
-	Ssm          ssm.Interface
-	Cfn          cfn.Interface
-	Ddb          ddb.Interface
-	Storage      storage.StorageClient
-	InputClient  storage.InputClient
-	OptionClient storage.OptionClient
-	WesFactory   func(url string) (wes.Interface, error)
+	Project     storage.ProjectClient
+	Config      storage.ConfigClient
+	S3          s3.Interface
+	Ssm         ssm.Interface
+	Cfn         cfn.Interface
+	Ddb         ddb.Interface
+	Storage     storage.StorageClient
+	InputClient storage.InputClient
+	WesFactory  func(url string) (wes.Interface, error)
 
 	wes wes.Interface
 	baseProps
@@ -159,16 +158,15 @@ func NewManager(profile string) *Manager {
 	}
 	s3 := aws.S3Client(profile)
 	return &Manager{
-		Project:      projectClient,
-		Config:       configClient,
-		Ssm:          aws.SsmClient(profile),
-		Cfn:          aws.CfnClient(profile),
-		S3:           s3,
-		Ddb:          aws.DdbClient(profile),
-		Storage:      storageClient,
-		InputClient:  storage.NewInputClient(s3),
-		OptionClient: storage.NewOptionClient(s3),
-		WesFactory:   func(url string) (wes.Interface, error) { return wes.New(url, profile) },
+		Project:     projectClient,
+		Config:      configClient,
+		Ssm:         aws.SsmClient(profile),
+		Cfn:         aws.CfnClient(profile),
+		S3:          s3,
+		Ddb:         aws.DdbClient(profile),
+		Storage:     storageClient,
+		InputClient: storage.NewInputClient(s3),
+		WesFactory:  func(url string) (wes.Interface, error) { return wes.New(url, profile) },
 	}
 }
 
@@ -367,31 +365,12 @@ func (m *Manager) readOptionFile(optionFileUrl string) {
 		m.err = err
 		return
 	}
-	var optionFile OptionFile
+	var optionFile map[string]string
 	if err := json.Unmarshal(bytes, &optionFile); err != nil {
 		m.err = err
 		return
 	}
 	m.optionFile = optionFile
-}
-
-func (m *Manager) uploadOptionFileToS3() {
-	if m.err != nil || m.optionFile == nil {
-		return
-	}
-	objectKey := awsresources.RenderBucketDataKey(m.projectSpec.Name, m.userId)
-	dir, err := createTempDir("", "workflow_*")
-	if err != nil {
-		m.err = err
-		return
-	}
-	fileLocation := fmt.Sprintf("%s/%s", dir, m.optionFileUrl)
-	updatedOption, err := m.OptionClient.UpdateOptionFile(m.Project.GetLocation(), m.optionFile, m.bucketName, objectKey, fileLocation)
-	if err != nil {
-		m.err = err
-		return
-	}
-	m.optionFile = updatedOption
 }
 
 func (m *Manager) readEngineOptions(engineOptions string) {
@@ -404,6 +383,7 @@ func (m *Manager) readEngineOptions(engineOptions string) {
 		return
 	}
 	m.engineOptions = engineOptions
+	m.workflowEngineParams["engineOptions"] = engineOptions
 }
 
 func (m *Manager) readConfig() {
@@ -500,9 +480,12 @@ func (m *Manager) setWorkflowEngineParameters() {
 	if m.optionFileUrl == "" {
 		return
 	}
-	if m.workflowEngine == "nextflow" || m.workflowEngine == "miniwdl" {
-		log.Debug().Msgf("optionFile flag can only be used with head node engines")
-		return
+	if m.optionFile != nil {
+		if m.workflowEngine == "nextflow" || m.workflowEngine == "miniwdl" {
+			log.Debug().Msgf("optionFile flag can only be used with head node engines")
+			return
+		}
+		m.workflowEngineParams = m.optionFile
 	}
 
 	namePattern := fmt.Sprintf("%s_*", filepath.Base(m.optionFileUrl))
@@ -512,7 +495,6 @@ func (m *Manager) setWorkflowEngineParameters() {
 		return
 	}
 	m.attachments = append(m.attachments, optionFileName)
-	m.workflowEngineParams["workflowOptionFile"] = filepath.Base(optionFileName)
 }
 
 func (m *Manager) setWesClient() {

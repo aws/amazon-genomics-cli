@@ -23,7 +23,6 @@ func (m *Manager) RunWorkflow(contextName, workflowName, argumentsUrl string, op
 	m.uploadInputsToS3()
 	m.parseInputToArguments()
 	m.readOptionFile(optionFileUrl)
-	m.uploadOptionFileToS3()
 	m.readEngineOptions(engineOptions)
 	m.setContextStackInfo(contextName)
 	m.setWesUrl()
