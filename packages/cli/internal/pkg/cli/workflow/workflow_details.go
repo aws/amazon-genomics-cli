@@ -15,6 +15,7 @@ type InstanceSummary struct {
 	SubmitTime   string
 	State        string
 	InProject    bool
+	Request      string
 }
 
 func (i *InstanceSummary) IsInstanceRunning() bool {
