@@ -135,6 +135,62 @@ adding the following key/ value pair.&lt;/p&gt;
     </item>
     
     <item>
+      <title>Docs: Snakemake</title>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/snakemake/</link>
+      <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>
+      
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/snakemake/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/&#34;&gt;Snakemake&lt;/a&gt; is free open source software distributed under the MIT licence
+developed by &lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/project_info/authors.html&#34;&gt;Johannes Köster and their team&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The source code for snakemake is available on &lt;a href=&#34;https://github.com/snakemake/snakemake&#34;&gt;GitHub&lt;/a&gt;. When deployed with
+Amazon Genomics CLI snakemake uses Batch to distribute the underlying tasks.&lt;/p&gt;
+&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
+&lt;p&gt;There are four components of a snakemake engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
+&lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
+&lt;p&gt;Amazon Genomics CLI communicates with the snakemake engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
+the WES standard and translates WES calls into calls to the snakemake head process.&lt;/p&gt;
+&lt;h3 id=&#34;engine-batch-job&#34;&gt;Engine Batch Job&lt;/h3&gt;
+&lt;p&gt;For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the snakemake process responsible
+for running that workflow. These snakemake &amp;ldquo;head&amp;rdquo; jobs are run in an &amp;ldquo;On-demand&amp;rdquo; AWS Fargate compute environment even when the actual workflow
+tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.&lt;/p&gt;
+&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
+&lt;p&gt;Workflow tasks are submitted by the snakemake head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
+Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
+&lt;h4 id=&#34;efs-scratch-space-and-s3-localization&#34;&gt;EFS scratch space and S3 localization&lt;/h4&gt;
+&lt;p&gt;Any context with a snakemake engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from the workflow
+are localized to the volume by jobs that the snakemake engine spawns to copy these files to the volume. Outputs are copied back
+to S3 after the workflow is complete. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.&lt;/p&gt;
+&lt;p&gt;The EFS volume can used by all snakemake engine &amp;ldquo;head&amp;rdquo; jobs to store metadata necessary for dependency caching by specifying an argument
+for the conda workspace that is common across all executions. An example of this is &lt;code&gt;--conda-prefix /mnt/efs/snakemake/conda&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The EFS volume will remain in your account for the lifetime of the context and are destroyed when contexts are destroyed.
+Because the volume will grow in size as you run more workflows we recommend destroying the context when done to avoid on going EFS
+charges.&lt;/p&gt;
+&lt;h2 id=&#34;using-snakemake-as-a-context-engine&#34;&gt;Using Snakemake as a Context Engine&lt;/h2&gt;
+&lt;p&gt;You may declare snakemake to be the &lt;code&gt;engine&lt;/code&gt; for any contexts &lt;code&gt;snakemake&lt;/code&gt; type engine. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;onDemandCtx&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;requestSpotInstances&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;snakemake&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;snakemake&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;conda-dependency-caching&#34;&gt;Conda Dependency Caching&lt;/h2&gt;
+&lt;p&gt;Dependency caching is disabled by default so that each workflow can be run independently. If you would like workflow
+runs to re-use the Conda cache then please specify a folder under &amp;ldquo;/mnt/efs&amp;rdquo; which is where the EFS storage space is
+attached. This will enable snakemake to re-use the dependency which will decrease the time that subsequent workflow runs
+will take.&lt;/p&gt;
+&lt;p&gt;To disable call caching you can provide the &lt;code&gt;--conda-prefix&lt;/code&gt; engine option. You may do this in a workflows &lt;code&gt;MANIFEST.json&lt;/code&gt; by
+adding the following key/ value pair.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  &amp;quot;engineOptions&amp;quot;: &amp;quot;-j 10 --conda-prefix /mnt/efs/snakemake/conda&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: Nextflow</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/nextflow/</link>
       <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>

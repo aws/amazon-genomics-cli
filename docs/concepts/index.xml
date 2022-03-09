@@ -47,6 +47,7 @@ for networking and storage this may be the easiest way to activate Amazon Genomi
 &lt;h3 id=&#34;activate&#34;&gt;&lt;code&gt;activate&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;You can activate an account using &lt;code&gt;agc account activate&lt;/code&gt;. An account must be activated before any contexts can be deployed
 or workflows run.&lt;/p&gt;
+&lt;p&gt;Activating an account will also bootstrap the AWS Environment for CDK app deployments.&lt;/p&gt;
 &lt;p&gt;Amazon Genomics CLI requires an S3 bucket to store workflow results and associated information. If you prefer to use an existing bucket
 you can use the form  &lt;code&gt;agc account activate --bucket my-existing-bucket&lt;/code&gt;. If you do this the AWS &lt;a href=&#34;https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html&#34;&gt;IAM&lt;/a&gt; role used to run
 Amazon Genomics CLI must be able to write to that bucket.&lt;/p&gt;
@@ -212,6 +213,13 @@ documentation provides more details.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://1000genomes-dragen-3.7.6&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can use S3 prefixes to be more restrictive about access to data. For example, if you want to allow access to the
+&lt;code&gt;foo&lt;/code&gt; folder of &lt;code&gt;my-bucket&lt;/code&gt; and it&amp;rsquo;s sub-folders you would declare the location as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://my-bucket/foo/*&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can also grant access to a specific object (only) by providing the full path of the object. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://my-bucket/foo/object&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
 &lt;p&gt;A full reference of project commands are available &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_project/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;init&#34;&gt;&lt;code&gt;init&lt;/code&gt;&lt;/h3&gt;
@@ -389,7 +397,7 @@ a &lt;a href=&#34;https://aws.amazon.com/lambda/pricing/&#34;&gt;pricing model&l
 base storage. Additionally, Cromwell is deployed with a standard EFS volume for storage of metadata. EFS &lt;a href=&#34;https://aws.amazon.com/efs/pricing/&#34;&gt;costs&lt;/a&gt; are volume based. While
 relatively small the amount of metadata will expand as more workflows are run. The volume is destroyed when the context is destroyed. An estimated
 cost for both components is available via &lt;a href=&#34;https://calculator.aws/#/estimate?id=8ccc606c1b267e2933a6d683c0b98fcf11e4cbab&#34;&gt;this link&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Contexts using the &amp;ldquo;miniwdl&amp;rdquo; engine use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
+&lt;p&gt;Contexts using the &amp;ldquo;miniwdl&amp;rdquo; or &amp;ldquo;snakemake&amp;rdquo; engines use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
 workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use. An estimated cost assuming a
 total of 500 GB of workflow artifacts is available via &lt;a href=&#34;https://calculator.aws/#/estimate?id=4d19b43aa86fcc3af199c425bfcc55193592cbb4&#34;&gt;this link&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;tags&#34;&gt;Tags&lt;/h3&gt;
@@ -524,7 +532,7 @@ the main workflow file and any supporting files:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;The zip file must contain one workflow file with the prefix main followed by the conventional suffix for the workflow, e.g. &lt;code&gt;main.wdl&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Any sub-workflows or tasks referenced by the main workflow must either be in the zip at the appropriate relative path or they must be referenced by URLs that are resolvable by the workflow engine. The WesAdapter may attempt to resolve them for the engine but this is a convenience and not required.&lt;/li&gt;
-&lt;li&gt;Any variables not defined in the workflows must be provided in an inputs file named with the prefix inputs and the conventional suffix for the workflow engine (e.g &lt;code&gt;inputs.json&lt;/code&gt;). For workflow engines that support multiple input files an index suffix must be provided (e.g. inputs_a.json or inputs_1.json) if there is more than one inputs file.&lt;/li&gt;
+&lt;li&gt;Any variables not defined in the workflows must be provided in an inputs file that is referenced via the input argument in AGC. For workflow engines that support multiple input files an index suffix must be provided (e.g. inputs_a.json or inputs_1.json) if there is more than one inputs file.&lt;/li&gt;
 &lt;li&gt;A workflow options file may be included and must be named with the options prefix followed by the conventional suffix of the workflow. The WesAdapter may chose to make use of this depending on the context of the workflow engine. It may also choose to pass this to the workflow engine or pass a modified copy to the workflow engine.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/li&gt;
@@ -604,9 +612,9 @@ The workflow engine decides how the workflow is to be run and the context provid
 &lt;p&gt;Invoking &lt;code&gt;agc workflow run &amp;lt;workflow-name&amp;gt; -c &amp;lt;context-name&amp;gt;&lt;/code&gt; will run the named workflow in a specific context. The
 unique ID of that workflow instance run will be returned if the submission is successful.&lt;/p&gt;
 &lt;h4 id=&#34;workflow-arguments&#34;&gt;&lt;code&gt;workflow arguments&lt;/code&gt;&lt;/h4&gt;
-&lt;p&gt;Workflow arguments such as options files can be specified at submission time using the &lt;code&gt;a&lt;/code&gt; or &lt;code&gt;--args&lt;/code&gt; flag. For
+&lt;p&gt;Workflow arguments such as inputs file can be specified at submission time using the &lt;code&gt;i&lt;/code&gt; or &lt;code&gt;--inputsFile&lt;/code&gt; flag. For
 example:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run my-workflow --args inputs.json
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run my-workflow --inputsFile inputs.json
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If the inputs file references local files, these will be synced with S3 and those files in S3 will be used when the workflow
 instance is run.&lt;/p&gt;
 &lt;h3 id=&#34;list&#34;&gt;&lt;code&gt;list&lt;/code&gt;&lt;/h3&gt;
@@ -691,6 +699,12 @@ to Amazon Genomics CLI through which it will submit workflows and workflow comma
 &lt;td&gt;&lt;a href=&#34;https://miniwdl.readthedocs.io/en/latest/&#34;&gt;miniwdl&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://openwdl.org&#34;&gt;WDL&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://miniwdl.readthedocs.io/en/latest/runner_reference.html?highlight=errata#wdl-interoperability&#34;&gt;documented here&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Head Process&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/&#34;&gt;Snakemake&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/snakefiles/writing_snakefiles.html&#34;&gt;Snakemake&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;All versions&lt;/td&gt;
 &lt;td&gt;Head Process&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;

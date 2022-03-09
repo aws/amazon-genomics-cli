@@ -47,6 +47,7 @@ for networking and storage this may be the easiest way to activate Amazon Genomi
 &lt;h3 id=&#34;activate&#34;&gt;&lt;code&gt;activate&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;You can activate an account using &lt;code&gt;agc account activate&lt;/code&gt;. An account must be activated before any contexts can be deployed
 or workflows run.&lt;/p&gt;
+&lt;p&gt;Activating an account will also bootstrap the AWS Environment for CDK app deployments.&lt;/p&gt;
 &lt;p&gt;Amazon Genomics CLI requires an S3 bucket to store workflow results and associated information. If you prefer to use an existing bucket
 you can use the form  &lt;code&gt;agc account activate --bucket my-existing-bucket&lt;/code&gt;. If you do this the AWS &lt;a href=&#34;https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html&#34;&gt;IAM&lt;/a&gt; role used to run
 Amazon Genomics CLI must be able to write to that bucket.&lt;/p&gt;
@@ -200,6 +201,7 @@ CONTEXTNAME    cromwell    spotCtx
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You should see something like:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;CONTEXT    myContext    false    STARTED
 OUTPUTLOCATION    s3://agc-123456789012-us-east-2/project/Demo/userid/xxxxxxxxJKP3z/context/myContext
+WESENDPOINT	  https://a1b2c3d4.execute-api.us-east-2.amazonaws.com/prod/ga4gh/wes/v1
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can add more data locations using the &lt;code&gt;data&lt;/code&gt; section of the &lt;code&gt;agc-project.yaml&lt;/code&gt; config file. All contexts will have an
 appropriate access policy created for the data locations listed when they are deployed. For example, the following config adds three public buckets from the Registry of Open Data on AWS:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;myproject&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -334,7 +336,7 @@ WORKFLOWNAME    words-with-vowels
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you have another context in your project, for example one named “test”, you can run the “hello” workflow there with:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run hello --context &lt;span style=&#34;color:#204a87&#34;&gt;test&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If your workflow was successfully submitted you should get something like:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;2021-08-04T23:01:37Z 𝒊  Running workflow. Workflow name: &#39;hello&#39;, Arguments: &#39;&#39;, Context: &#39;myContext&#39;
+&lt;pre&gt;&lt;code&gt;2021-08-04T23:01:37Z 𝒊  Running workflow. Workflow name: &#39;hello&#39;, InputsFile: &#39;&#39;, Context: &#39;myContext&#39;
 &amp;quot;06604478-0897-462a-9ad1-47dd5c5717ca&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The last line is the workflow run id. You use this id to reference a specific workflow execution.&lt;/p&gt;
 &lt;p&gt;Running workflows is an asynchronous process. After submitting a workflow from the CLI, it is handled entirely in the cloud.
@@ -386,9 +388,9 @@ cat &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; inpu
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;{&amp;#34;ReadFile.input_file&amp;#34;: &amp;#34;data.txt&amp;#34;}
 &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;EOF&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, you would submit the workflow with its corresponding inputs file with:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run &lt;span style=&#34;color:#204a87&#34;&gt;read&lt;/span&gt; --args inputs/read.inputs.json
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Amazon Genomics CLI will scan the file provided to &lt;code&gt;--args&lt;/code&gt; for local paths, sync those files to S3, and rewrite the
-inputs file in transit to point to the appropriate S3 locations. Paths in the &lt;code&gt;*.inputs.json&lt;/code&gt; file provided as &lt;code&gt;--args&lt;/code&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run &lt;span style=&#34;color:#204a87&#34;&gt;read&lt;/span&gt; --inputsFile inputs/read.inputs.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Amazon Genomics CLI will scan the file provided to &lt;code&gt;--inputsFile&lt;/code&gt; for local paths, sync those files to S3, and rewrite the
+inputs file in transit to point to the appropriate S3 locations. Paths in the &lt;code&gt;*.inputs.json&lt;/code&gt; file provided as &lt;code&gt;--inputsFile&lt;/code&gt;
 are referenced relative to the &lt;code&gt;*.inputs.json&lt;/code&gt; file.&lt;/p&gt;
 &lt;h3 id=&#34;accessing-workflow-results&#34;&gt;Accessing workflow results&lt;/h3&gt;
 &lt;p&gt;Workflow results are written to an S3 bucket specified or created by Amazon Genomics CLI during account activation. See the section on account activation above for more details. You can list or retrieve the S3 URI for the bucket with:&lt;/p&gt;
@@ -612,6 +614,13 @@ documentation provides more details.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://1000genomes-dragen-3.7.6&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;readOnly&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can use S3 prefixes to be more restrictive about access to data. For example, if you want to allow access to the
+&lt;code&gt;foo&lt;/code&gt; folder of &lt;code&gt;my-bucket&lt;/code&gt; and it&amp;rsquo;s sub-folders you would declare the location as:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://my-bucket/foo/*&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can also grant access to a specific object (only) by providing the full path of the object. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;location&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;s3://my-bucket/foo/object&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
 &lt;p&gt;A full reference of project commands are available &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_project/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;init&#34;&gt;&lt;code&gt;init&lt;/code&gt;&lt;/h3&gt;
@@ -727,7 +736,10 @@ and is ignored.&lt;/p&gt;
 &lt;p&gt;To download a specific release, see &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/releases&#34;&gt;releases page&lt;/a&gt; of our Github repo.&lt;/p&gt;
 &lt;p&gt;To download the latest release navigate to &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/releases/&#34;&gt;https://github.com/aws/amazon-genomics-cli/releases/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Once you have downloaded a release, type the following to install:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;unzip amazon-genomics-cli-&amp;lt;version&amp;gt;.zip
+&lt;p&gt;The latest nightly build can be accessed here: &lt;code&gt;s3://healthai-public-assets-us-east-1/amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;You can download the nightly by running the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;aws s3api get-object --bucket healthai-public-assets-us-east-1 --key amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip amazon-genomics-cli.zip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;unzip amazon-genomics-cli-&amp;lt;version&amp;gt;.zip
 &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; amazon-genomics-cli/ 
 ./install.sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will place the &lt;code&gt;agc&lt;/code&gt; command in &lt;code&gt;$HOME/bin&lt;/code&gt;.&lt;/p&gt;
@@ -739,7 +751,7 @@ and is ignored.&lt;/p&gt;
 Commands
   Getting Started 🌱
     account     Commands for AWS account setup.
-                Install or remove Amazon Genomics CLI from your account.
+                Install or remove AGC from your account.
 
   Contexts
     context     Commands for contexts.
@@ -756,14 +768,15 @@ Commands
                 Workflows are potentially-dynamic graphs of computational tasks to execute.
 
   Settings ⚙️
-    version     Print the version number.
     configure   Commands for configuration.
                 Configuration is stored per user.
 
 Flags
-  -h, --help      help for agc
-  -v, --verbose   Display verbose diagnostic information.
-      --version   version for agc
+      --format string   Format option for output. Valid options are: text, table, json (default &amp;quot;text&amp;quot;)
+  -h, --help            help for agc
+      --silent          Suppresses all diagnostic information.
+  -v, --verbose         Display verbose diagnostic information.
+      --version         version for agc
 Examples
   Displays the help menu for the specified sub-command.
   `$ agc account --help`
@@ -773,13 +786,19 @@ Examples
 &lt;li&gt;modifying your &lt;code&gt;$HOME/.bashrc&lt;/code&gt; (or equivalent file) appending the following line and restarting your shell:&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre&gt;&lt;code&gt;export PATH=$HOME/bin:$PATH
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Verify that you have the latest version of Amazon Genomics CLI with:&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you are running this on MacOS, you may see this below popup window when you initially run any agc commands due to Apple&amp;rsquo;s security restrictions.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/aws/amazon-genomics-cli/blob/mac-doc/site/static/images/agc-cannot-open-popup.png?raw=true&#34; alt=&#34;alt text&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Click Cancel and navigate to Apple&amp;rsquo;s System Preferences, click Security &amp;amp; Privacy, then click General. Near the bottom, you will see a line indicating &lt;code&gt;&amp;quot;agc&amp;quot; was blocked from use because it is not from an identified developer.&lt;/code&gt; To the right, click Allow Anyway.&lt;/p&gt;
+&lt;p&gt;Now go back to the terminal and run &lt;code&gt;agc --help&lt;/code&gt; again. You will see this new popup window below asking you to override the system security.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/aws/amazon-genomics-cli/blob/mac-doc/site/static/images/agc-cannot-verify-developer-popup.png?raw=true&#34; alt=&#34;alt text&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Click Open and now your &lt;code&gt;agc&lt;/code&gt; is correctly installed.&lt;/p&gt;
+&lt;p&gt;Verify that you have the latest version of Amazon Genomics CLI with:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc --version
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you do not, you may need to uninstall any previous versions of Amazon Genomics CLI and reinstall the latest.&lt;/p&gt;
 &lt;h2 id=&#34;command-completion&#34;&gt;Command Completion&lt;/h2&gt;
 &lt;p&gt;Amazon Genomics CLI can generate shell completion scripts that enable &amp;lsquo;Tab&amp;rsquo; completion of commands.
 Command completion is optional and not required to use Amazon Genomics CLI. To generate a completion script you can use:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt; agc generate &amp;lt;shell&amp;gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt; agc completion &amp;lt;shell&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;where &amp;ldquo;shell&amp;rdquo; is one of:&lt;/p&gt;
 &lt;h3 id=&#34;bash&#34;&gt;Bash&lt;/h3&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; &amp;lt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;agc completion bash&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;
@@ -954,7 +973,7 @@ a &lt;a href=&#34;https://aws.amazon.com/lambda/pricing/&#34;&gt;pricing model&l
 base storage. Additionally, Cromwell is deployed with a standard EFS volume for storage of metadata. EFS &lt;a href=&#34;https://aws.amazon.com/efs/pricing/&#34;&gt;costs&lt;/a&gt; are volume based. While
 relatively small the amount of metadata will expand as more workflows are run. The volume is destroyed when the context is destroyed. An estimated
 cost for both components is available via &lt;a href=&#34;https://calculator.aws/#/estimate?id=8ccc606c1b267e2933a6d683c0b98fcf11e4cbab&#34;&gt;this link&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Contexts using the &amp;ldquo;miniwdl&amp;rdquo; engine use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
+&lt;p&gt;Contexts using the &amp;ldquo;miniwdl&amp;rdquo; or &amp;ldquo;snakemake&amp;rdquo; engines use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
 workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use. An estimated cost assuming a
 total of 500 GB of workflow artifacts is available via &lt;a href=&#34;https://calculator.aws/#/estimate?id=4d19b43aa86fcc3af199c425bfcc55193592cbb4&#34;&gt;this link&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;tags&#34;&gt;Tags&lt;/h3&gt;
@@ -1032,6 +1051,62 @@ adding the following key/ value pair.&lt;/p&gt;
     </item>
     
     <item>
+      <title>Docs: Snakemake</title>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/snakemake/</link>
+      <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>
+      
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/snakemake/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/&#34;&gt;Snakemake&lt;/a&gt; is free open source software distributed under the MIT licence
+developed by &lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/project_info/authors.html&#34;&gt;Johannes Köster and their team&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The source code for snakemake is available on &lt;a href=&#34;https://github.com/snakemake/snakemake&#34;&gt;GitHub&lt;/a&gt;. When deployed with
+Amazon Genomics CLI snakemake uses Batch to distribute the underlying tasks.&lt;/p&gt;
+&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
+&lt;p&gt;There are four components of a snakemake engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
+&lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
+&lt;p&gt;Amazon Genomics CLI communicates with the snakemake engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
+the WES standard and translates WES calls into calls to the snakemake head process.&lt;/p&gt;
+&lt;h3 id=&#34;engine-batch-job&#34;&gt;Engine Batch Job&lt;/h3&gt;
+&lt;p&gt;For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the snakemake process responsible
+for running that workflow. These snakemake &amp;ldquo;head&amp;rdquo; jobs are run in an &amp;ldquo;On-demand&amp;rdquo; AWS Fargate compute environment even when the actual workflow
+tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.&lt;/p&gt;
+&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
+&lt;p&gt;Workflow tasks are submitted by the snakemake head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
+Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
+&lt;h4 id=&#34;efs-scratch-space-and-s3-localization&#34;&gt;EFS scratch space and S3 localization&lt;/h4&gt;
+&lt;p&gt;Any context with a snakemake engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from the workflow
+are localized to the volume by jobs that the snakemake engine spawns to copy these files to the volume. Outputs are copied back
+to S3 after the workflow is complete. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.&lt;/p&gt;
+&lt;p&gt;The EFS volume can used by all snakemake engine &amp;ldquo;head&amp;rdquo; jobs to store metadata necessary for dependency caching by specifying an argument
+for the conda workspace that is common across all executions. An example of this is &lt;code&gt;--conda-prefix /mnt/efs/snakemake/conda&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The EFS volume will remain in your account for the lifetime of the context and are destroyed when contexts are destroyed.
+Because the volume will grow in size as you run more workflows we recommend destroying the context when done to avoid on going EFS
+charges.&lt;/p&gt;
+&lt;h2 id=&#34;using-snakemake-as-a-context-engine&#34;&gt;Using Snakemake as a Context Engine&lt;/h2&gt;
+&lt;p&gt;You may declare snakemake to be the &lt;code&gt;engine&lt;/code&gt; for any contexts &lt;code&gt;snakemake&lt;/code&gt; type engine. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;onDemandCtx&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;requestSpotInstances&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;snakemake&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;snakemake&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;conda-dependency-caching&#34;&gt;Conda Dependency Caching&lt;/h2&gt;
+&lt;p&gt;Dependency caching is disabled by default so that each workflow can be run independently. If you would like workflow
+runs to re-use the Conda cache then please specify a folder under &amp;ldquo;/mnt/efs&amp;rdquo; which is where the EFS storage space is
+attached. This will enable snakemake to re-use the dependency which will decrease the time that subsequent workflow runs
+will take.&lt;/p&gt;
+&lt;p&gt;To disable call caching you can provide the &lt;code&gt;--conda-prefix&lt;/code&gt; engine option. You may do this in a workflows &lt;code&gt;MANIFEST.json&lt;/code&gt; by
+adding the following key/ value pair.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  &amp;quot;engineOptions&amp;quot;: &amp;quot;-j 10 --conda-prefix /mnt/efs/snakemake/conda&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: Setup</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/getting-started/setup/</link>
       <pubDate>Tue, 07 Sep 2021 13:42:50 -0400</pubDate>
@@ -1040,25 +1115,15 @@ adding the following key/ value pair.&lt;/p&gt;
       <description>
         
         
-        &lt;h2 id=&#34;cdk-bootstrap&#34;&gt;CDK Bootstrap&lt;/h2&gt;
-&lt;p&gt;Amazon Genomics CLI uses AWS CDK to deploy infrastructure. If you have not already done so, you will need to &amp;ldquo;bootstrap&amp;rdquo; CDK into the account and region where you plan to use Amazon Genomics CLI.
-CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defined infrastructure. Full details are available
-&lt;a href=&#34;https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Amazon Genomics CLI will install its own local copy of of the AWS CDK. If you do not have the AWS CDK installed globally on your machine use can also use this local copy by changing to the Amazon Genomics CLI CDK installation location:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cd $HOME/.agc/cdk
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and using &lt;code&gt;npx&lt;/code&gt; to invoke the CDK:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;npx cdk ...
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To bootstrap a single region:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;cdk bootstrap aws://ACCOUNT-NUMBER-1/REGION-1&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;If you plan to use Amazon Genomics CLI in multiple regions you can use this form of the command:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;cdk bootstrap aws://ACCOUNT-NUMBER-1/REGION-1 aws://ACCOUNT-NUMBER-1/REGION-2 ...&lt;/code&gt;&lt;/p&gt;
-&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cdk bootstrap 123456789012/us-east-1 123456789012/us-west-1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;account-activation&#34;&gt;Account activation&lt;/h2&gt;
+        &lt;h2 id=&#34;account-activation&#34;&gt;Account activation&lt;/h2&gt;
 &lt;p&gt;To start using Amazon Genomics CLI with your AWS account, you need to activate it.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc account activate
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will create the core infrastructure that Amazon Genomics CLI needs to operate, which includes a DynamoDB table, an S3 bucket and a VPC. This will take ~5min to complete. You only need to do this once per account region.&lt;/p&gt;
 &lt;p&gt;The DynamoDB table is used by the CLI for persistent state. The S3 bucket is used for durable workflow data and Amazon Genomics CLI metadata and the VPC is used to isolate compute resources. You can specify your own preexisting S3 Bucket or VPC if needed using &lt;code&gt;--bucket&lt;/code&gt; and &lt;code&gt;--vpc&lt;/code&gt; options.&lt;/p&gt;
+&lt;h3 id=&#34;cdk-bootstrap&#34;&gt;CDK Bootstrap&lt;/h3&gt;
+&lt;p&gt;Amazon Genomics CLI uses AWS CDK to deploy infrastructure. Activating an account will bootstrap the AWS Environment for CDK app deployments.
+CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defined infrastructure. Full details are available
+&lt;a href=&#34;https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;define-a-username&#34;&gt;Define a username&lt;/h2&gt;
 &lt;p&gt;Amazon Genomics CLI requires that you define a username and email. You can do this using the following command:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;agc configure email you@youremail.com&lt;/code&gt;&lt;/p&gt;
@@ -1279,7 +1344,7 @@ the main workflow file and any supporting files:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;The zip file must contain one workflow file with the prefix main followed by the conventional suffix for the workflow, e.g. &lt;code&gt;main.wdl&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Any sub-workflows or tasks referenced by the main workflow must either be in the zip at the appropriate relative path or they must be referenced by URLs that are resolvable by the workflow engine. The WesAdapter may attempt to resolve them for the engine but this is a convenience and not required.&lt;/li&gt;
-&lt;li&gt;Any variables not defined in the workflows must be provided in an inputs file named with the prefix inputs and the conventional suffix for the workflow engine (e.g &lt;code&gt;inputs.json&lt;/code&gt;). For workflow engines that support multiple input files an index suffix must be provided (e.g. inputs_a.json or inputs_1.json) if there is more than one inputs file.&lt;/li&gt;
+&lt;li&gt;Any variables not defined in the workflows must be provided in an inputs file that is referenced via the input argument in AGC. For workflow engines that support multiple input files an index suffix must be provided (e.g. inputs_a.json or inputs_1.json) if there is more than one inputs file.&lt;/li&gt;
 &lt;li&gt;A workflow options file may be included and must be named with the options prefix followed by the conventional suffix of the workflow. The WesAdapter may chose to make use of this depending on the context of the workflow engine. It may also choose to pass this to the workflow engine or pass a modified copy to the workflow engine.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/li&gt;
@@ -1359,9 +1424,9 @@ The workflow engine decides how the workflow is to be run and the context provid
 &lt;p&gt;Invoking &lt;code&gt;agc workflow run &amp;lt;workflow-name&amp;gt; -c &amp;lt;context-name&amp;gt;&lt;/code&gt; will run the named workflow in a specific context. The
 unique ID of that workflow instance run will be returned if the submission is successful.&lt;/p&gt;
 &lt;h4 id=&#34;workflow-arguments&#34;&gt;&lt;code&gt;workflow arguments&lt;/code&gt;&lt;/h4&gt;
-&lt;p&gt;Workflow arguments such as options files can be specified at submission time using the &lt;code&gt;a&lt;/code&gt; or &lt;code&gt;--args&lt;/code&gt; flag. For
+&lt;p&gt;Workflow arguments such as inputs file can be specified at submission time using the &lt;code&gt;i&lt;/code&gt; or &lt;code&gt;--inputsFile&lt;/code&gt; flag. For
 example:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run my-workflow --args inputs.json
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run my-workflow --inputsFile inputs.json
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If the inputs file references local files, these will be synced with S3 and those files in S3 will be used when the workflow
 instance is run.&lt;/p&gt;
 &lt;h3 id=&#34;list&#34;&gt;&lt;code&gt;list&lt;/code&gt;&lt;/h3&gt;
@@ -1446,6 +1511,12 @@ to Amazon Genomics CLI through which it will submit workflows and workflow comma
 &lt;td&gt;&lt;a href=&#34;https://miniwdl.readthedocs.io/en/latest/&#34;&gt;miniwdl&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://openwdl.org&#34;&gt;WDL&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://miniwdl.readthedocs.io/en/latest/runner_reference.html?highlight=errata#wdl-interoperability&#34;&gt;documented here&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Head Process&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/&#34;&gt;Snakemake&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/snakefiles/writing_snakefiles.html&#34;&gt;Snakemake&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;All versions&lt;/td&gt;
 &lt;td&gt;Head Process&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -1598,7 +1669,7 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
     <item>
       <title>Docs: agc</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc/</guid>
       <description>
@@ -1612,8 +1683,9 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
   Displays the help menu for the specified sub-command.
   /code $ agc account --help
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
   -h, --help            help for agc
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
       --version         version for agc
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
@@ -1637,7 +1709,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     <item>
       <title>Docs: agc account</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account/</guid>
       <description>
@@ -1654,7 +1726,8 @@ These commands should be used to install or remove AGC from your AWS account.&lt
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
   -h, --help                help for account
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -1669,7 +1742,7 @@ These commands should be used to install or remove AGC from your AWS account.&lt
     <item>
       <title>Docs: agc account activate</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_activate/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_activate/</guid>
       <description>
@@ -1687,14 +1760,18 @@ it needs to that account and region.&lt;/p&gt;
 Activate AGC in your AWS account with a custom S3 bucket and VPC.
 /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --bucket string   The name of an S3 bucket that AGC will use to store its data.
-                        An autogenerated name will be used if not specified. A new bucket will be created if the bucket does not exist.
-  -h, --help            help for activate
-      --vpc string      The ID of a VPC that AGC will run in. 
-                        A new VPC will be created if not specified.
+&lt;pre&gt;&lt;code&gt;      --bucket string         The name of an S3 bucket that AGC will use to store its data.
+                              An autogenerated name will be used if not specified. A new bucket will be created if the bucket does not exist.
+  -h, --help                  help for activate
+      --tags stringToString   A list of comma separated tags to be applied to all AGC resources in this account
+                              (i.e. --tags &amp;quot;k1=v1&amp;quot;,&amp;quot;k2=v2&amp;quot;). Each key-value pair must be quoted as shown in the example,
+                              otherwise the parsing will fail. (default [])
+      --vpc string            The ID of a VPC that AGC will run in. 
+                              A new VPC will be created if not specified.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -1708,7 +1785,7 @@ Install or remove AGC from your account.&lt;/li&gt;
     <item>
       <title>Docs: agc account deactivate</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_deactivate/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_deactivate/</guid>
       <description>
@@ -1733,7 +1810,8 @@ Deactivate AGC in your AWS account.
   -h, --help    help for deactivate
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -1747,7 +1825,7 @@ Install or remove AGC from your account.&lt;/li&gt;
     <item>
       <title>Docs: agc completion</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion/</guid>
       <description>
@@ -1761,7 +1839,8 @@ See each sub-command&amp;rsquo;s help for details on how to use the generated sc
 &lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for completion
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -1778,7 +1857,7 @@ See each sub-command&amp;rsquo;s help for details on how to use the generated sc
     <item>
       <title>Docs: agc completion bash</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_bash/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_bash/</guid>
       <description>
@@ -1803,7 +1882,8 @@ $ agc completion bash &amp;gt; /usr/local/etc/bash_completion.d/agc&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help              help for bash
       --no-descriptions   disable completion descriptions
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -1816,7 +1896,7 @@ $ agc completion bash &amp;gt; /usr/local/etc/bash_completion.d/agc&lt;/p&gt;
     <item>
       <title>Docs: agc completion fish</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_fish/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_fish/</guid>
       <description>
@@ -1836,7 +1916,8 @@ $ agc completion fish &amp;gt; ~/.config/fish/completions/agc.fish&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help              help for fish
       --no-descriptions   disable completion descriptions
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -1849,7 +1930,7 @@ $ agc completion fish &amp;gt; ~/.config/fish/completions/agc.fish&lt;/p&gt;
     <item>
       <title>Docs: agc completion powershell</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_powershell/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_powershell/</guid>
       <description>
@@ -1868,7 +1949,8 @@ to your powershell profile.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help              help for powershell
       --no-descriptions   disable completion descriptions
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -1881,7 +1963,7 @@ to your powershell profile.&lt;/p&gt;
     <item>
       <title>Docs: agc completion zsh</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_zsh/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_zsh/</guid>
       <description>
@@ -1905,7 +1987,8 @@ to enable it.  You can execute the following once:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help              help for zsh
       --no-descriptions   disable completion descriptions
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -1918,7 +2001,7 @@ to enable it.  You can execute the following once:&lt;/p&gt;
     <item>
       <title>Docs: agc configure</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure/</guid>
       <description>
@@ -1934,13 +2017,15 @@ Configure local settings and preferences to customize the CLI experience.&lt;/p&
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
   -h, --help                help for configure
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc/&#34;&gt;agc&lt;/a&gt;	 - 🧬 Launch and manage genomics workloads on AWS.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_configure_describe/&#34;&gt;agc configure describe&lt;/a&gt;	 - Shows current configuration of the AGC setup for current user&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_configure_email/&#34;&gt;agc configure email&lt;/a&gt;	 - Sets user email address to be used to tag AGC resources created in the account&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_configure_format/&#34;&gt;agc configure format&lt;/a&gt;	 - Sets default format option for output display of AGC commands. Valid format options are &amp;lsquo;text&amp;rsquo;, &amp;lsquo;table&amp;rsquo;, or &amp;lsquo;json&amp;rsquo;&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
@@ -1949,7 +2034,7 @@ Configure local settings and preferences to customize the CLI experience.&lt;/p&
     <item>
       <title>Docs: agc configure describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_describe/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_describe/</guid>
       <description>
@@ -1961,13 +2046,15 @@ Configure local settings and preferences to customize the CLI experience.&lt;/p&
 &lt;p&gt;Running this command reads current configuration file for AGC and prints out it content
 Output of the command has following format:
 CONFIG:
+FORMAT: Name
 USER: Email Id&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc configure describe [flags]
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for describe
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -1981,7 +2068,7 @@ Configuration is stored per user.&lt;/li&gt;
     <item>
       <title>Docs: agc configure email</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_email/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_email/</guid>
       <description>
@@ -1994,7 +2081,36 @@ Configuration is stored per user.&lt;/li&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for email
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
+  -v, --verbose             Display verbose diagnostic information.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_configure/&#34;&gt;agc configure&lt;/a&gt;	 - Commands for configuration.
+Configuration is stored per user.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: agc configure format</title>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_format/</link>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
+      
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_format/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;agc-configure-format&#34;&gt;agc configure format&lt;/h2&gt;
+&lt;p&gt;Sets default format option for output display of AGC commands. Valid format options are &amp;lsquo;text&amp;rsquo;, &amp;lsquo;table&amp;rsquo;, or &amp;lsquo;json&amp;rsquo;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;agc configure format output_format [flags]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -h, --help   help for format
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2008,7 +2124,7 @@ Configuration is stored per user.&lt;/li&gt;
     <item>
       <title>Docs: agc context</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context/</guid>
       <description>
@@ -2026,7 +2142,8 @@ particular context.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
   -h, --help                help for context
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2044,7 +2161,7 @@ particular context.&lt;/p&gt;
     <item>
       <title>Docs: agc context deploy</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_deploy/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_deploy/</guid>
       <description>
@@ -2059,6 +2176,8 @@ It creates AGC resources in AWS.&lt;/p&gt;
 DETAIL: AccessLogGroupName BucketLocation EngineLogGroupName Status StatusReason WesLogGroupName WesUrl
 SUMMARY: IsSpot MaxVCpus Name
 ENGINE: Engine Type
+FILESYSTEM: FSType
+FSCONFIG: FSProvisionedThroughput
 STRING&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc context deploy {context_name ... | --all} [flags]
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
@@ -2070,7 +2189,8 @@ STRING&lt;/p&gt;
   -h, --help              help for deploy
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2084,7 +2204,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_describe/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_describe/</guid>
       <description>
@@ -2097,7 +2217,8 @@ Contexts specify workflow engines and computational fleets to use when running a
 &lt;p&gt;Output of the command has following format:
 CONTEXT: MaxVCpus Name RequestSpotInstances Status StatusReason
 INSTANCETYPE: Value
-OUTPUTLOCATION: Url&lt;/p&gt;
+OUTPUTLOCATION: Url
+WESENDPOINT: Url&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc context describe context_name [flags]
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;
@@ -2107,7 +2228,8 @@ OUTPUTLOCATION: Url&lt;/p&gt;
   -h, --help             help for describe
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2121,7 +2243,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context destroy</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_destroy/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_destroy/</guid>
       <description>
@@ -2143,7 +2265,8 @@ It destroys AGC resources in AWS.&lt;/p&gt;
   -h, --help              help for destroy
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2157,7 +2280,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context list</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_list/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_list/</guid>
       <description>
@@ -2175,7 +2298,8 @@ CONTEXTSUMMARY: EngineName Name&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for list
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2189,7 +2313,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context status</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_status/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_status/</guid>
       <description>
@@ -2209,7 +2333,8 @@ INSTANCE: ContextName ContextReason ContextStatus IsDefinedInProjectFile&lt;/p&g
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for status
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2223,7 +2348,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc logs</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs/</guid>
       <description>
@@ -2241,7 +2366,8 @@ access rights to.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
   -h, --help                help for logs
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2258,7 +2384,7 @@ access rights to.&lt;/p&gt;
     <item>
       <title>Docs: agc logs access</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_access/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_access/</guid>
       <description>
@@ -2290,7 +2416,8 @@ If no start, end, or look back periods are set, this command will show logs from
   -t, --tail               Follow the log output.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2303,7 +2430,7 @@ If no start, end, or look back periods are set, this command will show logs from
     <item>
       <title>Docs: agc logs adapter</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_adapter/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_adapter/</guid>
       <description>
@@ -2335,7 +2462,8 @@ If no start, end, or look back periods are set, this command will show logs from
   -t, --tail               Follow the log output.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2348,7 +2476,7 @@ If no start, end, or look back periods are set, this command will show logs from
     <item>
       <title>Docs: agc logs engine</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_engine/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_engine/</guid>
       <description>
@@ -2380,7 +2508,8 @@ If no start, end, or look back periods are set, this command will show logs from
   -t, --tail               Follow the log output.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2393,7 +2522,7 @@ If no start, end, or look back periods are set, this command will show logs from
     <item>
       <title>Docs: agc logs workflow</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_workflow/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_workflow/</guid>
       <description>
@@ -2406,7 +2535,8 @@ If no start, end, or look back periods are set, this command will show logs from
 If the &amp;ndash;run flag is omitted then the latest workflow run is used.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc logs workflow workflow_name [-r run_id] [--failed_tasks] [flags]
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;  -e, --end string         A date to stop displaying logs.
+&lt;pre&gt;&lt;code&gt;      --all-tasks          Show logs of all tasks in the given workflow run
+  -e, --end string         A date to stop displaying logs.
                            Supports most date formats, such as mm/dd/yy or yyyy-mm-dd-07:00.
                            Times respect the system timezone.
       --failed-tasks       Only show logs of tasks that have not exited cleanly.
@@ -2421,9 +2551,11 @@ If the &amp;ndash;run flag is omitted then the latest workflow run is used.&lt;/
                            Supports most date formats, such as 2021/03/31 or 8/8/2021 01:00:01 PM.
                            Times respect the system timezone.
   -t, --tail               Follow the log output.
+      --task string        The ID of a single task to retrieve.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2436,7 +2568,7 @@ If the &amp;ndash;run flag is omitted then the latest workflow run is used.&lt;/
     <item>
       <title>Docs: agc project</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project/</guid>
       <description>
@@ -2451,7 +2583,8 @@ and contexts you are working with.&lt;/p&gt;
 &lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for project
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2467,7 +2600,7 @@ and contexts you are working with.&lt;/p&gt;
     <item>
       <title>Docs: agc project describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_describe/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_describe/</guid>
       <description>
@@ -2487,7 +2620,8 @@ DATA: Location ReadOnly&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for describe
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2500,7 +2634,7 @@ DATA: Location ReadOnly&lt;/p&gt;
     <item>
       <title>Docs: agc project init</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_init/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_init/</guid>
       <description>
@@ -2511,16 +2645,17 @@ DATA: Location ReadOnly&lt;/p&gt;
 &lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
 &lt;p&gt;Initialize current directory with a new empty AGC project for a particular workflow type.
 Project specification file &amp;lsquo;agc-project.yaml&amp;rsquo; will be created in the current directory.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;agc project init project_name --workflow-type {wdl|nextflow} [flags]
+&lt;pre&gt;&lt;code&gt;agc project init project_name --workflow-type {wdl|nextflow|snakemake} [flags]
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;
 Initialize a new project named &amp;quot;myProject&amp;quot;.
 /code $ agc project init myProject --workflow-type my_workflow_type
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help                   help for init
-  -w, --workflow-type string   uses the specified workflow type for the default context. Valid values include [nextflow wdl]
+  -w, --workflow-type string   uses the specified workflow type for the default context. Valid values include [nextflow snakemake wdl]
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2533,7 +2668,7 @@ Initialize a new project named &amp;quot;myProject&amp;quot;.
     <item>
       <title>Docs: agc project validate</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_validate/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_validate/</guid>
       <description>
@@ -2554,7 +2689,8 @@ DATA: Location ReadOnly&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for validate
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2567,7 +2703,7 @@ DATA: Location ReadOnly&lt;/p&gt;
     <item>
       <title>Docs: agc workflow</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow/</guid>
       <description>
@@ -2586,7 +2722,8 @@ typed according to which workflow definition language they use (e.g. WDL).&lt;/p
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
   -h, --help                help for workflow
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+&lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
+      --silent          Suppresses all diagnostic information.
   -v, --verbose         Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2605,7 +2742,7 @@ typed according to which workflow definition language they use (e.g. WDL).&lt;/p
     <item>
       <title>Docs: agc workflow describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_describe/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_describe/</guid>
       <description>
@@ -2624,7 +2761,8 @@ WORKFLOW: Name Source TypeLanguage TypeVersion&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for describe
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2638,7 +2776,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     <item>
       <title>Docs: agc workflow list</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_list/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_list/</guid>
       <description>
@@ -2656,7 +2794,8 @@ WORKFLOWNAME: Name&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for list
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;
@@ -2670,7 +2809,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     <item>
       <title>Docs: agc workflow output</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_output/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
+      <pubDate>Wed, 09 Mar 2022 20:32:50 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_output/</guid>
       <description>
@@ -2683,75 +2822,8 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for output
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
-  -v, --verbose             Display verbose diagnostic information.
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
-Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
-&lt;/ul&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: agc workflow run</title>
-      <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_run/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
-      
-      <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_run/</guid>
-      <description>
-        
-        
-        &lt;h2 id=&#34;agc-workflow-run&#34;&gt;agc workflow run&lt;/h2&gt;
-&lt;p&gt;Run a workflow&lt;/p&gt;
-&lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
-&lt;p&gt;run is for running the specified workflow in the specified context.
-This command prints a run Id for the created workflow instance.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;agc workflow run workflow_name --context context_name [flags]
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;
-Run the workflow named &amp;quot;example-workflow&amp;quot;, against the &amp;quot;prod&amp;quot; context,
-using input parameters contained in file &amp;quot;file:///Users/ec2-user/myproj/test-args.json&amp;quot;
-/code $ agc workflow run example-workflow --context prod --args file:///Users/ec2-user/myproj/test-args.json
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;  -a, --args string      Arguments to use.
-  -c, --context string   Name of context
-  -h, --help             help for run
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
-  -v, --verbose             Display verbose diagnostic information.
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
-Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
-&lt;/ul&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: agc workflow status</title>
-      <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_status/</link>
-      <pubDate>Tue, 14 Dec 2021 00:23:28 +0000</pubDate>
-      
-      <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_status/</guid>
-      <description>
-        
-        
-        &lt;h2 id=&#34;agc-workflow-status&#34;&gt;agc workflow status&lt;/h2&gt;
-&lt;p&gt;Show the status for workflow run(s) in the current project.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;agc workflow status [flags]
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;  -c, --context-name string    show status of workflow runs in a specific context
-  -h, --help                   help for status
-      --limit int              maximum number of workflow instances to show (default 20)
-  -r, --run-id string          show status of specific workflow run
-  -n, --workflow-name string   show status of workflow runs for a specific workflow name
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, tabular (default &amp;quot;text&amp;quot;)
+      --format string       Format option for output. Valid options are: text, table, json
+      --silent              Suppresses all diagnostic information.
   -v, --verbose             Display verbose diagnostic information.
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
 &lt;ul&gt;

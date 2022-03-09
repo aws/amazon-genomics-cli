@@ -93,7 +93,10 @@ aws configure
 &lt;p&gt;To download a specific release, see &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/releases&#34;&gt;releases page&lt;/a&gt; of our Github repo.&lt;/p&gt;
 &lt;p&gt;To download the latest release navigate to &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/releases/&#34;&gt;https://github.com/aws/amazon-genomics-cli/releases/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Once you have downloaded a release, type the following to install:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;unzip amazon-genomics-cli-&amp;lt;version&amp;gt;.zip
+&lt;p&gt;The latest nightly build can be accessed here: &lt;code&gt;s3://healthai-public-assets-us-east-1/amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;You can download the nightly by running the following:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;aws s3api get-object --bucket healthai-public-assets-us-east-1 --key amazon-genomics-cli/nightly-build/amazon-genomics-cli.zip amazon-genomics-cli.zip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;unzip amazon-genomics-cli-&amp;lt;version&amp;gt;.zip
 &lt;span style=&#34;color:#204a87&#34;&gt;cd&lt;/span&gt; amazon-genomics-cli/ 
 ./install.sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will place the &lt;code&gt;agc&lt;/code&gt; command in &lt;code&gt;$HOME/bin&lt;/code&gt;.&lt;/p&gt;
@@ -105,7 +108,7 @@ aws configure
 Commands
   Getting Started 🌱
     account     Commands for AWS account setup.
-                Install or remove Amazon Genomics CLI from your account.
+                Install or remove AGC from your account.
 
   Contexts
     context     Commands for contexts.
@@ -122,14 +125,15 @@ Commands
                 Workflows are potentially-dynamic graphs of computational tasks to execute.
 
   Settings ⚙️
-    version     Print the version number.
     configure   Commands for configuration.
                 Configuration is stored per user.
 
 Flags
-  -h, --help      help for agc
-  -v, --verbose   Display verbose diagnostic information.
-      --version   version for agc
+      --format string   Format option for output. Valid options are: text, table, json (default &amp;quot;text&amp;quot;)
+  -h, --help            help for agc
+      --silent          Suppresses all diagnostic information.
+  -v, --verbose         Display verbose diagnostic information.
+      --version         version for agc
 Examples
   Displays the help menu for the specified sub-command.
   `$ agc account --help`
@@ -139,13 +143,19 @@ Examples
 &lt;li&gt;modifying your &lt;code&gt;$HOME/.bashrc&lt;/code&gt; (or equivalent file) appending the following line and restarting your shell:&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre&gt;&lt;code&gt;export PATH=$HOME/bin:$PATH
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Verify that you have the latest version of Amazon Genomics CLI with:&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you are running this on MacOS, you may see this below popup window when you initially run any agc commands due to Apple&amp;rsquo;s security restrictions.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/aws/amazon-genomics-cli/blob/mac-doc/site/static/images/agc-cannot-open-popup.png?raw=true&#34; alt=&#34;alt text&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Click Cancel and navigate to Apple&amp;rsquo;s System Preferences, click Security &amp;amp; Privacy, then click General. Near the bottom, you will see a line indicating &lt;code&gt;&amp;quot;agc&amp;quot; was blocked from use because it is not from an identified developer.&lt;/code&gt; To the right, click Allow Anyway.&lt;/p&gt;
+&lt;p&gt;Now go back to the terminal and run &lt;code&gt;agc --help&lt;/code&gt; again. You will see this new popup window below asking you to override the system security.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://github.com/aws/amazon-genomics-cli/blob/mac-doc/site/static/images/agc-cannot-verify-developer-popup.png?raw=true&#34; alt=&#34;alt text&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Click Open and now your &lt;code&gt;agc&lt;/code&gt; is correctly installed.&lt;/p&gt;
+&lt;p&gt;Verify that you have the latest version of Amazon Genomics CLI with:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc --version
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you do not, you may need to uninstall any previous versions of Amazon Genomics CLI and reinstall the latest.&lt;/p&gt;
 &lt;h2 id=&#34;command-completion&#34;&gt;Command Completion&lt;/h2&gt;
 &lt;p&gt;Amazon Genomics CLI can generate shell completion scripts that enable &amp;lsquo;Tab&amp;rsquo; completion of commands.
 Command completion is optional and not required to use Amazon Genomics CLI. To generate a completion script you can use:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt; agc generate &amp;lt;shell&amp;gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt; agc completion &amp;lt;shell&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;where &amp;ldquo;shell&amp;rdquo; is one of:&lt;/p&gt;
 &lt;h3 id=&#34;bash&#34;&gt;Bash&lt;/h3&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#204a87&#34;&gt;source&lt;/span&gt; &amp;lt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;(&lt;/span&gt;agc completion bash&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;)&lt;/span&gt;
@@ -187,25 +197,15 @@ Command completion is optional and not required to use Amazon Genomics CLI. To g
       <description>
         
         
-        &lt;h2 id=&#34;cdk-bootstrap&#34;&gt;CDK Bootstrap&lt;/h2&gt;
-&lt;p&gt;Amazon Genomics CLI uses AWS CDK to deploy infrastructure. If you have not already done so, you will need to &amp;ldquo;bootstrap&amp;rdquo; CDK into the account and region where you plan to use Amazon Genomics CLI.
-CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defined infrastructure. Full details are available
-&lt;a href=&#34;https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Amazon Genomics CLI will install its own local copy of of the AWS CDK. If you do not have the AWS CDK installed globally on your machine use can also use this local copy by changing to the Amazon Genomics CLI CDK installation location:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;cd $HOME/.agc/cdk
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;and using &lt;code&gt;npx&lt;/code&gt; to invoke the CDK:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;npx cdk ...
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To bootstrap a single region:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;cdk bootstrap aws://ACCOUNT-NUMBER-1/REGION-1&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;If you plan to use Amazon Genomics CLI in multiple regions you can use this form of the command:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;cdk bootstrap aws://ACCOUNT-NUMBER-1/REGION-1 aws://ACCOUNT-NUMBER-1/REGION-2 ...&lt;/code&gt;&lt;/p&gt;
-&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;cdk bootstrap 123456789012/us-east-1 123456789012/us-west-1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;account-activation&#34;&gt;Account activation&lt;/h2&gt;
+        &lt;h2 id=&#34;account-activation&#34;&gt;Account activation&lt;/h2&gt;
 &lt;p&gt;To start using Amazon Genomics CLI with your AWS account, you need to activate it.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc account activate
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will create the core infrastructure that Amazon Genomics CLI needs to operate, which includes a DynamoDB table, an S3 bucket and a VPC. This will take ~5min to complete. You only need to do this once per account region.&lt;/p&gt;
 &lt;p&gt;The DynamoDB table is used by the CLI for persistent state. The S3 bucket is used for durable workflow data and Amazon Genomics CLI metadata and the VPC is used to isolate compute resources. You can specify your own preexisting S3 Bucket or VPC if needed using &lt;code&gt;--bucket&lt;/code&gt; and &lt;code&gt;--vpc&lt;/code&gt; options.&lt;/p&gt;
+&lt;h3 id=&#34;cdk-bootstrap&#34;&gt;CDK Bootstrap&lt;/h3&gt;
+&lt;p&gt;Amazon Genomics CLI uses AWS CDK to deploy infrastructure. Activating an account will bootstrap the AWS Environment for CDK app deployments.
+CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defined infrastructure. Full details are available
+&lt;a href=&#34;https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;define-a-username&#34;&gt;Define a username&lt;/h2&gt;
 &lt;p&gt;Amazon Genomics CLI requires that you define a username and email. You can do this using the following command:&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;agc configure email you@youremail.com&lt;/code&gt;&lt;/p&gt;

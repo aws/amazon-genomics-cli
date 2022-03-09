@@ -18,33 +18,26 @@
 <link rel="icon" type="image/png" href="/amazon-genomics-cli/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/amazon-genomics-cli/favicons/android-192x192.png" sizes="192x192">
 
-<title>agc logs | Amazon Genomics CLI</title>
-<meta name="description" content="agc logs
-Commands for various logs.
-Synopsis
-Commands for various logs.
-Logs can currently be listed for workflows, workflow engines,
-and various AGC …">
-<meta property="og:title" content="agc logs" />
-<meta property="og:description" content="agc logs Commands for various logs.
-Synopsis Commands for various logs. Logs can currently be listed for workflows, workflow engines, and various AGC infrastructure parts. You can also show the content of any CloudWatch log stream that you have access rights to.
-Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help help for logs Options inherited from parent commands  --format string Format option for output. Valid options are: text, table, json --silent Suppresses all diagnostic information." />
+<title>Snakemake | Amazon Genomics CLI</title>
+<meta name="description" content="Details on the Snakemake engine deployed by Amazon Genomics CLI
+">
+<meta property="og:title" content="Snakemake" />
+<meta property="og:description" content="Details on the Snakemake engine deployed by Amazon Genomics CLI
+" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs/" /><meta property="article:section" content="docs" />
-<meta property="article:published_time" content="2022-03-09T20:32:50+00:00" />
-<meta property="article:modified_time" content="2022-03-09T20:32:50+00:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/snakemake/" /><meta property="article:section" content="docs" />
+<meta property="article:published_time" content="2021-10-01T17:27:31-04:00" />
+<meta property="article:modified_time" content="2022-03-09T12:31:11-08:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
-<meta itemprop="name" content="agc logs">
-<meta itemprop="description" content="agc logs Commands for various logs.
-Synopsis Commands for various logs. Logs can currently be listed for workflows, workflow engines, and various AGC infrastructure parts. You can also show the content of any CloudWatch log stream that you have access rights to.
-Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help help for logs Options inherited from parent commands  --format string Format option for output. Valid options are: text, table, json --silent Suppresses all diagnostic information."><meta itemprop="datePublished" content="2022-03-09T20:32:50+00:00" />
-<meta itemprop="dateModified" content="2022-03-09T20:32:50+00:00" />
-<meta itemprop="wordCount" content="145">
+<meta itemprop="name" content="Snakemake">
+<meta itemprop="description" content="Details on the Snakemake engine deployed by Amazon Genomics CLI
+"><meta itemprop="datePublished" content="2021-10-01T17:27:31-04:00" />
+<meta itemprop="dateModified" content="2022-03-09T12:31:11-08:00" />
+<meta itemprop="wordCount" content="495">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="agc logs"/>
-<meta name="twitter:description" content="agc logs Commands for various logs.
-Synopsis Commands for various logs. Logs can currently be listed for workflows, workflow engines, and various AGC infrastructure parts. You can also show the content of any CloudWatch log stream that you have access rights to.
-Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help help for logs Options inherited from parent commands  --format string Format option for output. Valid options are: text, table, json --silent Suppresses all diagnostic information."/>
+<meta name="twitter:title" content="Snakemake"/>
+<meta name="twitter:description" content="Details on the Snakemake engine deployed by Amazon Genomics CLI
+"/>
 
 
 
@@ -212,22 +205,22 @@ Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help he
   <a href="/amazon-genomics-cli/docs/best-practices/scalingworkloads/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicesscalingworkloads"><span class="">Scaling Workloads</span></a>
 </li>
   </ul>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocsworkflow-engines-li">
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-amazon-genomics-clidocsworkflow-engines-li">
   <a href="/amazon-genomics-cli/docs/workflow-engines/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsworkflow-engines"><span class="">Workflow Engines</span></a>
   <ul class="ul-2 foldable">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginescromwell-li">
   <a href="/amazon-genomics-cli/docs/workflow-engines/cromwell/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginescromwell"><span class="">Cromwell</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesminiwdl-li">
   <a href="/amazon-genomics-cli/docs/workflow-engines/miniwdl/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesminiwdl"><span class="">miniwdl</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginessnakemake-li">
-  <a href="/amazon-genomics-cli/docs/workflow-engines/snakemake/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginessnakemake"><span class="">Snakemake</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-amazon-genomics-clidocsworkflow-enginessnakemake-li">
+  <a href="/amazon-genomics-cli/docs/workflow-engines/snakemake/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginessnakemake"><span class="td-sidebar-nav-active-item">Snakemake</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesnextflow-li">
   <a href="/amazon-genomics-cli/docs/workflow-engines/nextflow/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesnextflow"><span class="">Nextflow</span></a>
 </li>
   </ul>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocscontribution-guidelines-li">
   <a href="/amazon-genomics-cli/docs/contribution-guidelines/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocscontribution-guidelines"><span class="">Contribution Guidelines</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-amazon-genomics-clidocsreference-li">
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocsreference-li">
   <a href="/amazon-genomics-cli/docs/reference/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsreference"><span class="">Reference</span></a>
   <ul class="ul-2 foldable">
     <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc-li">
@@ -268,8 +261,8 @@ Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help he
   <a href="/amazon-genomics-cli/docs/reference/agc_context_list/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_context_list"><span class="">agc context list</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_context_status-li">
   <a href="/amazon-genomics-cli/docs/reference/agc_context_status/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_context_status"><span class="">agc context status</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-amazon-genomics-clidocsreferenceagc_logs-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_logs/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_logs"><span class="td-sidebar-nav-active-item">agc logs</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_logs-li">
+  <a href="/amazon-genomics-cli/docs/reference/agc_logs/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_logs"><span class="">agc logs</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_logs_access-li">
   <a href="/amazon-genomics-cli/docs/reference/agc_logs_access/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_logs_access"><span class="">agc logs access</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_logs_adapter-li">
@@ -313,11 +306,11 @@ Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help he
           <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
             
 <div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
-<a href="https://github.com/aws/amazon-genomics-cli/tree/main/site//content/en/docs/Reference/agc_logs.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa fa-file-alt fa-fw"></i> View page source</a>
-  <a href="https://github.com/aws/amazon-genomics-cli/edit/main/site//content/en/docs/Reference/agc_logs.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-  <a href="https://github.com/aws/amazon-genomics-cli/new/main/site//content/en/docs/Reference/agc_logs.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Create child page</a>
-  <a href="https://github.com/aws/amazon-genomics-cli/issues/new?title=agc%20logs" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
-  <a id="print" href="https://aws.github.io/amazon-genomics-cli/docs/reference/_print/"><i class="fa fa-print fa-fw"></i> Print entire section</a>
+<a href="https://github.com/aws/amazon-genomics-cli/tree/main/site//content/en/docs/Workflow%20engines/snakemake.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa fa-file-alt fa-fw"></i> View page source</a>
+  <a href="https://github.com/aws/amazon-genomics-cli/edit/main/site//content/en/docs/Workflow%20engines/snakemake.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/aws/amazon-genomics-cli/new/main/site//content/en/docs/Workflow%20engines/snakemake.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Create child page</a>
+  <a href="https://github.com/aws/amazon-genomics-cli/issues/new?title=Snakemake" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+  <a id="print" href="https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/_print/"><i class="fa fa-print fa-fw"></i> Print entire section</a>
 
 </div>
 
@@ -326,14 +319,16 @@ Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help he
 
 <div class="td-toc"><nav id="TableOfContents">
   <ul>
-    <li><a href="#agc-logs">agc logs</a>
+    <li><a href="#description">Description</a></li>
+    <li><a href="#architecture">Architecture</a>
       <ul>
-        <li><a href="#synopsis">Synopsis</a></li>
-        <li><a href="#options">Options</a></li>
-        <li><a href="#options-inherited-from-parent-commands">Options inherited from parent commands</a></li>
-        <li><a href="#see-also">SEE ALSO</a></li>
+        <li><a href="#wes-adapter">WES Adapter</a></li>
+        <li><a href="#engine-batch-job">Engine Batch Job</a></li>
+        <li><a href="#compute-environment">Compute Environment</a></li>
       </ul>
     </li>
+    <li><a href="#using-snakemake-as-a-context-engine">Using Snakemake as a Context Engine</a></li>
+    <li><a href="#conda-dependency-caching">Conda Dependency Caching</a></li>
   </ul>
 </nav></div>
 
@@ -370,17 +365,17 @@ Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help he
     <a href="https://aws.github.io/amazon-genomics-cli/docs/">Documentation</a>
   </li>
   <li class="breadcrumb-item">
-    <a href="https://aws.github.io/amazon-genomics-cli/docs/reference/">Reference</a>
+    <a href="https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/">Workflow Engines</a>
   </li>
   <li class="breadcrumb-item active" aria-current="page">
-    <a href="https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs/">agc logs</a>
+    <a href="https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/snakemake/">Snakemake</a>
   </li>
   </ol>
 </nav>
             
 <div class="td-content">
-	<h1>agc logs</h1>
-	
+	<h1>Snakemake</h1>
+	<div class="lead">Details on the Snakemake engine deployed by Amazon Genomics CLI</div>
 	<header class="article-meta">
 		
 		
@@ -396,33 +391,56 @@ Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help he
 		
 		
 	</header>    
-	<h2 id="agc-logs">agc logs</h2>
-<p>Commands for various logs.</p>
-<h3 id="synopsis">Synopsis</h3>
-<p>Commands for various logs.
-Logs can currently be listed for workflows, workflow engines,
-and various AGC infrastructure parts.
-You can also show the content of any CloudWatch log stream that you have
-access rights to.</p>
-<h3 id="options">Options</h3>
-<pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
-  -h, --help                help for logs
-</code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>      --format string   Format option for output. Valid options are: text, table, json
-      --silent          Suppresses all diagnostic information.
-  -v, --verbose         Display verbose diagnostic information.
-</code></pre><h3 id="see-also">SEE ALSO</h3>
-<ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
-<li><a href="/amazon-genomics-cli/docs/reference/agc_logs_access/">agc logs access</a>	 - Show workflow access logs for a given context.</li>
-<li><a href="/amazon-genomics-cli/docs/reference/agc_logs_adapter/">agc logs adapter</a>	 - Show workflow adapter logs for a given context.</li>
-<li><a href="/amazon-genomics-cli/docs/reference/agc_logs_engine/">agc logs engine</a>	 - Show workflow engine logs for a given context.</li>
-<li><a href="/amazon-genomics-cli/docs/reference/agc_logs_workflow/">agc logs workflow</a>	 - Show the task logs of a given workflow</li>
-</ul>
+	<h2 id="description">Description</h2>
+<p><a href="https://snakemake.readthedocs.io/en/stable/">Snakemake</a> is free open source software distributed under the MIT licence
+developed by <a href="https://snakemake.readthedocs.io/en/stable/project_info/authors.html">Johannes Köster and their team</a>.</p>
+<p>The source code for snakemake is available on <a href="https://github.com/snakemake/snakemake">GitHub</a>. When deployed with
+Amazon Genomics CLI snakemake uses Batch to distribute the underlying tasks.</p>
+<h2 id="architecture">Architecture</h2>
+<p>There are four components of a snakemake engine as deployed in an Amazon Genomics CLI context:</p>
+<h3 id="wes-adapter">WES Adapter</h3>
+<p>Amazon Genomics CLI communicates with the snakemake engine via a GA4GH <a href="https://github.com/ga4gh/workflow-execution-service-schemas">WES</a> REST service. The WES Adapter implements
+the WES standard and translates WES calls into calls to the snakemake head process.</p>
+<h3 id="engine-batch-job">Engine Batch Job</h3>
+<p>For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the snakemake process responsible
+for running that workflow. These snakemake &ldquo;head&rdquo; jobs are run in an &ldquo;On-demand&rdquo; AWS Fargate compute environment even when the actual workflow
+tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.</p>
+<h3 id="compute-environment">Compute Environment</h3>
+<p>Workflow tasks are submitted by the snakemake head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
+Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on container hosts as space allows.</p>
+<h4 id="efs-scratch-space-and-s3-localization">EFS scratch space and S3 localization</h4>
+<p>Any context with a snakemake engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from the workflow
+are localized to the volume by jobs that the snakemake engine spawns to copy these files to the volume. Outputs are copied back
+to S3 after the workflow is complete. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.</p>
+<p>The EFS volume can used by all snakemake engine &ldquo;head&rdquo; jobs to store metadata necessary for dependency caching by specifying an argument
+for the conda workspace that is common across all executions. An example of this is <code>--conda-prefix /mnt/efs/snakemake/conda</code>.</p>
+<p>The EFS volume will remain in your account for the lifetime of the context and are destroyed when contexts are destroyed.
+Because the volume will grow in size as you run more workflows we recommend destroying the context when done to avoid on going EFS
+charges.</p>
+<h2 id="using-snakemake-as-a-context-engine">Using Snakemake as a Context Engine</h2>
+<p>You may declare snakemake to be the <code>engine</code> for any contexts <code>snakemake</code> type engine. For example:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">contexts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">onDemandCtx</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">requestSpotInstances</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">false</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">snakemake</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">snakemake</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h2 id="conda-dependency-caching">Conda Dependency Caching</h2>
+<p>Dependency caching is disabled by default so that each workflow can be run independently. If you would like workflow
+runs to re-use the Conda cache then please specify a folder under &ldquo;/mnt/efs&rdquo; which is where the EFS storage space is
+attached. This will enable snakemake to re-use the dependency which will decrease the time that subsequent workflow runs
+will take.</p>
+<p>To disable call caching you can provide the <code>--conda-prefix</code> engine option. You may do this in a workflows <code>MANIFEST.json</code> by
+adding the following key/ value pair.</p>
+<pre><code>  &quot;engineOptions&quot;: &quot;-j 10 --conda-prefix /mnt/efs/snakemake/conda&quot;
+</code></pre>
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">
+  Last modified March 9, 2022: <a href="https://github.com/aws/amazon-genomics-cli/commit/f6df52072ea78043ecd23407dc49d77ca8e53ec9">Removes if statement (#368) (f6df520)</a>
+</div>
 
-	
-	
-	
 </div>
 
 
