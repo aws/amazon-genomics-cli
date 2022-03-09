@@ -58,12 +58,11 @@ modify the network topology of the specified VPC.
 Issuing account activate commands more than once effectively updates the core infrastructure with the difference between
 the two commands. For example, if you had previously activated the account using `agc account activate` and later invoked
 `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id` then Amazon Genomics CLI will update to use `my-existing-bucket`
-and the identified VPC. The old VPC and related infrastructure will be destroyed. S3 buckets will be *retained* according
-to their retention policy.
+and the identified VPC. The old VPC and S3 buckets will be *retained* according to their retention policy.
 
-If you initially activated the account with `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id`
-and later invoked `agc account activate` then Amazon Genomics CLI will stop using the previous specified bucket and VPC. *ALL* of the 
-pre-existing S3 and VPC infrastructure will be retained and a new bucket and VPC will be created for use by Amazon Genomics CLI.
+If you initially activated the account with `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id` 
+and later invoked `agc account activate` then Amazon Genomics CLI will stop using the previous specified bucket, however the VPC will be recalled and re-used.
+*ALL* of the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.
 
 ### `deactivate`
 
