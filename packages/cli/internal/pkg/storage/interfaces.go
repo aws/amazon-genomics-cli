@@ -36,4 +36,5 @@ type ConfigClient interface {
 
 type InputClient interface {
 	UpdateInputReferencesAndUploadToS3(initialProjectDirectory string, tempProjectDirectory string, bucketName string, baseS3Key string) error
+	UpdateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string, fileLocation string) (map[string]interface{}, error)
 }

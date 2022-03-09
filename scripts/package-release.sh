@@ -11,6 +11,7 @@ mkdir -p ${RELEASE_DIR}/wes
 cp packages/wes_adapter/dist/wes_adapter.zip ${RELEASE_DIR}/wes
 cp -a scripts/cli/. ${RELEASE_DIR}
 cp -a examples ${RELEASE_DIR}
+cp -a extras ${RELEASE_DIR}
 cp -a packages/cli/bin/local/. ${RELEASE_DIR}
 version=$(jq .version -r < version.json)
 commit="${CODEBUILD_RESOLVED_SOURCE_VERSION:-$(git rev-parse --verify HEAD)}"

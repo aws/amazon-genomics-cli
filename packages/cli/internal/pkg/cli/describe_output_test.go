@@ -14,7 +14,7 @@ func TestDescribeOutput(t *testing.T) {
 	}{
 		"WorkflowInstance": {
 			output:              types.WorkflowInstance{},
-			expectedDescription: "Output of the command has following format:\nWORKFLOWINSTANCE: ContextName Id InProject State SubmittedTime WorkflowName\n",
+			expectedDescription: "Output of the command has following format:\nWORKFLOWINSTANCE: ContextName Id InProject Request State SubmittedTime WorkflowName\n",
 		},
 		"Workflow": {
 			output:              types.Workflow{},

@@ -88,6 +88,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
   private createSnakemakeEngine(props: EngineOptions, batchHead: Batch, batchWorkers: Batch): SnakemakeEngine {
     return new SnakemakeEngine(this, "SnakemakeEngine", {
       vpc: props.vpc,
+      iops: props.iops,
       engineBatch: batchHead,
       workerBatch: batchWorkers,
       rootDirS3Uri: props.contextParameters.getEngineBucketPath(),

@@ -43,6 +43,7 @@ type contextProps struct {
 	outputBucket     string
 	artifactBucket   string
 	artifactUrl      string
+	customTagsJson   string
 	contextEnv       contextEnvironment
 }
 
@@ -83,6 +84,7 @@ type ProgressResult struct {
 
 var displayProgressBar = cdk.DisplayProgressBar
 var showExecution = cdk.ShowExecution
+var silentExecution = cdk.SilentExecution
 
 func (m *Manager) getEnvironmentVars() []string {
 	var environmentVars []string
@@ -193,6 +195,14 @@ func (m *Manager) setOutputBucket() {
 	}
 }
 
+func (m *Manager) setCustomTags() {
+	if m.err != nil {
+		return
+	}
+
+	m.customTagsJson = m.Ssm.GetCustomTags()
+}
+
 func (m *Manager) setContextEnv(contextName string) {
 	if m.err != nil {
 		return
@@ -210,6 +220,7 @@ func (m *Manager) setContextEnv(contextName string) {
 		UserId:               m.userId,
 		UserEmail:            m.userEmail,
 		OutputBucketName:     m.outputBucket,
+		CustomTagsJson:       m.customTagsJson,
 		ArtifactBucketName:   m.artifactBucket,
 		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
 		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
@@ -219,8 +230,10 @@ func (m *Manager) setContextEnv(contextName string) {
 		UsePublicSubnets:     m.contextSpec.UsePublicSubnets,
 		// TODO: we default to a single engine in a context for now
 		// need to allow for multiple engines in the same context
-		EngineName:        context.Engines[0].Engine,
-		EngineDesignation: context.Engines[0].Engine,
+		EngineName:              context.Engines[0].Engine,
+		EngineDesignation:       context.Engines[0].Engine,
+		FilesystemType:          context.Engines[0].Filesystem.FSType,
+		FSProvisionedThroughput: context.Engines[0].Filesystem.Configuration.FSProvisionedThroughput,
 	}
 }
 func (m *Manager) validateImage() {
@@ -276,6 +289,8 @@ func (m *Manager) processExecution(allProgressStreams []cdk.ProgressStream, desc
 	var cdkResults []cdk.Result
 	if logging.Verbose {
 		cdkResults = showExecution(allProgressStreams)
+	} else if logging.Silent {
+		cdkResults = silentExecution(allProgressStreams)
 	} else {
 		cdkResults = displayProgressBar(description, allProgressStreams)
 	}

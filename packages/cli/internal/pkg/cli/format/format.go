@@ -15,6 +15,7 @@ type FormatterType string
 const (
 	textFormat    FormatterType = "text"
 	tableFormat   FormatterType = "table"
+	jsonFormat    FormatterType = "json"
 	DefaultFormat               = textFormat
 )
 
@@ -28,12 +29,18 @@ func NewTable(output io.Writer) *Table {
 	}
 }
 
+func NewJson() *Json {
+	return &Json{os.Stdout}
+}
+
 func SetFormatter(format FormatterType) {
 	switch format {
 	case textFormat:
 		Default = NewText()
 	case tableFormat:
 		Default = NewTable(os.Stdout)
+	case jsonFormat:
+		Default = NewJson()
 	}
 }
 
@@ -47,8 +54,8 @@ func NewStringFormatter(buffer *bytes.Buffer) Formatter {
 
 func (f FormatterType) ValidateFormatter() error {
 	switch f {
-	case textFormat, tableFormat:
+	case textFormat, tableFormat, jsonFormat:
 		return nil
 	}
-	return fmt.Errorf("invalid format type. Valid format types are 'text' and 'table'")
+	return fmt.Errorf("invalid format type. Valid format types are 'text', 'table', or 'json'")
 }

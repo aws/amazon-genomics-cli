@@ -63,6 +63,7 @@ func (m *Manager) populateInstancesState() {
 		m.setWesUrl()
 		m.setWesClient()
 		for _, instance := range instances {
+			m.setRequest(instance)
 			m.updateInstanceState(instance)
 			m.updateInProject(instance)
 		}

@@ -2,11 +2,18 @@ package spec
 
 const DefaultMaxVCpus = 256
 
-type Engine struct {
-	Type   string `yaml:"type"`
-	Engine string `yaml:"engine"`
+type FSConfig struct {
+	FSProvisionedThroughput int `yaml:"provisionedThroughput"`
 }
-
+type Filesystem struct {
+	FSType        string   `yaml:"fsType"`
+	Configuration FSConfig `yaml:"configuration,omitempty"`
+}
+type Engine struct {
+	Type       string     `yaml:"type"`
+	Engine     string     `yaml:"engine"`
+	Filesystem Filesystem `yaml:"filesystem,omitempty"`
+}
 type Context struct {
 	InstanceTypes        []string `yaml:"instanceTypes,omitempty"`
 	RequestSpotInstances bool     `yaml:"requestSpotInstances,omitempty"`

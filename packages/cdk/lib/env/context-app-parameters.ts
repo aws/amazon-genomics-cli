@@ -46,6 +46,14 @@ export class ContextAppParameters {
    */
   public readonly engineName: string;
   /**
+   * Name of the filesystem type to use (e.g. EFS, S3).
+   */
+  public readonly filesystemType?: string;
+  /**
+   * Amount of provisioned IOPS to use.
+   */
+  public readonly fsProvisionedThroughput?: number;
+  /**
    * Name of the engine ECR image.
    */
   public readonly engineDesignation: string;
@@ -93,6 +101,11 @@ export class ContextAppParameters {
    */
   public readonly agcVersion: string;
 
+  /**
+   * Map of custom tags to be applied to all the infrastructure in the context.
+   */
+  public readonly customTags: { [key: string]: string };
+
   constructor(node: Node) {
     const instanceTypeStrings = getEnvStringListOrDefault(node, "BATCH_COMPUTE_INSTANCE_TYPES");
 
@@ -107,6 +120,8 @@ export class ContextAppParameters {
     this.readWriteBucketArns = getEnvStringListOrDefault(node, "READ_WRITE_BUCKET_ARNS");
 
     this.engineName = getEnvString(node, "ENGINE_NAME");
+    this.filesystemType = getEnvStringOrDefault(node, "FILESYSTEM_TYPE", this.getDefaultFilesystem());
+    this.fsProvisionedThroughput = getEnvNumber(node, "FS_PROVISIONED_THROUGHPUT");
     this.engineDesignation = getEnvString(node, "ENGINE_DESIGNATION");
     this.engineHealthCheckPath = getEnvStringOrDefault(node, "ENGINE_HEALTH_CHECK_PATH", "/engine/v1/status")!;
     this.callCachingEnabled = getEnvBoolOrDefault(node, "CALL_CACHING_ENABLED", true)!;
@@ -120,6 +135,13 @@ export class ContextAppParameters {
 
     this.usePublicSubnets = getEnvBoolOrDefault(node, "PUBLIC_SUBNETS", false);
     this.agcVersion = getEnvString(node, "AGC_VERSION");
+
+    const tagsJson = getEnvStringOrDefault(node, "CUSTOM_TAGS");
+    if (tagsJson != null) {
+      this.customTags = JSON.parse(tagsJson);
+    } else {
+      this.customTags = {};
+    }
   }
 
   public getContextBucketPath(): string {
@@ -160,5 +182,26 @@ export class ContextAppParameters {
         ...additionalEnvVars,
       },
     };
+  }
+
+  public getDefaultFilesystem(): string {
+    let defFilesystem: string;
+    switch (this.engineName) {
+      case "cromwell":
+        defFilesystem = "S3";
+        break;
+      case "nextflow":
+        defFilesystem = "S3";
+        break;
+      case "miniwdl":
+        defFilesystem = "EFS";
+        break;
+      case "snakemake":
+        defFilesystem = "EFS";
+        break;
+      default:
+        throw Error(`Engine '${this.engineName}' is not supported`);
+    }
+    return defFilesystem;
   }
 }
