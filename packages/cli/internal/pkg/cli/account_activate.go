@@ -5,7 +5,9 @@ package cli
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"path/filepath"
 	"strings"
 
@@ -35,11 +37,10 @@ A new VPC will be created if not specified.`
 	accountTagsDescription = `A list of comma separated tags to be applied to all AGC resources in this account
 (i.e. --tags "k1=v1","k2=v2"). Each key-value pair must be quoted as shown in the example,
 otherwise the parsing will fail.`
-	cdkCoreDir    = ".agc/cdk/apps/core"
-	bucketPrefix  = "agc"
-	activateKey   = "activate"
-	bootstrapKey  = "bootstrap"
-	coreStackName = "Agc-Core"
+	cdkCoreDir   = ".agc/cdk/apps/core"
+	bucketPrefix = "agc"
+	activateKey  = "activate"
+	bootstrapKey = "bootstrap"
 )
 
 type accountActivateVars struct {
@@ -115,9 +116,9 @@ func (o accountActivateOpts) generateEnvVars() ([]string, error) {
 	}
 
 	environmentVars := []string{
-		fmt.Sprintf("AGC_BUCKET_NAME=%s", o.bucketName),
-		fmt.Sprintf("CREATE_AGC_BUCKET=%t", !exists),
-		fmt.Sprintf("AGC_VERSION=%s", version.Version),
+		fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, o.bucketName),
+		fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, !exists),
+		fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 	}
 
 	if o.customTags != nil {
@@ -142,9 +143,10 @@ func (o accountActivateOpts) getVpcId() (string, error) {
 	if o.vpcId != "" {
 		return o.vpcId, nil
 	} else {
+		coreStackName := awsresources.RenderCoreStackName()
 		stackOutputs, err := o.cfnClient.GetStackOutputs(coreStackName)
 		if err != nil {
-			if err == cfn.StackDoesNotExistError {
+			if errors.Is(err, cfn.StackDoesNotExistError) {
 				log.Debug().Msgf("Cloudformation Stack '%s' does not exist", coreStackName)
 				return "", nil
 			} else {

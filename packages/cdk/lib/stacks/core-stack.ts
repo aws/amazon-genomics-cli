@@ -81,8 +81,6 @@ export class CoreStack extends Stack {
         "idempotency-key": props.idempotencyKey,
       },
     });
-
-    console.log("context passed in App :point_right:", this.node.tryGetContext("fromApp"));
     new CfnOutput(this, VPC_PARAMETER_ID, { value: this.vpc.vpcId });
 
     const asset = new Asset(this, "WesAdapter", {
