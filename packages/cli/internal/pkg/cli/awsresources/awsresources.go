@@ -11,6 +11,10 @@ func RenderContextStackName(projectName, contextName, userId string) string {
 	return fmt.Sprintf("%s-Context-%s-%s-%s", constants.ProductName, projectName, userId, contextName)
 }
 
+func RenderCoreStackName() string {
+	return fmt.Sprintf("%s-%s", constants.ProductName, "Core")
+}
+
 func RenderContextStackNameRegexp(projectName, userId string) string {
 	return fmt.Sprintf("^%s-Context-%s-%s-([^\\-]+)$", constants.ProductName, projectName, userId)
 }
