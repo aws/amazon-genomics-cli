@@ -1286,6 +1286,7 @@
             },
             "lru-cache": {
               "version": "6.0.0",
+              "resolved": "",
               "dev": true,
               "requires": {
                 "yallist": "^4.0.0"
@@ -1293,6 +1294,7 @@
             },
             "semver": {
               "version": "7.3.5",
+              "resolved": "",
               "dev": true,
               "requires": {
                 "lru-cache": "^6.0.0"
@@ -1300,6 +1302,7 @@
             },
             "yallist": {
               "version": "4.0.0",
+              "resolved": "",
               "dev": true
             }
           }
@@ -1331,6 +1334,7 @@
           "dependencies": {
             "lru-cache": {
               "version": "6.0.0",
+              "resolved": "",
               "dev": true,
               "requires": {
                 "yallist": "^4.0.0"
@@ -1338,6 +1342,7 @@
             },
             "semver": {
               "version": "7.3.5",
+              "resolved": "",
               "dev": true,
               "requires": {
                 "lru-cache": "^6.0.0"
@@ -1345,6 +1350,7 @@
             },
             "yallist": {
               "version": "4.0.0",
+              "resolved": "",
               "dev": true
             }
           }
