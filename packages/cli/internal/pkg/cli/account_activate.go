@@ -188,7 +188,7 @@ func displayProgress(progressStream cdk.ProgressStream, displayMsg string) error
 			}
 			lastEvent = event
 		}
-		log.Info().Msg(strings.Join(lastEvent.Outputs, "\n"))
+		log.Debug().Msg(strings.Join(lastEvent.Outputs, "\n"))
 	} else {
 		return progressStream.DisplayProgress(displayMsg)
 	}
