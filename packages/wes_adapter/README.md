@@ -20,7 +20,7 @@ Run `make init`, this will create a venv and install the packages required for W
 Override the required environment variables at `./start-local-server.sh` to point the service to access correct AWS resources
 
 ```bash
-export ENGINE_NAME= # nextflow or cromwell
+export ENGINE_NAME= # nextflow, snakemake, miniwdl or cromwell
 export JOB_QUEUE= 
 export JOB_DEFINITION= 
 export ENGINE_LOG_GROUP=
