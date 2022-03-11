@@ -178,6 +178,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
 				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
 				vars := []string{
+					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
 					fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
 					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
 					fmt.Sprintf("AGC_VERSION=%s", version.Version),
@@ -201,6 +202,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					}, cfn.StackDoesNotExistError,
 				)
 				vars := []string{
+					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
 					fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
 					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
 					fmt.Sprintf("AGC_VERSION=%s", version.Version),
@@ -223,6 +225,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					}, cfn.StackDoesNotExistError,
 				)
 				vars := []string{
+					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
 					fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
 					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
 					fmt.Sprintf("AGC_VERSION=%s", version.Version),
