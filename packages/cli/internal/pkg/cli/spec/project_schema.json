@@ -71,6 +71,9 @@
             "requestSpotInstances":{
               "type":"boolean"
             },
+            "usePublicSubnets":{
+              "type":"boolean"
+            },
             "maxVCpus":{
               "type":"integer",
               "minimum": 1

@@ -51,7 +51,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
 
     // Generate the wes lambda
     const lambda = this.renderAdapterLambda({
-      vpc: props.vpc,
+      vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
       role: adapterRole,
       jobQueueArn: this.batchHead.jobQueue.jobQueueArn,
       jobDefinitionArn: this.snakemakeEngine.headJobDefinition.jobDefinitionArn,
@@ -162,15 +162,21 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
   }
 
   private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, taskQueueArn, workflowRoleArn, fsapId, outputBucket }) {
-    return super.renderPythonLambda(this, "SnakemakeWesAdapterLambda", vpc, role, {
-      ENGINE_NAME: "snakemake",
-      JOB_QUEUE: jobQueueArn,
-      JOB_DEFINITION: jobDefinitionArn,
-      TASK_QUEUE: taskQueueArn,
-      WORKFLOW_ROLE: workflowRoleArn,
-      FSAP_ID: fsapId,
-      OUTPUT_DIR_S3_URI: outputBucket,
-      TIME: Date.now().toString(),
-    });
+    return super.renderPythonLambda(
+      this,
+      "SnakemakeWesAdapterLambda",
+      role,
+      {
+        ENGINE_NAME: "snakemake",
+        JOB_QUEUE: jobQueueArn,
+        JOB_DEFINITION: jobDefinitionArn,
+        TASK_QUEUE: taskQueueArn,
+        WORKFLOW_ROLE: workflowRoleArn,
+        FSAP_ID: fsapId,
+        OUTPUT_DIR_S3_URI: outputBucket,
+        TIME: Date.now().toString(),
+      },
+      vpc
+    );
   }
 }

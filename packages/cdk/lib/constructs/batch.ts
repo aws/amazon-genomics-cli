@@ -1,6 +1,6 @@
 import { Fn, Names, Stack } from "aws-cdk-lib";
 import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "@aws-cdk/aws-batch-alpha";
-import { CfnLaunchTemplate, InstanceType, IVpc } from "aws-cdk-lib/aws-ec2";
+import { CfnLaunchTemplate, InstanceType, IVpc, SubnetType } from "aws-cdk-lib/aws-ec2";
 import {
   CfnInstanceProfile,
   Grant,
@@ -58,6 +58,16 @@ export interface ComputeOptions {
    * @default none
    */
   resourceTags?: { [p: string]: string };
+
+  /**
+   * If true, put EC2 instances into public subnets instead of private subnets.
+   * This allows you to obtain significantly lower ongoing costs if used in conjunction with the usePublicSubnets option
+   * for the associated account/core stack, which is enabled using `agc account activate --usePublicSubnets`.
+   * Note that this option risks security vulnerabilities if security groups are manually modified.
+   *
+   * @default false
+   */
+  usePublicSubnets?: boolean;
 }
 
 export interface BatchProps extends ComputeOptions {
@@ -168,12 +178,17 @@ export class Batch extends Construct {
 
   private renderComputeEnvironment(options: ComputeOptions): IComputeEnvironment {
     const computeType = options.computeType || defaultComputeType;
+    const subnets = {
+      // Even if we use public subnets, CDK will assign security groups only allow minimal necessary inbound traffic
+      subnetType: options.usePublicSubnets ? SubnetType.PUBLIC : SubnetType.PRIVATE_WITH_NAT,
+    };
     if (computeType == ComputeResourceType.FARGATE || computeType == ComputeResourceType.FARGATE_SPOT) {
       return new ComputeEnvironment(this, "ComputeEnvironment", {
         computeResources: {
           vpc: options.vpc,
           type: computeType,
           maxvCpus: options.maxVCpus,
+          vpcSubnets: subnets,
         },
       });
     }
@@ -205,6 +220,7 @@ export class Batch extends Construct {
           launchTemplateName: launchTemplate.launchTemplateName!,
         },
         computeResourcesTags: options.resourceTags,
+        vpcSubnets: subnets,
       },
     });
   }
