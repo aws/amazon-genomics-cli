@@ -15,7 +15,8 @@ import {
 } from "aws-cdk-lib/aws-iam";
 import { getInstanceTypesForBatch } from "../util/instance-types";
 import { batchArn, ec2Arn } from "../util";
-import { APP_NAME, APP_TAG_KEY } from "../../lib/constants";
+import { APP_NAME, APP_TAG_KEY, TAGGED_RESOURCE_TYPES } from "../../lib/constants";
+import { CfnLaunchTemplateProps } from "aws-cdk-lib/aws-ec2/lib/ec2.generated";
 import { Construct } from "constructs";
 
 export interface ComputeOptions {
@@ -193,18 +194,13 @@ export class Batch extends Construct {
       });
     }
 
+    const launchTemplateProps = this.getLaunchTemplateProps(options.launchTemplateData, options.resourceTags);
+
     /*
      * TAKE NOTE! If you change the launch template you will need to destroy any existing contexts and deploy. A CDK update won't
      * be enough to trigger an update of the Batch compute environment to use the new template.
      */
-    const launchTemplate = options.launchTemplateData
-      ? new CfnLaunchTemplate(this, "LaunchTemplate", {
-          launchTemplateName: Names.uniqueId(this),
-          launchTemplateData: {
-            userData: Fn.base64(options.launchTemplateData),
-          },
-        })
-      : undefined;
+    const launchTemplate = launchTemplateProps ? new CfnLaunchTemplate(this, "LaunchTemplate", launchTemplateProps) : undefined;
 
     const instanceProfile = new CfnInstanceProfile(this, "ComputeProfile", {
       roles: [this.role.roleName],
@@ -223,5 +219,31 @@ export class Batch extends Construct {
         vpcSubnets: subnets,
       },
     });
+  }
+
+  private getLaunchTemplateProps(launchTemplateData?: string, resourceTags?: { [p: string]: string }): CfnLaunchTemplateProps | undefined {
+    if (launchTemplateData) {
+      let tagSpecifications;
+
+      if (resourceTags) {
+        tagSpecifications = TAGGED_RESOURCE_TYPES.map((resourceTypeToTag) => ({
+          resourceType: resourceTypeToTag,
+          tags: Object.keys(resourceTags).map((key) => ({
+            key,
+            value: resourceTags[key],
+          })),
+        }));
+      }
+
+      return {
+        launchTemplateName: Names.uniqueId(this),
+        launchTemplateData: {
+          userData: Fn.base64(launchTemplateData),
+          tagSpecifications,
+        },
+      };
+    }
+
+    return undefined;
   }
 }

@@ -1,3 +1,5 @@
+import { TaggedResourceTypes } from "./types/tagged-resource-types";
+
 export const PRODUCT_NAME = "Agc";
 export const APP_NAME = "agc";
 export const APP_ENV_NAME = "AGC";
@@ -16,3 +18,5 @@ export const ENGINE_CROMWELL = "cromwell";
 export const ENGINE_MINIWDL = "miniwdl";
 export const ENGINE_NEXTFLOW = "nextflow";
 export const ENGINE_SNAKEMAKE = "snakemake";
+
+export const TAGGED_RESOURCE_TYPES: TaggedResourceTypes = ["volume"];
