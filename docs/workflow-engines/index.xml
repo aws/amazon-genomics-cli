@@ -15,6 +15,22 @@
     
     
     <item>
+      <title>Docs: Filesystems</title>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/filesystems/</link>
+      <pubDate>Fri, 11 Mar 2022 14:31:11 -0400</pubDate>
+      
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/filesystems/</guid>
+      <description>
+        
+        
+        &lt;p&gt;The tasks in a workflow require a common filesystem or scratch space where the outputs of tasks can be written so they
+are available to the inputs of dependent tasks in the same workflow. The following pages provide details on the engine
+filesystems that can be deployed by Amazon Genomics CLI.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: Cromwell</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/cromwell/</link>
       <pubDate>Fri, 01 Oct 2021 17:27:21 -0400</pubDate>

@@ -4,7 +4,9 @@
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="generator" content="Hugo 0.85.0" />
-<meta name="robots" content="index, follow">
+<link rel="canonical" type="text/html" href="https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/filesystems/">
+<link rel="alternate" type="application/rss&#43;xml" href="https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/filesystems/index.xml">
+<meta name="robots" content="noindex, nofollow">
 
 
 <link rel="shortcut icon" href="/amazon-genomics-cli/favicons/favicon.ico" >
@@ -18,33 +20,21 @@
 <link rel="icon" type="image/png" href="/amazon-genomics-cli/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/amazon-genomics-cli/favicons/android-192x192.png" sizes="192x192">
 
-<title>agc configure | Amazon Genomics CLI</title>
-<meta name="description" content="agc configure
-Commands for configuration.
-Configuration is stored per user.
-Synopsis
-Commands for configuration.
-Configure local settings and …">
-<meta property="og:title" content="agc configure" />
-<meta property="og:description" content="agc configure Commands for configuration. Configuration is stored per user.
-Synopsis Commands for configuration. Configure local settings and preferences to customize the CLI experience.
-Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help help for configure Options inherited from parent commands  --format string Format option for output. Valid options are: text, table, json --silent Suppresses all diagnostic information. -v, --verbose Display verbose diagnostic information. SEE ALSO  agc	- 🧬 Launch and manage genomics workloads on AWS." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure/" /><meta property="article:section" content="docs" />
-<meta property="article:published_time" content="2022-03-14T18:20:25+00:00" />
-<meta property="article:modified_time" content="2022-03-14T18:20:25+00:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<title>Filesystems | Amazon Genomics CLI</title>
+<meta name="description" content="Workflow Filesystems
+">
+<meta property="og:title" content="Filesystems" />
+<meta property="og:description" content="Workflow Filesystems
+" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/filesystems/" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
-<meta itemprop="name" content="agc configure">
-<meta itemprop="description" content="agc configure Commands for configuration. Configuration is stored per user.
-Synopsis Commands for configuration. Configure local settings and preferences to customize the CLI experience.
-Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help help for configure Options inherited from parent commands  --format string Format option for output. Valid options are: text, table, json --silent Suppresses all diagnostic information. -v, --verbose Display verbose diagnostic information. SEE ALSO  agc	- 🧬 Launch and manage genomics workloads on AWS."><meta itemprop="datePublished" content="2022-03-14T18:20:25+00:00" />
-<meta itemprop="dateModified" content="2022-03-14T18:20:25+00:00" />
-<meta itemprop="wordCount" content="134">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="agc configure"/>
-<meta name="twitter:description" content="agc configure Commands for configuration. Configuration is stored per user.
-Synopsis Commands for configuration. Configure local settings and preferences to customize the CLI experience.
-Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help help for configure Options inherited from parent commands  --format string Format option for output. Valid options are: text, table, json --silent Suppresses all diagnostic information. -v, --verbose Display verbose diagnostic information. SEE ALSO  agc	- 🧬 Launch and manage genomics workloads on AWS."/>
+<meta itemprop="name" content="Filesystems">
+<meta itemprop="description" content="Workflow Filesystems
+"><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Filesystems"/>
+<meta name="twitter:description" content="Workflow Filesystems
+"/>
 
 
 
@@ -63,7 +53,7 @@ Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help he
 <link rel="stylesheet" href="/amazon-genomics-cli/css/prism.css"/>
 
   </head>
-  <body class="td-page">
+  <body class="td-section">
     <header>
       
 <nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
@@ -132,304 +122,183 @@ Options  -p, --awsProfile string Use the provided AWS CLI profile. -h, --help he
     <div class="container-fluid td-outer">
       <div class="td-main">
         <div class="row flex-xl-nowrap">
-          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
-            
-<div id="td-sidebar-menu" class="td-sidebar__inner">
-  <form class="td-sidebar__search d-flex align-items-center">
-    <input
-  type="search"
-  class="form-control td-search-input"
-  placeholder="&#xf002; Search this site…"
-  aria-label="Search this site…"
-  autocomplete="off"
-  
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.793d2e9bb38f8a8180988a7cc0bb80a8.json"
-  data-offline-search-base-href="/"
-  data-offline-search-max-results="10"
->
-
-    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
-    </button>
-  </form>
-  <nav class="collapse td-sidebar-nav" id="td-section-nav">
-    <ul class="td-sidebar-nav__section pr-md-3 ul-0">
-      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-amazon-genomics-clidocs-li">
-  <a href="/amazon-genomics-cli/docs/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-amazon-genomics-clidocs"><span class="">Documentation</span></a>
-  <ul class="ul-1">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsoverview-li">
-  <a href="/amazon-genomics-cli/docs/overview/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsoverview"><span class="">Overview</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocsgetting-started-li">
-  <a href="/amazon-genomics-cli/docs/getting-started/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsgetting-started"><span class="">Getting Started</span></a>
-  <ul class="ul-2 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsgetting-startedprerequisites-li">
-  <a href="/amazon-genomics-cli/docs/getting-started/prerequisites/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsgetting-startedprerequisites"><span class="">Prerequisites</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsgetting-startedinstallation-li">
-  <a href="/amazon-genomics-cli/docs/getting-started/installation/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsgetting-startedinstallation"><span class="">Installation</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsgetting-startedsetup-li">
-  <a href="/amazon-genomics-cli/docs/getting-started/setup/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsgetting-startedsetup"><span class="">Setup</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsgetting-startedhelloworld-li">
-  <a href="/amazon-genomics-cli/docs/getting-started/helloworld/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsgetting-startedhelloworld"><span class="">Hello world</span></a>
-</li>
-  </ul>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsexamples-li">
-  <a href="/amazon-genomics-cli/docs/examples/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsexamples"><span class="">Examples</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocsconcepts-li">
-  <a href="/amazon-genomics-cli/docs/concepts/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsconcepts"><span class="">Concepts</span></a>
-  <ul class="ul-2 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsconceptsaccounts-li">
-  <a href="/amazon-genomics-cli/docs/concepts/accounts/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsconceptsaccounts"><span class="">Accounts</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsconceptsusers-li">
-  <a href="/amazon-genomics-cli/docs/concepts/users/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsconceptsusers"><span class="">Users</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsconceptsprojects-li">
-  <a href="/amazon-genomics-cli/docs/concepts/projects/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsconceptsprojects"><span class="">Projects</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsconceptscontexts-li">
-  <a href="/amazon-genomics-cli/docs/concepts/contexts/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsconceptscontexts"><span class="">Contexts</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsconceptsdata-li">
-  <a href="/amazon-genomics-cli/docs/concepts/data/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsconceptsdata"><span class="">Data</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsconceptsworkflows-li">
-  <a href="/amazon-genomics-cli/docs/concepts/workflows/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsconceptsworkflows"><span class="">Workflows</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsconceptsengines-li">
-  <a href="/amazon-genomics-cli/docs/concepts/engines/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsconceptsengines"><span class="">Engines</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsconceptslogs-li">
-  <a href="/amazon-genomics-cli/docs/concepts/logs/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsconceptslogs"><span class="">Logs</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsconceptsnamespaces-li">
-  <a href="/amazon-genomics-cli/docs/concepts/namespaces/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsconceptsnamespaces"><span class="">Namespaces</span></a>
-</li>
-  </ul>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocstutorials-li">
-  <a href="/amazon-genomics-cli/docs/tutorials/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocstutorials"><span class="">Tutorials</span></a>
-  <ul class="ul-2 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocstutorialswalkthrough-li">
-  <a href="/amazon-genomics-cli/docs/tutorials/walkthrough/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocstutorialswalkthrough"><span class="">Walk through</span></a>
-</li>
-  </ul>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocsbest-practices-li">
-  <a href="/amazon-genomics-cli/docs/best-practices/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsbest-practices"><span class="">Best Practices</span></a>
-  <ul class="ul-2 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts-li">
-  <a href="/amazon-genomics-cli/docs/best-practices/controllingcosts/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts"><span class="">Controlling Costs</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicesscalingworkloads-li">
-  <a href="/amazon-genomics-cli/docs/best-practices/scalingworkloads/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicesscalingworkloads"><span class="">Scaling Workloads</span></a>
-</li>
-  </ul>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocsworkflow-engines-li">
-  <a href="/amazon-genomics-cli/docs/workflow-engines/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsworkflow-engines"><span class="">Workflow Engines</span></a>
-  <ul class="ul-2 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocsworkflow-enginesfilesystems-li">
-  <a href="/amazon-genomics-cli/docs/workflow-engines/filesystems/" title="Filesystems" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsworkflow-enginesfilesystems"><span class="">FileSystems</span></a>
-  <ul class="ul-3 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesfilesystemsefs-li">
-  <a href="/amazon-genomics-cli/docs/workflow-engines/filesystems/efs/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesfilesystemsefs"><span class="">EFS Workflow Filesystem</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesfilesystemss3-li">
-  <a href="/amazon-genomics-cli/docs/workflow-engines/filesystems/s3/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesfilesystemss3"><span class="">S3 Workflow Filesystem</span></a>
-</li>
-  </ul>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginescromwell-li">
-  <a href="/amazon-genomics-cli/docs/workflow-engines/cromwell/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginescromwell"><span class="">Cromwell</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesminiwdl-li">
-  <a href="/amazon-genomics-cli/docs/workflow-engines/miniwdl/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesminiwdl"><span class="">miniwdl</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginessnakemake-li">
-  <a href="/amazon-genomics-cli/docs/workflow-engines/snakemake/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginessnakemake"><span class="">Snakemake</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesnextflow-li">
-  <a href="/amazon-genomics-cli/docs/workflow-engines/nextflow/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesnextflow"><span class="">Nextflow</span></a>
-</li>
-  </ul>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocscontribution-guidelines-li">
-  <a href="/amazon-genomics-cli/docs/contribution-guidelines/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocscontribution-guidelines"><span class="">Contribution Guidelines</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-amazon-genomics-clidocsreference-li">
-  <a href="/amazon-genomics-cli/docs/reference/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsreference"><span class="">Reference</span></a>
-  <ul class="ul-2 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc"><span class="">agc</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_account-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_account/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_account"><span class="">agc account</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_account_activate-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_account_activate/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_account_activate"><span class="">agc account activate</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_account_deactivate-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_account_deactivate/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_account_deactivate"><span class="">agc account deactivate</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_completion-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_completion/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_completion"><span class="">agc completion</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_completion_bash-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_completion_bash/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_completion_bash"><span class="">agc completion bash</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_completion_fish-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_completion_fish/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_completion_fish"><span class="">agc completion fish</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_completion_powershell-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_completion_powershell/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_completion_powershell"><span class="">agc completion powershell</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_completion_zsh-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_completion_zsh/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_completion_zsh"><span class="">agc completion zsh</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-amazon-genomics-clidocsreferenceagc_configure-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_configure/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_configure"><span class="td-sidebar-nav-active-item">agc configure</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_configure_describe-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_configure_describe/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_configure_describe"><span class="">agc configure describe</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_configure_email-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_configure_email/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_configure_email"><span class="">agc configure email</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_configure_format-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_configure_format/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_configure_format"><span class="">agc configure format</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_context-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_context/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_context"><span class="">agc context</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_context_deploy-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_context_deploy/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_context_deploy"><span class="">agc context deploy</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_context_describe-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_context_describe/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_context_describe"><span class="">agc context describe</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_context_destroy-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_context_destroy/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_context_destroy"><span class="">agc context destroy</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_context_list-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_context_list/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_context_list"><span class="">agc context list</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_context_status-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_context_status/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_context_status"><span class="">agc context status</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_logs-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_logs/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_logs"><span class="">agc logs</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_logs_access-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_logs_access/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_logs_access"><span class="">agc logs access</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_logs_adapter-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_logs_adapter/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_logs_adapter"><span class="">agc logs adapter</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_logs_engine-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_logs_engine/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_logs_engine"><span class="">agc logs engine</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_logs_workflow-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_logs_workflow/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_logs_workflow"><span class="">agc logs workflow</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_project-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_project/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_project"><span class="">agc project</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_project_describe-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_project_describe/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_project_describe"><span class="">agc project describe</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_project_init-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_project_init/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_project_init"><span class="">agc project init</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_project_validate-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_project_validate/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_project_validate"><span class="">agc project validate</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_workflow/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow"><span class="">agc workflow</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow_describe-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_workflow_describe/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow_describe"><span class="">agc workflow describe</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow_list-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_workflow_list/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow_list"><span class="">agc workflow list</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow_output-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_workflow_output/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow_output"><span class="">agc workflow output</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow_run-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_workflow_run/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow_run"><span class="">agc workflow run</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow_status-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_workflow_status/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow_status"><span class="">agc workflow status</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsreferenceagc_workflow_stop-li">
-  <a href="/amazon-genomics-cli/docs/reference/agc_workflow_stop/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsreferenceagc_workflow_stop"><span class="">agc workflow stop</span></a>
-</li>
-  </ul>
-</li>
-  </ul>
-</li>
-    </ul>
-  </nav>
-</div>
-
-          </aside>
-          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
-            
-<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
-<a href="https://github.com/aws/amazon-genomics-cli/tree/main/site//content/en/docs/Reference/agc_configure.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa fa-file-alt fa-fw"></i> View page source</a>
-  <a href="https://github.com/aws/amazon-genomics-cli/edit/main/site//content/en/docs/Reference/agc_configure.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-  <a href="https://github.com/aws/amazon-genomics-cli/new/main/site//content/en/docs/Reference/agc_configure.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Create child page</a>
-  <a href="https://github.com/aws/amazon-genomics-cli/issues/new?title=agc%20configure" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
-  <a id="print" href="https://aws.github.io/amazon-genomics-cli/docs/reference/_print/"><i class="fa fa-print fa-fw"></i> Print entire section</a>
-
-</div>
-
-            
-
-
-<div class="td-toc"><nav id="TableOfContents">
-  <ul>
-    <li><a href="#agc-configure">agc configure</a>
-      <ul>
-        <li><a href="#synopsis">Synopsis</a></li>
-        <li><a href="#options">Options</a></li>
-        <li><a href="#options-inherited-from-parent-commands">Options inherited from parent commands</a></li>
-        <li><a href="#see-also">SEE ALSO</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav></div>
-
-
-
-            
-
-	
-		
-
-
-
-  
-  
-
-	
-		
-
-
-
-  
-  
-
-	
-
-          </aside>
           <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
             
+
+
+
+
+<div class="td-content">
+<div class="pageinfo pageinfo-primary d-print-none">
+<p>
+This is the multi-page printable view of this section.
+<a href="#" onclick="print();return false;">Click here to print</a>.
+</p><p>
+<a href="/amazon-genomics-cli/docs/workflow-engines/filesystems/">Return to the regular view of this page</a>.
+</p>
+</div>
+
+
+
+<h1 class="title">Filesystems</h1>
+<div class="lead">Workflow Filesystems</div>
+
+
+
+
+    <ul>
+    
+  
+  
+  
   
 
-            <nav aria-label="breadcrumb" class="td-breadcrumbs">
-  <ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="https://aws.github.io/amazon-genomics-cli/docs/">Documentation</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="https://aws.github.io/amazon-genomics-cli/docs/reference/">Reference</a>
-  </li>
-  <li class="breadcrumb-item active" aria-current="page">
-    <a href="https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure/">agc configure</a>
-  </li>
-  </ol>
-</nav>
-            
-<div class="td-content">
-	<h1>agc configure</h1>
+  
+    
+    
 	
-	<header class="article-meta">
-		
-		
-			
-				
+<li>1: <a href="#pg-dded0714e7076ba02ca9bb1acd6b5a28">EFS Workflow Filesystem</a></li>
 
 
-			
-				
-
-
-			
-		
-		
-	</header>    
-	<h2 id="agc-configure">agc configure</h2>
-<p>Commands for configuration.
-Configuration is stored per user.</p>
-<h3 id="synopsis">Synopsis</h3>
-<p>Commands for configuration.
-Configure local settings and preferences to customize the CLI experience.</p>
-<h3 id="options">Options</h3>
-<pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
-  -h, --help                help for configure
-</code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
-<pre><code>      --format string   Format option for output. Valid options are: text, table, json
-      --silent          Suppresses all diagnostic information.
-  -v, --verbose         Display verbose diagnostic information.
-</code></pre><h3 id="see-also">SEE ALSO</h3>
-<ul>
-<li><a href="/amazon-genomics-cli/docs/reference/agc/">agc</a>	 - 🧬 Launch and manage genomics workloads on AWS.</li>
-<li><a href="/amazon-genomics-cli/docs/reference/agc_configure_describe/">agc configure describe</a>	 - Shows current configuration of the AGC setup for current user</li>
-<li><a href="/amazon-genomics-cli/docs/reference/agc_configure_email/">agc configure email</a>	 - Sets user email address to be used to tag AGC resources created in the account</li>
-<li><a href="/amazon-genomics-cli/docs/reference/agc_configure_format/">agc configure format</a>	 - Sets default format option for output display of AGC commands. Valid format options are &lsquo;text&rsquo;, &lsquo;table&rsquo;, or &lsquo;json&rsquo;</li>
-</ul>
-
+    
+  
+    
+    
 	
-	
-	
+<li>2: <a href="#pg-99fc65bfd4f076f2cfc1b170e810e7cb">S3 Workflow Filesystem</a></li>
+
+
+    
+  
+
+    </ul>
+
+
+<div class="content">
+      <p>The tasks in a workflow require a common filesystem or scratch space where the outputs of tasks can be written so they
+are available to the inputs of dependent tasks in the same workflow. The following pages provide details on the engine
+filesystems that can be deployed by Amazon Genomics CLI.</p>
+
 </div>
+</div>
+
+
+  
+  
+  
+  
+
+  
+  
+
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-dded0714e7076ba02ca9bb1acd6b5a28">1 - EFS Workflow Filesystem</h1>
+    
+	<h2 id="amazon-efs-workflow-filesystem">Amazon EFS Workflow Filesystem</h2>
+<p>Workflow engines that support it may use Amazon EFS as a shared &ldquo;scratch&rdquo; space for hosting workflow intermediates and
+outputs. Initial inputs are localized once from S3 and final outputs are written back to S3 when the workflow is complete.
+All intermediate I/O is performed against the EFS filesystem.</p>
+<h3 id="advantages">Advantages</h3>
+<ol>
+<li>Compared with the <a href="/amazon-genomics-cli/docs/workflow-engines/filesystems/s3/">S3 Filesystem</a> there is no redundant I/O of inputs from S3.</li>
+<li>Each tasks individual I/O operations tend to be smaller than the copy from S3 so there is less network congestion on the container host.</li>
+<li>Option to use provisioned IOPs to provide high sustained throughput.</li>
+<li>The volume is elastic and will expand and contract as needed.</li>
+<li>It is simple to start an Amazon EC2 instance from the AWS console and connect it to the EFS volume to view outputs as they are created. This can be useful for debugging a workflow.</li>
+</ol>
+<h3 id="disadvantages">Disadvantages</h3>
+<ol>
+<li>Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned IOPs.</li>
+<li>The volume exists for the lifetime of the context and will incur costs based on its size for the lifetime of the context. If you no longer need the context we recommend destroying it.</li>
+<li>Call caching is only possible for as long as the volume exists, i.e. the lifetime of the context.</li>
+</ol>
+<h3 id="provisioned-iops">Provisioned IOPs</h3>
+<p>Amazon EFS volumes deployed by the Amazon Genomics CLI use <a href="https://docs.aws.amazon.com/efs/latest/ug/performance.html#bursting">&ldquo;bursting&rdquo;</a>
+throughput by default. For workflows that have high I/O throughput or in scenarios where you may have many workflows
+running in the same context at the same time, you may exhaust the burst credits of the volume.
+This might cause a workflow to slow down or even fail. Available volume credits can be <a href="https://docs.aws.amazon.com/efs/latest/ug/monitoring_overview.html">monitored</a>
+in the Amazon EFS console, and/ or Amazon CloudWatch. If you observe the exhaustion of burst credits you may want to consider
+deploying a context with <a href="https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput">provisioned</a> throughput IOPs.</p>
+<p>The following fragment of an <code>agc-project.yaml</code> file is an example of how to configure provisioned throughput for the
+Amazon EFS volume used by miniwdl in an Amazon Genomics CLI context.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">myContext</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">wdl</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">miniwdl</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">filesystem</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">          </span><span style="color:#204a87;font-weight:bold">fsType</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">EFS</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">          </span><span style="color:#204a87;font-weight:bold">configuration</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">            </span><span style="color:#204a87;font-weight:bold">provisionedThroughput</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1024</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h3 id="supporting-engines">Supporting Engines</h3>
+<p>The use of Amazon EFS as a shared file system is supported by the <a href="/amazon-genomics-cli/docs/workflow-engines/miniwdl/">miniwdl</a> and
+<a href="/amazon-genomics-cli/docs/workflow-engines/snakemake/">Snakemake</a> engines. Both use EFS with bursting throughput by default and both
+support provisioned IOPs.</p>
+
+</div>
+
+
+
+    
+	
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-99fc65bfd4f076f2cfc1b170e810e7cb">2 - S3 Workflow Filesystem</h1>
+    
+	<h2 id="amazon-s3-workflow-filesystem">Amazon S3 Workflow Filesystem</h2>
+<p>Some workflow engines deployed by Amazon Genomics CLI can use S3 as their shared &ldquo;filesystem&rdquo;. Because S3 is not a POSIX
+compliant filesystem and most of the applications run by workflow tasks will require POSIX files, inputs will be localized
+from Amazon S3 and outputs will be delocalized to Amazon S3.</p>
+<h3 id="advantages">Advantages</h3>
+<ol>
+<li>Inputs are read into each task&rsquo;s container and are not available by a common container mount so there is no possibility of containers on the same host over-writing or accessing another tasks inputs</li>
+<li>No shared file system needs to be provisioned for a contexts compute environment thereby reducing ongoing costs.</li>
+<li>All intermediate task outputs and all workflow outputs are persisted to the S3 bucket provisioned by Amazon Genomics CLI and this bucket will remain after contexts are destroyed and even after Amazon Genomics CLI is deactivated in the account.</li>
+<li>Container hosts use an auto-expansion strategy for their local EBS volumes so disk sizes don&rsquo;t need to be stated.</li>
+</ol>
+<h3 id="disadvantages">Disadvantages</h3>
+<ol>
+<li>Container hosts running multiple tasks may exhaust their aggregate network bandwidth (see below).</li>
+<li>It is assumed that no other external process will be making changes to the S3 objects during a workflow run. If this does happen, the run may fail or be corrupted.</li>
+</ol>
+<h3 id="network-bandwidth-considerations">Network Bandwidth Considerations</h3>
+<p>During workflows with large numbers of concurrent steps that all rely on large inputs you may observe that the localization
+of inputs to the containers will become very slow. This is because a single EC2 container host may have multiple containers
+all competing for limited bandwidth. In these cases we recommend the following possible mitigations:</p>
+<ol>
+<li>Consider using a shared filesystem such as EFS for your engine or an engine that supports EFS</li>
+<li>Configure your <code>agc-project.yaml</code> such that a context is available that uses instance types that are <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/general-purpose-instances.html#general-purpose-network-performance">network optimized</a>.
+For example used <code>m5n</code> instance types rather than <code>m5</code> and use instance types that offer sustained throughput rather than
+<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/general-purpose-instances.html#general-purpose-network-performance">bursting throughput</a> such as instances with more than 16 vCPU.</li>
+<li>Consider modifying your workflow to request larger memory and vCPU amounts for these tasks. This will tend to ensure
+AWS Batch selects larger instances with better performance as well as placing fewer containers per host resulting in less competition for bandwidth.</li>
+</ol>
+<p>These mitigations may result in the use of more expensive infrastructure but can ultimately save money by completing
+the workflow quicker. The best price-performance configuration will vary by workflow.</p>
+<h3 id="supporting-engines">Supporting Engines</h3>
+<p>The <a href="/amazon-genomics-cli/docs/workflow-engines/cromwell/">Cromwell</a> and <a href="/amazon-genomics-cli/docs/workflow-engines/nextflow/">Nextflow</a> engines both support the use of Amazon S3 as a filesystem.
+Contexts using these engines will use this filesystem by default.</p>
+
+</div>
+
+
+
+    
+	
+  
+
 
 
           </main>

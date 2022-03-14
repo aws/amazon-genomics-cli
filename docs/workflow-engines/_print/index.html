@@ -111,7 +111,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.18fa5c016108da039407c67165cef86f.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.793d2e9bb38f8a8180988a7cc0bb80a8.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -157,7 +157,22 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>1: <a href="#pg-b812d6d6ccf08050a8b058f849258f24">Cromwell</a></li>
+<li>1: <a href="#pg-a4021d5b24308a0389c949e8f2bf5f99">Filesystems</a></li>
+
+
+    
+    <ul>
+        
+  
+  
+  
+  
+
+  
+    
+    
+	
+<li>1.1: <a href="#pg-dded0714e7076ba02ca9bb1acd6b5a28">EFS Workflow Filesystem</a></li>
 
 
     
@@ -165,7 +180,19 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>2: <a href="#pg-ce78b9e5a84e9a8a9ba2d03b23c23514">miniwdl</a></li>
+<li>1.2: <a href="#pg-99fc65bfd4f076f2cfc1b170e810e7cb">S3 Workflow Filesystem</a></li>
+
+
+    
+  
+
+    </ul>
+    
+  
+    
+    
+	
+<li>2: <a href="#pg-b812d6d6ccf08050a8b058f849258f24">Cromwell</a></li>
 
 
     
@@ -173,7 +200,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>3: <a href="#pg-213fbc809c7f219340e18bd5d4675202">Snakemake</a></li>
+<li>3: <a href="#pg-ce78b9e5a84e9a8a9ba2d03b23c23514">miniwdl</a></li>
 
 
     
@@ -181,7 +208,15 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>4: <a href="#pg-201f7953fd8f191a875eff2bec53af2d">Nextflow</a></li>
+<li>4: <a href="#pg-213fbc809c7f219340e18bd5d4675202">Snakemake</a></li>
+
+
+    
+  
+    
+    
+	
+<li>5: <a href="#pg-201f7953fd8f191a875eff2bec53af2d">Nextflow</a></li>
 
 
     
@@ -213,7 +248,145 @@ This is the multi-page printable view of this section.
 
 <div class="td-content" style="">
     
-	<h1 id="pg-b812d6d6ccf08050a8b058f849258f24">1 - Cromwell</h1>
+	<h1 id="pg-a4021d5b24308a0389c949e8f2bf5f99">1 - Filesystems</h1>
+    <div class="lead">Workflow Filesystems</div>
+	<p>The tasks in a workflow require a common filesystem or scratch space where the outputs of tasks can be written so they
+are available to the inputs of dependent tasks in the same workflow. The following pages provide details on the engine
+filesystems that can be deployed by Amazon Genomics CLI.</p>
+
+</div>
+
+
+
+    
+      
+  
+  
+  
+  
+
+  
+  
+
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-dded0714e7076ba02ca9bb1acd6b5a28">1.1 - EFS Workflow Filesystem</h1>
+    
+	<h2 id="amazon-efs-workflow-filesystem">Amazon EFS Workflow Filesystem</h2>
+<p>Workflow engines that support it may use Amazon EFS as a shared &ldquo;scratch&rdquo; space for hosting workflow intermediates and
+outputs. Initial inputs are localized once from S3 and final outputs are written back to S3 when the workflow is complete.
+All intermediate I/O is performed against the EFS filesystem.</p>
+<h3 id="advantages">Advantages</h3>
+<ol>
+<li>Compared with the <a href="/amazon-genomics-cli/docs/workflow-engines/filesystems/s3/">S3 Filesystem</a> there is no redundant I/O of inputs from S3.</li>
+<li>Each tasks individual I/O operations tend to be smaller than the copy from S3 so there is less network congestion on the container host.</li>
+<li>Option to use provisioned IOPs to provide high sustained throughput.</li>
+<li>The volume is elastic and will expand and contract as needed.</li>
+<li>It is simple to start an Amazon EC2 instance from the AWS console and connect it to the EFS volume to view outputs as they are created. This can be useful for debugging a workflow.</li>
+</ol>
+<h3 id="disadvantages">Disadvantages</h3>
+<ol>
+<li>Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned IOPs.</li>
+<li>The volume exists for the lifetime of the context and will incur costs based on its size for the lifetime of the context. If you no longer need the context we recommend destroying it.</li>
+<li>Call caching is only possible for as long as the volume exists, i.e. the lifetime of the context.</li>
+</ol>
+<h3 id="provisioned-iops">Provisioned IOPs</h3>
+<p>Amazon EFS volumes deployed by the Amazon Genomics CLI use <a href="https://docs.aws.amazon.com/efs/latest/ug/performance.html#bursting">&ldquo;bursting&rdquo;</a>
+throughput by default. For workflows that have high I/O throughput or in scenarios where you may have many workflows
+running in the same context at the same time, you may exhaust the burst credits of the volume.
+This might cause a workflow to slow down or even fail. Available volume credits can be <a href="https://docs.aws.amazon.com/efs/latest/ug/monitoring_overview.html">monitored</a>
+in the Amazon EFS console, and/ or Amazon CloudWatch. If you observe the exhaustion of burst credits you may want to consider
+deploying a context with <a href="https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput">provisioned</a> throughput IOPs.</p>
+<p>The following fragment of an <code>agc-project.yaml</code> file is an example of how to configure provisioned throughput for the
+Amazon EFS volume used by miniwdl in an Amazon Genomics CLI context.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">myContext</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">wdl</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">miniwdl</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">filesystem</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">          </span><span style="color:#204a87;font-weight:bold">fsType</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">EFS</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">          </span><span style="color:#204a87;font-weight:bold">configuration</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">            </span><span style="color:#204a87;font-weight:bold">provisionedThroughput</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1024</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h3 id="supporting-engines">Supporting Engines</h3>
+<p>The use of Amazon EFS as a shared file system is supported by the <a href="/amazon-genomics-cli/docs/workflow-engines/miniwdl/">miniwdl</a> and
+<a href="/amazon-genomics-cli/docs/workflow-engines/snakemake/">Snakemake</a> engines. Both use EFS with bursting throughput by default and both
+support provisioned IOPs.</p>
+
+</div>
+
+
+
+    
+	
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-99fc65bfd4f076f2cfc1b170e810e7cb">1.2 - S3 Workflow Filesystem</h1>
+    
+	<h2 id="amazon-s3-workflow-filesystem">Amazon S3 Workflow Filesystem</h2>
+<p>Some workflow engines deployed by Amazon Genomics CLI can use S3 as their shared &ldquo;filesystem&rdquo;. Because S3 is not a POSIX
+compliant filesystem and most of the applications run by workflow tasks will require POSIX files, inputs will be localized
+from Amazon S3 and outputs will be delocalized to Amazon S3.</p>
+<h3 id="advantages">Advantages</h3>
+<ol>
+<li>Inputs are read into each task&rsquo;s container and are not available by a common container mount so there is no possibility of containers on the same host over-writing or accessing another tasks inputs</li>
+<li>No shared file system needs to be provisioned for a contexts compute environment thereby reducing ongoing costs.</li>
+<li>All intermediate task outputs and all workflow outputs are persisted to the S3 bucket provisioned by Amazon Genomics CLI and this bucket will remain after contexts are destroyed and even after Amazon Genomics CLI is deactivated in the account.</li>
+<li>Container hosts use an auto-expansion strategy for their local EBS volumes so disk sizes don&rsquo;t need to be stated.</li>
+</ol>
+<h3 id="disadvantages">Disadvantages</h3>
+<ol>
+<li>Container hosts running multiple tasks may exhaust their aggregate network bandwidth (see below).</li>
+<li>It is assumed that no other external process will be making changes to the S3 objects during a workflow run. If this does happen, the run may fail or be corrupted.</li>
+</ol>
+<h3 id="network-bandwidth-considerations">Network Bandwidth Considerations</h3>
+<p>During workflows with large numbers of concurrent steps that all rely on large inputs you may observe that the localization
+of inputs to the containers will become very slow. This is because a single EC2 container host may have multiple containers
+all competing for limited bandwidth. In these cases we recommend the following possible mitigations:</p>
+<ol>
+<li>Consider using a shared filesystem such as EFS for your engine or an engine that supports EFS</li>
+<li>Configure your <code>agc-project.yaml</code> such that a context is available that uses instance types that are <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/general-purpose-instances.html#general-purpose-network-performance">network optimized</a>.
+For example used <code>m5n</code> instance types rather than <code>m5</code> and use instance types that offer sustained throughput rather than
+<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/general-purpose-instances.html#general-purpose-network-performance">bursting throughput</a> such as instances with more than 16 vCPU.</li>
+<li>Consider modifying your workflow to request larger memory and vCPU amounts for these tasks. This will tend to ensure
+AWS Batch selects larger instances with better performance as well as placing fewer containers per host resulting in less competition for bandwidth.</li>
+</ol>
+<p>These mitigations may result in the use of more expensive infrastructure but can ultimately save money by completing
+the workflow quicker. The best price-performance configuration will vary by workflow.</p>
+<h3 id="supporting-engines">Supporting Engines</h3>
+<p>The <a href="/amazon-genomics-cli/docs/workflow-engines/cromwell/">Cromwell</a> and <a href="/amazon-genomics-cli/docs/workflow-engines/nextflow/">Nextflow</a> engines both support the use of Amazon S3 as a filesystem.
+Contexts using these engines will use this filesystem by default.</p>
+
+</div>
+
+
+
+    
+	
+  
+
+    
+	
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-b812d6d6ccf08050a8b058f849258f24">2 - Cromwell</h1>
     <div class="lead">Details on the Cromwell engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="https://cromwell.readthedocs.io/en/stable/">Cromwell</a> is a workflow engine developed by the <a href="https://www.broadinstitute.org/">Broad Institute</a>.
@@ -283,7 +456,7 @@ and is ignored.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-ce78b9e5a84e9a8a9ba2d03b23c23514">2 - miniwdl</h1>
+	<h1 id="pg-ce78b9e5a84e9a8a9ba2d03b23c23514">3 - miniwdl</h1>
     <div class="lead">Details on the miniwdl engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="https://miniwdl.readthedocs.io/en/latest/index.html">miniwdl</a> is free open source software distributed under the MIT licence
@@ -341,7 +514,7 @@ adding the following key/ value pair.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-213fbc809c7f219340e18bd5d4675202">3 - Snakemake</h1>
+	<h1 id="pg-213fbc809c7f219340e18bd5d4675202">4 - Snakemake</h1>
     <div class="lead">Details on the Snakemake engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="https://snakemake.readthedocs.io/en/stable/">Snakemake</a> is free open source software distributed under the MIT licence
@@ -401,7 +574,7 @@ adding the following key/ value pair.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-201f7953fd8f191a875eff2bec53af2d">4 - Nextflow</h1>
+	<h1 id="pg-201f7953fd8f191a875eff2bec53af2d">5 - Nextflow</h1>
     <div class="lead">Details on the Nextflow engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="https://www.nextflow.io/">Nextflow</a> is free open source software distributed under the Apache 2.0 licence
