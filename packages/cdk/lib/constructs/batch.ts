@@ -194,7 +194,7 @@ export class Batch extends Construct {
       });
     }
 
-    const launchTemplateProps = this.getLaunchTemplateProps(options.launchTemplateData, options.resourceTags);
+    const launchTemplateProps = this.renderLaunchTemplateProps(options.launchTemplateData, options.resourceTags);
 
     /*
      * TAKE NOTE! If you change the launch template you will need to destroy any existing contexts and deploy. A CDK update won't
@@ -221,7 +221,7 @@ export class Batch extends Construct {
     });
   }
 
-  private getLaunchTemplateProps(launchTemplateData?: string, resourceTags?: { [p: string]: string }): CfnLaunchTemplateProps | undefined {
+  private renderLaunchTemplateProps(launchTemplateData?: string, resourceTags?: { [p: string]: string }): CfnLaunchTemplateProps | undefined {
     if (launchTemplateData) {
       let tagSpecifications;
 
