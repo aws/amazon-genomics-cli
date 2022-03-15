@@ -76,7 +76,7 @@ type runProps struct {
 	inputUrl             string
 	input                Input
 	optionFileUrl        string
-	optionFile           map[string]string
+	options              map[string]string
 	engineOptions        string
 	arguments            []string
 	attachments          []string
@@ -365,12 +365,12 @@ func (m *Manager) readOptionFile(optionFileUrl string) {
 		m.err = err
 		return
 	}
-	var optionFile map[string]string
-	if err := json.Unmarshal(bytes, &optionFile); err != nil {
+	var options map[string]string
+	if err := json.Unmarshal(bytes, &options); err != nil {
 		m.err = err
 		return
 	}
-	m.optionFile = optionFile
+	m.options = options
 }
 
 func (m *Manager) readEngineOptions(engineOptions string) {
@@ -480,12 +480,12 @@ func (m *Manager) setWorkflowEngineParameters() {
 	if m.optionFileUrl == "" {
 		return
 	}
-	if m.optionFile != nil {
+	if m.options != nil {
 		if m.workflowEngine == "nextflow" || m.workflowEngine == "miniwdl" {
-			log.Debug().Msgf("optionFile flag can only be used with head node engines")
+			log.Debug().Msgf("optionFile flag cannot be used with head node engines")
 			return
 		}
-		m.workflowEngineParams = m.optionFile
+		m.workflowEngineParams = m.options
 	}
 
 	namePattern := fmt.Sprintf("%s_*", filepath.Base(m.optionFileUrl))

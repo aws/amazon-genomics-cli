@@ -351,3 +351,26 @@ func (mr *MockInputClientMockRecorder) UpdateInputsInFile(initialProjectDirector
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateInputsInFile", reflect.TypeOf((*MockInputClient)(nil).UpdateInputsInFile), initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation)
 }
+
+// MockOptionClient is a mock of OptionClient interface.
+type MockOptionClient struct {
+	ctrl     *gomock.Controller
+	recorder *MockOptionClientMockRecorder
+}
+
+// MockInputClientMockRecorder is the mock recorder for MockOptionClient.
+type MockOptionClientMockRecorder struct {
+	mock *MockOptionClient
+}
+
+// NewMockOptionClient creates a new mock instance.
+func NewMockOptionClient(ctrl *gomock.Controller) *MockOptionClient {
+	mock := &MockOptionClient{ctrl: ctrl}
+	mock.recorder = &MockOptionClientMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockOptionClient) EXPECT() *MockOptionClientMockRecorder {
+	return m.recorder
+}

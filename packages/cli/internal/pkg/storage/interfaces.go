@@ -38,8 +38,3 @@ type InputClient interface {
 	UpdateInputReferencesAndUploadToS3(initialProjectDirectory string, tempProjectDirectory string, bucketName string, baseS3Key string) error
 	UpdateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string, fileLocation string) (map[string]interface{}, error)
 }
-
-type OptionClient interface {
-	UpdateOptionReferenceAndUploadToS3(initialProjectDirectory string, tempProjectDirectory string, bucketName string, baseS3Key string) error
-	UpdateOptionFile(initialProjectDirectory string, optionFile interface{}, bucketName string, baseS3Key string, fileLocation string) (interface{}, error)
-}

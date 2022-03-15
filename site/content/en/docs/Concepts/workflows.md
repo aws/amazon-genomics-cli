@@ -148,15 +148,22 @@ An additional optionFileUrl can be provided using the 'o' or '--optionFileUrl' f
 agc workflow run my-workflow --optionFileUrl optionFile.json
 ```
 
-If the option file references a local file, it will be synced with S3 and the file in S3 will be used when the workflow
-instance is run. This is only for use with engines that run in server mode (e.g. Cromwell). It will be ignored if not using an engine  running in server mode.
+OptionFileUrl is only for use with engines that run in server mode (e.g. Cromwell). It will be ignored if not using an engine running in server mode.
+
+Example option.json
+```shell
+{
+    "option_name_1": "option value 1",
+    "option_name_2": "option value 2"
+}
+```
 
 #### `workflow engineOptions`
 
 An additional property 'engineOptions' can be provided using the 'e' or '--engineOptions' flag. For example:
 
 ```shell
-agc workflow run my-workflow --engineOptions "-exampleOption"
+agc workflow run my-workflow --engineOptions "-f foo -b -c --anotherFlag"
 ```
 
 This is only for use with head node engines (e.g. Nextflow, MiniWDL). Otherwise, the property will be ignored.

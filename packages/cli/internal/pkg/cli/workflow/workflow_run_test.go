@@ -272,6 +272,34 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_LocalFile_NoArgs() {
   }
 }
 
+func (s *WorkflowRunTestSuite) TestRunWorkflow_LocalFile_OptionsFile() {
+  s.mockConfigClient.EXPECT().GetUserId().Return(testUserId, nil)
+  s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
+  s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
+  s.mockProjectClient.EXPECT().GetLocation().Return(testProjectFileDir)
+  s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
+  s.mockTmp.EXPECT().Write(testOptionFileName+"_*", testOptionFilePath).Return(testTmpAttachmentPath, nil)
+  s.mockInputClient.EXPECT().UpdateInputReferencesAndUploadToS3(testFullWorkflowLocalUrl, testTempDir, testOutputBucket, testWorkflowKey).Return(nil)
+  s.mockStorageClient.EXPECT().ReadAsBytes(testOptionFilePath).Return([]byte(testOptionFileLocal), nil)
+  s.mockTmp.EXPECT().TempDir("", "workflow_*").Return(testTempDir, nil)
+  s.mockOs.EXPECT().RemoveAll(testTempDir).Return(nil)
+  s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
+  s.mockFileInfo.EXPECT().IsDir().Return(true)
+  s.mockZip.EXPECT().CompressToTmp(testTempDir).Return(testCompressedTmpPath, nil)
+  uploadCall := s.mockS3Client.EXPECT().UploadFile(testOutputBucket, testWorkflowZipKey, testCompressedTmpPath).Return(nil)
+  s.mockOs.EXPECT().Remove(testTmpAttachmentPath).After(uploadCall).Return(nil)
+  s.mockCfn.EXPECT().GetStackInfo(testContext1Stack).Return(s.testStackInfo, nil)
+  s.mockWes.EXPECT().RunWorkflow(context.Background(), gomock.Any()).Return(testRun1Id, nil)
+  s.mockDdb.EXPECT().WriteWorkflowInstance(context.Background(), s.wfInstance).Return(nil)
+  s.wfInstance.WorkflowName = testLocalWorkflowName
+  s.mockOs.EXPECT().Remove(testCompressedTmpPath).After(uploadCall).Return(nil)
+
+  actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, "", testOptionFilePath, "")
+  if s.Assert().NoError(err) {
+    s.Assert().Equal(testRun1Id, actualId)
+  }
+}
+
 func (s *WorkflowRunTestSuite) TestRunWorkflow_S3Object_WithLocalArgs() {
   s.mockConfigClient.EXPECT().GetUserId().Return(testUserId, nil)
   s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
