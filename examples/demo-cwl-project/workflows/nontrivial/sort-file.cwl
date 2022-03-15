@@ -2,10 +2,12 @@
 cwlVersion: v1.2
 class: CommandLineTool
 baseCommand: ["sort"]
+requirements:
+  InlineJavascriptRequirement: {}
 hints:
   ResourceRequirement:
     coresMax: 1
-    outdirMin: $(inputs.input_file.size)
+    outdirMin: $(parseInt(Math.ceil(inputs.input_file.size/(2**20))))
 inputs:
   input_file:
     type: File
