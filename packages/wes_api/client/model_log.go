@@ -10,7 +10,6 @@
 package wes_client
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
