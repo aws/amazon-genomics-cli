@@ -7,7 +7,7 @@ requirements:
 hints:
   ResourceRequirement:
     coresMax: 1
-    outdirMin: $(parseInt(Math.ceil(inputs.input_file.size/(2**20))))
+    outdirMin: $(parseInt(Math.ceil(inputs.input_file.size / Math.pow(2, 20))))
 inputs:
   input_file:
     type: File
