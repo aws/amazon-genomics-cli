@@ -58,12 +58,11 @@ modify the network topology of the specified VPC.
 Issuing account activate commands more than once effectively updates the core infrastructure with the difference between
 the two commands. For example, if you had previously activated the account using `agc account activate` and later invoked
 `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id` then Amazon Genomics CLI will update to use `my-existing-bucket`
-and the identified VPC. The old VPC and related infrastructure will be destroyed. S3 buckets will be *retained* according
-to their retention policy.
+and the identified VPC. The old VPC and S3 buckets will be *retained* according to their retention policy.
 
-If you initially activated the account with `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id`
-and later invoked `agc account activate` then Amazon Genomics CLI will stop using the previous specified bucket and VPC. *ALL* of the 
-pre-existing S3 and VPC infrastructure will be retained and a new bucket and VPC will be created for use by Amazon Genomics CLI.
+If you initially activated the account with `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id` 
+and later invoked `agc account activate` then Amazon Genomics CLI will stop using the previous specified bucket, however the VPC will 
+be recalled and re-used. *ALL* of the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.
 
 ### `deactivate`
 
@@ -91,6 +90,11 @@ While an account region is activated there will be ongoing charges from the core
 as VPC NAT gateways and VPC Endpoints. If you no longer use Amazon Genomics CLI in a region we recommend you deactivate it. You may also
 wish to remove the S3 bucket along with its objects as well as the [CloudWatch](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/index.html) logs produced by Amazon Genomics CLI. These are retained
 by default so that you can view workflow results and logs even after deactivation.
+
+However, if you wish to have this infrastructure remain deployed, you are able to significantly reduce ongoing costs by using `agc account activate --usePublicSubnets`.
+This prevents the creation of private subnets with NAT gateways, and the use of VPC endpoints, both of which have associated ongoing costs.
+However please note that **you must also set `usePublicSubnets: true` in your `agc-config.yaml` if you choose to use this option**.
+Please also note that this is not recommended for security-critical deployments, as it means that any edits to the stack security groups risk exposing worker nodes to the public internet.
 
 ### Network traffic
 

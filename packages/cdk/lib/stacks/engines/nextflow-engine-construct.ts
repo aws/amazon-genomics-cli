@@ -58,11 +58,11 @@ export class NextflowEngineConstruct extends EngineConstruct {
     engineLogGroup.grant(adapterRole, "logs:StartQuery");
 
     const lambda = this.renderAdapterLambda({
-      vpc: props.vpc,
       role: adapterRole,
       jobQueueArn: props.headQueue.jobQueueArn,
       jobDefinitionArn: this.nextflowEngine.headJobDefinition.jobDefinitionArn,
       engineLogGroupName: engineLogGroup.logGroupName,
+      vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
     });
     this.adapterLogGroup = lambda.logGroup;
 
@@ -82,12 +82,18 @@ export class NextflowEngineConstruct extends EngineConstruct {
     };
   }
 
-  private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, engineLogGroupName }) {
-    return super.renderPythonLambda(this, "NextflowWesAdapterLambda", vpc, role, {
-      ENGINE_NAME: "nextflow",
-      JOB_QUEUE: jobQueueArn,
-      JOB_DEFINITION: jobDefinitionArn,
-      ENGINE_LOG_GROUP: engineLogGroupName,
-    });
+  private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, engineLogGroupName, vpc }) {
+    return super.renderPythonLambda(
+      this,
+      "NextflowWesAdapterLambda",
+      role,
+      {
+        ENGINE_NAME: "nextflow",
+        JOB_QUEUE: jobQueueArn,
+        JOB_DEFINITION: jobDefinitionArn,
+        ENGINE_LOG_GROUP: engineLogGroupName,
+      },
+      vpc
+    );
   }
 }

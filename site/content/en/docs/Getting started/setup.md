@@ -19,6 +19,10 @@ The DynamoDB table is used by the CLI for persistent state. The S3 bucket is use
 
 ### CDK Bootstrap
 
+{{% alert title="Attention" color="warning" %}}
+This step is NOT required when using Amazon Genomics CLI version 1.2 or above
+{{% /alert %}}
+
 Amazon Genomics CLI uses AWS CDK to deploy infrastructure. Activating an account will bootstrap the AWS Environment for CDK app deployments.
 CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defined infrastructure. Full details are available
 [here](https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html).

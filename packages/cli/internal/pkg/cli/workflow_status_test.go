@@ -50,11 +50,13 @@ func TestWorkflowStatusOpts_Execute(t *testing.T) {
 		testWorkflow1   = "Test Workflow 1"
 		testSubmitTime1 = "Test Submit Time 1"
 		testState1      = "Test State 1"
+		testRequest1    = "Test Request 1"
 
 		testInstanceId2 = "Test Instance Id 2"
 		testWorkflow2   = "Test Workflow 2"
 		testSubmitTime2 = "Test Submit Time 2"
 		testState2      = "Test State 2"
+		testRequest2    = "Test Request 2"
 	)
 
 	testInstanceSummary1 := workflow.InstanceSummary{
@@ -64,6 +66,7 @@ func TestWorkflowStatusOpts_Execute(t *testing.T) {
 		SubmitTime:   testSubmitTime1,
 		State:        testState1,
 		InProject:    true,
+		Request:      testRequest1,
 	}
 
 	testWorkflowInstance1 := types.WorkflowInstance{
@@ -73,6 +76,7 @@ func TestWorkflowStatusOpts_Execute(t *testing.T) {
 		State:         testState1,
 		InProject:     true,
 		SubmittedTime: testSubmitTime1,
+		Request:       testRequest1,
 	}
 
 	testInstanceSummary2 := workflow.InstanceSummary{
@@ -82,6 +86,7 @@ func TestWorkflowStatusOpts_Execute(t *testing.T) {
 		SubmitTime:   testSubmitTime2,
 		State:        testState2,
 		InProject:    true,
+		Request:      testRequest2,
 	}
 
 	testWorkflowInstance2 := types.WorkflowInstance{
@@ -91,6 +96,7 @@ func TestWorkflowStatusOpts_Execute(t *testing.T) {
 		State:         testState2,
 		InProject:     true,
 		SubmittedTime: testSubmitTime2,
+		Request:       testRequest2,
 	}
 
 	tests := map[string]struct {

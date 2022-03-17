@@ -11,4 +11,5 @@ const (
 	CreateBucketEnvKey  = "CREATE_AGC_BUCKET"
 	AgcVersionEnvKey    = "AGC_VERSION"
 	VpcIdEnvKey         = "VPC_ID"
+	PublicSubnetsEnvKey = "AGC_USE_PUBLIC_SUBNETS"
 )

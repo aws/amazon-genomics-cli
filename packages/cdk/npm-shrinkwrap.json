@@ -1283,6 +1283,27 @@
               "resolved": "https://registry.npmjs.org/jsonschema/-/jsonschema-1.4.0.tgz",
               "integrity": "sha512-/YgW6pRMr6M7C+4o8kS+B/2myEpHCrxO4PEWnqJNBFMjn7EWXqlQ4tGwL6xTHeRplwuZmcAncdvfOad1nT2yMw==",
               "dev": true
+            },
+            "lru-cache": {
+              "version": "6.0.0",
+              "resolved": "",
+              "dev": true,
+              "requires": {
+                "yallist": "^4.0.0"
+              }
+            },
+            "semver": {
+              "version": "7.3.5",
+              "resolved": "",
+              "dev": true,
+              "requires": {
+                "lru-cache": "^6.0.0"
+              }
+            },
+            "yallist": {
+              "version": "4.0.0",
+              "resolved": "",
+              "dev": true
             }
           }
         },
@@ -1309,6 +1330,29 @@
           "requires": {
             "@aws-cdk/cloud-assembly-schema": "2.10.0",
             "semver": "^7.3.5"
+          },
+          "dependencies": {
+            "lru-cache": {
+              "version": "6.0.0",
+              "resolved": "",
+              "dev": true,
+              "requires": {
+                "yallist": "^4.0.0"
+              }
+            },
+            "semver": {
+              "version": "7.3.5",
+              "resolved": "",
+              "dev": true,
+              "requires": {
+                "lru-cache": "^6.0.0"
+              }
+            },
+            "yallist": {
+              "version": "4.0.0",
+              "resolved": "",
+              "dev": true
+            }
           }
         },
         "@aws-cdk/region-info": {
@@ -1679,11 +1723,6 @@
           "resolved": "https://registry.npmjs.org/color-name/-/color-name-1.1.4.tgz",
           "integrity": "sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==",
           "dev": true
-        },
-        "colors": {
-          "version": "1.4.0",
-          "resolved": "https://registry.npmjs.org/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78",
-          "integrity": "sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA=="
         },
         "compress-commons": {
           "version": "4.1.1",
@@ -2206,11 +2245,6 @@
             "graceful-fs": "^4.1.6",
             "universalify": "^2.0.0"
           }
-        },
-        "jsonschema": {
-          "version": "1.4.0",
-          "resolved": false,
-          "integrity": "sha512-/YgW6pRMr6M7C+4o8kS+B/2myEpHCrxO4PEWnqJNBFMjn7EWXqlQ4tGwL6xTHeRplwuZmcAncdvfOad1nT2yMw=="
         },
         "lazystream": {
           "version": "1.0.1",

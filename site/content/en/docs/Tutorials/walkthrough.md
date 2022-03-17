@@ -314,7 +314,7 @@ agc workflow run hello --context test
 If your workflow was successfully submitted you should get something like:
 
 ```
-2021-08-04T23:01:37Z 𝒊  Running workflow. Workflow name: 'hello', Arguments: '', Context: 'myContext'
+2021-08-04T23:01:37Z 𝒊  Running workflow. Workflow name: 'hello', InputsFile: '', Context: 'myContext'
 "06604478-0897-462a-9ad1-47dd5c5717ca"
 ```
 
@@ -406,11 +406,11 @@ EOF
 Finally, you would submit the workflow with its corresponding inputs file with:
 
 ```shell
-agc workflow run read --args inputs/read.inputs.json
+agc workflow run read --inputsFile inputs/read.inputs.json
 ```
 
-Amazon Genomics CLI will scan the file provided to `--args` for local paths, sync those files to S3, and rewrite the 
-inputs file in transit to point to the appropriate S3 locations. Paths in the `*.inputs.json` file provided as `--args` 
+Amazon Genomics CLI will scan the file provided to `--inputsFile` for local paths, sync those files to S3, and rewrite the 
+inputs file in transit to point to the appropriate S3 locations. Paths in the `*.inputs.json` file provided as `--inputsFile` 
 are referenced relative to the `*.inputs.json` file.
 
 ### Accessing workflow results

@@ -54,7 +54,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
 
     const lambda = this.renderAdapterLambda({
-      vpc: props.vpc,
+      vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
       role: this.adapterRole,
       engineLogGroupName: this.adapterLogGroup.logGroupName,
       jobQueueArn: props.jobQueue.jobQueueArn,
@@ -123,15 +123,21 @@ export class CromwellEngineConstruct extends EngineConstruct {
     return engine;
   }
 
-  private renderAdapterLambda({ vpc, role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint }) {
-    return super.renderPythonLambda(this, "CromwellWesAdapterLambda", vpc, role, {
-      ENGINE_NAME: "cromwell",
-      ENGINE_ENDPOINT: engineEndpoint,
-      ENGINE_LOG_GROUP: engineLogGroupName,
-      JOB_QUEUE: jobQueueArn,
-      PROJECT_NAME: projectName,
-      CONTEXT_NAME: contextName,
-      USER_ID: userId,
-    });
+  private renderAdapterLambda({ role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint, vpc }) {
+    return super.renderPythonLambda(
+      this,
+      "CromwellWesAdapterLambda",
+      role,
+      {
+        ENGINE_NAME: "cromwell",
+        ENGINE_ENDPOINT: engineEndpoint,
+        ENGINE_LOG_GROUP: engineLogGroupName,
+        JOB_QUEUE: jobQueueArn,
+        PROJECT_NAME: projectName,
+        CONTEXT_NAME: contextName,
+        USER_ID: userId,
+      },
+      vpc
+    );
   }
 }

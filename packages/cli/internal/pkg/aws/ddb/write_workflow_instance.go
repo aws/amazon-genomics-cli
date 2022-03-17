@@ -21,6 +21,7 @@ type WorkflowInstance struct {
 	ProjectName  string
 	UserId       string
 	CreatedTime  string
+	Request      string
 }
 
 func (c *Client) WriteWorkflowInstance(ctx context.Context, instance WorkflowInstance) error {

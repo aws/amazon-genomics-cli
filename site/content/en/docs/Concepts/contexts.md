@@ -106,6 +106,23 @@ contexts:
         engine: nextflow
 ```
 
+### Public Subnets
+
+In the interest of saving money, in particular if you intend to have the AGC stack deployed for a long period, you may choose to deploy in "public subnet" mode.
+To do this, you must first set up the core stack using `aws configure --usePublicSubnets`, which will disable the creation of the NAT gateway and VPC endpoints which present an ongoing cost unrelated to your use of compute resources.
+After you have done this, you must also set `usePublicSubnets: true` in all contexts you use:
+```yaml
+contexts:
+  someCtx:
+    usePublicSubnets: true
+    engines:
+      - type: nextflow
+        engine: nextflow
+```
+
+This ensures that the AWS batch instances are deployed into a public subnet, which has no additional cost associated with it.
+However note that while these instances are given a security group that will block all incoming traffic, this is not as secure as using the default private subnet mode.
+
 ## Context Commands
 
 A full reference of context commands is [here]( {{< relref "../Reference/agc_context" >}} )
@@ -195,9 +212,11 @@ base storage. Additionally, Cromwell is deployed with a standard EFS volume for 
 relatively small the amount of metadata will expand as more workflows are run. The volume is destroyed when the context is destroyed. An estimated
 cost for both components is available via [this link](https://calculator.aws/#/estimate?id=8ccc606c1b267e2933a6d683c0b98fcf11e4cbab)
 
-Contexts using the "miniwdl" engine use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
+Contexts using the "miniwdl" or "snakemake" engines use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
 workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use. An estimated cost assuming a
 total of 500 GB of workflow artifacts is available via [this link](https://calculator.aws/#/estimate?id=4d19b43aa86fcc3af199c425bfcc55193592cbb4)
+
+Refer to the [public subnets section](#public-subnets) if you are concerned about reducing these ongoing costs.
 
 ### Tags
 

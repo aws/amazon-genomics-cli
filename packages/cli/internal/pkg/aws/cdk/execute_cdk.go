@@ -64,6 +64,7 @@ func processCommandIO(cmd *exec.Cmd, executionName string) (chan ProgressEvent, 
 		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
 	stdout, err := cmd.StdoutPipe()
+
 	if err != nil {
 		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}

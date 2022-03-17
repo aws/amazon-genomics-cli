@@ -1,10 +1,10 @@
 import { CfnOutput, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { AttributeType, BillingMode, ITable, ProjectionType, Table } from "aws-cdk-lib/aws-dynamodb";
-import { StringParameter, IParameter } from "aws-cdk-lib/aws-ssm";
-import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
+import { IParameter, StringParameter } from "aws-cdk-lib/aws-ssm";
+import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
-import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME, WES_KEY_PARAMETER_NAME, WES_BUCKET_NAME } from "../constants";
+import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME, WES_KEY_PARAMETER_NAME, WES_BUCKET_NAME, VPC_PARAMETER_ID } from "../constants";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import * as path from "path";
 import { homedir } from "os";
@@ -56,6 +56,16 @@ export interface CoreStackProps extends StackProps {
    * @default none
    */
   parameters?: ParameterProps[];
+  /**
+   * If true, spawn a VPC with no NAT gateways or VPC endpoints (ie, no private subnets).
+   * This **must** be used in conjunction with the uesPublicSubnets option for any context deployed within this account,
+   * which can be specified in the `agc-project.yaml`.
+   *
+   * Note that this option risks security vulnerabilities if security groups are manually modified.
+   *
+   * @default false
+   */
+  usePublicSubnets?: boolean;
 }
 
 const parameterPrefix = `/${APP_NAME}/_common/`;
@@ -68,7 +78,7 @@ export class CoreStack extends Stack {
   constructor(scope: Construct, id: string, props: CoreStackProps) {
     super(scope, id, props);
 
-    this.vpc = this.renderVpc(props.vpcId);
+    this.vpc = this.renderVpc(props.vpcId, props.usePublicSubnets);
     this.table = this.renderTable();
     this.bucket = this.renderBucket(props.bucketName, props.createNewBucket);
 
@@ -81,6 +91,7 @@ export class CoreStack extends Stack {
         "idempotency-key": props.idempotencyKey,
       },
     });
+    new CfnOutput(this, VPC_PARAMETER_ID, { value: this.vpc.vpcId });
 
     const asset = new Asset(this, "WesAdapter", {
       path: path.join(homedir(), ".agc", "wes", "wes_adapter.zip"),
@@ -96,47 +107,60 @@ export class CoreStack extends Stack {
     new CfnOutput(this, "TableName", { value: this.table.tableName });
   }
 
-  private renderVpc(vpcId?: string): IVpc {
+  private renderVpc(vpcId?: string, publicSubnets?: boolean): IVpc {
     if (vpcId) {
       return Vpc.fromLookup(this, "Vpc", { vpcId });
     }
+
     const vpc = new Vpc(this, "Vpc", {
-      gatewayEndpoints: {
-        S3Endpoint: { service: GatewayVpcEndpointAwsService.S3 },
-      },
+      gatewayEndpoints: publicSubnets
+        ? {}
+        : {
+            S3Endpoint: { service: GatewayVpcEndpointAwsService.S3 },
+          },
+      subnetConfiguration: publicSubnets
+        ? [
+            {
+              subnetType: SubnetType.PUBLIC,
+              name: "Public",
+            },
+          ]
+        : Vpc.DEFAULT_SUBNETS,
     });
 
-    const subnetSelection = { subnets: vpc.privateSubnets, onePerAz: true };
-    vpc.addInterfaceEndpoint(`${PRODUCT_NAME}LogsEndpoint`, {
-      service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.logs`),
-      subnets: subnetSelection,
-      open: true,
-    });
-    vpc.addInterfaceEndpoint(`${PRODUCT_NAME}EcrDkrEndpoint`, {
-      service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ecr.dkr`),
-      subnets: subnetSelection,
-      open: true,
-    });
-    vpc.addInterfaceEndpoint(`${PRODUCT_NAME}EcrApiEndpoint`, {
-      service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ecr.api`),
-      subnets: subnetSelection,
-      open: true,
-    });
-    vpc.addInterfaceEndpoint(`${PRODUCT_NAME}EcsAgentEndpoint`, {
-      service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ecs-agent`),
-      subnets: subnetSelection,
-      open: true,
-    });
-    vpc.addInterfaceEndpoint(`${PRODUCT_NAME}EcsTelemEndpoint`, {
-      service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ecs-telemetry`),
-      subnets: subnetSelection,
-      open: true,
-    });
-    vpc.addInterfaceEndpoint(`${PRODUCT_NAME}EcsEndpoint`, {
-      service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ecs`),
-      subnets: subnetSelection,
-      open: true,
-    });
+    if (!publicSubnets) {
+      const subnetSelection = { subnets: vpc.privateSubnets, onePerAz: true };
+      vpc.addInterfaceEndpoint(`${PRODUCT_NAME}LogsEndpoint`, {
+        service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.logs`),
+        subnets: subnetSelection,
+        open: true,
+      });
+      vpc.addInterfaceEndpoint(`${PRODUCT_NAME}EcrDkrEndpoint`, {
+        service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ecr.dkr`),
+        subnets: subnetSelection,
+        open: true,
+      });
+      vpc.addInterfaceEndpoint(`${PRODUCT_NAME}EcrApiEndpoint`, {
+        service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ecr.api`),
+        subnets: subnetSelection,
+        open: true,
+      });
+      vpc.addInterfaceEndpoint(`${PRODUCT_NAME}EcsAgentEndpoint`, {
+        service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ecs-agent`),
+        subnets: subnetSelection,
+        open: true,
+      });
+      vpc.addInterfaceEndpoint(`${PRODUCT_NAME}EcsTelemEndpoint`, {
+        service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ecs-telemetry`),
+        subnets: subnetSelection,
+        open: true,
+      });
+      vpc.addInterfaceEndpoint(`${PRODUCT_NAME}EcsEndpoint`, {
+        service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ecs`),
+        subnets: subnetSelection,
+        open: true,
+      });
+    }
 
     return vpc;
   }
