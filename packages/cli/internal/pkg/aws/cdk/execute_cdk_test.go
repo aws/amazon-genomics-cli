@@ -23,7 +23,7 @@ const (
 	testExecuteCommandFailureArg    = "test-execute-command-failure-arg"
 	testExecuteExecutioName         = "test-key"
 	testExecuteCommandProgressLine  = "Agc-Context-Demo-yy110HKO4J-ctx1 | 3/10 | 3:22:16 PM | REVIEW_IN_PROGRESS   | AWS::CloudFormation::Stack | Agc-Context-Demo-yy110HKO4J-ctx1 User Initiated"
-    testExecuteCommandProgressLine2 = "Agc-Context-Demo-yy110HKO4J-ctx1 | 4/10 | 3:23:16 PM | REVIEW_IN_PROGRESS   | AWS::CloudFormation::Stack | Agc-Context-Demo-yy110HKO4J-ctx1 User Initiated"
+	testExecuteCommandProgressLine2 = "Agc-Context-Demo-yy110HKO4J-ctx1 | 4/10 | 3:23:16 PM | REVIEW_IN_PROGRESS   | AWS::CloudFormation::Stack | Agc-Context-Demo-yy110HKO4J-ctx1 User Initiated"
 	testExecuteCodePrompt           = "\nMFA token for arn:something-or-other: \n\n"
 	testExecuteCode                 = "31337"
 )
@@ -41,10 +41,10 @@ type ExecuteCdkCommandTestSuite struct {
 
 	osRemoveAllOrig func(string) error
 	execCommandOrig func(command string, args ...string) *exec.Cmd
-	mfaInputOrig io.Reader
-	mfaOutputOrig io.Writer
+	mfaInputOrig    io.Reader
+	mfaOutputOrig   io.Writer
 
-	fakeInput io.Writer
+	fakeInput  io.Writer
 	fakeOutput io.Reader
 
 	ctrl   *gomock.Controller
