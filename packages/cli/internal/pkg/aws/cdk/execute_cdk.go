@@ -19,7 +19,10 @@ var ExecuteCdkCommand = executeCdkCommand
 var execCommand = exec.Command
 var progressRegex = regexp.MustCompile(`^.*\|\s*([0-9]+/[0-9]+)\s*\|(.*)`)
 
+// These can be swapped out to use fake versions during tests
 var osRemoveAll = os.RemoveAll
+var mfaInput io.Reader = os.Stdin // Stream to get MFA codes from the user
+var mfaOutput io.Writer = os.Stdout // Stream to ask the user for MFA codes
 
 func executeCdkCommand(appDir string, commandArgs []string, executionName string) (ProgressStream, error) {
 	return executeCdkCommandAndCleanupDirectory(appDir, commandArgs, "", executionName)
@@ -110,7 +113,7 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
 				// We also need to make sure to drop down a couple lines
 				// because if there's a progress spinner going it will just
 				// immediately clobber our prompt.
-				fmt.Printf("\n%s\n\n", line)
+				fmt.Fprintf(mfaOutput, "\n%s\n\n", line)
 				line = ""
 
 				oldStepDescription := currentEvent.StepDescription
@@ -119,7 +122,7 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.Write
 
 				// And we need to read and pass along a code.
 				var reply string
-				fmt.Scanln(&reply)
+				fmt.Fscanln(mfaInput, &reply)
 
 				currentEvent.StepDescription = oldStepDescription
 				progressChan <- *currentEvent
