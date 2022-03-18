@@ -260,4 +260,4 @@ def to_iso(epoch: Optional[int]) -> Optional[str]:
 def chunks(l: list, n: int) -> Iterable[list]:
     """split list l into chunks of size n"""
     for i in range(0, len(l), n):
-        yield l[i:i+n]
+        yield l[i : i + n]
