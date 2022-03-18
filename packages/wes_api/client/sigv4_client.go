@@ -6,12 +6,13 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"github.com/aws/aws-sdk-go-v2/aws"
-	sigv4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	sigv4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 )
 
 // NewSigningHttpClient returns an *http.Client that will sign all requests with AWS V4 Signing.

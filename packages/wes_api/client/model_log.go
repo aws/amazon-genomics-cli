@@ -14,7 +14,6 @@ import (
 	"fmt"
 )
 
-
 // Log - Log and other info
 type Log struct {
 
@@ -48,40 +47,40 @@ func (self *Log) UnmarshalJSON(data []byte) error {
 	// See <https://stackoverflow.com/a/62992367>.
 
 	type LogFields Log
-    var unmarshallTo struct {
+	var unmarshallTo struct {
 		// This will get exit_code over the composed-in field
-        ExitCodeJSON json.RawMessage `json:"exit_code,omitempty"`
-        LogFields
-    }
+		ExitCodeJSON json.RawMessage `json:"exit_code,omitempty"`
+		LogFields
+	}
 	// Unmarshall everything that's easy
 	err := json.Unmarshal(data, &unmarshallTo)
-    if err != nil {
+	if err != nil {
 		// We can't even parse the rest of the info.
 		// Still need to move what we can into us.
 		*self = Log(unmarshallTo.LogFields)
-        return err
-    }
+		return err
+	}
 
-    if len(unmarshallTo.ExitCodeJSON) > 0 {
-        // An exit code is present.
-        // We need to parse the exit code.
-        err = json.Unmarshal(unmarshallTo.ExitCodeJSON, &unmarshallTo.ExitCode)
-        if err != nil {
-            // It can't be parsed as a (nullable) string. Must be an unquoted int.
-            var intCode int
-            err = json.Unmarshal(unmarshallTo.ExitCodeJSON, &intCode)
-            if err != nil {
-                // Can't parse this at all.
-                // Still need to move what we can into us.
-                *self = Log(unmarshallTo.LogFields)
-                return err
-            }
-            // Convert to a string
-            unmarshallTo.ExitCode = fmt.Sprintf("%d", intCode)
-        }
-    }
+	if len(unmarshallTo.ExitCodeJSON) > 0 {
+		// An exit code is present.
+		// We need to parse the exit code.
+		err = json.Unmarshal(unmarshallTo.ExitCodeJSON, &unmarshallTo.ExitCode)
+		if err != nil {
+			// It can't be parsed as a (nullable) string. Must be an unquoted int.
+			var intCode int
+			err = json.Unmarshal(unmarshallTo.ExitCodeJSON, &intCode)
+			if err != nil {
+				// Can't parse this at all.
+				// Still need to move what we can into us.
+				*self = Log(unmarshallTo.LogFields)
+				return err
+			}
+			// Convert to a string
+			unmarshallTo.ExitCode = fmt.Sprintf("%d", intCode)
+		}
+	}
 
 	// Move all the data back into us
-    *self = Log(unmarshallTo.LogFields)
+	*self = Log(unmarshallTo.LogFields)
 	return nil
 }
