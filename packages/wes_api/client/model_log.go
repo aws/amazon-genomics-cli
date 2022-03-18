@@ -62,21 +62,24 @@ func (self *Log) UnmarshalJSON(data []byte) error {
         return err
     }
 
-	// Now we need to do the exit code
-	err = json.Unmarshal(unmarshallTo.ExitCodeJSON, &unmarshallTo.ExitCode)
-	if err != nil {
-		// It can't be parsed as a (nullable) string. Must be an unquoted int.
-		var intCode int
-		err = json.Unmarshal(unmarshallTo.ExitCodeJSON, &intCode)
-		if err != nil {
-			// Can't parse this at all.
-			// Still need to move what we can into us.
-			*self = Log(unmarshallTo.LogFields)
-			return err
-		}
-		// Convert to a string
-		unmarshallTo.ExitCode = fmt.Sprintf("%d", intCode)
-	}
+    if len(unmarshallTo.ExitCodeJSON) > 0 {
+        // An exit code is present.
+        // We need to parse the exit code.
+        err = json.Unmarshal(unmarshallTo.ExitCodeJSON, &unmarshallTo.ExitCode)
+        if err != nil {
+            // It can't be parsed as a (nullable) string. Must be an unquoted int.
+            var intCode int
+            err = json.Unmarshal(unmarshallTo.ExitCodeJSON, &intCode)
+            if err != nil {
+                // Can't parse this at all.
+                // Still need to move what we can into us.
+                *self = Log(unmarshallTo.LogFields)
+                return err
+            }
+            // Convert to a string
+            unmarshallTo.ExitCode = fmt.Sprintf("%d", intCode)
+        }
+    }
 
 	// Move all the data back into us
     *self = Log(unmarshallTo.LogFields)
