@@ -136,7 +136,7 @@ class NextflowWESAdapter(BatchAdapter):
             endTime=end_time or int(time.time()),
             queryString=query,
             # TODO: handle pagination? GetRunLog doesn't seem to support it...
-            limit=100,
+            limit=10_000,
         )["queryId"]
         response = None
 
