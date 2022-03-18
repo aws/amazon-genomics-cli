@@ -379,10 +379,13 @@ func (m *Manager) readEngineOptions(engineOptions string) {
 	}
 	log.Debug().Msgf("engineOptions override: %s", engineOptions)
 	if m.workflowEngine == "cromwell" {
-		log.Debug().Msgf("cannot use engineOptions flag with engines that run in server mode")
+		log.Error().Msgf("cannot use engineOptions flag with engines that run in server mode")
 		return
 	}
 	m.engineOptions = engineOptions
+	if m.workflowEngineParams == nil {
+		m.workflowEngineParams = make(map[string]string)
+	}
 	m.workflowEngineParams["engineOptions"] = engineOptions
 }
 
@@ -482,7 +485,7 @@ func (m *Manager) setWorkflowEngineParameters() {
 	}
 	if m.options != nil {
 		if m.workflowEngine == "nextflow" || m.workflowEngine == "miniwdl" {
-			log.Debug().Msgf("optionFile flag cannot be used with head node engines")
+			log.Error().Msgf("optionFile flag cannot be used with head node engines")
 			return
 		}
 		m.workflowEngineParams = m.options

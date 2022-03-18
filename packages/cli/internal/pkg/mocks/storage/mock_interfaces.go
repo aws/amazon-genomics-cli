@@ -358,7 +358,7 @@ type MockOptionClient struct {
 	recorder *MockOptionClientMockRecorder
 }
 
-// MockInputClientMockRecorder is the mock recorder for MockOptionClient.
+// MockOptionClientMockRecorder is the mock recorder for MockOptionClient.
 type MockOptionClientMockRecorder struct {
 	mock *MockOptionClient
 }

@@ -148,7 +148,7 @@ An additional optionFileUrl can be provided using the 'o' or '--optionFileUrl' f
 agc workflow run my-workflow --optionFileUrl optionFile.json
 ```
 
-OptionFileUrl is only for use with engines that run in server mode (e.g. Cromwell). It will be ignored if not using an engine running in server mode.
+OptionFileUrl is only for use with engines that run in server mode (e.g. Cromwell).
 
 Example option.json
 ```shell
@@ -166,7 +166,7 @@ An additional property 'engineOptions' can be provided using the 'e' or '--engin
 agc workflow run my-workflow --engineOptions "-f foo -b -c --anotherFlag"
 ```
 
-This is only for use with head node engines (e.g. Nextflow, MiniWDL). Otherwise, the property will be ignored.
+This is only for use with head node engines (e.g. Nextflow, MiniWDL).
 
 ### `list`
 
