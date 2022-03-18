@@ -78,7 +78,6 @@ type WorkflowRunTestSuite struct {
 	mockDdb           *awsmocks.MockDdbClient
 	mockStorageClient *storagemocks.MockStorageClient
 	mockInputClient   *storagemocks.MockInputClient
-	mockOptionClient  *storagemocks.MockOptionClient
 	mockOs            *iomocks.MockOS
 	mockZip           *iomocks.MockZip
 	mockTmp           *iomocks.MockTmp
