@@ -1,9 +1,11 @@
 import traceback
 import os
 import typing
+import time
 from abc import abstractmethod
 from datetime import datetime
 from typing import Optional
+from typing import Iterable
 
 import boto3
 from mypy_boto3_batch import BatchClient
@@ -180,7 +182,14 @@ class BatchAdapter(AbstractWESAdapter):
     def describe_jobs(self, job_ids: typing.List[str]) -> typing.List[JobDetailTypeDef]:
         if not job_ids:
             return []
-        return self.aws_batch.describe_jobs(jobs=job_ids)["jobs"]
+
+        jobs = []
+        job_ids_sets = chunks(job_ids, 100)
+        for job_ids_set in job_ids_sets:
+            jobs += self.aws_batch.describe_jobs(jobs=job_ids_set)["jobs"]
+            time.sleep(1)
+
+        return jobs
 
     @abstractmethod
     def get_child_tasks(
@@ -246,3 +255,9 @@ def to_iso(epoch: Optional[int]) -> Optional[str]:
     if not epoch:
         return None
     return datetime.utcfromtimestamp(epoch / 1000.0).astimezone().isoformat()
+
+
+def chunks(l: list, n: int) -> Iterable[list]:
+    """split list l into chunks of size n"""
+    for i in range(0, len(l), n):
+        yield l[i:i+n]
