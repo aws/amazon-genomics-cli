@@ -187,7 +187,6 @@ class BatchAdapter(AbstractWESAdapter):
         job_ids_sets = chunks(job_ids, 100)
         for job_ids_set in job_ids_sets:
             jobs += self.aws_batch.describe_jobs(jobs=job_ids_set)["jobs"]
-            time.sleep(1)
 
         return jobs
 
