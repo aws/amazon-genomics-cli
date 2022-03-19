@@ -188,14 +188,16 @@ class BatchAdapter(AbstractWESAdapter):
         job_ids_sets = chunks(job_ids, 100)
         with ThreadPoolExecutor(max_workers=10) as executor:
             future_jobs = {
-                executor.submit(self.aws_batch.describe_jobs, jobs=job_ids_set): job_ids_set
+                executor.submit(
+                    self.aws_batch.describe_jobs, jobs=job_ids_set
+                ): job_ids_set
                 for job_ids_set in job_ids_sets
             }
             for future in as_completed(future_jobs):
                 job_ids_set = future_jobs[future]
                 try:
                     response = future.result()
-                    jobs += response['jobs']
+                    jobs += response["jobs"]
                 except Exception as e:
                     print(f"error retrieving jobs: {e}")
 
