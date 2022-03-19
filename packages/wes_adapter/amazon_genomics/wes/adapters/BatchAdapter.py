@@ -3,6 +3,7 @@ import os
 import typing
 import time
 from abc import abstractmethod
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Optional
 from typing import Iterable
@@ -185,8 +186,18 @@ class BatchAdapter(AbstractWESAdapter):
 
         jobs = []
         job_ids_sets = chunks(job_ids, 100)
-        for job_ids_set in job_ids_sets:
-            jobs += self.aws_batch.describe_jobs(jobs=job_ids_set)["jobs"]
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            future_jobs = {
+                executor.submit(self.aws_batch.describe_jobs, jobs=job_ids_set): job_ids_set
+                for job_ids_set in job_ids_sets
+            }
+            for future in as_completed(future_jobs):
+                job_ids_set = future_jobs[future]
+                try:
+                    response = future.result()
+                    jobs += response['jobs']
+                except Exception as e:
+                    print(f"error retrieving jobs: {e}")
 
         return jobs
 
