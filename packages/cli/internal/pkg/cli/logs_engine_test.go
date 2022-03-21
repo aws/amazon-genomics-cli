@@ -81,10 +81,10 @@ func TestLogsEngineOpts_Validate_RunIdRequiredForOtherEngines(t *testing.T) {
 	ctxMock := contextmocks.NewMockContextManager(ctrl)
 	opts := logsEngineOpts{logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{contextName: "myCtx"}}}
 	opts.ctxManager = ctxMock
-	ctxMock.EXPECT().List().Return(map[string]context.Summary{"myCtx": {Engines: []spec.Engine{{Engine: "other"}}}}, nil)
+	ctxMock.EXPECT().List().Return(map[string]context.Summary{"myCtx": {Engines: []spec.Engine{{Engine: "miniwdl"}}}}, nil)
 
 	err := opts.Validate()
-	assert.EqualError(t, err, "an error occurred caused by: a workflow run must be specified if workflow engine is 'other'\nsuggestion: please run the command again with -r <run-id>\n")
+	assert.EqualError(t, err, "an error occurred caused by: a workflow run must be specified if workflow engine is 'miniwdl'\nsuggestion: please run the command again with -r <run-id>\n")
 }
 
 func TestLogsEngineOpts_Execute_Group(t *testing.T) {

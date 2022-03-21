@@ -5,11 +5,11 @@ package cli
 
 import (
 	"fmt"
-
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -29,6 +29,7 @@ type logsEngineVars struct {
 type logsEngineOpts struct {
 	logsEngineVars
 	logsSharedOpts
+	workflowManager *workflow.Manager
 }
 
 func newLogsEngineOpts(vars logsEngineVars) (*logsEngineOpts, error) {
@@ -38,6 +39,7 @@ func newLogsEngineOpts(vars logsEngineVars) (*logsEngineOpts, error) {
 			ctxManager: context.NewManager(profile),
 			cwlClient:  aws.CwlClient(profile),
 		},
+		workflowManager: workflow.NewManager(profile),
 	}, nil
 }
 
@@ -53,11 +55,9 @@ func (o *logsEngineOpts) Validate() error {
 		}
 
 		summary := ctxMap[o.contextName]
-		for _, engine := range summary.Engines {
-			if engine.Engine != "cromwell" {
-				return actionableerror.New(fmt.Errorf("a workflow run must be specified if workflow engine is '%s'", engine.Engine),
-					"please run the command again with -r <run-id>")
-			}
+		if summary.IsHeadProcessEngine() {
+			return actionableerror.New(fmt.Errorf("a workflow run must be specified if workflow engine is '%s'", summary.Engines[0].Engine),
+				"please run the command again with -r <run-id>")
 		}
 	}
 
@@ -71,10 +71,29 @@ func (o *logsEngineOpts) Execute() error {
 	}
 
 	logGroupName := contextInfo.EngineLogGroupName
-	if o.tail {
-		err = o.followLogGroup(logGroupName)
+	log.Debug().Msgf("Engine log group name: '%s'", logGroupName)
+
+	if o.workflowRunId != "" {
+		log.Debug().Msgf("Getting log stream for workflow run '%s'", o.workflowRunId)
+
+		workflowRunLog, err := o.workflowManager.GetEngineLogByRunId(o.workflowRunId)
+		if err != nil {
+			return err
+		}
+		log.Debug().Msgf("Stream '%s' for log group '%s' contains StdOut for run '%s'", workflowRunLog.StdOut, logGroupName, workflowRunLog.WorkflowRunId)
+
+		if o.tail {
+			err = o.followLogStreams(logGroupName, workflowRunLog.StdOut)
+		} else {
+			err = o.displayLogStreams(logGroupName, o.startTime, o.endTime, o.filter, workflowRunLog.StdOut)
+		}
+
 	} else {
-		err = o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter)
+		if o.tail {
+			err = o.followLogGroup(logGroupName)
+		} else {
+			err = o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter)
+		}
 	}
 
 	return err
