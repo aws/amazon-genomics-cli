@@ -379,7 +379,7 @@ func (m *Manager) readEngineOptions(engineOptions string) {
 	}
 	log.Debug().Msgf("engineOptions override: %s", engineOptions)
 	if m.workflowEngine == "cromwell" {
-		log.Error().Msgf("cannot use engineOptions flag with engines that run in server mode")
+		m.err = fmt.Errorf("cannot use engineOptions flag with engines that run in server mode")
 		return
 	}
 	m.engineOptions = engineOptions
@@ -485,19 +485,11 @@ func (m *Manager) setWorkflowEngineParameters() {
 	}
 	if m.options != nil {
 		if m.workflowEngine == "nextflow" || m.workflowEngine == "miniwdl" {
-			log.Error().Msgf("optionFile flag cannot be used with head node engines")
+			m.err = fmt.Errorf("optionFile flag cannot be used with head node engines")
 			return
 		}
 		m.workflowEngineParams = m.options
 	}
-
-	namePattern := fmt.Sprintf("%s_*", filepath.Base(m.optionFileUrl))
-	optionFileName, err := writeToTmp(namePattern, m.optionFileUrl)
-	if err != nil {
-		m.err = err
-		return
-	}
-	m.attachments = append(m.attachments, optionFileName)
 }
 
 func (m *Manager) setWesClient() {
