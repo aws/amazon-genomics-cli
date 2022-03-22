@@ -1,9 +1,10 @@
 package context
 
 import (
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	"reflect"
 	"strings"
+
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 )
 
 var serverEngines = map[string]bool{"cromwell": true}

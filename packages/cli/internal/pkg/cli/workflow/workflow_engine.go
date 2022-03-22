@@ -1,9 +1,12 @@
 package workflow
 
+import "github.com/rsc/wes_client"
+
 type EngineLog struct {
-	WorkflowRunId string
-	StdOut        string
-	StdErr        string
+	WorkflowRunId  string
+	StdOut         string
+	StdErr         string
+	WorkflowStatus wes_client.State
 }
 
 func (m *Manager) GetEngineLogByRunId(runId string) (EngineLog, error) {
@@ -26,8 +29,9 @@ func (m *Manager) buildEngineLog() (EngineLog, error) {
 	}
 
 	return EngineLog{
-		WorkflowRunId: m.taskProps.runLog.RunId,
-		StdOut:        m.taskProps.runLog.RunLog.Stdout,
-		StdErr:        m.taskProps.runLog.RunLog.Stderr,
+		WorkflowRunId:  m.taskProps.runLog.RunId,
+		StdOut:         m.taskProps.runLog.RunLog.Stdout,
+		StdErr:         m.taskProps.runLog.RunLog.Stderr,
+		WorkflowStatus: m.taskProps.runLog.State,
 	}, nil
 }
