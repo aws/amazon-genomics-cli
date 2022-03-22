@@ -31,5 +31,5 @@ type Log struct {
 	Stderr string `json:"stderr,omitempty"`
 
 	// Exit code of the program
-	ExitCode string `json:"exit_code,omitempty"`
+	ExitCode *int32 `json:"exit_code,omitempty"`
 }
