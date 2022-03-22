@@ -4,6 +4,7 @@
 package cli
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -104,11 +105,58 @@ func (o *logsWorkflowOpts) Execute() error {
 		}
 	} else {
 		printRunLog(runLog)
+		// Go and fetch the run-level log text if available
+		if len(runLog.Stdout) > 0 {
+			logDataStream, err := o.workflowManager.GetRunLogData(o.runId, runLog.Stdout)
+			if err != nil {
+				log.Error().Msgf("Could not retrieve standard output from %s: %v", runLog.Stdout, err)
+			} else {
+				printLn("Run Standard Output:")
+				// We would like to copy from logDataStream to standard output,
+				// but we can't.
+				// We aren't actually allowed to use standard output here; we
+				// must do all our output through printLn, because otherwise
+				// the test harness cannot capture it and see that we have done
+				// it, and we fail the tests.
+				// So we need to go through each line in logDataStream, and printLn it.
+				scanner := bufio.NewScanner(*logDataStream)
+				for scanner.Scan() {
+					printLn(scanner.Text())
+				}
+				err = scanner.Err()
+				// TODO: bufio's Scanner can't handle arbitrarily long lines.
+				// If it finds a line longer than 64k, it will stop with an
+				// error.
+				// We can raise the limit, but we can't get rid of the limit.
+				// To fully support arbitrarily long lines in the log, we need
+				// to come up with a better way for the test harness to collect
+				// streaming output.
+				if err != nil {
+					return err
+				}
+			}
+		}
+		if len(runLog.Stderr) > 0 {
+			logDataStream, err := o.workflowManager.GetRunLogData(o.runId, runLog.Stderr)
+			if err != nil {
+				log.Error().Msgf("Could not retrieve standard error from %s: %v", runLog.Stderr, err)
+			} else {
+				printLn("Run Standard Error:")
+				scanner := bufio.NewScanner(*logDataStream)
+				for scanner.Scan() {
+					printLn(scanner.Text())
+				}
+				err = scanner.Err()
+				if err != nil {
+					return err
+				}
+			}
+		}
 		return nil
 	}
 
 	if len(jobIds) == 0 {
-		log.Info().Msgf("No logs available for run '%s'. Please try again later.", o.runId)
+		log.Info().Msgf("No job logs available for run '%s'. Please try again later.", o.runId)
 		return nil
 	}
 	notCachedJobIds := filterCachedJobIds(jobIds)

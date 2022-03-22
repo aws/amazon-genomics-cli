@@ -6,6 +6,7 @@ package wesmocks
 
 import (
 	context "context"
+	io "io"
 	reflect "reflect"
 
 	option "github.com/aws/amazon-genomics-cli/internal/pkg/wes/option"
@@ -49,6 +50,21 @@ func (m *MockWesClient) GetRunLog(ctx context.Context, runId string) (wes_client
 func (mr *MockWesClientMockRecorder) GetRunLog(ctx, runId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRunLog", reflect.TypeOf((*MockWesClient)(nil).GetRunLog), ctx, runId)
+}
+
+// GetRunLogData mocks base method.
+func (m *MockWesClient) GetRunLogData(ctx context.Context, runId string, dataUrl string) (*io.ReadCloser, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRunLogData", ctx, runId, dataUrl)
+	ret0, _ := ret[0].(*io.ReadCloser)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRunLogData indicates an expected call of GetRunLogData.
+func (mr *MockWesClientMockRecorder) GetRunLogData(ctx, runId interface{}, dataUrl interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRunLogData", reflect.TypeOf((*MockWesClient)(nil).GetRunLogData), ctx, runId, dataUrl)
 }
 
 // GetRunStatus mocks base method.
