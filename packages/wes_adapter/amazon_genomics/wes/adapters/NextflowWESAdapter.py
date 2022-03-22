@@ -1,5 +1,5 @@
 import typing
-
+from datetime import datetime
 import time
 import os
 
@@ -133,7 +133,7 @@ class NextflowWESAdapter(BatchAdapter):
         query_id = self.aws_logs.start_query(
             logGroupName=self.engine_log_group,
             startTime=start_time,
-            endTime=end_time or int(time.time()),
+            endTime=end_time or int(datetime.utcnow().timestamp()),
             queryString=query,
             # TODO: handle pagination? GetRunLog doesn't seem to support it...
             limit=10_000,
