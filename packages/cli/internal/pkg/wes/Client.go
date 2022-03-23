@@ -2,6 +2,7 @@ package wes
 
 import (
 	"context"
+	"io"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/wes/option"
 	"github.com/rs/zerolog/log"
@@ -50,4 +51,9 @@ func (c *Client) GetRunStatus(ctx context.Context, runId string) (string, error)
 func (c *Client) GetRunLog(ctx context.Context, runId string) (wes.RunLog, error) {
 	runLog, _, err := c.wes.WorkflowExecutionServiceApi.GetRunLog(ctx, runId)
 	return runLog, err
+}
+
+func (c *Client) GetRunLogData(ctx context.Context, runId string, dataUrl string) (*io.ReadCloser, error) {
+	runLogDataStream, _, err := c.wes.WorkflowExecutionServiceApi.GetRunLogData(ctx, runId, dataUrl)
+	return runLogDataStream, err
 }
