@@ -4,7 +4,6 @@ import (
 	ctx "context"
 	"errors"
 	"fmt"
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"testing"
 	"time"
 
@@ -15,6 +14,7 @@ import (
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
 	wesmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/wes"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/wes"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/golang/mock/gomock"
 	"github.com/rsc/wes_client"
 	"github.com/stretchr/testify/suite"
@@ -201,7 +201,7 @@ func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithTaskNameFailure() {
 	}
 }
 
-func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithExitCodeUnknown() {
+func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithExitCodeNil() {
 	defer s.ctrl.Finish()
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
 	s.mockConfigClient.EXPECT().GetUserId().Return(testUserId, nil)
@@ -217,14 +217,12 @@ func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithExitCodeUnknown() {
 		}},
 	}, nil)
 
-	tasks, err := s.manager.GetWorkflowTasks(testRunId)
-	if s.Assert().NoError(err) {
-		s.Assert().Equal(testTaskName, tasks[0].Name)
-		s.Assert().Equal(testTaskJobId, tasks[0].JobId)
-		s.Assert().True(tasks[0].StartTime.Equal(testStartTime.Truncate(time.Second)))
-		s.Assert().True(tasks[0].StopTime.Equal(testStopTime.Truncate(time.Second)))
-		s.Assert().Empty(nil, "NA")
-	}
+	tasks, _ := s.manager.GetWorkflowTasks(testRunId)
+	s.Assert().Equal(testTaskName, tasks[0].Name)
+	s.Assert().Equal(testTaskJobId, tasks[0].JobId)
+	s.Assert().True(tasks[0].StartTime.Equal(testStartTime.Truncate(time.Second)))
+	s.Assert().True(tasks[0].StopTime.Equal(testStopTime.Truncate(time.Second)))
+	s.Assert().Equal(tasks[0].ExitCode, "NA")
 }
 
 func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithExitCodeExists() {
@@ -243,14 +241,13 @@ func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithExitCodeExists() {
 		}},
 	}, nil)
 
-	tasks, err := s.manager.GetWorkflowTasks(testRunId)
-	if s.Assert().NoError(err) {
-		s.Assert().Equal(testTaskName, tasks[0].Name)
-		s.Assert().Equal(testTaskJobId, tasks[0].JobId)
-		s.Assert().True(tasks[0].StartTime.Equal(testStartTime.Truncate(time.Second)))
-		s.Assert().True(tasks[0].StopTime.Equal(testStopTime.Truncate(time.Second)))
-		s.Assert().Equal(testExitCode, "0")
-	}
+	tasks, _ := s.manager.GetWorkflowTasks(testRunId)
+	s.Assert().Equal(testTaskName, tasks[0].Name)
+	s.Assert().Equal(testTaskJobId, tasks[0].JobId)
+	s.Assert().True(tasks[0].StartTime.Equal(testStartTime.Truncate(time.Second)))
+	s.Assert().True(tasks[0].StopTime.Equal(testStopTime.Truncate(time.Second)))
+	s.Assert().Equal(testExitCode, "0")
+
 }
 
 func TestGetWorkflowTasksTestSuite(t *testing.T) {
