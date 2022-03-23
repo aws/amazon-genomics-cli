@@ -12,6 +12,11 @@ workflows:
       language: cwl
       version: v1.2
     sourceURL: workflows/nontrivial
+  manyjobs:
+    type:
+      language: cwl
+      version: v1.2
+    sourceURL: workflows/manyjobs
 contexts:
   myContext:
     engines:
