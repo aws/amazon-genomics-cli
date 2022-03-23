@@ -2,7 +2,7 @@ package workflow
 
 import (
 	"fmt"
-  "io"
+	"io"
 	"strconv"
 	"strings"
 	"time"
