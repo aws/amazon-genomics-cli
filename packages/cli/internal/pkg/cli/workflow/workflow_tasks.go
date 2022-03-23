@@ -87,7 +87,7 @@ func (m *Manager) getTasks() ([]Task, error) {
 			return nil, fmt.Errorf("unable to parse job ID from task name '%s'", taskName)
 		}
 
-		exitCode := "UNKNOWN"
+		exitCode := "NA"
 		if taskLog.ExitCode != nil {
 			exitCode = strconv.FormatInt(int64(*taskLog.ExitCode), 10)
 		}

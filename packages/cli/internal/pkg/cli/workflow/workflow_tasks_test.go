@@ -223,7 +223,7 @@ func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithExitCodeUnknown() {
 		s.Assert().Equal(testTaskJobId, tasks[0].JobId)
 		s.Assert().True(tasks[0].StartTime.Equal(testStartTime.Truncate(time.Second)))
 		s.Assert().True(tasks[0].StopTime.Equal(testStopTime.Truncate(time.Second)))
-		s.Assert().Empty(nil, "UNKNOWN")
+		s.Assert().Empty(nil, "NA")
 	}
 }
 
