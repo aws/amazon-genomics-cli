@@ -1,6 +1,8 @@
 package workflow
 
-import "github.com/rsc/wes_client"
+import (
+	"github.com/rsc/wes_client"
+)
 
 type EngineLog struct {
 	WorkflowRunId  string

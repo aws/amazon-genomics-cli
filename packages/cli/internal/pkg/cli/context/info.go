@@ -2,13 +2,12 @@ package context
 
 import (
 	"reflect"
-	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 )
 
-var serverEngines = map[string]bool{"cromwell": true}
-var headEngines = map[string]bool{"nextflow": true, "miniwdl": true, "snakemake": true}
+var headEngines = map[string]bool{constants.NEXTFLOW: true, constants.MINIWDL: true, constants.SNAKEMAKE: true}
 
 type Summary struct {
 	Name          string
@@ -18,20 +17,14 @@ type Summary struct {
 	Engines       []spec.Engine
 }
 
-func (i Summary) IsEmpty() bool {
-	return reflect.ValueOf(i).IsZero()
-}
-
-//IsServerProcessEngine Does the workflow engine run as a server process? A server process has a potential one to many
-// mapping with workflow runs.
-func (i *Summary) IsServerProcessEngine() bool {
-	return serverEngines[strings.ToLower(strings.TrimSpace(i.Engines[0].Engine))]
+func (s Summary) IsEmpty() bool {
+	return reflect.ValueOf(s).IsZero()
 }
 
 //IsHeadProcessEngine Does the workflow engine run as a head process? A head process has one to one
 // mapping with workflow runs. Processes are not reused.
-func (i *Summary) IsHeadProcessEngine() bool {
-	return headEngines[strings.ToLower(strings.TrimSpace(i.Engines[0].Engine))]
+func (s *Summary) IsHeadProcessEngine() bool {
+	return headEngines[s.Engines[0].Engine]
 }
 
 type Detail struct {
@@ -52,6 +45,6 @@ type Instance struct {
 	IsDefinedInProjectFile bool
 }
 
-func (i Detail) IsEmpty() bool {
-	return reflect.ValueOf(i).IsZero()
+func (d Detail) IsEmpty() bool {
+	return reflect.ValueOf(d).IsZero()
 }

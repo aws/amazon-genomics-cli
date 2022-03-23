@@ -8,9 +8,9 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -56,9 +56,16 @@ func (o *logsEngineOpts) Validate() error {
 		}
 
 		summary := ctxMap[o.contextName]
+		engine := summary.Engines[0].Engine
 		if summary.IsHeadProcessEngine() {
-			return actionableerror.New(fmt.Errorf("a workflow run must be specified if workflow engine is '%s'", summary.Engines[0].Engine),
-				"please run the command again with -r <run-id>")
+			log.Warn().Msgf("DEPRECATION WARNING!!")
+			log.Warn().Msgf("Obtaining engine logs for a workflow context where the engine is '%s' will return engine logs from ALL workflows run in this context",
+				engine)
+			log.Warn().Msgf("Specifying a run-id will be MANDATORY in future versions")
+			log.Warn().Msgf("Please run the command again with -r <run-id>")
+		}
+		if engine == constants.CROMWELL {
+			log.Warn().Msgf("Cromwell doesn't currently support engine logs for specific runs")
 		}
 	}
 
@@ -74,30 +81,52 @@ func (o *logsEngineOpts) Execute() error {
 	logGroupName := contextInfo.EngineLogGroupName
 	log.Debug().Msgf("Engine log group name: '%s'", logGroupName)
 
-	if o.workflowRunId != "" {
-		log.Debug().Msgf("Getting log stream for workflow run '%s'", o.workflowRunId)
-
-		workflowRunLog, err := o.workflowManager.GetEngineLogByRunId(o.workflowRunId)
-		if err != nil {
-			return err
-		}
-		log.Debug().Msgf("Stream '%s' for log group '%s' contains StdOut for run '%s'", workflowRunLog.StdOut, logGroupName, workflowRunLog.WorkflowRunId)
-
-		if o.tail {
-			err = o.followLogStreams(logGroupName, workflowRunLog.StdOut)
-		} else {
-			err = o.displayLogStreams(logGroupName, o.startTime, o.endTime, o.filter, workflowRunLog.StdOut)
-		}
-
+	if o.workflowRunId == "" {
+		err = executeGetEngineLogForWholeGroup(o, logGroupName)
 	} else {
-		if o.tail {
-			err = o.followLogGroup(logGroupName)
-		} else {
-			err = o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter)
-		}
+		err = executeGetEngineLogForRunId(o, logGroupName)
 	}
 
 	return err
+}
+
+func executeGetEngineLogForWholeGroup(o *logsEngineOpts, logGroupName string) error {
+	if o.tail {
+		return o.followLogGroup(logGroupName)
+	}
+	return o.displayLogGroup(logGroupName, o.startTime, o.endTime, o.filter)
+}
+
+func executeGetEngineLogForRunId(o *logsEngineOpts, logGroupName string) error {
+	log.Info().Msgf("Getting log stream for workflow run '%s'", o.workflowRunId)
+
+	workflowRunLog, err := o.workflowManager.GetEngineLogByRunId(o.workflowRunId)
+	if err != nil {
+		return err
+	}
+
+	logStreamName := streamNameFromRunLog(workflowRunLog)
+	log.Debug().Msgf("Log stream name is: '%s'", logStreamName)
+
+	if logStreamName != "" {
+		if o.tail {
+			return o.followLogStreams(logGroupName, logStreamName)
+		}
+		return o.displayLogStreams(logGroupName, o.startTime, o.endTime, o.filter, logStreamName)
+	}
+
+	workflowStatus := workflowRunLog.WorkflowStatus
+	log.Warn().Msgf("Cannot find an engine log stream for workflow run '%s', the current status of the run is: '%s', "+
+		"the log will not be available until after the workflow is RUNNING", o.workflowRunId, workflowStatus)
+	return nil
+}
+
+func streamNameFromRunLog(workflowRunLog workflow.EngineLog) string {
+	logStreamName := workflowRunLog.StdOut
+	if logStreamName == "" {
+		logStreamName = workflowRunLog.StdErr
+	}
+	return logStreamName
 }
 
 func BuildLogsEngineCommand() *cobra.Command {
