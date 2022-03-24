@@ -281,6 +281,22 @@ def test_cancel_run_failed(aws_batch: BatchClient, adapter: StubBatchAdapter):
         adapter.cancel_run(job_id)
 
 
+def test_describe_jobs_returns_more_than_100(aws_batch: BatchClient, adapter: StubBatchAdapter):
+    job_ids = range(100)
+    adapter.describe_jobs(job_ids)
+    assert aws_batch.describe_jobs.call_count == 1
+    aws_batch.describe_jobs.reset_mock()
+
+    job_ids = range(101)
+    adapter.describe_jobs(job_ids)
+    assert aws_batch.describe_jobs.call_count == 2
+    aws_batch.describe_jobs.reset_mock()
+
+    job_ids = range(1000)
+    adapter.describe_jobs(job_ids)
+    assert aws_batch.describe_jobs.call_count == 10
+    aws_batch.describe_jobs.reset_mock()
+
 def generate_batch_job(overrides=None):
     job_defaults = {
         "jobId": job_id,
