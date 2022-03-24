@@ -281,7 +281,7 @@ def test_cancel_run_failed(aws_batch: BatchClient, adapter: StubBatchAdapter):
         adapter.cancel_run(job_id)
 
 
-def test_describe_jobs_returns_more_than_100(
+def test_describe_jobs_called_more_than_once(
     aws_batch: BatchClient, adapter: StubBatchAdapter
 ):
     job_ids = range(100)
