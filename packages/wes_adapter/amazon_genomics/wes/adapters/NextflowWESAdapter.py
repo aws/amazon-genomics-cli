@@ -135,7 +135,7 @@ class NextflowWESAdapter(BatchAdapter):
             logGroupName=self.engine_log_group,
             # AWS Batch GetJobDescription reports start and stop times in milliseconds.
             # CloudWatch Logs StartQuery states epoch seconds as input startTime and endTime,
-            # however, milliseconds also works if used for both. 
+            # however, milliseconds also works if used for both.
             startTime=start_time,
             endTime=end_time or int(math.ceil(datetime.utcnow().timestamp()) * 1000),
             queryString=query,
