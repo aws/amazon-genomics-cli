@@ -1,5 +1,5 @@
 ---
-name: Demo
+name: CWLDemo
 schemaVersion: 1
 workflows:
   hello:
