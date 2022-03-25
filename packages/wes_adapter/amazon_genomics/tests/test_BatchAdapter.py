@@ -300,6 +300,19 @@ def test_describe_jobs_called_more_than_once(
     aws_batch.describe_jobs.reset_mock()
 
 
+def test_describe_jobs_returns_more_than_100_results(
+    aws_batch: BatchClient, adapter: StubBatchAdapter
+):
+    aws_batch.describe_jobs.side_effect = [
+        {"jobs": [generate_batch_job({"jobId": jobid}) for jobid in range(100)]},
+        {"jobs": [generate_batch_job({"jobId": jobid}) for jobid in range(100, 150)]},
+    ]
+
+    jobs = adapter.describe_jobs(range(150))
+    assert len(jobs) == 150
+    assert set([job["jobId"] for job in jobs]) == set(range(150))
+
+
 def generate_batch_job(overrides=None):
     job_defaults = {
         "jobId": job_id,
