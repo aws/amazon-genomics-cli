@@ -1,5 +1,6 @@
 import typing
-
+from datetime import datetime
+import math
 import time
 import os
 
@@ -132,11 +133,14 @@ class NextflowWESAdapter(BatchAdapter):
 
         query_id = self.aws_logs.start_query(
             logGroupName=self.engine_log_group,
+            # AWS Batch GetJobDescription reports start and stop times in milliseconds.
+            # CloudWatch Logs StartQuery states epoch seconds as input startTime and endTime,
+            # however, milliseconds also works if used for both.
             startTime=start_time,
-            endTime=end_time or int(time.time()),
+            endTime=end_time or int(math.ceil(datetime.utcnow().timestamp()) * 1000),
             queryString=query,
             # TODO: handle pagination? GetRunLog doesn't seem to support it...
-            limit=100,
+            limit=10_000,
         )["queryId"]
         response = None
 

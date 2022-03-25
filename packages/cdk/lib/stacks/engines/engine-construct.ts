@@ -38,6 +38,7 @@ export abstract class EngineConstruct extends Construct {
       environment,
       role,
       timeout: Duration.seconds(60),
+      memorySize: 256,
     });
   }
 
