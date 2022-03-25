@@ -8,6 +8,7 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
@@ -49,24 +50,25 @@ func (o *logsEngineOpts) Validate() error {
 		return err
 	}
 
-	if o.workflowRunId == "" {
-		ctxMap, err := o.ctxManager.List()
-		if err != nil {
-			return err
-		}
+	ctxMap, err := o.ctxManager.List()
+	if err != nil {
+		return err
+	}
 
-		summary := ctxMap[o.contextName]
-		engine := summary.Engines[0].Engine
-		if summary.IsHeadProcessEngine() {
+	summary := ctxMap[o.contextName]
+	engine := summary.Engines[0].Engine
+
+	if o.workflowRunId == "" {
+		if !summary.IsServerProcessEngine() {
 			log.Warn().Msgf("DEPRECATION WARNING!!")
 			log.Warn().Msgf("Obtaining engine logs for a workflow context where the engine is '%s' will return engine logs from ALL workflows run in this context",
 				engine)
 			log.Warn().Msgf("Specifying a run-id will be MANDATORY in future versions")
 			log.Warn().Msgf("Please run the command again with -r <run-id>")
 		}
-		if engine == constants.CROMWELL {
-			log.Warn().Msgf("Cromwell doesn't currently support engine logs for specific runs")
-		}
+	} else if engine == constants.CROMWELL {
+		return actionableerror.New(fmt.Errorf("use of -%s (--%s) flag with Cromwell is invalid", runIdShort, runIdFlag),
+			"Cromwell doesn't currently support engine logs for specific runs, displaying complete log")
 	}
 
 	return o.parseTime(o.logsSharedVars)
@@ -82,12 +84,9 @@ func (o *logsEngineOpts) Execute() error {
 	log.Debug().Msgf("Engine log group name: '%s'", logGroupName)
 
 	if o.workflowRunId == "" {
-		err = executeGetEngineLogForWholeGroup(o, logGroupName)
-	} else {
-		err = executeGetEngineLogForRunId(o, logGroupName)
+		return executeGetEngineLogForWholeGroup(o, logGroupName)
 	}
-
-	return err
+	return executeGetEngineLogForRunId(o, logGroupName)
 }
 
 func executeGetEngineLogForWholeGroup(o *logsEngineOpts, logGroupName string) error {
@@ -105,14 +104,14 @@ func executeGetEngineLogForRunId(o *logsEngineOpts, logGroupName string) error {
 		return err
 	}
 
-	logStreamName := streamNameFromRunLog(workflowRunLog)
-	log.Debug().Msgf("Log stream name is: '%s'", logStreamName)
+	logStreamNames := streamNamesFromRunLog(workflowRunLog)
+	log.Debug().Msgf("Log stream name is: '%v'", logStreamNames)
 
-	if logStreamName != "" {
+	if len(logStreamNames) > 0 {
 		if o.tail {
-			return o.followLogStreams(logGroupName, logStreamName)
+			return o.followLogStreams(logGroupName, logStreamNames...)
 		}
-		return o.displayLogStreams(logGroupName, o.startTime, o.endTime, o.filter, logStreamName)
+		return o.displayLogStreams(logGroupName, o.startTime, o.endTime, o.filter, logStreamNames...)
 	}
 
 	workflowStatus := workflowRunLog.WorkflowStatus
@@ -121,12 +120,15 @@ func executeGetEngineLogForRunId(o *logsEngineOpts, logGroupName string) error {
 	return nil
 }
 
-func streamNameFromRunLog(workflowRunLog workflow.EngineLog) string {
-	logStreamName := workflowRunLog.StdOut
-	if logStreamName == "" {
-		logStreamName = workflowRunLog.StdErr
+func streamNamesFromRunLog(workflowRunLog workflow.EngineLog) []string {
+	var streamNames = make([]string, 0)
+	if workflowRunLog.StdOut != "" {
+		streamNames = append(streamNames, workflowRunLog.StdOut)
 	}
-	return logStreamName
+	if workflowRunLog.StdErr != "" {
+		streamNames = append(streamNames, workflowRunLog.StdErr)
+	}
+	return streamNames
 }
 
 func BuildLogsEngineCommand() *cobra.Command {

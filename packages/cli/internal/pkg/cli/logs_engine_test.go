@@ -9,6 +9,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
 	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"
 	"github.com/golang/mock/gomock"
@@ -20,7 +21,14 @@ const (
 )
 
 func TestLogsEngineOpts_Validate_LookBackFlag(t *testing.T) {
-	opts := logsEngineOpts{logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{lookBack: "5h"}, workflowRunId: "1234"}}
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	contextManager := buildMockCtxMgr(ctrl)
+
+	opts := logsEngineOpts{
+		logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{contextName: testContextName, lookBack: "5h"}, workflowRunId: "1234"},
+		logsSharedOpts: logsSharedOpts{ctxManager: contextManager},
+	}
 	before := time.Now().Add(-5 * time.Hour)
 	err := opts.Validate()
 	after := time.Now().Add(-5 * time.Hour)
@@ -30,15 +38,27 @@ func TestLogsEngineOpts_Validate_LookBackFlag(t *testing.T) {
 }
 
 func TestLogsEngineOpts_Validate_LookBackError(t *testing.T) {
-	opts := logsEngineOpts{logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{lookBack: "abc"}, workflowRunId: "1234"}}
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	contextManager := buildMockCtxMgr(ctrl)
+	opts := logsEngineOpts{
+		logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{contextName: testContextName, lookBack: "abc"}, workflowRunId: "1234"},
+		logsSharedOpts: logsSharedOpts{ctxManager: contextManager},
+	}
 	err := opts.Validate()
 	assert.Equal(t, fmt.Errorf("time: invalid duration \"abc\""), err)
 }
 
 func TestLogsEngineOpts_Validate_StartEndFlags(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	contextManager := buildMockCtxMgr(ctrl)
 	start := time.Unix(0, 773391600000)
 	end := time.Unix(0, 773391700000)
-	opts := logsEngineOpts{logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{startString: start.Format(time.RFC3339Nano), endString: end.Format(time.RFC3339Nano)}, workflowRunId: "1234"}}
+	opts := logsEngineOpts{
+		logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{contextName: testContextName, startString: start.Format(time.RFC3339Nano), endString: end.Format(time.RFC3339Nano)}, workflowRunId: "1234"},
+		logsSharedOpts: logsSharedOpts{ctxManager: contextManager},
+	}
 	err := opts.Validate()
 	assert.NoError(t, err)
 	assert.True(t, start.Equal(*opts.startTime))
@@ -46,13 +66,25 @@ func TestLogsEngineOpts_Validate_StartEndFlags(t *testing.T) {
 }
 
 func TestLogsEngineOpts_Validate_StartError(t *testing.T) {
-	opts := logsEngineOpts{logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{startString: "abc"}, workflowRunId: "1234"}}
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	contextManager := buildMockCtxMgr(ctrl)
+	opts := logsEngineOpts{
+		logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{contextName: testContextName, startString: "abc"}, workflowRunId: "1234"},
+		logsSharedOpts: logsSharedOpts{ctxManager: contextManager},
+	}
 	err := opts.Validate()
 	assert.Equal(t, fmt.Errorf("Could not find format for \"abc\""), err)
 }
 
 func TestLogsEngineOpts_Validate_EndError(t *testing.T) {
-	opts := logsEngineOpts{logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{endString: "abc"}, workflowRunId: "1234"}}
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	contextManager := buildMockCtxMgr(ctrl)
+	opts := logsEngineOpts{
+		logsEngineVars: logsEngineVars{logsSharedVars: logsSharedVars{contextName: testContextName, endString: "abc"}, workflowRunId: "1234"},
+		logsSharedOpts: logsSharedOpts{ctxManager: contextManager},
+	}
 	err := opts.Validate()
 	assert.Equal(t, fmt.Errorf("Could not find format for \"abc\""), err)
 }
@@ -168,4 +200,50 @@ func TestLogsEngineOpts_Execute_StreamError(t *testing.T) {
 
 	err := opts.Execute()
 	assert.Equal(t, someErr, err)
+}
+
+func Test_streamNamesFromRunLog(t *testing.T) {
+	const StdOutStream = "stdout/log/stream"
+	const StdErrStream = "stderr/log/stream"
+
+	type test struct {
+		workflowRunLog workflow.EngineLog
+		expect         []string
+	}
+
+	tests := map[string]test{
+		"empty STDOUT and STDERR produce empty array": {
+			workflowRunLog: workflow.EngineLog{},
+			expect:         []string{}},
+		"STDOUT stream name is present": {
+			workflowRunLog: workflow.EngineLog{StdOut: StdOutStream},
+			expect:         []string{StdOutStream},
+		},
+		"STDERR stream name is present": {
+			workflowRunLog: workflow.EngineLog{StdErr: StdErrStream},
+			expect:         []string{StdErrStream},
+		},
+		"STDOUT and STDERR stream names are present": {
+			workflowRunLog: workflow.EngineLog{StdOut: StdOutStream, StdErr: StdErrStream},
+			expect:         []string{StdOutStream, StdErrStream},
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			actual := streamNamesFromRunLog(tt.workflowRunLog)
+			assert.Equal(t, tt.expect, actual)
+		})
+	}
+}
+
+func buildMockCtxMgr(ctrl *gomock.Controller) *contextmocks.MockContextManager {
+	contextManager := contextmocks.NewMockContextManager(ctrl)
+	contextManager.EXPECT().List().Return(
+		map[string]context.Summary{
+			testContextName: {
+				Engines: []spec.Engine{{Type: "foo", Engine: "foo"}},
+			},
+		}, nil)
+	return contextManager
 }
