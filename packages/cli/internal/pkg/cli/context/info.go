@@ -7,7 +7,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 )
 
-var headEngines = map[string]bool{constants.NEXTFLOW: true, constants.MINIWDL: true, constants.SNAKEMAKE: true}
+var serverProcessEngines = map[string]bool{constants.CROMWELL: true}
 
 type Summary struct {
 	Name          string
@@ -21,10 +21,10 @@ func (s Summary) IsEmpty() bool {
 	return reflect.ValueOf(s).IsZero()
 }
 
-//IsHeadProcessEngine Does the workflow engine run as a head process? A head process has one to one
-// mapping with workflow runs. Processes are not reused.
-func (s *Summary) IsHeadProcessEngine() bool {
-	return headEngines[s.Engines[0].Engine]
+//IsServerProcessEngine Does the workflow engine run as a server process? A server process engine has one to many
+// mapping with workflow runs. The engine can be used to run multiple workflows and the process is re-used and long running.
+func (s *Summary) IsServerProcessEngine() bool {
+	return serverProcessEngines[s.Engines[0].Engine]
 }
 
 type Detail struct {

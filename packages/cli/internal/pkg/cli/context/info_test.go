@@ -28,32 +28,41 @@ func TestDetail_IsNotEmpty(t *testing.T) {
 	assert.False(t, detail.IsEmpty())
 }
 
-func TestSummary_IsHeadProcessEngine(t *testing.T) {
-	type testScenario struct {
+func TestSummary_IsServerProcessEngine(t *testing.T) {
+	tests := map[string]struct {
 		engineName string
 		expect     bool
+	}{
+		"otherIsNotAServer": {
+			engineName: "other",
+			expect:     false,
+		},
+
+		"cromwellIsAServer": {
+			engineName: constants.CROMWELL,
+			expect:     true,
+		},
+
+		"snakeMakeIsNotAServer": {
+			engineName: constants.SNAKEMAKE,
+			expect:     false,
+		},
+		"nextFlowIsNotAServer": {
+			engineName: constants.NEXTFLOW,
+			expect:     false,
+		},
+		"miniwdlIsNotAServer": {
+			engineName: constants.MINIWDL,
+			expect:     false,
+		},
 	}
 
-	scenarios := []testScenario{{
-		engineName: "other",
-		expect:     false,
-	}, {
-		engineName: constants.CROMWELL,
-		expect:     false,
-	}, {
-		engineName: constants.SNAKEMAKE,
-		expect:     true,
-	}, {
-		engineName: constants.NEXTFLOW,
-		expect:     true,
-	}, {
-		engineName: constants.MINIWDL,
-		expect:     true,
-	}}
-
-	for _, scenario := range scenarios {
-		engine := spec.Engine{Engine: scenario.engineName}
-		summary := Summary{Engines: []spec.Engine{engine}}
-		assert.Equal(t, scenario.expect, summary.IsHeadProcessEngine())
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			engine := spec.Engine{Engine: test.engineName}
+			summary := Summary{Engines: []spec.Engine{engine}}
+			actual := summary.IsServerProcessEngine()
+			assert.Equal(t, test.expect, actual)
+		})
 	}
 }
