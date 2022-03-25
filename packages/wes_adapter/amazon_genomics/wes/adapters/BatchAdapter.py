@@ -196,10 +196,10 @@ class BatchAdapter(AbstractWESAdapter):
             for future in as_completed(future_jobs):
                 job_ids_set = future_jobs[future]
                 try:
-                    response = future.result()
+                    response = future.result(timeout=5)
                     jobs += response["jobs"]
                 except Exception as e:
-                    print(f"error retrieving jobs: {e}")
+                    self.logger.error(f"error retrieving jobs: {e}")
 
         return jobs
 
