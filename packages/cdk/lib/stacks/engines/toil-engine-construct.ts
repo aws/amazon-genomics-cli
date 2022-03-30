@@ -22,9 +22,7 @@ export interface ToilEngineConstructProps extends EngineOptions {
 
 export class ToilEngineConstruct extends EngineConstruct {
   public readonly engine: SecureService;
-  public readonly adapterRole: IRole;
   public readonly apiProxy: ApiProxy;
-  public readonly adapterLogGroup: ILogGroup;
   public readonly engineLogGroup: ILogGroup;
   public readonly engineRole: IRole;
   public readonly jobRole: IRole;
@@ -57,10 +55,7 @@ export class ToilEngineConstruct extends EngineConstruct {
       TOIL_AWS_BATCH_JOB_ROLE_ARN: this.jobRole.roleArn,
     });
 
-    // TODO: Move log group creation into service construct and make it a property
     this.engine = this.getEngineServiceDefinition(props.vpc, engineContainer, this.engineLogGroup);
-    // This is unused because we have no adapter, but a log group is required.
-    this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
 
     // We don't use an adapter, so put the access-controlling proxy right in
     // front of the engine load balancer.
@@ -74,7 +69,6 @@ export class ToilEngineConstruct extends EngineConstruct {
   protected getOutputs(): EngineOutputs {
     return {
       accessLogGroup: this.apiProxy.accessLogGroup,
-      adapterLogGroup: this.adapterLogGroup,
       engineLogGroup: this.engineLogGroup,
       wesUrl: this.apiProxy.restApi.url,
     };
