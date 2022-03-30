@@ -184,8 +184,9 @@ export class ContextStack extends Stack {
 
     return {
       ...commonBatchProps,
-      // We only use one Batch from the stack for the Toil jobs. The server
-      // lives in Fargate and doesn't run in either of these.
+      // We only use one Batch compute environment and queue from the stack for
+      // the Toil jobs. The server lives in Fargate and doesn't run in either
+      // of these.
       createSpotBatch: requestSpotInstances,
       createOnDemandBatch: !requestSpotInstances,
     };
