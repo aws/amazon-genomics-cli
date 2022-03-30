@@ -31,7 +31,6 @@ export class ToilEngineRole extends ToilJobRole {
         ...props,
         toilJobArnPattern: toilJobArnPattern,
       }),
-      // TODO: Can we restrict this to allow passing the role only to jobs?
       ToilIamPassJobRole: new PolicyDocument({
         assignSids: true,
         statements: [
