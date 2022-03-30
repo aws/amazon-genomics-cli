@@ -204,6 +204,9 @@ export class ContextAppParameters {
       case "snakemake":
         defFilesystem = "EFS";
         break;
+      case "toil":
+        defFilesystem = "S3";
+        break;
       default:
         throw Error(`Engine '${this.engineName}' is not supported`);
     }
