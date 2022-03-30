@@ -97,10 +97,7 @@ func (m *Manager) getEnvironmentVars() []string {
 	// this algorithm.
 	var dependencyImageKeys []string
 	for _, imageKey := range relevantImageKeys {
-		for _, dependencies := range environment.ImageDependencies[imageKey] {
-			// Collect the dependencies of all the relevant images
-			dependencyImageKeys = append(dependencyImageKeys, dependencies)
-		}
+		dependencyImageKeys = append(dependencyImageKeys, environment.ImageDependencies[imageKey]...)
 	}
 	// And add them to the relevant images
 	relevantImageKeys = append(relevantImageKeys, dependencyImageKeys...)
