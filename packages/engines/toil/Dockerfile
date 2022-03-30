@@ -26,7 +26,7 @@ RUN curl -s "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/
 # Add rabbitmq repository
 ADD rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
 
-# Sadly pre-importing keys doesn't seem to save any time whan we use yum later, so don't so it.
+# Sadly pre-importing keys doesn't seem to save any time when we use yum later, so don't so it.
 
 # Install deps
 RUN curl -fsSL https://rpm.nodesource.com/setup_16.x | bash - \
