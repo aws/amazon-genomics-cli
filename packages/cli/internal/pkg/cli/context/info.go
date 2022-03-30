@@ -4,7 +4,10 @@ import (
 	"reflect"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 )
+
+var serverProcessEngines = map[string]bool{constants.CROMWELL: true}
 
 type Summary struct {
 	Name          string
@@ -14,8 +17,14 @@ type Summary struct {
 	Engines       []spec.Engine
 }
 
-func (i Summary) IsEmpty() bool {
-	return reflect.ValueOf(i).IsZero()
+func (s Summary) IsEmpty() bool {
+	return reflect.ValueOf(s).IsZero()
+}
+
+//IsServerProcessEngine Does the workflow engine run as a server process? A server process engine has one to many
+// mapping with workflow runs. The engine can be used to run multiple workflows and the process is re-used and long running.
+func (s *Summary) IsServerProcessEngine() bool {
+	return serverProcessEngines[s.Engines[0].Engine]
 }
 
 type Detail struct {
@@ -36,6 +45,6 @@ type Instance struct {
 	IsDefinedInProjectFile bool
 }
 
-func (i Detail) IsEmpty() bool {
-	return reflect.ValueOf(i).IsZero()
+func (d Detail) IsEmpty() bool {
+	return reflect.ValueOf(d).IsZero()
 }
