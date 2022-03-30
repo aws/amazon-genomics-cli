@@ -14,6 +14,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	// We check a lot of generated CDK commands to make sure they have the
+	// right number of command line arguments. How many should there be to
+	// start?
+	testCdkBaseArgumentCount = 26
+	// And how many do we expect if the WES adapter images are also to be
+	// passed?
+	testCdkAdaptedArgumentCount = testCdkBaseArgumentCount + 4
+)
+
 func TestManager_Deploy(t *testing.T) {
 	origVerbose := logging.Verbose
 	origDisplayProgressBar := displayProgressBar
@@ -46,7 +56,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return(testTags)
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["NEXTFLOW"]).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
-				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(30), testContextName3).After(clearContext).Return(mockClients.progressStream1, nil)
+				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkAdaptedArgumentCount), testContextName3).After(clearContext).Return(mockClients.progressStream1, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
 				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Deploying resources for context(s) %s", []string{testContextName3}), []cdk.ProgressStream{mockClients.progressStream1}).Return([]cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName3}})
 				return mockClients
@@ -69,9 +79,32 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return("")
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["NEXTFLOW"]).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
-				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(30), testContextName3).After(clearContext).Return(mockClients.progressStream1, nil)
+				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkAdaptedArgumentCount), testContextName3).After(clearContext).Return(mockClients.progressStream1, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
 				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Deploying resources for context(s) %s", []string{testContextName3}), []cdk.ProgressStream{mockClients.progressStream1}).Return([]cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName3}})
+				return mockClients
+			},
+		},
+		"deploy success (no adapter)": {
+			contextList: []string{testContextName4},
+			expectedProgressResultList: []ProgressResult{
+				{Outputs: []string{"some message"}, Context: testContextName4},
+			},
+			setupMocks: func(t *testing.T) mockClients {
+				mockClients := createMocks(t)
+				defer close(mockClients.progressStream1)
+				defer close(mockClients.progressStream2)
+				mockClients.configMock.EXPECT().GetUserEmailAddress().Return(testUserEmail, nil)
+				mockClients.configMock.EXPECT().GetUserId().Return(testUserId, nil)
+				mockClients.projMock.EXPECT().Read().Return(testValidProjectSpec, nil)
+				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
+				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
+				mockClients.ssmMock.EXPECT().GetCustomTags().Return("")
+				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["TOIL"]).Return(nil)
+				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
+				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkBaseArgumentCount), testCdkBaseArgumentCount).After(clearContext).Return(mockClients.progressStream1, nil)
+				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
+				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Deploying resources for context(s) %s", []string{testContextName4}), []cdk.ProgressStream{mockClients.progressStream1}).Return([]cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName4}})
 				return mockClients
 			},
 		},
@@ -94,8 +127,8 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["CROMWELL"]).Times(2).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				clearContext2 := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
-				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(30), testContextName1).After(clearContext).Return(mockClients.progressStream1, nil)
-				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(30), testContextName2).After(clearContext2).Return(mockClients.progressStream2, nil)
+				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkAdaptedArgumentCount), testContextName1).After(clearContext).Return(mockClients.progressStream1, nil)
+				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkAdaptedArgumentCount), testContextName2).After(clearContext2).Return(mockClients.progressStream2, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
 				expectedCdkResult := []cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName1}, {Outputs: []string{"some other message"}, ExecutionName: testContextName2}}
 				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Deploying resources for context(s) %s", []string{testContextName1, testContextName2}), []cdk.ProgressStream{mockClients.progressStream1, mockClients.progressStream2}).Return(expectedCdkResult)
@@ -235,7 +268,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return(testTags)
 				mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
-				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(30), testContextName1).Return(nil, fmt.Errorf("some context error"))
+				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkAdaptedArgumentCount), testContextName1).Return(nil, fmt.Errorf("some context error"))
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["CROMWELL"]).Return(nil)
 				return mockClients
 			},
