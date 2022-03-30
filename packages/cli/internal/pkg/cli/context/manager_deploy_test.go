@@ -18,7 +18,7 @@ const (
 	// We check a lot of generated CDK commands to make sure they have the
 	// right number of command line arguments. How many should there be to
 	// start?
-	testCdkBaseArgumentCount = 26
+	testCdkBaseArgumentCount = 27
 	// And how many do we expect if the WES adapter images are also to be
 	// passed?
 	testCdkAdaptedArgumentCount = testCdkBaseArgumentCount + 4
@@ -102,7 +102,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return("")
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["TOIL"]).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
-				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkBaseArgumentCount), testCdkBaseArgumentCount).After(clearContext).Return(mockClients.progressStream1, nil)
+				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkBaseArgumentCount), testContextName4).After(clearContext).Return(mockClients.progressStream1, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
 				mockClients.cdkMock.EXPECT().DisplayProgressBar(fmt.Sprintf("Deploying resources for context(s) %s", []string{testContextName4}), []cdk.ProgressStream{mockClients.progressStream1}).Return([]cdk.Result{{Outputs: []string{"some message"}, ExecutionName: testContextName4}})
 				return mockClients

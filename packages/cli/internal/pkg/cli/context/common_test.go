@@ -14,7 +14,7 @@ const (
 	testContextName1       = "testContextName1"
 	testContextName2       = "testContextName2"
 	testContextName3       = "testContextName3"
-    testContextName4       = "testContextName4"
+	testContextName4       = "testContextName4"
 	testUnknownContextName = "unknown-context-name"
 	testS3Location1        = "s3://test-s3-location-1"
 	testS3Location2        = "s3://test-s3-location-2"
@@ -49,7 +49,7 @@ var (
 					{Type: "nextflow", Engine: "nextflow"},
 				},
 			},
-            testContextName4: {
+			testContextName4: {
 				Engines: []spec.Engine{
 					{Type: "cwl", Engine: "toil"},
 				},

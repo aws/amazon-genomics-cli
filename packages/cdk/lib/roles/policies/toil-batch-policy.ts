@@ -1,4 +1,4 @@
-import { PolicyDocument, PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
+import { PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
 import { CromwellBatchPolicy } from "./cromwell-batch-policy";
 
 export interface ToilBatchPolicyProps {
@@ -14,15 +14,17 @@ export class ToilBatchPolicy extends CromwellBatchPolicy {
     // improvements.
     super({
       jobQueueArn: props.jobQueueArn,
-      cromwellJobArn: props.toilJobArnPattern
+      cromwellJobArn: props.toilJobArnPattern,
     });
 
     // The only additional thing we need is to be able to deregister job
     // definitions, which Cromwell doesn't do.
-    this.addStatements(new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: ["batch:DeregisterJobDefinition"],
-      resources: [props.toilJobArnPattern],
-    });
+    this.addStatements(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["batch:DeregisterJobDefinition"],
+        resources: [props.toilJobArnPattern],
+      })
+    );
   }
 }

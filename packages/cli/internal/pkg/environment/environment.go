@@ -64,13 +64,13 @@ var CommonImages = map[string]ecr.ImageReference{
 }
 
 // Some workflow engines require other images
-var ImageDependencies = map[string][]string{
-	WesImageKey: [],
-	CromwellImageKey: [WesImageKey],
-	NextflowImageKey: [WesImageKey],
-	MiniwdlImageKey: [WesImageKey],
-	SnakemakeImageKey: [WesImageKey],
-	ToilImageKey: []
+var ImageDependencies = map[string]([]string){
+	WesImageKey:       {},
+	CromwellImageKey:  {WesImageKey},
+	NextflowImageKey:  {WesImageKey},
+	MiniwdlImageKey:   {WesImageKey},
+	SnakemakeImageKey: {WesImageKey},
+	ToilImageKey:      {},
 }
 
 func LookUpEnvOrDefault(envVariableName string, defaultValue string) string {

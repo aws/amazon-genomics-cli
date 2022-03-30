@@ -23,7 +23,7 @@ const (
 	testCromwellRepository = "test-cromwell-repo"
 	testNextflowRepository = "test-nextflow-repo"
 	testMiniwdlRepository  = "test-miniwdl-repo"
-    testToilRepository     = "test-toil-repo"
+	testToilRepository     = "test-toil-repo"
 	testCoreStackName      = "Agc-Core"
 )
 
