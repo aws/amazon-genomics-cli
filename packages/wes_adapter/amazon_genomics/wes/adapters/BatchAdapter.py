@@ -251,7 +251,6 @@ class BatchAdapter(AbstractWESAdapter):
 
         start_time = to_iso(job_details.get("startedAt"))
         end_time = to_iso(job_details.get("stoppedAt"))
-        exitCode = job_details["container"].get("exitCode")
 
         return Log(
             name=task_name,
@@ -259,7 +258,7 @@ class BatchAdapter(AbstractWESAdapter):
             start_time=start_time,
             end_time=end_time,
             stdout=job_details["container"].get("logStreamName"),
-            exit_code=("" if exitCode == None else str(exitCode)),
+            exit_code=job_details["container"].get("exitCode"),
         )
 
 

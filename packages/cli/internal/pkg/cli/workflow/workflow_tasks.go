@@ -3,6 +3,7 @@ package workflow
 import (
 	"fmt"
 	"io"
+	"strconv"
 	"strings"
 	"time"
 
@@ -103,12 +104,18 @@ func (m *Manager) getTasks() ([]Task, error) {
 		if len(nameParts) != 2 {
 			return nil, fmt.Errorf("unable to parse job ID from task name '%s'", taskName)
 		}
+
+		exitCode := "NA"
+		if taskLog.ExitCode != nil {
+			exitCode = strconv.FormatInt(int64(*taskLog.ExitCode), 10)
+		}
+
 		tasks[i] = Task{
 			Name:      nameParts[0],
 			JobId:     nameParts[1],
 			StartTime: parseLogTime(taskLog.StartTime),
 			StopTime:  parseLogTime(taskLog.EndTime),
-			ExitCode:  taskLog.ExitCode,
+			ExitCode:  exitCode,
 		}
 	}
 

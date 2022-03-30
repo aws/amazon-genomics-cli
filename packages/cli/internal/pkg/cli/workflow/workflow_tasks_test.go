@@ -14,6 +14,7 @@ import (
 	storagemocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/storage"
 	wesmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/wes"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/wes"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/golang/mock/gomock"
 	"github.com/rsc/wes_client"
 	"github.com/stretchr/testify/suite"
@@ -97,7 +98,7 @@ func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithTask() {
 			Name:      testTaskCompositeName,
 			StartTime: testStartTime.UTC().Format("2006-01-02T15:04:05Z"),
 			EndTime:   testStopTime.UTC().Format("2006-01-02T15:04:05Z"),
-			ExitCode:  testExitCode,
+			ExitCode:  aws.Int32(0),
 		}},
 	}, nil)
 
@@ -197,6 +198,60 @@ func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithTaskNameFailure() {
 	if s.Assert().Error(err) {
 		s.Assert().EqualError(err, "unable to parse job ID from task name 'test-task-name'")
 		s.Assert().Empty(tasks)
+	}
+}
+
+func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithExitCodeNil() {
+	defer s.ctrl.Finish()
+	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
+	s.mockConfigClient.EXPECT().GetUserId().Return(testUserId, nil)
+	s.mockDdb.EXPECT().GetWorkflowInstanceById(ctx.Background(), testProjectName, testUserId, testRunId).Return(ddb.WorkflowInstance{ContextName: testContext1Name}, nil)
+	s.mockCfn.EXPECT().GetStackInfo(testContext1Stack).Return(cfn.StackInfo{Outputs: map[string]string{"WesUrl": testWes1Url}}, nil)
+	s.mockWes.EXPECT().GetRunLog(ctx.Background(), testRunId).Return(wes_client.RunLog{
+		RunId: testRunId,
+		TaskLogs: []wes_client.Log{{
+			Name:      testTaskCompositeName,
+			StartTime: testStartTime.UTC().Format("2006-01-02T15:04:05Z"),
+			EndTime:   testStopTime.UTC().Format("2006-01-02T15:04:05Z"),
+			ExitCode:  nil,
+		}},
+	}, nil)
+
+	tasks, err := s.manager.GetWorkflowTasks(testRunId)
+	s.Assert().NoError(err)
+	{
+		s.Assert().Equal(testTaskName, tasks[0].Name)
+		s.Assert().Equal(testTaskJobId, tasks[0].JobId)
+		s.Assert().True(tasks[0].StartTime.Equal(testStartTime.Truncate(time.Second)))
+		s.Assert().True(tasks[0].StopTime.Equal(testStopTime.Truncate(time.Second)))
+		s.Assert().Equal(tasks[0].ExitCode, "NA")
+	}
+}
+
+func (s *GetWorkflowTasksTestSuite) TestGetWorkflowTasks_WithExitCodeExists() {
+	defer s.ctrl.Finish()
+	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
+	s.mockConfigClient.EXPECT().GetUserId().Return(testUserId, nil)
+	s.mockDdb.EXPECT().GetWorkflowInstanceById(ctx.Background(), testProjectName, testUserId, testRunId).Return(ddb.WorkflowInstance{ContextName: testContext1Name}, nil)
+	s.mockCfn.EXPECT().GetStackInfo(testContext1Stack).Return(cfn.StackInfo{Outputs: map[string]string{"WesUrl": testWes1Url}}, nil)
+	s.mockWes.EXPECT().GetRunLog(ctx.Background(), testRunId).Return(wes_client.RunLog{
+		RunId: testRunId,
+		TaskLogs: []wes_client.Log{{
+			Name:      testTaskCompositeName,
+			StartTime: testStartTime.UTC().Format("2006-01-02T15:04:05Z"),
+			EndTime:   testStopTime.UTC().Format("2006-01-02T15:04:05Z"),
+			ExitCode:  aws.Int32(0),
+		}},
+	}, nil)
+
+	tasks, err := s.manager.GetWorkflowTasks(testRunId)
+	s.Assert().NoError(err)
+	{
+		s.Assert().Equal(testTaskName, tasks[0].Name)
+		s.Assert().Equal(testTaskJobId, tasks[0].JobId)
+		s.Assert().True(tasks[0].StartTime.Equal(testStartTime.Truncate(time.Second)))
+		s.Assert().True(tasks[0].StopTime.Equal(testStopTime.Truncate(time.Second)))
+		s.Assert().Equal(testExitCode, "0")
 	}
 }
 
