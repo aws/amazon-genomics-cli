@@ -15,7 +15,7 @@ import { Construct } from "constructs";
 
 export interface ToilEngineConstructProps extends EngineOptions {
   /**
-   * AWS Batch JobQueue to use for running workflows.
+   * AWS Batch JobQueue to use for running workflow tasks.
    */
   readonly jobQueue: IJobQueue;
 }
