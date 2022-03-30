@@ -16,7 +16,7 @@ interface ToilEngineRoleProps extends ToilJobRoleProps {
 // launch jobs on AWS Batch that themselves have a ToilJobRole role assigned.
 export class ToilEngineRole extends ToilJobRole {
   constructor(scope: Construct, id: string, props: ToilEngineRoleProps) {
-    const toilJobArn = Arn.format(
+    const toilJobDefinitionArnPattern = Arn.format(
       {
         account: Aws.ACCOUNT_ID,
         region: Aws.REGION,
@@ -29,7 +29,7 @@ export class ToilEngineRole extends ToilJobRole {
     super(scope, id, props, {
       ToilEngineBatchPolicy: new ToilBatchPolicy({
         ...props,
-        toilJobArn: toilJobArn,
+        toilJobDefinitionArnPattern: toilJobDefinitionArnPattern,
       }),
       // TODO: Can we restrict this to allow passing the role only to jobs?
       ToilIamPassJobRole: new PolicyDocument({

@@ -2,9 +2,7 @@ import { PolicyDocument, PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
 
 export interface ToilBatchPolicyProps {
   jobQueueArn: string;
-  // This is actually a pattern that matches all ARNs for potentially relevant
-  // definitions, since Toil makes its own definitions.
-  toilJobArn: string;
+  toilJobDefinitionArnPattern: string;
 }
 
 export class ToilBatchPolicy extends PolicyDocument {
@@ -20,12 +18,12 @@ export class ToilBatchPolicy extends PolicyDocument {
         new PolicyStatement({
           effect: Effect.ALLOW,
           actions: ["batch:RegisterJobDefinition", "batch:DeregisterJobDefinition"],
-          resources: [props.toilJobArn],
+          resources: [props.toilJobDefinitionArnPattern],
         }),
         new PolicyStatement({
           effect: Effect.ALLOW,
           actions: ["batch:SubmitJob"],
-          resources: [props.toilJobArn, props.jobQueueArn],
+          resources: [props.toilJobDefinitionArnPattern, props.jobQueueArn],
         }),
       ],
     });
