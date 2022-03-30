@@ -1,31 +1,28 @@
 import { PolicyDocument, PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
+import { CromwellBatchPolicy } from "./cromwell-batch-policy";
 
 export interface ToilBatchPolicyProps {
   jobQueueArn: string;
-  toilJobDefinitionArnPattern: string;
+  toilJobArnPattern: string;
 }
 
-export class ToilBatchPolicy extends PolicyDocument {
+export class ToilBatchPolicy extends CromwellBatchPolicy {
   constructor(props: ToilBatchPolicyProps) {
+    // To avoid adding more policies allowing access to "*", we are based on
+    // the Cromwell policy set. When the permissions for that get locked
+    // down to the minimum required to use Batch, we will inherit those
+    // improvements.
     super({
-      assignSids: true,
-      statements: [
-        new PolicyStatement({
-          effect: Effect.ALLOW,
-          actions: ["batch:DescribeJobDefinitions", "batch:ListJobs", "batch:DescribeJobs", "batch:DescribeJobQueues", "batch:DescribeComputeEnvironments"],
-          resources: ["*"],
-        }),
-        new PolicyStatement({
-          effect: Effect.ALLOW,
-          actions: ["batch:RegisterJobDefinition", "batch:DeregisterJobDefinition"],
-          resources: [props.toilJobDefinitionArnPattern],
-        }),
-        new PolicyStatement({
-          effect: Effect.ALLOW,
-          actions: ["batch:SubmitJob"],
-          resources: [props.toilJobDefinitionArnPattern, props.jobQueueArn],
-        }),
-      ],
+      jobQueueArn: props.jobQueueArn,
+      cromwellJobArn: props.toilJobArnPattern
+    });
+
+    // The only additional thing we need is to be able to deregister job
+    // definitions, which Cromwell doesn't do.
+    this.addStatements(new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["batch:DeregisterJobDefinition"],
+      resources: [props.toilJobArnPattern],
     });
   }
 }
