@@ -38,7 +38,11 @@ export class ToilJobRole extends Role {
     // becomes able to just use the one AGC-provided bucket.
     const jobStoreS3ArnPattern = Arn.format(
       {
-        // Note that regions and account IDs aren't allowed in S3 ARNs
+        // Note that regions and account IDs aren't allowed in S3 ARNs.
+        // But the formatter requires them to be passed, and wants an empty
+        // string if we don't actually want them filled in.
+        account: "",
+        region: "",
         partition: Aws.PARTITION,
         resource: "toil-*",
         service: "s3",
