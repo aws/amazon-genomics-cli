@@ -61,13 +61,11 @@ func (o *logsEngineOpts) Validate() error {
 	o.engine = summary.Engines[0].Engine
 
 	if o.workflowRunId == "" {
-		if !summary.IsServerProcessEngine() {
-			log.Warn().Msgf("DEPRECATION WARNING!!")
-			log.Warn().Msgf("Obtaining engine logs for a workflow context where the engine is '%s' will return engine logs from ALL workflows run in this context",
-				o.engine)
-			log.Warn().Msgf("Specifying a run-id will be MANDATORY in future versions")
-			log.Warn().Msgf("Please run the command again with -r <run-id>")
-		}
+		log.Warn().Msgf("DEPRECATION WARNING!!")
+		log.Warn().Msgf("Obtaining engine logs for a workflow context where the engine is '%s' will return engine logs from ALL workflows run in this context",
+			o.engine)
+		log.Warn().Msgf("Specifying a run-id will be MANDATORY in future versions")
+		log.Warn().Msgf("Please run the command again with -r <run-id>")
 	}
 
 	return o.parseTime(o.logsSharedVars)
@@ -87,16 +85,16 @@ func (o *logsEngineOpts) Execute() error {
 	}
 	if o.engine == constants.CROMWELL {
 		currentFilter := o.filter
-		log.Info().Msgf("current filter = '%s'", currentFilter)
+		log.Debug().Msgf("current filter = '%s'", currentFilter)
 		cromwellLogTag := stringutils.SubString(o.workflowRunId, 0, 7)
-		log.Info().Msgf("cromwell short run id = '%s'", cromwellLogTag)
+		log.Debug().Msgf("cromwell short run id = '%s'", cromwellLogTag)
 
 		var builder strings.Builder
 		builder.WriteString(currentFilter)
 		builder.WriteByte(' ')
 		builder.WriteString(cromwellLogTag)
 		o.filter = builder.String()
-		log.Info().Msgf("filter = '%s'", o.filter)
+		log.Debug().Msgf("filter = '%s'", o.filter)
 
 		return executeGetEngineLogForWholeGroup(o, logGroupName)
 	}

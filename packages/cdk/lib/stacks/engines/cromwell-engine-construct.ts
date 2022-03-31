@@ -31,10 +31,11 @@ export class CromwellEngineConstruct extends EngineConstruct {
   public readonly engineRole: IRole;
 
   /**
-   * Delimiter for new log events as opposed to the log driver default of '\n'
+   * Delimiter for new log events as opposed to the log driver default of '\n'. With this cloudwatch logs will group
+   * the multiline statements from cromwell logging and allow filtering by workflow run id.
    * @private
    */
-  private readonly cromwellLogDateTimeFormat = "%Y-%m-%d %H:%M:%S,%L";
+  private readonly cromwellLogDateTimeFormat = "%Y-%m-%d";
 
   constructor(scope: Construct, id: string, props: CromwellEngineConstructProps) {
     super(scope, id);
