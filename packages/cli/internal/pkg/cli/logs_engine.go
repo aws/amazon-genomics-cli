@@ -27,13 +27,13 @@ const (
 type logsEngineVars struct {
 	logsSharedVars
 	workflowRunId string
-	engine        string
 }
 
 type logsEngineOpts struct {
 	logsEngineVars
 	logsSharedOpts
 	workflowManager *workflow.Manager
+	engine          string
 }
 
 func newLogsEngineOpts(vars logsEngineVars) (*logsEngineOpts, error) {
