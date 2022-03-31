@@ -84,21 +84,24 @@ func (o *logsEngineOpts) Execute() error {
 		return executeGetEngineLogForWholeGroup(o, logGroupName)
 	}
 	if o.engine == constants.CROMWELL {
-		currentFilter := o.filter
-		log.Debug().Msgf("current filter = '%s'", currentFilter)
-		cromwellLogTag := stringutils.SubString(o.workflowRunId, 0, 7)
-		log.Debug().Msgf("cromwell short run id = '%s'", cromwellLogTag)
-
-		var builder strings.Builder
-		builder.WriteString(currentFilter)
-		builder.WriteByte(' ')
-		builder.WriteString(cromwellLogTag)
-		o.filter = builder.String()
-		log.Debug().Msgf("filter = '%s'", o.filter)
-
+		constructCromwellFilter(o)
 		return executeGetEngineLogForWholeGroup(o, logGroupName)
 	}
 	return executeGetEngineLogForRunId(o, logGroupName)
+}
+
+func constructCromwellFilter(o *logsEngineOpts) {
+	currentFilter := o.filter
+	log.Debug().Msgf("current filter = '%s'", currentFilter)
+	cromwellLogTag := stringutils.SubString(o.workflowRunId, 0, 8)
+	log.Debug().Msgf("cromwell short run id = '%s'", cromwellLogTag)
+
+	var builder strings.Builder
+	builder.WriteString(currentFilter)
+	builder.WriteByte(' ')
+	builder.WriteString(cromwellLogTag)
+	o.filter = builder.String()
+	log.Debug().Msgf("filter = '%s'", o.filter)
 }
 
 func executeGetEngineLogForWholeGroup(o *logsEngineOpts, logGroupName string) error {
