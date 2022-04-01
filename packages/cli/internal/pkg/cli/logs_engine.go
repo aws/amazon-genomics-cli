@@ -5,14 +5,13 @@ package cli
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/stringutils"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/unicode"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -92,16 +91,9 @@ func (o *logsEngineOpts) Execute() error {
 
 func constructCromwellFilter(o *logsEngineOpts) {
 	currentFilter := o.filter
-	log.Debug().Msgf("current filter = '%s'", currentFilter)
-	cromwellLogTag := stringutils.SubString(o.workflowRunId, 0, 8)
-	log.Debug().Msgf("cromwell short run id = '%s'", cromwellLogTag)
+	cromwellLogTag := unicode.SubString(o.workflowRunId, 0, 8)
 
-	var builder strings.Builder
-	builder.WriteString(currentFilter)
-	builder.WriteByte(' ')
-	builder.WriteString(cromwellLogTag)
-	o.filter = builder.String()
-	log.Debug().Msgf("filter = '%s'", o.filter)
+	o.filter = fmt.Sprintf("%s %s", currentFilter, cromwellLogTag)
 }
 
 func executeGetEngineLogForWholeGroup(o *logsEngineOpts, logGroupName string) error {

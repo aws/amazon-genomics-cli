@@ -1,4 +1,4 @@
-package stringutils
+package unicode
 
 import "sort"
 

@@ -11,7 +11,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/stringutils"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/unicode"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -85,7 +85,7 @@ func (o *deployContextOpts) validateSuppliedContexts(contextList []string) error
 
 // Execute causes the specified context(s) to be deployed.
 func (o *deployContextOpts) Execute() error {
-	o.contexts = stringutils.DeDuplicateStrings(o.contexts)
+	o.contexts = unicode.DeDuplicateStrings(o.contexts)
 
 	err := o.deployContexts()
 	if err != nil {
