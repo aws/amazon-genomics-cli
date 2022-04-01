@@ -8,10 +8,10 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/workflow"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/unicode"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -32,6 +32,7 @@ type logsEngineOpts struct {
 	logsEngineVars
 	logsSharedOpts
 	workflowManager *workflow.Manager
+	engine          string
 }
 
 func newLogsEngineOpts(vars logsEngineVars) (*logsEngineOpts, error) {
@@ -56,19 +57,14 @@ func (o *logsEngineOpts) Validate() error {
 	}
 
 	summary := ctxMap[o.contextName]
-	engine := summary.Engines[0].Engine
+	o.engine = summary.Engines[0].Engine
 
 	if o.workflowRunId == "" {
-		if !summary.IsServerProcessEngine() {
-			log.Warn().Msgf("DEPRECATION WARNING!!")
-			log.Warn().Msgf("Obtaining engine logs for a workflow context where the engine is '%s' will return engine logs from ALL workflows run in this context",
-				engine)
-			log.Warn().Msgf("Specifying a run-id will be MANDATORY in future versions")
-			log.Warn().Msgf("Please run the command again with -r <run-id>")
-		}
-	} else if engine == constants.CROMWELL {
-		return actionableerror.New(fmt.Errorf("use of -%s (--%s) flag with Cromwell is invalid", runIdShort, runIdFlag),
-			"Cromwell doesn't currently support engine logs for specific runs, displaying complete log")
+		log.Warn().Msgf("DEPRECATION WARNING!!")
+		log.Warn().Msgf("Obtaining engine logs for a workflow context where the engine is '%s' will return engine logs from ALL workflows run in this context",
+			o.engine)
+		log.Warn().Msgf("Specifying a run-id will be MANDATORY in future versions")
+		log.Warn().Msgf("Please run the command again with -r <run-id>")
 	}
 
 	return o.parseTime(o.logsSharedVars)
@@ -86,7 +82,18 @@ func (o *logsEngineOpts) Execute() error {
 	if o.workflowRunId == "" {
 		return executeGetEngineLogForWholeGroup(o, logGroupName)
 	}
+	if o.engine == constants.CROMWELL {
+		constructCromwellFilter(o)
+		return executeGetEngineLogForWholeGroup(o, logGroupName)
+	}
 	return executeGetEngineLogForRunId(o, logGroupName)
+}
+
+func constructCromwellFilter(o *logsEngineOpts) {
+	currentFilter := o.filter
+	cromwellLogTag := unicode.SubString(o.workflowRunId, 0, 8)
+
+	o.filter = fmt.Sprintf("%s %s", currentFilter, cromwellLogTag)
 }
 
 func executeGetEngineLogForWholeGroup(o *logsEngineOpts, logGroupName string) error {

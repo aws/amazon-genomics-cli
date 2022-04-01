@@ -30,6 +30,13 @@ export class CromwellEngineConstruct extends EngineConstruct {
   public readonly engineLogGroup: ILogGroup;
   public readonly engineRole: IRole;
 
+  /**
+   * Delimiter for new log events as opposed to the log driver default of '\n'. With this cloudwatch logs will group
+   * the multiline statements from cromwell logging and allow filtering by workflow run id.
+   * @private
+   */
+  private readonly cromwellLogDateTimeFormat = "%Y-%m-%d";
+
   constructor(scope: Construct, id: string, props: CromwellEngineConstructProps) {
     super(scope, id);
     const params = props.contextParameters;
@@ -108,7 +115,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
       environment: serviceContainer.environment,
       containerName: serviceContainer.serviceName,
       image: createEcrImage(this, serviceContainer.imageConfig.designation),
-      logging: LogDriver.awsLogs({ logGroup, streamPrefix: id }),
+      logging: LogDriver.awsLogs({ logGroup, streamPrefix: id, datetimeFormat: this.cromwellLogDateTimeFormat }),
       portMappings: serviceContainer.containerPort ? [{ containerPort: serviceContainer.containerPort }] : [],
     });
 
