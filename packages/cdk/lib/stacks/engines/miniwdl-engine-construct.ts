@@ -47,6 +47,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
         effect: Effect.ALLOW,
         actions: ["batch:TerminateJob"],
         resources: ["*"],
+        conditions: { "ForAllValues:StringEquals": { "aws:TagKeys": ["AWS_BATCH_PARENT_JOB_ID"] } },
       })
     );
 
