@@ -3,7 +3,7 @@ import { BucketOperations } from "../common/BucketOperations";
 import { HeadJobBatchPolicy } from "./policies/head-job-batch-policy";
 import { NextflowAdapterBatchPolicy } from "./policies/nextflow-adapter-batch-policy";
 import { batchArn } from "../util";
-import { Role, ServicePrincipal, PolicyDocument, PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
+import { Effect, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Construct } from "constructs";
 
 interface NextflowEngineRoleProps {
@@ -35,7 +35,15 @@ export class NextflowEngineRole extends Role {
       ...props.policies,
     });
 
-    this.attachInlinePolicy(new HeadJobBatchPolicy(this, "NextflowHeadJobBatchPolicy"));
+    const headJobBatchPolicy = new HeadJobBatchPolicy(this, "NextflowHeadJobBatchPolicy");
+    headJobBatchPolicy.addStatements(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["batch:TerminateJob"],
+        resources: ["*"],
+      })
+    );
+    this.attachInlinePolicy(headJobBatchPolicy);
 
     BucketOperations.grantBucketAccess(this, this, props.readOnlyBucketArns, true);
     BucketOperations.grantBucketAccess(this, this, props.readWriteBucketArns);

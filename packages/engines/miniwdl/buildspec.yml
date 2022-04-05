@@ -5,7 +5,7 @@ env:
   variables:
     # These variables may be over-ridden as appropriate by the CI/CD pipeline
     MINIWDL_IMAGE_NAME: "miniwdl"
-    MINIWDL_VERSION: "v0.1.6"
+    MINIWDL_VERSION: "v0.1.11"
 
 phases:
   pre_build:

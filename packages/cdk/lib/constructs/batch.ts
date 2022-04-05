@@ -116,7 +116,7 @@ export class Batch extends Construct {
   public grantJobAdministration(grantee: IGrantable, jobDefinitionName = "*"): Grant {
     return Grant.addToPrincipal({
       grantee: grantee,
-      actions: ["batch:SubmitJob", "batch:TerminateJob"],
+      actions: ["batch:SubmitJob"],
       resourceArns: [this.jobQueue.jobQueueArn, batchArn(this, "job-definition", jobDefinitionName)],
     });
   }
