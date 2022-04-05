@@ -140,6 +140,24 @@ agc workflow run my-workflow --inputsFile inputs.json
 If the inputs file references local files, these will be synced with S3 and those files in S3 will be used when the workflow
 instance is run.
 
+#### `workflow optionFileUrl`
+
+An additional optionFileUrl can be provided using the 'o' or '--optionFileUrl' flag. For example:
+
+```shell
+agc workflow run my-workflow --optionFileUrl optionFile.json
+```
+
+OptionFileUrl is only for use with engines that run in server mode (e.g. Cromwell).
+
+Example option.json
+```shell
+{
+    "option_name_1": "option value 1",
+    "option_name_2": "option value 2"
+}
+```
+
 ### `list`
 
 The `agc workflow list` command can be used to list all workflows that are specified in the current project.

@@ -75,6 +75,8 @@ type runProps struct {
 	workflowUrl          string
 	inputUrl             string
 	input                Input
+	optionFileUrl        string
+	options              map[string]string
 	arguments            []string
 	attachments          []string
 	workflowParams       map[string]string
@@ -305,6 +307,7 @@ func (m *Manager) readInput(inputUrl string) {
 	if m.err != nil || inputUrl == "" {
 		return
 	}
+	log.Debug().Msgf("Input file override URL: %s", inputUrl)
 	m.inputUrl = inputUrl
 	bytes, err := m.Storage.ReadAsBytes(inputUrl)
 	if err != nil {
@@ -348,6 +351,25 @@ func (m *Manager) uploadInputsToS3() {
 		return
 	}
 	m.input = updateInputs
+}
+
+func (m *Manager) readOptionFile(optionFileUrl string) {
+	if m.err != nil || optionFileUrl == "" {
+		return
+	}
+	log.Debug().Msgf("Option file override URL: %s", optionFileUrl)
+	m.optionFileUrl = optionFileUrl
+	bytes, err := m.Storage.ReadAsBytes(optionFileUrl)
+	if err != nil {
+		m.err = err
+		return
+	}
+	var options map[string]string
+	if err := json.Unmarshal(bytes, &options); err != nil {
+		m.err = err
+		return
+	}
+	m.options = options
 }
 
 func (m *Manager) readConfig() {
@@ -434,6 +456,23 @@ func (m *Manager) setWorkflowParameters() {
 		return
 	}
 	m.workflowParams["workflowInputs"] = filepath.Base(m.attachments[0])
+}
+
+func (m *Manager) setWorkflowEngineParameters() {
+	if m.err != nil {
+		return
+	}
+	m.workflowEngineParams = make(map[string]string)
+	if m.optionFileUrl == "" {
+		return
+	}
+	if m.options != nil {
+		if m.workflowEngine == "nextflow" || m.workflowEngine == "miniwdl" {
+			m.err = fmt.Errorf("optionFile flag cannot be used with head node engines")
+			return
+		}
+		m.workflowEngineParams = m.options
+	}
 }
 
 func (m *Manager) setWesClient() {
