@@ -2,7 +2,7 @@ package workflow
 
 import "fmt"
 
-func (m *Manager) RunWorkflow(contextName, workflowName, argumentsUrl string, optionFileUrl string, engineOptions string) (string, error) {
+func (m *Manager) RunWorkflow(contextName, workflowName, argumentsUrl string, optionFileUrl string) (string, error) {
 	m.readProjectSpec()
 	m.setWorkflowSpec(workflowName)
 	m.readConfig()
@@ -23,7 +23,6 @@ func (m *Manager) RunWorkflow(contextName, workflowName, argumentsUrl string, op
 	m.uploadInputsToS3()
 	m.parseInputToArguments()
 	m.readOptionFile(optionFileUrl)
-	m.readEngineOptions(engineOptions)
 	m.setContextStackInfo(contextName)
 	m.setWesUrl()
 	m.setWesClient()

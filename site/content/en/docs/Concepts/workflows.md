@@ -158,16 +158,6 @@ Example option.json
 }
 ```
 
-#### `workflow engineOptions`
-
-An additional property 'engineOptions' can be provided using the 'e' or '--engineOptions' flag. For example:
-
-```shell
-agc workflow run my-workflow --engineOptions "-f foo -b -c --anotherFlag"
-```
-
-This is only for use with head node engines (e.g. Nextflow, MiniWDL).
-
 ### `list`
 
 The `agc workflow list` command can be used to list all workflows that are specified in the current project.

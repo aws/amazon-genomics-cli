@@ -14,12 +14,6 @@ const (
 )
 
 const (
-	engineOptionsFlag            = "engineOptions"
-	engineOptionsFlagShort       = "e"
-	engineOptionsFlagDescription = "Engine options to use."
-)
-
-const (
 	VerboseFlag            = "verbose"
 	VerboseFlagShort       = "v"
 	VerboseFlagDescription = "Display verbose diagnostic information."

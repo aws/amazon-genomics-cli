@@ -77,7 +77,6 @@ type runProps struct {
 	input                Input
 	optionFileUrl        string
 	options              map[string]string
-	engineOptions        string
 	arguments            []string
 	attachments          []string
 	workflowParams       map[string]string
@@ -371,22 +370,6 @@ func (m *Manager) readOptionFile(optionFileUrl string) {
 		return
 	}
 	m.options = options
-}
-
-func (m *Manager) readEngineOptions(engineOptions string) {
-	if m.err != nil || engineOptions == "" {
-		return
-	}
-	log.Debug().Msgf("engineOptions override: %s", engineOptions)
-	if m.workflowEngine == "cromwell" {
-		m.err = fmt.Errorf("cannot use engineOptions flag with engines that run in server mode")
-		return
-	}
-	m.engineOptions = engineOptions
-	if m.workflowEngineParams == nil {
-		m.workflowEngineParams = make(map[string]string)
-	}
-	m.workflowEngineParams["engineOptions"] = engineOptions
 }
 
 func (m *Manager) readConfig() {
