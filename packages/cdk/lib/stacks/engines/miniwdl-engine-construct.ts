@@ -1,8 +1,8 @@
-import { Stack, Aws } from "aws-cdk-lib";
+import { Aws, Stack } from "aws-cdk-lib";
 import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import { ApiProxy, Batch } from "../../constructs";
-import { EngineOutputs, EngineConstruct } from "./engine-construct";
-import { IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal, ManagedPolicy } from "aws-cdk-lib/aws-iam";
+import { EngineConstruct, EngineOutputs } from "./engine-construct";
+import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
 import { IVpc } from "aws-cdk-lib/aws-ec2";
@@ -42,6 +42,14 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
         resources: ["*"],
       })
     );
+    this.batchHead.role.addToPrincipalPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["batch:TerminateJob"],
+        resources: ["*"],
+        conditions: { "ForAllValues:StringEquals": { "aws:TagKeys": ["AWS_BATCH_PARENT_JOB_ID"] } },
+      })
+    );
 
     this.miniwdlEngine = new MiniWdlEngine(this, "MiniWdlEngine", {
       vpc: props.vpc,
@@ -60,6 +68,11 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
             BatchPolicies.listAndDescribe,
             new PolicyStatement({
               actions: ["tag:GetResources"],
+              resources: ["*"],
+            }),
+            new PolicyStatement({
+              effect: Effect.ALLOW,
+              actions: ["batch:TerminateJob"],
               resources: ["*"],
             }),
           ],

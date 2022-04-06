@@ -101,7 +101,7 @@ function cancel() {
     echo "stopping ${ENGINE_NAME} pid: $ENGINE_PID"
     kill -TERM "$ENGINE_PID"
     echo "waiting .."
-    wait $ENGINE_PID
+    wait "$ENGINE_PID"
     echo "=== !! cancellation complete !! ==="
     set -e
 }
@@ -144,7 +144,7 @@ echo "cd ${ENGINE_PROJECT}"
 cd ${ENGINE_PROJECT}
 echo "== Running Workflow =="
 echo "${ENGINE_RUN_CMD} ${ENGINE_PARAMS}"
-$ENGINE_RUN_CMD $ENGINE_PARAMS & ENGINE_PID=$!
+$ENGINE_RUN_CMD $ENGINE_PARAMS 2>&1 & ENGINE_PID=$!
 
 echo "${ENGINE_NAME} pid: $ENGINE_PID"
 jobs

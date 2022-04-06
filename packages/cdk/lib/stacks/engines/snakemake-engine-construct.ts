@@ -7,7 +7,7 @@ import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { ENGINE_SNAKEMAKE } from "../../constants";
 import { Construct } from "constructs";
-import { IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
@@ -79,6 +79,11 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
               resources: ["*"],
               conditions: { "ForAllValues:StringEquals": { "aws:TagKeys": ["AWS_BATCH_PARENT_JOB_ID"] } },
             }),
+            new PolicyStatement({
+              actions: ["batch:TerminateJob"],
+              resources: ["*"],
+              conditions: { "ForAllValues:StringEquals": { "aws:TagKeys": ["AWS_BATCH_PARENT_JOB_ID"] } },
+            }),
           ],
         }),
       },
@@ -121,6 +126,13 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       new PolicyStatement({
         actions: ["iam:PassRole"],
         resources: [this.batchHead.role.roleArn],
+      })
+    );
+    this.batchHead.role.addToPrincipalPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["batch:TerminateJob"],
+        resources: ["*"],
       })
     );
   }
