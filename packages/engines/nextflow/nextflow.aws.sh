@@ -133,7 +133,7 @@ if [[ "$NEXTFLOW_PROJECT" =~ ^s3://.* ]]; then
         NEXTFLOW_PROJECT="${NEXTFLOW_PROJECT_DIRECTORY}/${NEXTFLOW_PROJECT}"
       fi
       NEXTFLOW_PARAMS="$(cat $MANIFEST_JSON | jq -r '.engineOptions // empty')"
-      INPUT_FILE="${NEXTFLOW_PROJECT_DIRECTORY}/$(cat $MANIFEST_JSON | jq -r '.inputFileURLs[0] // empty')"
+      INPUT_FILE="$(cat $MANIFEST_JSON | jq -r '.inputFileURLs[0] // empty')"
       if [[ -n "$INPUT_FILE" ]] ; then
          INPUT_JSON="${NEXTFLOW_PROJECT_DIRECTORY}/${INPUT_FILE}"
       fi

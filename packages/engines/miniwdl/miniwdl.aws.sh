@@ -76,7 +76,7 @@ if [[ "$MINIWDL_PROJECT" =~ ^s3://.* ]]; then
         MINIWDL_PROJECT="${MINIWDL_PROJECT_DIRECTORY}/${MINIWDL_PROJECT}"
       fi
       MINIWDL_PARAMS="${MINIWDL_PARAMS} $(cat $MANIFEST_JSON | jq -r '.engineOptions // empty')"
-      INPUT_FILE="${MINIWDL_PROJECT_DIRECTORY}/$(cat $MANIFEST_JSON | jq -r '.inputFileURLs[0] // empty')"
+      INPUT_FILE="$(cat $MANIFEST_JSON | jq -r '.inputFileURLs[0] // empty')"
       if [[ -n "$INPUT_FILE" ]] ; then
          INPUT_JSON="${MINIWDL_PROJECT_DIRECTORY}/${INPUT_FILE}"
       fi
