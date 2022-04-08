@@ -37,7 +37,7 @@ function handleManifest() {
       if [[ $ENGINE_PROJECT != *"://"* ]] ; then
         ENGINE_PROJECT="${ENGINE_PROJECT_DIRECTORY}/${ENGINE_PROJECT}"
       fi
-      ENGINE_OPTIONS="$(cat $MANIFEST_JSON | jq -r '.engineOptions')" 
+      ENGINE_OPTIONS="$(cat $MANIFEST_JSON | jq -r '.engineOptions // empty')"
       if [[ -n "$ENGINE_OPTIONS" ]] ; then
          ENGINE_PARAMS="${ENGINE_OPTIONS}"
       fi
