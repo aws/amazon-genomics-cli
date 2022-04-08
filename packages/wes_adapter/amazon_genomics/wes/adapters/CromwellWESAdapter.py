@@ -339,7 +339,7 @@ class CromwellWESAdapter(AbstractWESAdapter):  # inherit from ABC to enforce int
                     "end_time": task.get("end"),
                     "stdout": task.get("stdout"),
                     "stderr": task.get("stderr"),
-                    "exit_code": task.get("returnCode")
+                    "exit_code": task.get("returnCode"),
                 }
                 task_logs.append(log)
 
