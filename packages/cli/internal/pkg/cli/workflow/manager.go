@@ -339,7 +339,7 @@ func (m *Manager) uploadInputsToS3() {
 		return
 	}
 	objectKey := awsresources.RenderBucketDataKey(m.projectSpec.Name, m.userId)
-	updateInputs, err := m.InputClient.UpdateInputsInFile(m.Project.GetLocation(), m.input, m.bucketName, objectKey, m.inputUrl)
+	updateInputs, err := m.InputClient.UpdateInputs(m.Project.GetLocation(), m.input, m.bucketName, objectKey)
 	if err != nil {
 		m.err = fmt.Errorf("unable to sync s3://%s/%s: %w", m.bucketName, objectKey, err)
 		return
@@ -481,8 +481,8 @@ func (m *Manager) saveAttachments() {
 		return
 	}
 
+	namePattern := fmt.Sprintf("%s_*", filepath.Base(m.inputUrl))
 	for _, arg := range m.arguments {
-		namePattern := fmt.Sprintf("%s_*", filepath.Base(m.inputUrl))
 		fileName, err := writeToTmp(namePattern, arg)
 		if err != nil {
 			m.err = err
