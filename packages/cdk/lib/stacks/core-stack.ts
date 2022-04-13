@@ -1,10 +1,18 @@
 import { CfnOutput, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { AttributeType, BillingMode, ITable, ProjectionType, Table } from "aws-cdk-lib/aws-dynamodb";
-import { IParameter, StringParameter } from "aws-cdk-lib/aws-ssm";
+import { IParameter, StringListParameter, StringParameter } from "aws-cdk-lib/aws-ssm";
 import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
-import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME, WES_KEY_PARAMETER_NAME, WES_BUCKET_NAME, VPC_PARAMETER_ID } from "../constants";
+import {
+  PRODUCT_NAME,
+  APP_NAME,
+  VPC_PARAMETER_NAME,
+  WES_KEY_PARAMETER_NAME,
+  WES_BUCKET_NAME,
+  VPC_PARAMETER_ID,
+  VPC_SUBNETS_PARAMETER_NAME,
+} from "../constants";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import * as path from "path";
 import { homedir } from "os";
@@ -21,6 +29,27 @@ export interface ParameterProps {
    * The value stored in this parameter
    */
   value: string;
+  /**
+   * The description for this parameter
+   *
+   * @default none
+   */
+  description?: string;
+}
+
+export interface ListParameterProps {
+  /**
+   * The name of this parameter.
+   *
+   * All parameter names are prefixed with "/agc/_common/".
+   */
+  name: string;
+
+  /**
+   * The values stored in this parameter
+   */
+  value: string[];
+
   /**
    * The description for this parameter
    *
@@ -50,6 +79,13 @@ export interface CoreStackProps extends StackProps {
    * @default - A new VPC is created
    */
   vpcId?: string;
+
+  /**
+   * A list of private subnet ids from within the VPC specified by vpcId to use for infrastructure deployment
+   * @default - All private subnets are used
+   */
+  subnetIds?: string[];
+
   /**
    * A list of SSM parameters to create with the stack.
    *
@@ -103,6 +139,14 @@ export class CoreStack extends Stack {
 
     this.addParameter({ name: VPC_PARAMETER_NAME, value: this.vpc.vpcId, description: `VPC ID for ${PRODUCT_NAME}` });
     props.parameters?.forEach((parameterProps) => this.addParameter(parameterProps));
+
+    if (props.subnetIds != null && props.subnetIds.length > 0) {
+      this.addParameterList({
+        name: VPC_SUBNETS_PARAMETER_NAME,
+        value: props.subnetIds,
+        description: `Subnets of ${props.vpcId} to use for ${PRODUCT_NAME} infrastructure`,
+      });
+    }
 
     new CfnOutput(this, "TableName", { value: this.table.tableName });
   }
@@ -223,6 +267,14 @@ export class CoreStack extends Stack {
     return new StringParameter(this, props.name, {
       parameterName: `${parameterPrefix}${props.name}`,
       stringValue: props.value,
+      description: props.description,
+    });
+  }
+
+  private addParameterList(props: ListParameterProps): IParameter {
+    return new StringListParameter(this, props.name, {
+      parameterName: `${parameterPrefix}${props.name}`,
+      stringListValue: props.value,
       description: props.description,
     });
   }
