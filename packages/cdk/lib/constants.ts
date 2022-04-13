@@ -11,6 +11,7 @@ export const USER_EMAIL_TAG_KEY = `${APP_NAME}-user-email`;
 export const AGC_VERSION_KEY = `${APP_NAME}-version`;
 export const VPC_PARAMETER_NAME = "vpc";
 export const VPC_PARAMETER_ID = "VpcId";
+export const VPC_SUBNETS_PARAMETER_NAME = "VpcSubnetIds";
 export const WES_KEY_PARAMETER_NAME = "WesAdapterZipKeyParameter";
 export const WES_BUCKET_NAME = "WesAdapterZipBucket";
 
