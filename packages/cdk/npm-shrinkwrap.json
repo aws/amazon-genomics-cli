@@ -474,10 +474,6 @@
         "to-fast-properties": "^2.0.0"
       }
     },
-    "@balena/dockerignore": {
-      "version": "https://registry.npmjs.org/@balena/dockerignore/-/dockerignore-1.0.2.tgz",
-      "integrity": "sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q=="
-    },
     "@bcoe/v8-coverage": {
       "version": "0.2.3",
       "resolved": "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz",
@@ -1222,11 +1218,6 @@
       "integrity": "sha1-x57Zf380y48robyXkLzDZkdLS3k=",
       "dev": true
     },
-    "at-least-node": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/at-least-node/-/at-least-node-1.0.0.tgz",
-      "integrity": "sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg=="
-    },
     "atob": {
       "version": "2.1.2",
       "resolved": "https://registry.npmjs.org/atob/-/atob-2.1.2.tgz",
@@ -1289,10 +1280,12 @@
           "dependencies": {
             "jsonschema": {
               "version": "1.4.0",
+              "resolved": "",
               "dev": true
             },
             "lru-cache": {
               "version": "6.0.0",
+              "resolved": "",
               "dev": true,
               "requires": {
                 "yallist": "^4.0.0"
@@ -1309,6 +1302,7 @@
             },
             "yallist": {
               "version": "4.0.0",
+              "resolved": "",
               "dev": true
             }
           }
@@ -1340,6 +1334,7 @@
           "dependencies": {
             "lru-cache": {
               "version": "6.0.0",
+              "resolved": "",
               "dev": true,
               "requires": {
                 "yallist": "^4.0.0"
@@ -1356,6 +1351,7 @@
             },
             "yallist": {
               "version": "4.0.0",
+              "resolved": "",
               "dev": true
             }
           }
@@ -2251,10 +2247,6 @@
             "universalify": "^2.0.0"
           }
         },
-        "jsonschema": {
-          "version": "https://registry.npmjs.org/jsonschema/-/jsonschema-1.4.0.tgz",
-          "integrity": "sha512-/YgW6pRMr6M7C+4o8kS+B/2myEpHCrxO4PEWnqJNBFMjn7EWXqlQ4tGwL6xTHeRplwuZmcAncdvfOad1nT2yMw=="
-        },
         "lazystream": {
           "version": "1.0.1",
           "resolved": "https://registry.npmjs.org/lazystream/-/lazystream-1.0.1.tgz",
@@ -2978,29 +2970,36 @@
       },
       "dependencies": {
         "@balena/dockerignore": {
-          "version": "1.0.2"
+          "version": "1.0.2",
+          "resolved": ""
         },
         "at-least-node": {
-          "version": "1.0.0"
+          "version": "1.0.0",
+          "resolved": ""
         },
         "balanced-match": {
-          "version": "1.0.2"
+          "version": "1.0.2",
+          "resolved": ""
         },
         "brace-expansion": {
           "version": "1.1.11",
+          "resolved": "",
           "requires": {
             "balanced-match": "^1.0.0",
             "concat-map": "0.0.1"
           }
         },
         "case": {
-          "version": "1.6.3"
+          "version": "1.6.3",
+          "resolved": ""
         },
         "concat-map": {
-          "version": "0.0.1"
+          "version": "0.0.1",
+          "resolved": ""
         },
         "fs-extra": {
           "version": "9.1.0",
+          "resolved": "",
           "requires": {
             "at-least-node": "^1.0.0",
             "graceful-fs": "^4.2.0",
@@ -3009,7 +3008,8 @@
           }
         },
         "graceful-fs": {
-          "version": "4.2.8"
+          "version": "4.2.8",
+          "resolved": ""
         },
         "ignore": {
           "version": "5.1.9",
@@ -3018,16 +3018,19 @@
         },
         "jsonfile": {
           "version": "6.1.0",
+          "resolved": "",
           "requires": {
             "graceful-fs": "^4.1.6",
             "universalify": "^2.0.0"
           }
         },
         "jsonschema": {
-          "version": "1.4.0"
+          "version": "1.4.0",
+          "resolved": ""
         },
         "lru-cache": {
           "version": "6.0.0",
+          "resolved": "",
           "requires": {
             "yallist": "^4.0.0"
           }
@@ -3054,13 +3057,16 @@
           }
         },
         "universalify": {
-          "version": "2.0.0"
+          "version": "2.0.0",
+          "resolved": ""
         },
         "yallist": {
-          "version": "4.0.0"
+          "version": "4.0.0",
+          "resolved": ""
         },
         "yaml": {
-          "version": "1.10.2"
+          "version": "1.10.2",
+          "resolved": ""
         }
       }
     },
@@ -3322,10 +3328,6 @@
       "requires": {
         "rsvp": "^4.8.4"
       }
-    },
-    "case": {
-      "version": "https://registry.npmjs.org/case/-/case-1.6.3.tgz",
-      "integrity": "sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ=="
     },
     "chalk": {
       "version": "4.1.2",
@@ -4392,23 +4394,6 @@
         "map-cache": "^0.2.2"
       }
     },
-    "fs-extra": {
-      "version": "https://registry.npmjs.org/fs-extra/-/fs-extra-9.1.0.tgz",
-      "integrity": "sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==",
-      "requires": {
-        "at-least-node": "^1.0.0",
-        "graceful-fs": "^4.2.0",
-        "jsonfile": "^6.0.1",
-        "universalify": "^2.0.0"
-      },
-      "dependencies": {
-        "universalify": {
-          "version": "2.0.0",
-          "resolved": "https://registry.npmjs.org/universalify/-/universalify-2.0.0.tgz",
-          "integrity": "sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ=="
-        }
-      }
-    },
     "fs.realpath": {
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz",
@@ -4516,7 +4501,8 @@
     "graceful-fs": {
       "version": "4.2.9",
       "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.9.tgz",
-      "integrity": "sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ=="
+      "integrity": "sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==",
+      "dev": true
     },
     "growly": {
       "version": "1.3.0",
@@ -5526,26 +5512,6 @@
       "requires": {
         "minimist": "^1.2.5"
       }
-    },
-    "jsonfile": {
-      "version": "6.1.0",
-      "resolved": "https://registry.npmjs.org/jsonfile/-/jsonfile-6.1.0.tgz",
-      "integrity": "sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==",
-      "requires": {
-        "graceful-fs": "^4.1.6",
-        "universalify": "^2.0.0"
-      },
-      "dependencies": {
-        "universalify": {
-          "version": "2.0.0",
-          "resolved": "https://registry.npmjs.org/universalify/-/universalify-2.0.0.tgz",
-          "integrity": "sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ=="
-        }
-      }
-    },
-    "jsonschema": {
-      "version": "https://registry.npmjs.org/jsonschema/-/jsonschema-1.4.0.tgz",
-      "integrity": "sha512-/YgW6pRMr6M7C+4o8kS+B/2myEpHCrxO4PEWnqJNBFMjn7EWXqlQ4tGwL6xTHeRplwuZmcAncdvfOad1nT2yMw=="
     },
     "kind-of": {
       "version": "6.0.3",
@@ -7482,10 +7448,6 @@
       "resolved": "https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz",
       "integrity": "sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==",
       "dev": true
-    },
-    "yaml": {
-      "version": "https://registry.npmjs.org/yaml/-/yaml-1.10.2.tgz",
-      "integrity": "sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg=="
     },
     "yargs": {
       "version": "15.4.1",

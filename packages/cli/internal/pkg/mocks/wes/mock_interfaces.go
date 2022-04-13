@@ -53,7 +53,7 @@ func (mr *MockWesClientMockRecorder) GetRunLog(ctx, runId interface{}) *gomock.C
 }
 
 // GetRunLogData mocks base method.
-func (m *MockWesClient) GetRunLogData(ctx context.Context, runId string, dataUrl string) (*io.ReadCloser, error) {
+func (m *MockWesClient) GetRunLogData(ctx context.Context, runId, dataUrl string) (*io.ReadCloser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetRunLogData", ctx, runId, dataUrl)
 	ret0, _ := ret[0].(*io.ReadCloser)
@@ -62,7 +62,7 @@ func (m *MockWesClient) GetRunLogData(ctx context.Context, runId string, dataUrl
 }
 
 // GetRunLogData indicates an expected call of GetRunLogData.
-func (mr *MockWesClientMockRecorder) GetRunLogData(ctx, runId interface{}, dataUrl interface{}) *gomock.Call {
+func (mr *MockWesClientMockRecorder) GetRunLogData(ctx, runId, dataUrl interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRunLogData", reflect.TypeOf((*MockWesClient)(nil).GetRunLogData), ctx, runId, dataUrl)
 }
