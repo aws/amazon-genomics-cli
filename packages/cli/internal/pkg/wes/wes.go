@@ -3,6 +3,8 @@ package wes
 import (
 	"context"
 	"fmt"
+	"io"
+	"net/http"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -15,7 +17,17 @@ const (
 	numSecondsBetweenStartUpPings = 3
 )
 
-func EstablishWesConnection(wesUrl string, profile string) (*wes.APIClient, error) {
+type apiClient interface {
+	CancelRun(ctx context.Context, runId string) (wes.RunId, *http.Response, error)
+	GetRunLog(ctx context.Context, runId string) (wes.RunLog, *http.Response, error)
+	GetRunStatus(ctx context.Context, runId string) (wes.RunStatus, *http.Response, error)
+	GetServiceInfo(ctx context.Context) (wes.ServiceInfo, *http.Response, error)
+	ListRuns(ctx context.Context, localVarOptionals *wes.ListRunsOpts) (wes.RunListResponse, *http.Response, error)
+	RunWorkflow(ctx context.Context, localVarOptionals *wes.RunWorkflowOpts) (wes.RunId, *http.Response, error)
+	GetRunLogData(ctx context.Context, runId string, dataUrl string) (*io.ReadCloser, *http.Response, error)
+}
+
+func establishWesConnection(wesUrl string, profile string) (apiClient, error) {
 	log.Debug().Msgf("EstablishWesConnection(%s)", wesUrl)
 	apiClient, err := getApiClient(wesUrl, profile)
 	if err != nil {
@@ -45,7 +57,7 @@ func EstablishWesConnection(wesUrl string, profile string) (*wes.APIClient, erro
 	return apiClient, err
 }
 
-func getApiClient(url string, profile string) (*wes.APIClient, error) {
+func getApiClient(url string, profile string) (apiClient, error) {
 	configuration := wes.NewConfiguration()
 	configuration.BasePath = url
 	config, err := config.LoadDefaultConfig(context.Background(), config.WithSharedConfigProfile(profile))
@@ -57,11 +69,11 @@ func getApiClient(url string, profile string) (*wes.APIClient, error) {
 		return nil, err
 	}
 
-	return apiClient, nil
+	return apiClient.WorkflowExecutionServiceApi, nil
 }
 
-func workflowEngineInstanceIsHealthy(apiClient *wes.APIClient) (bool, error) {
-	_, _, err := apiClient.WorkflowExecutionServiceApi.GetServiceInfo(context.Background())
+func workflowEngineInstanceIsHealthy(apiClient apiClient) (bool, error) {
+	_, _, err := apiClient.GetServiceInfo(context.Background())
 	if err != nil {
 		return false, err
 	}
