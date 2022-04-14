@@ -33,7 +33,7 @@ function handleManifest() {
       cat $MANIFEST_JSON
       # Get correct url of project root location
       ENGINE_PROJECT="$(cat $MANIFEST_JSON | jq -r '.mainWorkflowURL')"
-      ENGINE_OPTIONS="$(cat $MANIFEST_JSON | jq -r '.engineOptions')" 
+      ENGINE_OPTIONS="$(cat $MANIFEST_JSON | jq -r '.engineOptions // empty')"
       if [[ -n "$ENGINE_OPTIONS" ]] ; then
          ENGINE_PARAMS="${ENGINE_PARAMS} ${ENGINE_OPTIONS}"
       fi

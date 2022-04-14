@@ -130,17 +130,17 @@ func (mr *MockCdkClientMockRecorder) ShowExecution(progressEvents interface{}) *
 }
 
 // SilentExecution mocks base method.
-func (m *MockCdkClient) SilentExecution(progressEvents []cdk.ProgressStream) []cdk.Result {
+func (m *MockCdkClient) SilentExecution(progressStreams []cdk.ProgressStream) []cdk.Result {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SilentExecution", progressEvents)
+	ret := m.ctrl.Call(m, "SilentExecution", progressStreams)
 	ret0, _ := ret[0].([]cdk.Result)
 	return ret0
 }
 
 // SilentExecution indicates an expected call of SilentExecution.
-func (mr *MockCdkClientMockRecorder) SilentExecution(progressEvents interface{}) *gomock.Call {
+func (mr *MockCdkClientMockRecorder) SilentExecution(progressStreams interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SilentExecution", reflect.TypeOf((*MockCdkClient)(nil).SilentExecution), progressEvents)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SilentExecution", reflect.TypeOf((*MockCdkClient)(nil).SilentExecution), progressStreams)
 }
 
 // MockS3Client is a mock of S3Client interface.
@@ -341,21 +341,6 @@ func (mr *MockSsmClientMockRecorder) GetCommonParameter(parameterSuffix interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCommonParameter", reflect.TypeOf((*MockSsmClient)(nil).GetCommonParameter), parameterSuffix)
 }
 
-// GetOutputBucket mocks base method.
-func (m *MockSsmClient) GetOutputBucket() (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetOutputBucket")
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetOutputBucket indicates an expected call of GetOutputBucket.
-func (mr *MockSsmClientMockRecorder) GetOutputBucket() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutputBucket", reflect.TypeOf((*MockSsmClient)(nil).GetOutputBucket))
-}
-
 // GetCustomTags mocks base method.
 func (m *MockSsmClient) GetCustomTags() string {
 	m.ctrl.T.Helper()
@@ -364,7 +349,7 @@ func (m *MockSsmClient) GetCustomTags() string {
 	return ret0
 }
 
-// GetCustomTags indicates an expected call of GetOutputBucket.
+// GetCustomTags indicates an expected call of GetCustomTags.
 func (mr *MockSsmClientMockRecorder) GetCustomTags() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCustomTags", reflect.TypeOf((*MockSsmClient)(nil).GetCustomTags))
@@ -382,6 +367,21 @@ func (m *MockSsmClient) GetAdapterCustomEnvs() string {
 func (mr *MockSsmClientMockRecorder) GetAdapterCustomEnvs() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAdapterCustomEnvs", reflect.TypeOf((*MockSsmClient)(nil).GetAdapterCustomEnvs))
+}
+
+// GetOutputBucket mocks base method.
+func (m *MockSsmClient) GetOutputBucket() (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOutputBucket")
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOutputBucket indicates an expected call of GetOutputBucket.
+func (mr *MockSsmClientMockRecorder) GetOutputBucket() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOutputBucket", reflect.TypeOf((*MockSsmClient)(nil).GetOutputBucket))
 }
 
 // MockCfnClient is a mock of CfnClient interface.
@@ -420,21 +420,6 @@ func (m *MockCfnClient) DeleteStack(stackId string) (chan cfn.DeletionResult, er
 func (mr *MockCfnClientMockRecorder) DeleteStack(stackId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteStack", reflect.TypeOf((*MockCfnClient)(nil).DeleteStack), stackId)
-}
-
-// DescribeStack mocks base method.
-func (m *MockCfnClient) DescribeStack(stackName string) (cfn.StackInfo, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DescribeStack", stackName)
-	ret0, _ := ret[0].(cfn.StackInfo)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// DescribeStack indicates an expected call of DescribeStack.
-func (mr *MockCfnClientMockRecorder) DescribeStack(stackName interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeStack", reflect.TypeOf((*MockCfnClient)(nil).DescribeStack), stackName)
 }
 
 // GetStackInfo mocks base method.

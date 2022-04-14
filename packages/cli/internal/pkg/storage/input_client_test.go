@@ -108,7 +108,7 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_WriteFileFails() {
 	expectedErr := errors.New("FileNotFound")
 	ic.mockFileWriter.EXPECT().WriteFile(tempProjectDirectory, inputFileString, os.FileMode(0644)).Return(expectedErr)
 
-	_, err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
+	err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
 	ic.Assert().Equal(err, expectedErr)
 }
 
@@ -120,7 +120,7 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_UploadFileFails() {
 	expectedErr := errors.New("FileNotFound")
 	ic.mockS3Client.EXPECT().UploadFile("bucketName", baseS3Key+"/"+testFile1, "dir/"+testFile1).AnyTimes().Return(expectedErr)
 
-	_, err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
+	err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
 	ic.Assert().Equal(err, expectedErr)
 }
 
@@ -132,11 +132,11 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_MarshallFails() {
 	expectedErr := errors.New("FileNotFound")
 	ic.mockJson.EXPECT().Marshal(inputFile).Return(nil, expectedErr)
 
-	_, err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
+	err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
 	ic.Assert().Equal(err, expectedErr)
 }
 
-func (ic *InputClientTestSuite) TestUpdateInputsInFile_HappyCase() {
+func (ic *InputClientTestSuite) TestUpdateInputs_HappyCase() {
 	inputFile := map[string]interface{}{
 		"a": testFile1,
 		"b": 1,
@@ -157,11 +157,9 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_HappyCase() {
 	expectedErr := errors.New("FileNotFound")
 	//Using gomock.Any() since there are a bunch of file paths that are being passed around, and this validation is anyway convered in above cases.
 	ic.mockOs.EXPECT().Stat(gomock.Any()).AnyTimes().Return(nil, expectedErr)
-	ic.mockJson.EXPECT().Marshal(expectedUpdatedInputFile).Return(nil, nil)
-	ic.mockFileWriter.EXPECT().WriteFile(tempProjectDirectory, gomock.Any(), os.FileMode(0644)).Return(nil)
 	ic.mockS3Client.EXPECT().UploadFile("bucketName", gomock.Any(), gomock.Any()).AnyTimes().Return(nil)
 
-	actualUpdatedInputFile, err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
+	actualUpdatedInputFile, err := ic.inputInstance.UpdateInputs(initialProjectDirectory, inputFile, "bucketName", baseS3Key)
 	ic.Assert().Equal(err, nil)
 	ic.Assert().Equal(actualUpdatedInputFile, expectedUpdatedInputFile)
 }
