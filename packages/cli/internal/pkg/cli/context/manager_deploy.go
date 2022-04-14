@@ -58,6 +58,7 @@ func (m *Manager) setCdkConfigurationForDeployment() {
 	m.setArtifactUrl()
 	m.setArtifactBucket()
 	m.setCustomTags()
+	m.setAdapterCustomEnvs()
 }
 
 func (m *Manager) clearCdkContext(appDir string) {

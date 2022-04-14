@@ -370,6 +370,20 @@ func (mr *MockSsmClientMockRecorder) GetCustomTags() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCustomTags", reflect.TypeOf((*MockSsmClient)(nil).GetCustomTags))
 }
 
+// GetAdapterCustomEnvs mocks base method.
+func (m *MockSsmClient) GetAdapterCustomEnvs() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAdapterCustomEnvs")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetAdapterCustomEnvs indicates an expected call of GetAdapterCustomEnvs.
+func (mr *MockSsmClientMockRecorder) GetAdapterCustomEnvs() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAdapterCustomEnvs", reflect.TypeOf((*MockSsmClient)(nil).GetAdapterCustomEnvs))
+}
+
 // MockCfnClient is a mock of CfnClient interface.
 type MockCfnClient struct {
 	ctrl     *gomock.Controller

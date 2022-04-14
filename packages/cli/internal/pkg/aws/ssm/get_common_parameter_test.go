@@ -75,3 +75,15 @@ func TestClient_GetCustomTags_ExpectedValue(t *testing.T) {
 	actual := client.GetCustomTags()
 	assert.Equal(t, tags, actual)
 }
+
+func TestClient_GetAdapterCustomEnvs_ExpectedValue(t *testing.T) {
+	adapterCustomEnvs := "adapterCustomEnvs"
+	mockSsm := new(ssmMockClient)
+	client := &Client{mockSsm}
+	ctx := context.Background()
+	mockSsm.On("GetParameter", ctx, &ssm.GetParameterInput{Name: aws.String("/agc/_common/adapterCustomEnvs")}).
+		Return(&ssm.GetParameterOutput{Parameter: &types.Parameter{Value: aws.String(adapterCustomEnvs)}}, nil)
+
+	actual := client.GetAdapterCustomEnvs()
+	assert.Equal(t, adapterCustomEnvs, actual)
+}

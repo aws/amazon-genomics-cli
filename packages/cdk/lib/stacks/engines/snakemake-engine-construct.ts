@@ -59,6 +59,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       taskQueueArn: this.batchWorkers.jobQueue.jobQueueArn,
       fsapId: this.snakemakeEngine.fsap.accessPointId,
       outputBucket: params.getEngineBucketPath(),
+      customEnvs: contextParameters.adapterCustomEnvs,
     });
     this.adapterLogGroup = lambda.logGroup;
 
@@ -173,22 +174,19 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     });
   }
 
-  private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, taskQueueArn, workflowRoleArn, fsapId, outputBucket }) {
-    return super.renderPythonLambda(
-      this,
-      "SnakemakeWesAdapterLambda",
-      role,
-      {
-        ENGINE_NAME: "snakemake",
-        JOB_QUEUE: jobQueueArn,
-        JOB_DEFINITION: jobDefinitionArn,
-        TASK_QUEUE: taskQueueArn,
-        WORKFLOW_ROLE: workflowRoleArn,
-        FSAP_ID: fsapId,
-        OUTPUT_DIR_S3_URI: outputBucket,
-        TIME: Date.now().toString(),
-      },
-      vpc
-    );
+  private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, taskQueueArn, workflowRoleArn, fsapId, outputBucket, customEnvs }) {
+    const environment = {
+      ...customEnvs,
+      ENGINE_NAME: "snakemake",
+      JOB_QUEUE: jobQueueArn,
+      JOB_DEFINITION: jobDefinitionArn,
+      TASK_QUEUE: taskQueueArn,
+      WORKFLOW_ROLE: workflowRoleArn,
+      FSAP_ID: fsapId,
+      OUTPUT_DIR_S3_URI: outputBucket,
+      TIME: Date.now().toString(),
+    };
+
+    return super.renderPythonLambda(this, "SnakemakeWesAdapterLambda", role, environment, vpc);
   }
 }

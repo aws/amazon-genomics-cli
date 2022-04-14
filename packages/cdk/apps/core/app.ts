@@ -42,6 +42,16 @@ if (customTagsJsonString) {
   customTagsMap = JSON.parse(customTagsJsonString);
 }
 
+// If user specified adapter custom envs, add them to the stack parameters, so they will be persisted in SSM Parameter Store.
+const adapterCustomEnvsJsonString = getContextOrDefault<Maybe<string>>(app.node, "ADAPTER_CUSTOM_ENVS");
+if (adapterCustomEnvsJsonString) {
+  stackParameters.push({
+    name: "adapterCustomEnvs",
+    value: adapterCustomEnvsJsonString,
+    description: "JSON string of adapter custom envs to be used to pass to adapter",
+  });
+}
+
 new CoreStack(app, `${PRODUCT_NAME}-Core`, {
   vpcId,
   bucketName,

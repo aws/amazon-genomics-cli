@@ -38,13 +38,14 @@ type baseProps struct {
 
 //nolint:structcheck
 type contextProps struct {
-	readBuckets      []string
-	readWriteBuckets []string
-	outputBucket     string
-	artifactBucket   string
-	artifactUrl      string
-	customTagsJson   string
-	contextEnv       contextEnvironment
+	readBuckets           []string
+	readWriteBuckets      []string
+	outputBucket          string
+	artifactBucket        string
+	artifactUrl           string
+	customTagsJson        string
+	adapterCustomEnvsJson string
+	contextEnv            contextEnvironment
 }
 
 //nolint:structcheck
@@ -203,6 +204,14 @@ func (m *Manager) setCustomTags() {
 	m.customTagsJson = m.Ssm.GetCustomTags()
 }
 
+func (m *Manager) setAdapterCustomEnvs() {
+	if m.err != nil {
+		return
+	}
+
+	m.adapterCustomEnvsJson = m.Ssm.GetAdapterCustomEnvs()
+}
+
 func (m *Manager) setContextEnv(contextName string) {
 	if m.err != nil {
 		return
@@ -215,19 +224,20 @@ func (m *Manager) setContextEnv(contextName string) {
 	}
 
 	m.contextEnv = contextEnvironment{
-		ProjectName:          m.projectSpec.Name,
-		ContextName:          contextName,
-		UserId:               m.userId,
-		UserEmail:            m.userEmail,
-		OutputBucketName:     m.outputBucket,
-		CustomTagsJson:       m.customTagsJson,
-		ArtifactBucketName:   m.artifactBucket,
-		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
-		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
-		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
-		MaxVCpus:             m.contextSpec.MaxVCpus,
-		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
-		UsePublicSubnets:     m.contextSpec.UsePublicSubnets,
+		ProjectName:           m.projectSpec.Name,
+		ContextName:           contextName,
+		UserId:                m.userId,
+		UserEmail:             m.userEmail,
+		OutputBucketName:      m.outputBucket,
+		CustomTagsJson:        m.customTagsJson,
+		AdapterCustomEnvsJson: m.adapterCustomEnvsJson,
+		ArtifactBucketName:    m.artifactBucket,
+		ReadBucketArns:        strings.Join(m.readBuckets, listDelimiter),
+		ReadWriteBucketArns:   strings.Join(m.readWriteBuckets, listDelimiter),
+		InstanceTypes:         strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
+		MaxVCpus:              m.contextSpec.MaxVCpus,
+		RequestSpotInstances:  m.contextSpec.RequestSpotInstances,
+		UsePublicSubnets:      m.contextSpec.UsePublicSubnets,
 		// TODO: we default to a single engine in a context for now
 		// need to allow for multiple engines in the same context
 		EngineName:              context.Engines[0].Engine,
