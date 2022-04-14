@@ -43,8 +43,8 @@ You must enable the usePublicSubnets option in your project context if you use t
 (i.e. --tags "k1=v1","k2=v2"). Each key-value pair must be quoted as shown in the example,
 otherwise the parsing will fail.`
 	adapterCustomEnvsDescription = `A list of comma separated adapter custom envs to be passed to adapter
-(i.e. --adapterCustomEnvs "k1=v1","k2=v2"). Each key-value pair must be quoted as shown in the example,
-otherwise the parsing will fail.`
+(i.e. --adapterCustomEnvs "k1=v1","k2=v2","k3=[{ \"k4\": { \"k5\": \"v5\" } }]").
+Each key-value pair must be quoted as shown in the example, otherwise the parsing will fail.`
 	cdkCoreDir   = ".agc/cdk/apps/core"
 	bucketPrefix = "agc"
 	activateKey  = "activate"
