@@ -2,6 +2,7 @@ package option
 
 import (
 	"encoding/json"
+
 	"github.com/antihax/optional"
 	wes "github.com/rsc/wes_client"
 )

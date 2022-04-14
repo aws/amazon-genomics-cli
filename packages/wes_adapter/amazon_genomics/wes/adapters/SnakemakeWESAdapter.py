@@ -32,14 +32,14 @@ class SnakemakeWESAdapter(BatchAdapter):
     """
 
     def __init__(
-            self,
-            job_queue: str,
-            job_definition: str,
-            output_dir_s3_uri: str,
-            aws_batch: BatchClient = None,
-            aws_tags: ResourceGroupsTaggingAPIClient = None,
-            aws_s3: S3Client = None,
-            logger=None,
+        self,
+        job_queue: str,
+        job_definition: str,
+        output_dir_s3_uri: str,
+        aws_batch: BatchClient = None,
+        aws_tags: ResourceGroupsTaggingAPIClient = None,
+        aws_s3: S3Client = None,
+        logger=None,
     ):
         super().__init__(job_queue, job_definition, aws_batch, logger)
         self.output_dir_s3_uri = output_dir_s3_uri
@@ -54,14 +54,14 @@ class SnakemakeWESAdapter(BatchAdapter):
         )
 
     def command(
-            self,
-            workflow_params=None,
-            workflow_type=None,
-            workflow_type_version=None,
-            tags=None,
-            workflow_engine_parameters=None,
-            workflow_url=None,
-            workflow_attachment=None,
+        self,
+        workflow_params=None,
+        workflow_type=None,
+        workflow_type_version=None,
+        tags=None,
+        workflow_engine_parameters=None,
+        workflow_url=None,
+        workflow_attachment=None,
     ):
         engine_params_to_pass = []
 
@@ -87,7 +87,7 @@ class SnakemakeWESAdapter(BatchAdapter):
         return {}
 
     def get_child_tasks(
-            self, head_job: JobDetailTypeDef
+        self, head_job: JobDetailTypeDef
     ) -> typing.List[JobDetailTypeDef]:
         return describe_batch_jobs_with_tag(
             tag_key=SM_PARENT_TAG_KEY,
