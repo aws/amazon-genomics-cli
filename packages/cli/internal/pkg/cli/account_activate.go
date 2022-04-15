@@ -217,12 +217,6 @@ Activate AGC in your AWS account with a custom S3 bucket and VPC.
 /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id`,
 		Args: cobra.NoArgs,
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
-			if vars.publicSubnets && vars.vpcId != "" {
-				return clierror.New("account activate", vars, &actionableerror.Error{
-					Cause:           fmt.Errorf("both %[1]q and %[2]q cannot be specified together, as %[2]q involves creating a minimal VPC", accountVpcFlag, publicSubnetsFlag),
-					SuggestedAction: "Remove one or both of these flags",
-				})
-			}
 			opts, err := newAccountActivateOpts(vars)
 			if err != nil {
 				return err
