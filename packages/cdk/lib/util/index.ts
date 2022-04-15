@@ -1,14 +1,13 @@
 import { Repository } from "aws-cdk-lib/aws-ecr";
-import { CloudMapOptions, ContainerImage, LogDriver, TaskDefinition } from "aws-cdk-lib/aws-ecs";
+import { ContainerImage, TaskDefinition } from "aws-cdk-lib/aws-ecs";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import { Maybe, ServiceContainer } from "../types";
-import { Arn, Stack } from "aws-cdk-lib";
+import { Arn, CfnParameter, Fn, Stack } from "aws-cdk-lib";
 import { Construct, Node } from "constructs";
 import { APP_NAME } from "../constants";
 import { SecureService } from "../constructs";
 import { Protocol } from "aws-cdk-lib/aws-elasticloadbalancingv2";
-import { IVpc } from "aws-cdk-lib/aws-ec2";
-import { IRole } from "aws-cdk-lib/aws-iam";
+import { IVpc, Subnet, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { LogConfiguration, LogDriver as BatchLogDriver } from "@aws-cdk/aws-batch-alpha";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 
@@ -29,8 +28,26 @@ export const getCommonParameter = (scope: Construct, keySuffix: string): string 
   return StringParameter.valueFromLookup(scope, `/${APP_NAME}/_common/${keySuffix}`);
 };
 
-export const getProjectParameter = (scope: Construct, project: string, keySuffix: string): string => {
-  return StringParameter.valueFromLookup(scope, `/${APP_NAME}/${project}/${keySuffix}`);
+/**
+ * Obtains the content of a ParameterStore StringList parameter as a {@code string[]}. Because of an issue with the
+ * way CloudFormation resolves these parameters to only a comma separated string at deploy time we need to use a
+ * different approach which unfortunately requires us to know the length of the array a priori.
+ * @param scope the {@code Construct} that will resolve and hold the resulting string[]
+ * @param keySuffix the key of the StringList parameter
+ * @param lengthSuffix the key for the parameter which will hold the length of the array
+ */
+export const getCommonParameterList = (scope: Construct, keySuffix: string, lengthSuffix: string): string[] => {
+  const arrayLength = Number(StringParameter.valueFromLookup(scope, `/${APP_NAME}/_common/${lengthSuffix}`));
+  const cfnParameter = new CfnParameter(scope, `ListParam${keySuffix}`, {
+    type: "AWS::SSM::Parameter::Value<List<String>>",
+    default: `/${APP_NAME}/_common/${keySuffix}`,
+  });
+  const list = cfnParameter.valueAsList;
+  const subnetIds: string[] = [];
+  for (let i = 0; i < arrayLength; i++) {
+    subnetIds.push(Fn.select(i, list));
+  }
+  return subnetIds;
 };
 
 export const createEcrImage = (scope: Construct, designation: string): ContainerImage => {
@@ -48,35 +65,6 @@ export const createEcrImage = (scope: Construct, designation: string): Container
 };
 
 const defaultHealthCheckPath = "/ga4gh/wes/v1/service-info";
-
-export const renderServiceWithContainer = (
-  scope: Construct,
-  id: string,
-  serviceContainer: ServiceContainer,
-  vpc: IVpc,
-  taskRole: IRole,
-  logGroup: ILogGroup,
-  cloudMapOptions?: CloudMapOptions
-): SecureService => {
-  return new SecureService(scope, id, {
-    vpc,
-    serviceName: serviceContainer.serviceName,
-    cpu: serviceContainer.cpu,
-    memoryLimitMiB: serviceContainer.memoryLimitMiB,
-    cloudMapOptions,
-    healthCheck: {
-      path: serviceContainer.healthCheckPath ?? defaultHealthCheckPath,
-      protocol: Protocol.HTTP,
-    },
-    taskImageOptions: {
-      taskRole,
-      image: createEcrImage(scope, serviceContainer.imageConfig.designation),
-      environment: serviceContainer.environment,
-      containerPort: serviceContainer.containerPort,
-      logDriver: LogDriver.awsLogs({ logGroup, streamPrefix: id }),
-    },
-  });
-};
 
 export const renderServiceWithTaskDefinition = (
   scope: Construct,
@@ -111,4 +99,12 @@ export function batchArn(scope: Construct, resource: string, resourcePrefix = "*
 
 export function ec2Arn(scope: Construct, resource: string, resourcePrefix = "*"): string {
   return Arn.format({ resource: `${resource}/${resourcePrefix}`, service: "ec2" }, Stack.of(scope));
+}
+
+export function subnetSelectionFromIds(scope: Construct, subnetIds: string[]): SubnetSelection {
+  const subnets = subnetIds.map((id, index) => {
+    return Subnet.fromSubnetId(scope, `ContextSubnet${index}`, id);
+  });
+
+  return { subnets };
 }

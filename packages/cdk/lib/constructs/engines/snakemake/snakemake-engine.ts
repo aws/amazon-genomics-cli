@@ -26,11 +26,11 @@ export class SnakemakeEngine extends Engine {
   constructor(scope: Construct, id: string, props: SnakemakeEngineProps) {
     super(scope, id);
 
-    const { vpc, iops, engineBatch, workerBatch } = props;
+    const { vpc, subnets, iops, engineBatch, workerBatch } = props;
     if (iops?.toMebibytes() == 0 || iops == undefined) {
-      this.fileSystem = this.createFileSystemDefaultThroughput(vpc);
+      this.fileSystem = this.createFileSystemDefaultThroughput(vpc, subnets);
     } else {
-      this.fileSystem = this.createFileSystemIOPS(vpc, iops);
+      this.fileSystem = this.createFileSystemIOPS(vpc, subnets, iops);
     }
     this.fsap = this.createAccessPoint(this.fileSystem);
 

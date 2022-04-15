@@ -18,6 +18,8 @@ const (
 	testAccountRegion      = "test-account-region"
 	testAccountId          = "test-account-id"
 	testAccountVpcId       = "test-account-vpc-id"
+	testAccountSubnetId1   = "test-account-subnet-id-1"
+	testAccountSubnetId2   = "test-account-subnet-id-2"
 	testImageTag           = "test-image-tag"
 	testWesRepository      = "test-wes-repo"
 	testCromwellRepository = "test-cromwell-repo"
@@ -62,6 +64,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 
 	testCases := map[string]struct {
 		vpcId       string
+		subnets     []string
 		bucketName  string
 		setupMocks  func(*testing.T) mockClients
 		expectedErr error
@@ -169,6 +172,28 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
 				return mocks
 			},
+		},
+		"new bucket with Custom VPC and specified subnet IDs": {
+			vpcId:   testAccountVpcId,
+			subnets: []string{testAccountSubnetId1, testAccountSubnetId2},
+			setupMocks: func(t *testing.T) mockClients {
+				mocks := createMocks(t)
+				defer close(mocks.progressStream)
+				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
+				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
+				vars := []string{
+					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
+					fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, "agc-test-account-id-test-account-region"),
+					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
+					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
+					fmt.Sprintf("%s=%s", constants.VpcIdEnvKey, testAccountVpcId),
+					fmt.Sprintf("%s=%s,%s", constants.AgcVpcSubnetsEnvKey, testAccountSubnetId1, testAccountSubnetId2),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
+				return mocks
+			},
+			expectedErr: nil,
 		},
 		"custom VPC with existing stack updates": {
 			vpcId: testAccountVpcId,
@@ -293,6 +318,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				accountActivateVars: accountActivateVars{
 					bucketName: tc.bucketName,
 					vpcId:      tc.vpcId,
+					subnets:    tc.subnets,
 				},
 				stsClient: mocks.stsMock,
 				s3Client:  mocks.s3Mock,

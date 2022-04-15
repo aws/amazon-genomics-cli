@@ -141,7 +141,7 @@ func (o accountActivateOpts) generateEnvVars() ([]string, error) {
 		environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.CustomTagEnvKey, string(jsonBytes)))
 	}
 
-	err = o.generateVpcEnvVars(environmentVars)
+	environmentVars, err = o.appendVpcEnvVars(environmentVars)
 	if err != nil {
 		return nil, err
 	}
@@ -149,10 +149,10 @@ func (o accountActivateOpts) generateEnvVars() ([]string, error) {
 	return environmentVars, err
 }
 
-func (o accountActivateOpts) generateVpcEnvVars(environmentVars []string) error {
+func (o accountActivateOpts) appendVpcEnvVars(environmentVars []string) ([]string, error) {
 	vpcId, err := o.getVpcId()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if vpcId != "" {
 		environmentVars = append(environmentVars, fmt.Sprintf("VPC_ID=%s", vpcId))
@@ -161,7 +161,7 @@ func (o accountActivateOpts) generateVpcEnvVars(environmentVars []string) error 
 			environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.AgcVpcSubnetsEnvKey, subnets))
 		}
 	}
-	return nil
+	return environmentVars, nil
 }
 
 func (o accountActivateOpts) getVpcId() (string, error) {
