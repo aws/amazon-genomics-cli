@@ -1,8 +1,16 @@
 import { Size, Stack, StackProps } from "aws-cdk-lib";
-import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
+import { IVpc, SubnetSelection, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
-import { getCommonParameter } from "../util";
-import { ENGINE_CROMWELL, ENGINE_MINIWDL, ENGINE_NEXTFLOW, ENGINE_SNAKEMAKE, VPC_PARAMETER_NAME } from "../constants";
+import { getCommonParameter, getCommonParameterList, subnetSelectionFromIds } from "../util";
+import {
+  ENGINE_CROMWELL,
+  ENGINE_MINIWDL,
+  ENGINE_NEXTFLOW,
+  ENGINE_SNAKEMAKE,
+  VPC_NUMBER_SUBNETS_PARAMETER_NAME,
+  VPC_PARAMETER_NAME,
+  VPC_SUBNETS_PARAMETER_NAME,
+} from "../constants";
 import { ContextAppParameters } from "../env";
 import { BatchConstruct, BatchConstructProps } from "./engines/batch-construct";
 import { CromwellEngineConstruct } from "./engines/cromwell-engine-construct";
@@ -18,12 +26,15 @@ export interface ContextStackProps extends StackProps {
 export class ContextStack extends Stack {
   private readonly vpc: IVpc;
   private readonly iops: Size;
+  private readonly subnets: SubnetSelection;
 
   constructor(scope: Construct, id: string, props: ContextStackProps) {
     super(scope, id, props);
 
     const vpcId = getCommonParameter(this, VPC_PARAMETER_NAME);
     this.vpc = Vpc.fromLookup(this, "Vpc", { vpcId });
+    const subnetIds = getCommonParameterList(this, VPC_SUBNETS_PARAMETER_NAME, VPC_NUMBER_SUBNETS_PARAMETER_NAME);
+    this.subnets = subnetSelectionFromIds(this, subnetIds);
 
     const { contextParameters } = props;
     const { engineName } = contextParameters;
@@ -162,6 +173,7 @@ export class ContextStack extends Stack {
     const { contextParameters } = props;
     return {
       vpc: this.vpc,
+      subnets: this.subnets,
       iops: this.iops,
       contextParameters,
     };
@@ -195,9 +207,11 @@ export class ContextStack extends Stack {
   private renderBatchStack(props: BatchConstructProps) {
     return new BatchConstruct(this, "Batch", props);
   }
+
   private getCommonEngineProps(props: ContextStackProps) {
     return {
       vpc: this.vpc,
+      subnets: this.subnets,
       iops: this.iops,
       contextParameters: props.contextParameters,
       policyOptions: {

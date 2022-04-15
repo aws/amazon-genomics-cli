@@ -8,7 +8,7 @@ import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { ENGINE_SNAKEMAKE } from "../../constants";
 import { Construct } from "constructs";
 import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
-import { IVpc } from "aws-cdk-lib/aws-ec2";
+import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
@@ -28,12 +28,12 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
   constructor(scope: Construct, id: string, props: EngineOptions) {
     super(scope, id);
 
-    const { vpc, contextParameters } = props;
+    const { vpc, subnets, contextParameters } = props;
     const params = props.contextParameters;
 
-    this.batchHead = this.renderBatch("HeadBatch", vpc, contextParameters, ComputeResourceType.FARGATE);
+    this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, ComputeResourceType.FARGATE);
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
-    this.batchWorkers = this.renderBatch("TaskBatch", vpc, contextParameters, workerComputeType);
+    this.batchWorkers = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, workerComputeType);
 
     // Generate the engine that will run snakemake on batch
     this.snakemakeEngine = this.createSnakemakeEngine(props, this.batchHead, this.batchWorkers);
@@ -52,6 +52,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     // Generate the wes lambda
     const lambda = this.renderAdapterLambda({
       vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
+      subnets: props.contextParameters.usePublicSubnets ? undefined : props.subnets,
       role: adapterRole,
       jobQueueArn: this.batchHead.jobQueue.jobQueueArn,
       jobDefinitionArn: this.snakemakeEngine.headJobDefinition.jobDefinitionArn,
@@ -93,6 +94,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
   private createSnakemakeEngine(props: EngineOptions, batchHead: Batch, batchWorkers: Batch): SnakemakeEngine {
     return new SnakemakeEngine(this, "SnakemakeEngine", {
       vpc: props.vpc,
+      subnets: props.subnets,
       iops: props.iops,
       engineBatch: batchHead,
       workerBatch: batchWorkers,
@@ -160,9 +162,10 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     });
   }
 
-  private renderBatch(id: string, vpc: IVpc, appParams: ContextAppParameters, computeType?: ComputeResourceType): Batch {
+  private renderBatch(id: string, vpc: IVpc, subnets: SubnetSelection, appParams: ContextAppParameters, computeType?: ComputeResourceType): Batch {
     return new Batch(this, id, {
       vpc,
+      subnets,
       computeType,
       instanceTypes: appParams.instanceTypes,
       maxVCpus: appParams.maxVCpus,
@@ -173,7 +176,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     });
   }
 
-  private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, taskQueueArn, workflowRoleArn, fsapId, outputBucket }) {
+  private renderAdapterLambda({ vpc, subnets, role, jobQueueArn, jobDefinitionArn, taskQueueArn, workflowRoleArn, fsapId, outputBucket }) {
     return super.renderPythonLambda(
       this,
       "SnakemakeWesAdapterLambda",
@@ -188,7 +191,8 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
         OUTPUT_DIR_S3_URI: outputBucket,
         TIME: Date.now().toString(),
       },
-      vpc
+      vpc,
+      subnets
     );
   }
 }
