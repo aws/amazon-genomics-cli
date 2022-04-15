@@ -461,7 +461,7 @@ func (m *Manager) setWorkflowEngineParameters() {
 		return
 	}
 	if m.options != nil {
-		if m.workflowEngine == "nextflow" || m.workflowEngine == "miniwdl" {
+		if m.workflowEngine == "nextflow" || m.workflowEngine == "miniwdl" || m.workflowEngine == "snakemake" {
 			m.err = fmt.Errorf("optionFile flag cannot be used with head node engines")
 			return
 		}
