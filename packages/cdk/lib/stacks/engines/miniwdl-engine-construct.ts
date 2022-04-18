@@ -52,6 +52,8 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     );
 
     this.miniwdlEngine = new MiniWdlEngine(this, "MiniWdlEngine", {
+      vcpus: params.vCpus,
+      engineMemoryMiB: params.memoryLimitMiB,
       vpc: props.vpc,
       iops: props.iops,
       rootDirS3Uri: rootDirS3Uri,

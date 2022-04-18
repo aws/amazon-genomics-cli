@@ -37,6 +37,9 @@ contexts:
     engines:
       - type: wdl
         engine: miniwdl
+        resourceRequirements:
+          vcpus: 2
+          memoryLimit: 4096
 
   spotCtx:
     requestSpotInstances: true

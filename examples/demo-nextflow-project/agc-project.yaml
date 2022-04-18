@@ -28,4 +28,4 @@ contexts:
         engine: nextflow
         resourceRequirements:
             vcpus: 2
-            memoryLimit: 2048
+            memoryLimit: 4096
