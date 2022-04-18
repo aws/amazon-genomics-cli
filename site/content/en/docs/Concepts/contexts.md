@@ -107,8 +107,8 @@ contexts:
 ```
 ### Engine vCpus and Memory
 *default minimums:*
-*cpus:* 1
-*memory:* 2048
+*cpus:* 2
+*memory:* 4096
 
 You may optionally specify the minimum number of vCpus and memory used in a context job.
 
@@ -121,7 +121,7 @@ contexts:
       - type: nextflow
         engine: nextflow
         resourceRequirements:
-          vcpus: 3
+          vcpus: 2
           memoryLimit: 6144
 ```
 ### Public Subnets

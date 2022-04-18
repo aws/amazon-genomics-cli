@@ -52,7 +52,7 @@ contexts:
 ```
 
 The following snippet
-defines a Nextflow DSL engine of type `Nextflow` as part of the context named `spotContext` with a minimum requirement count of Cpus and Memory, when these are not provided the defaults would be used. (cpus:1, memory: 2048)
+defines a Nextflow DSL engine of type `Nextflow` as part of the context named `spotContext` with a minimum requirement count of Cpus and Memory, when these are not provided the defaults would be used. (cpus:2, memory: 4096)
 
 ```yaml
 contexts:
@@ -62,8 +62,8 @@ contexts:
       - type: nextflow
         engine: nextflow
         resourceRequirements:
-          vcpus: 1
-          memoryLimit: 2048
+          vcpus: 2
+          memoryLimit: 4096
 ```
 
 ## Commands
