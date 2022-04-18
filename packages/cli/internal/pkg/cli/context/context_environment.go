@@ -36,6 +36,8 @@ type contextEnvironment struct {
 	ResourceType        string
 	MaxVCpus            int
 
+	VCpus                int
+	MemoryLimitMiB       int
 	RequestSpotInstances bool
 	UsePublicSubnets     bool
 }
@@ -68,5 +70,7 @@ func (input contextEnvironment) ToEnvironmentList() []string {
 		"MAX_V_CPUS":                   strconv.Itoa(input.MaxVCpus),
 		"REQUEST_SPOT_INSTANCES":       strconv.FormatBool(input.RequestSpotInstances),
 		"PUBLIC_SUBNETS":               strconv.FormatBool(input.UsePublicSubnets),
+		"V_CPUS":                       strconv.Itoa(input.VCpus),
+		"MEMORY_LIMIT_MIB":             strconv.Itoa(input.MemoryLimitMiB),
 	})
 }

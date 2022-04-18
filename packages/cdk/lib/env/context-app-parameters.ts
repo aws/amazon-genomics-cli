@@ -88,6 +88,14 @@ export class ContextAppParameters {
    */
   public readonly instanceTypes?: InstanceType[];
   /**
+   * The maximum number of Amazon EC2 vCPUs that an environment can reach for the nextflow engine.
+   */
+  public readonly vCpus?: number;
+  /**
+   * The maximum memory limit that an environment can reach for the nextflow engine.
+   */
+  public readonly memoryLimitMiB?: number;
+  /**
    * If true, put EC2 instances into public subnets instead of private subnets.
    * This allows you to obtain significantly lower ongoing costs if used in conjunction with the usePublicSubnets option
    * for the associated account/core stack, which is enabled using `agc account activate --usePublicSubnets`.
@@ -132,6 +140,9 @@ export class ContextAppParameters {
     this.maxVCpus = getEnvNumber(node, "MAX_V_CPUS");
     this.requestSpotInstances = getEnvBoolOrDefault(node, "REQUEST_SPOT_INSTANCES", false)!;
     this.instanceTypes = instanceTypeStrings ? instanceTypeStrings.map((instanceType) => new InstanceType(instanceType.trim())) : undefined;
+
+    this.vCpus = getEnvNumber(node, "V_CPUS");
+    this.memoryLimitMiB = getEnvNumber(node, "MEMORY_LIMIT_MIB");
 
     this.usePublicSubnets = getEnvBoolOrDefault(node, "PUBLIC_SUBNETS", false);
     this.agcVersion = getEnvString(node, "AGC_VERSION");

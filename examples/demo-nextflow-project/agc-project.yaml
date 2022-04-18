@@ -26,3 +26,6 @@ contexts:
     engines:
       - type: nextflow
         engine: nextflow
+        resourceRequirements:
+            vcpus: 1
+            memoryLimit: 2048

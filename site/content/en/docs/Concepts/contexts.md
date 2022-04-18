@@ -105,7 +105,25 @@ contexts:
       - type: nextflow
         engine: nextflow
 ```
+### Engine vCpus and Memory
+*default minimums:*
+*cpus:* 1
+*memory:* 2048
 
+You may optionally specify the minimum number of vCpus and memory used in a context job.
+
+*note:* if these are not provided the defaults would be used.
+```yaml
+contexts:
+  spotContext:
+    requestSpotInstances: true
+    engines:
+      - type: nextflow
+        engine: nextflow
+        resourceRequirements:
+          vcpus: 3
+          memoryLimit: 6144
+```
 ### Public Subnets
 
 In the interest of saving money, in particular if you intend to have the AGC stack deployed for a long period, you may choose to deploy in "public subnet" mode.

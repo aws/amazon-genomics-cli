@@ -51,6 +51,21 @@ contexts:
         engine: cromwell
 ```
 
+The following snippet
+defines a Nextflow DSL engine of type `Nextflow` as part of the context named `spotContext` with a minimum requirement count of Cpus and Memory, when these are not provided the defaults would be used. (cpus:1, memory: 2048)
+
+```yaml
+contexts:
+  spotContext:
+    requestSpotInstances: true
+    engines:
+      - type: nextflow
+        engine: nextflow
+        resourceRequirements:
+          vcpus: 1
+          memoryLimit: 2048
+```
+
 ## Commands
 
 There are no commands specific to engines. Engines are [deployed]( {{< relref "contexts#deploy" >}} ) along with contexts by the [`context` commands]( {{< relref "contexts#context-commands" >}} ) and workflows

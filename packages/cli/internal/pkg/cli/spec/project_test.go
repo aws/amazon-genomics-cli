@@ -110,6 +110,10 @@ schemaVersion: 0
 							{
 								Type:   "nextflow",
 								Engine: "nextflow",
+								ResourceRequirements: ResourceRequirement{
+									VCpus:          2,
+									MemoryLimitMiB: 4048,
+								},
 								Filesystem: Filesystem{
 									FSType: "S3",
 								},
@@ -122,6 +126,10 @@ schemaVersion: 0
 							{
 								Type:   "nextflow",
 								Engine: "nextflow",
+								ResourceRequirements: ResourceRequirement{
+									VCpus:          2,
+									MemoryLimitMiB: 4048,
+								},
 							},
 						},
 					},
@@ -161,6 +169,9 @@ contexts:
         engines:
             - type: nextflow
               engine: nextflow
+              resourceRequirements:
+                vcpus: 2
+                memoryLimit: 4048
               filesystem:
                 fsType: S3
     ctx3:
@@ -168,6 +179,9 @@ contexts:
         engines:
             - type: nextflow
               engine: nextflow
+              resourceRequirements:
+                vcpus: 2
+                memoryLimit: 4048
 `,
 		},
 	}

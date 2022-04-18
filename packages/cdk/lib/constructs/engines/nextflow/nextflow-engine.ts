@@ -8,6 +8,8 @@ import { Engine, EngineProps } from "../engine";
 export interface NextflowEngineProps extends EngineProps {
   readonly jobQueueArn: string;
   readonly taskRole: IRole;
+  readonly vcpus?: number;
+  readonly engineMemoryMiB?: number;
 }
 
 const NEXTFLOW_IMAGE_DESIGNATION = "nextflow";
@@ -21,6 +23,8 @@ export class NextflowEngine extends Engine {
     this.headJobDefinition = new EngineJobDefinition(this, "NexflowHeadJobDef", {
       logGroup: this.logGroup,
       container: {
+        vcpus: props.vcpus,
+        memoryLimitMiB: props.engineMemoryMiB,
         jobRole: props.taskRole,
         image: createEcrImage(this, NEXTFLOW_IMAGE_DESIGNATION),
         command: [],
