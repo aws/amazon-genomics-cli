@@ -65,19 +65,22 @@ type s3Props struct {
 
 //nolint:structcheck
 type runProps struct {
-	runId           string
-	workflowSpec    spec.Workflow
-	workflowEngine  string
-	parsedSourceURL *url.URL
-	isLocal         bool
-	path            string
-	packPath        string
-	workflowUrl     string
-	inputUrl        string
-	input           Input
-	arguments       []string
-	attachments     []string
-	workflowParams  map[string]string
+	runId                string
+	workflowSpec         spec.Workflow
+	workflowEngine       string
+	parsedSourceURL      *url.URL
+	isLocal              bool
+	path                 string
+	packPath             string
+	workflowUrl          string
+	inputUrl             string
+	input                Input
+	optionFileUrl        string
+	options              map[string]string
+	arguments            []string
+	attachments          []string
+	workflowParams       map[string]string
+	workflowEngineParams map[string]string
 }
 
 //nolint:structcheck
@@ -304,6 +307,7 @@ func (m *Manager) readInput(inputUrl string) {
 	if m.err != nil || inputUrl == "" {
 		return
 	}
+	log.Debug().Msgf("Input file override URL: %s", inputUrl)
 	m.inputUrl = inputUrl
 	bytes, err := m.Storage.ReadAsBytes(inputUrl)
 	if err != nil {
@@ -335,18 +339,31 @@ func (m *Manager) uploadInputsToS3() {
 		return
 	}
 	objectKey := awsresources.RenderBucketDataKey(m.projectSpec.Name, m.userId)
-	dir, err := createTempDir("", "workflow_*")
-	if err != nil {
-		m.err = err
-		return
-	}
-	fileLocation := fmt.Sprintf("%s/%s", dir, m.inputUrl)
-	updateInputs, err := m.InputClient.UpdateInputsInFile(m.Project.GetLocation(), m.input, m.bucketName, objectKey, fileLocation)
+	updateInputs, err := m.InputClient.UpdateInputs(m.Project.GetLocation(), m.input, m.bucketName, objectKey)
 	if err != nil {
 		m.err = fmt.Errorf("unable to sync s3://%s/%s: %w", m.bucketName, objectKey, err)
 		return
 	}
 	m.input = updateInputs
+}
+
+func (m *Manager) readOptionFile(optionFileUrl string) {
+	if m.err != nil || optionFileUrl == "" {
+		return
+	}
+	log.Debug().Msgf("Option file override URL: %s", optionFileUrl)
+	m.optionFileUrl = optionFileUrl
+	bytes, err := m.Storage.ReadAsBytes(optionFileUrl)
+	if err != nil {
+		m.err = err
+		return
+	}
+	var options map[string]string
+	if err := json.Unmarshal(bytes, &options); err != nil {
+		m.err = err
+		return
+	}
+	m.options = options
 }
 
 func (m *Manager) readConfig() {
@@ -435,6 +452,23 @@ func (m *Manager) setWorkflowParameters() {
 	m.workflowParams["workflowInputs"] = filepath.Base(m.attachments[0])
 }
 
+func (m *Manager) setWorkflowEngineParameters() {
+	if m.err != nil {
+		return
+	}
+	m.workflowEngineParams = make(map[string]string)
+	if m.optionFileUrl == "" {
+		return
+	}
+	if m.options != nil {
+		if m.workflowEngine == "nextflow" || m.workflowEngine == "miniwdl" || m.workflowEngine == "snakemake" {
+			m.err = fmt.Errorf("optionFile flag cannot be used with head node engines")
+			return
+		}
+		m.workflowEngineParams = m.options
+	}
+}
+
 func (m *Manager) setWesClient() {
 	if m.err != nil {
 		return
@@ -447,8 +481,8 @@ func (m *Manager) saveAttachments() {
 		return
 	}
 
+	namePattern := fmt.Sprintf("%s_*", filepath.Base(m.inputUrl))
 	for _, arg := range m.arguments {
-		namePattern := fmt.Sprintf("%s_*", filepath.Base(m.inputUrl))
 		fileName, err := writeToTmp(namePattern, arg)
 		if err != nil {
 			m.err = err
@@ -477,7 +511,8 @@ func (m *Manager) runWorkflow() {
 		option.WorkflowType(m.workflowSpec.Type.Language),
 		option.WorkflowTypeVersion(m.workflowSpec.Type.Version),
 		option.WorkflowAttachment(m.attachments),
-		option.WorkflowParams(m.workflowParams))
+		option.WorkflowParams(m.workflowParams),
+		option.WorkflowEngineParams(m.workflowEngineParams))
 }
 
 func (m *Manager) recordWorkflowRun(workflowName, contextName string) {
@@ -582,6 +617,7 @@ func (m *Manager) populateInstancesAndMapToContexts(workflowInstances []ddb.Work
 			WorkflowName: instance.WorkflowName,
 			ContextName:  instance.ContextName,
 			SubmitTime:   instance.CreatedTime,
+			Request:      instance.Request,
 		}
 		m.instances[i] = instanceSummary
 		m.instancesPerContext[key] = append(m.instancesPerContext[key], &m.instances[i])
@@ -638,6 +674,26 @@ func (m *Manager) updateInProject(instance *InstanceSummary) {
 		return
 	}
 	_, instance.InProject = m.projectSpec.Workflows[instance.WorkflowName]
+}
+
+func (m *Manager) setRequest(instance *InstanceSummary) {
+	if m.err != nil || instance == nil {
+		return
+	}
+	if instance.Request != "" {
+		log.Debug().Msgf("Instance request field is already set.")
+		return
+	}
+	testRunLog, err := m.wes.GetRunLog(context.Background(), instance.Id)
+	if err != nil {
+		return
+	}
+	testReq := testRunLog.Request
+	workflowEngineParamsJsonBytes, err := json.Marshal(testReq)
+	if err != nil {
+		return
+	}
+	instance.Request = string(workflowEngineParamsJsonBytes)
 }
 
 func (m *Manager) setInstanceToStop(runId string) {

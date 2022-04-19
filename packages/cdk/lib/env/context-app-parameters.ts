@@ -88,6 +88,15 @@ export class ContextAppParameters {
    */
   public readonly instanceTypes?: InstanceType[];
   /**
+   * If true, put EC2 instances into public subnets instead of private subnets.
+   * This allows you to obtain significantly lower ongoing costs if used in conjunction with the usePublicSubnets option
+   * for the associated account/core stack, which is enabled using `agc account activate --usePublicSubnets`.
+   * Note that this option risks security vulnerabilities if security groups are manually modified.
+   *
+   * @default false
+   */
+  public readonly usePublicSubnets?: boolean;
+  /**
    * AGC version being deployed.
    */
   public readonly agcVersion: string;
@@ -124,6 +133,7 @@ export class ContextAppParameters {
     this.requestSpotInstances = getEnvBoolOrDefault(node, "REQUEST_SPOT_INSTANCES", false)!;
     this.instanceTypes = instanceTypeStrings ? instanceTypeStrings.map((instanceType) => new InstanceType(instanceType.trim())) : undefined;
 
+    this.usePublicSubnets = getEnvBoolOrDefault(node, "PUBLIC_SUBNETS", false);
     this.agcVersion = getEnvString(node, "AGC_VERSION");
 
     const tagsJson = getEnvStringOrDefault(node, "CUSTOM_TAGS");

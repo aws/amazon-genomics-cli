@@ -3,6 +3,7 @@ package cli
 import (
 	ctx "context"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -130,7 +131,7 @@ func (o *logsSharedOpts) displayEventFromChannel(channel <-chan cwl.StreamEvent)
 
 	for event := range channel {
 		if event.Err != nil {
-			return event.Err
+			return handleLogStreamRaceCondition(event.Err)
 		}
 		if len(event.Logs) > 0 {
 			for _, line := range event.Logs {
@@ -230,8 +231,16 @@ func (o *logsSharedOpts) displayLogStreams(logGroupName string, startTime, endTi
 	for _, stream := range streams {
 		err := o.displayLogGroup(logGroupName, startTime, endTime, filter, stream)
 		if err != nil {
-			return err
+			return handleLogStreamRaceCondition(err)
 		}
 	}
 	return nil
+}
+
+func handleLogStreamRaceCondition(err error) error {
+	if strings.Contains(err.Error(), "ResourceNotFoundException: The specified log stream does not exist") {
+		log.Warn().Msgf("The logging process has started but the log stream is not yet created, please wait and try again.")
+		return nil
+	}
+	return err
 }

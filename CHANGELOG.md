@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/aws/amazon-genomics-cli/compare/v1.3.0...v1.4.0) (2022-04-15)
+
+
+### Features
+
+* add "public subnet" mode for lower ongoing costs ([#283](https://github.com/aws/amazon-genomics-cli/issues/283)) ([d6a67f9](https://github.com/aws/amazon-genomics-cli/commit/d6a67f9ba819e6d2894e2dfce3d948d63439e556))
+* Add optionsFile flag ([#352](https://github.com/aws/amazon-genomics-cli/issues/352)) ([884308f](https://github.com/aws/amazon-genomics-cli/commit/884308fc2b7e00d918c57e8a912957076309dde2))
+* allow engine logs of specific cromwell workflows using run-id ([#389](https://github.com/aws/amazon-genomics-cli/issues/389)) ([ef8c6a3](https://github.com/aws/amazon-genomics-cli/commit/ef8c6a392c81c49b373766f2dcb9ea87aa5d1474))
+* Download and report WES run log files ([#319](https://github.com/aws/amazon-genomics-cli/issues/319)) ([2a8fab0](https://github.com/aws/amazon-genomics-cli/commit/2a8fab00ceedfd72321f5466183edf92f4c4d0fa))
+* Engine logs for specific workflow runs ([#379](https://github.com/aws/amazon-genomics-cli/issues/379)) ([8bda674](https://github.com/aws/amazon-genomics-cli/commit/8bda67492b3cf143ffd5a0a8931bbcdf3e04992d))
+* ensures vpcId is recalled (if available) on account_activate ([#365](https://github.com/aws/amazon-genomics-cli/issues/365)) ([f056026](https://github.com/aws/amazon-genomics-cli/commit/f0560267fbbffaa17f72a0764950ec86d005b63d))
+* Record command run and show in agc workflow status ([#353](https://github.com/aws/amazon-genomics-cli/issues/353)) ([45fac3a](https://github.com/aws/amazon-genomics-cli/commit/45fac3a476b95a94e65f1e8938a5a5750a703b0d))
+
+
+### Bug Fixes
+
+* Add safety checks in optional manifest fields ([#403](https://github.com/aws/amazon-genomics-cli/issues/403)) ([c084782](https://github.com/aws/amazon-genomics-cli/commit/c08478241cc09d218b3ee1e8a8593172cb2094c3))
+* Converts WDL log exit_code from string to int32 per WES spec ([#380](https://github.com/aws/amazon-genomics-cli/issues/380)) ([2b93a2c](https://github.com/aws/amazon-genomics-cli/commit/2b93a2cb843bce2945538d06f487886b7efe6707))
+* do not set WorkflowEngineParameters when empty ([#402](https://github.com/aws/amazon-genomics-cli/issues/402)) ([3260d73](https://github.com/aws/amazon-genomics-cli/commit/3260d73e7f43f0556a3adb88086bf58e67c43090))
+* ensure workflow engines can and do terminate child tasks when the engine task is stopped by AGC ([#391](https://github.com/aws/amazon-genomics-cli/issues/391)) ([68861e1](https://github.com/aws/amazon-genomics-cli/commit/68861e13dd42b077a8da371a12d39a9c3ef4bc71))
+* miniwdl wdl1.1support ([#370](https://github.com/aws/amazon-genomics-cli/issues/370)) ([7bcfd8f](https://github.com/aws/amazon-genomics-cli/commit/7bcfd8f10ee014c407ecbb801a1d4e5ee93c2496))
+* nextflow wes adapter can retrieve more than 100 task logs ([#377](https://github.com/aws/amazon-genomics-cli/issues/377)) ([a1c2d30](https://github.com/aws/amazon-genomics-cli/commit/a1c2d30784c6ca5f81b53993edb21bc46aff2aa3))
+* remove temp directory prefix from input URI ([#405](https://github.com/aws/amazon-genomics-cli/issues/405)) ([3933d7a](https://github.com/aws/amazon-genomics-cli/commit/3933d7a1b6a332008e9ad352946ff519d47e739c))
+* Revert change to WDL version for this workflow ([#378](https://github.com/aws/amazon-genomics-cli/issues/378)) ([75603a8](https://github.com/aws/amazon-genomics-cli/commit/75603a860ca401b7be2d5d04c51248a227283d00))
+* updates cromwell exit_code ([#398](https://github.com/aws/amazon-genomics-cli/issues/398)) ([9f6480d](https://github.com/aws/amazon-genomics-cli/commit/9f6480dcbd3bd280c822cce960aec0c6aceb7615))
+* updates workflow engine parameters for key, val pairing ([#407](https://github.com/aws/amazon-genomics-cli/issues/407)) ([7a27122](https://github.com/aws/amazon-genomics-cli/commit/7a2712245521d7778614cbf6c08d83008e9471ed))
+
 ## [1.3.0](https://github.com/aws/amazon-genomics-cli/compare/v1.1.2...v1.3.0) (2022-03-04)
 
 

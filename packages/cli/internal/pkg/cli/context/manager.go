@@ -227,6 +227,7 @@ func (m *Manager) setContextEnv(contextName string) {
 		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
 		MaxVCpus:             m.contextSpec.MaxVCpus,
 		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
+		UsePublicSubnets:     m.contextSpec.UsePublicSubnets,
 		// TODO: we default to a single engine in a context for now
 		// need to allow for multiple engines in the same context
 		EngineName:              context.Engines[0].Engine,

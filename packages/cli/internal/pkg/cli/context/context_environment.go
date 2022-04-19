@@ -29,13 +29,15 @@ type contextEnvironment struct {
 	AdapterDesignation string
 	AdapterRepository  string
 
-	ArtifactBucketName   string
-	ReadBucketArns       string
-	ReadWriteBucketArns  string
-	InstanceTypes        string
-	ResourceType         string
-	MaxVCpus             int
+	ArtifactBucketName  string
+	ReadBucketArns      string
+	ReadWriteBucketArns string
+	InstanceTypes       string
+	ResourceType        string
+	MaxVCpus            int
+
 	RequestSpotInstances bool
+	UsePublicSubnets     bool
 }
 
 func (input contextEnvironment) ToEnvironmentList() []string {
@@ -65,5 +67,6 @@ func (input contextEnvironment) ToEnvironmentList() []string {
 		"BATCH_COMPUTE_INSTANCE_TYPES": input.InstanceTypes,
 		"MAX_V_CPUS":                   strconv.Itoa(input.MaxVCpus),
 		"REQUEST_SPOT_INSTANCES":       strconv.FormatBool(input.RequestSpotInstances),
+		"PUBLIC_SUBNETS":               strconv.FormatBool(input.UsePublicSubnets),
 	})
 }

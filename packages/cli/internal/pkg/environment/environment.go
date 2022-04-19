@@ -13,7 +13,7 @@ const DefaultEcrRegion = "us-east-1"
 const DefaultCromwellTag = "64"
 const DefaultNextflowTag = "21.04.3"
 const DefaultWesTag = "0.1.0"
-const DefaultMiniwdlTag = "v0.1.6"
+const DefaultMiniwdlTag = "v0.1.11"
 const DefaultSnakemakeTag = "internal-fork"
 
 const WesImageKey = "WES"

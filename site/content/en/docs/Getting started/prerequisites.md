@@ -14,7 +14,7 @@ To run Amazon Genomics CLI the following prerequisites must be met:
   * Windows 10 with a Windows subsystem running Ubuntu which runs the commands
 * Internet access
 * An AWS Account
-* An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions [here](https://github.com/aws/amazon-genomics-cli/tree/main/extras/agc-minimal-permissions).
+* An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions [here]( {{< relref "../Best practices/iampermissions.md" >}} )
 
 Running Amazon Genomics CLI on Windows has not been tested, but it should run in WSL 2 with Ubuntu 20.04
 

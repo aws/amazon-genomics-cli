@@ -1,7 +1,12 @@
+import math
+import typing
+from datetime import datetime
+import math
+import time
 import typing
 
-import time
 import os
+from datetime import datetime
 
 import boto3
 from mypy_boto3_batch import BatchClient
@@ -125,26 +130,45 @@ class NextflowWESAdapter(BatchAdapter):
     def query_logs_for_job(self, job_details: JobDetailTypeDef, query: str):
         start_time = job_details.get("startedAt")
         if not start_time:
-            # the job is not started yet, so no tasks will have been created.
+            self.logger.info(
+                "the job is not started yet, so no tasks will have been created."
+            )
             return []
 
         end_time = job_details.get("stoppedAt")
 
         query_id = self.aws_logs.start_query(
             logGroupName=self.engine_log_group,
+            # AWS Batch GetJobDescription reports start and stop times in milliseconds.
+            # CloudWatch Logs StartQuery states epoch seconds as input startTime and endTime,
+            # however, milliseconds also works if used for both.
             startTime=start_time,
-            endTime=end_time or int(time.time()),
+            endTime=end_time or int(math.ceil(datetime.utcnow().timestamp()) * 1000),
             queryString=query,
             # TODO: handle pagination? GetRunLog doesn't seem to support it...
-            limit=100,
+            limit=10_000,
         )["queryId"]
         response = None
 
-        while response is None or response["status"] in ("Scheduled", "Running"):
+        results = self.handle_logs_query_response(query_id, response)
+        return results
+
+    def handle_logs_query_response(self, query_id: str, response):
+        while response is None or response["status"] in (
+            "Scheduled",
+            "Running",
+            "Unknown",
+        ):
             self.logger.info(f"Waiting for query [{query_id}] to complete ...")
             time.sleep(1)
             response = self.aws_logs.get_query_results(queryId=query_id)
+        if response["status"] == "Timeout":
+            self.logger.error(response)
+            raise Exception(
+                "the log query has timed out, consider using a narrower time range"
+            )
         if response["status"] != "Complete":
+            self.logger.error(response)
             raise InternalServerError("Logs query for child tasks was not successful")
 
         results = list(map(lambda result: to_dict(result), response["results"]))

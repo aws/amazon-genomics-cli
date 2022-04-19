@@ -1,8 +1,8 @@
 import typing
 import json
 
-
 import os
+from functools import reduce
 
 import boto3
 from botocore.exceptions import ClientError
@@ -17,7 +17,6 @@ from rest_api.models import (
     WorkflowTypeVersion,
     ServiceInfo,
 )
-
 
 SM_PARENT_TAG_KEY = "AWS_BATCH_PARENT_JOB_ID"
 SM_OUTPUT_FILE_NAME = "sm_output.txt"
@@ -65,8 +64,11 @@ class SnakemakeWESAdapter(BatchAdapter):
         workflow_attachment=None,
     ):
         engine_params_to_pass = []
-        if workflow_engine_parameters is not None:
-            engine_params_to_pass.append(workflow_engine_parameters)
+
+        if bool(workflow_engine_parameters):
+            for k, v in workflow_engine_parameters.items():
+                engine_params = "\n".join(workflow_engine_parameters)
+                engine_params_to_pass = engine_params
 
         engine_params_to_pass.extend(
             [

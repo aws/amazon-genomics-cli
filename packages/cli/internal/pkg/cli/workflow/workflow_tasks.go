@@ -2,6 +2,8 @@ package workflow
 
 import (
 	"fmt"
+	"io"
+	"strconv"
 	"strings"
 	"time"
 
@@ -18,9 +20,11 @@ type Task struct {
 }
 
 type RunLog struct {
-	RunId string
-	State string
-	Tasks []Task
+	RunId  string
+	State  string
+	Stdout string
+	Stderr string
+	Tasks  []Task
 }
 
 func (m *Manager) GetWorkflowTasks(runId string) ([]Task, error) {
@@ -49,10 +53,24 @@ func (m *Manager) GetRunLog(runId string) (RunLog, error) {
 	}
 
 	return RunLog{
-		RunId: m.taskProps.runLog.RunId,
-		State: string(m.taskProps.runLog.State),
-		Tasks: tasks,
+		RunId:  m.taskProps.runLog.RunId,
+		State:  string(m.taskProps.runLog.State),
+		Stdout: m.taskProps.runLog.RunLog.Stdout,
+		Stderr: m.taskProps.runLog.RunLog.Stderr,
+		Tasks:  tasks,
 	}, nil
+}
+
+func (m *Manager) GetRunLogData(runId string, dataUrl string) (*io.ReadCloser, error) {
+	if m.err != nil {
+		return nil, m.err
+	}
+	var stream *io.ReadCloser
+	stream, m.err = m.wes.GetRunLogData(context.Background(), runId, dataUrl)
+	if m.err != nil {
+		return nil, m.err
+	}
+	return stream, nil
 }
 
 func (m *Manager) setContextForRun(runId string) {
@@ -72,6 +90,7 @@ func (m *Manager) getRunLog(runId string) {
 		return
 	}
 	m.runLog, m.err = m.wes.GetRunLog(context.Background(), runId)
+	log.Debug().Msgf("Obtained log: %v", m.runLog)
 }
 
 func (m *Manager) getTasks() ([]Task, error) {
@@ -85,12 +104,18 @@ func (m *Manager) getTasks() ([]Task, error) {
 		if len(nameParts) != 2 {
 			return nil, fmt.Errorf("unable to parse job ID from task name '%s'", taskName)
 		}
+
+		exitCode := "NA"
+		if taskLog.ExitCode != nil {
+			exitCode = strconv.FormatInt(int64(*taskLog.ExitCode), 10)
+		}
+
 		tasks[i] = Task{
 			Name:      nameParts[0],
 			JobId:     nameParts[1],
 			StartTime: parseLogTime(taskLog.StartTime),
 			StopTime:  parseLogTime(taskLog.EndTime),
-			ExitCode:  taskLog.ExitCode,
+			ExitCode:  exitCode,
 		}
 	}
 

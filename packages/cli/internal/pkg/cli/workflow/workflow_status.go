@@ -1,5 +1,9 @@
 package workflow
 
+import (
+	"io"
+)
+
 type StatusManager interface {
 	StatusWorkflowAll(numInstances int) ([]InstanceSummary, error)
 	StatusWorkflowByInstanceId(instanceId string) ([]InstanceSummary, error)
@@ -9,6 +13,7 @@ type StatusManager interface {
 
 type TasksManager interface {
 	GetRunLog(runId string) (RunLog, error)
+	GetRunLogData(runId string, dataUrl string) (*io.ReadCloser, error)
 	GetWorkflowTasks(runId string) ([]Task, error)
 	StatusWorkflowByName(workflowName string, numInstances int) ([]InstanceSummary, error)
 }
@@ -63,6 +68,7 @@ func (m *Manager) populateInstancesState() {
 		m.setWesUrl()
 		m.setWesClient()
 		for _, instance := range instances {
+			m.setRequest(instance)
 			m.updateInstanceState(instance)
 			m.updateInProject(instance)
 		}

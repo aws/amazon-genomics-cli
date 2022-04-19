@@ -52,7 +52,7 @@ func (ic *InputInstance) UpdateInputReferencesAndUploadToS3(initialProjectDirect
 			return actionableerror.New(err, fmt.Sprintf("Please validate that the input JSON file %s exists", inputLocation))
 		}
 
-		_, err = ic.UpdateInputsInFile(initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation)
+		err = ic.UpdateInputsInFile(initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation)
 		if err != nil {
 			return err
 		}
@@ -61,7 +61,7 @@ func (ic *InputInstance) UpdateInputReferencesAndUploadToS3(initialProjectDirect
 	return nil
 }
 
-func (ic *InputInstance) UpdateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string, fileLocation string) (map[string]interface{}, error) {
+func (ic *InputInstance) UpdateInputs(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string) (map[string]interface{}, error) {
 	var updatedInputReferenceFile = make(map[string]interface{})
 	for key, value := range inputFile {
 		var inputReferences []string
@@ -101,16 +101,25 @@ func (ic *InputInstance) UpdateInputsInFile(initialProjectDirectory string, inpu
 			updatedInputReferenceFile[key] = value
 		}
 	}
+
+	return updatedInputReferenceFile, nil
+}
+
+func (ic *InputInstance) UpdateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string, fileLocation string) error {
+	updatedInputReferenceFile, err := ic.UpdateInputs(initialProjectDirectory, inputFile, bucketName, baseS3Key)
+	if err != nil {
+		return err
+	}
 	marshalledData, err := jsonMarshall(updatedInputReferenceFile)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	err = ioutilWriteFile(fileLocation, marshalledData, 0644)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return updatedInputReferenceFile, nil
+	return nil
 }
 
 func (ic *InputInstance) uploadReferencesToS3(inputLocations []string, baseDirectory string, bucketName string, baseS3Key string) ([]string, error) {

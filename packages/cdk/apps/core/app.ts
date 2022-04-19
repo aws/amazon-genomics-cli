@@ -15,6 +15,7 @@ const agcVersion = getEnvString(app.node, "AGC_VERSION");
 const vpcId = getContextOrDefault<Maybe<string>>(app.node, "VPC_ID");
 const bucketName = getContextOrDefault(app.node, `${APP_ENV_NAME}_BUCKET_NAME`, `${APP_NAME}-${account}-${region}`);
 const createNewBucket = getContextOrDefault(app.node, `CREATE_${APP_ENV_NAME}_BUCKET`, "true").toLowerCase() == "true";
+const usePublicSubnets = getContextOrDefault(app.node, `${APP_ENV_NAME}_USE_PUBLIC_SUBNETS`, "false").toLowerCase() == "true";
 
 const stackParameters = [
   {
@@ -45,6 +46,7 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
   vpcId,
   bucketName,
   createNewBucket,
+  usePublicSubnets,
   idempotencyKey: agcVersion,
   env: {
     account,

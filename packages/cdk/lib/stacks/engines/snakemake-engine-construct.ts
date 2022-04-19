@@ -7,7 +7,7 @@ import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { ENGINE_SNAKEMAKE } from "../../constants";
 import { Construct } from "constructs";
-import { IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
@@ -51,7 +51,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
 
     // Generate the wes lambda
     const lambda = this.renderAdapterLambda({
-      vpc: props.vpc,
+      vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
       role: adapterRole,
       jobQueueArn: this.batchHead.jobQueue.jobQueueArn,
       jobDefinitionArn: this.snakemakeEngine.headJobDefinition.jobDefinitionArn,
@@ -76,6 +76,11 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
             BatchPolicies.listAndDescribe,
             new PolicyStatement({
               actions: ["tag:GetResources"],
+              resources: ["*"],
+              conditions: { "ForAllValues:StringEquals": { "aws:TagKeys": ["AWS_BATCH_PARENT_JOB_ID"] } },
+            }),
+            new PolicyStatement({
+              actions: ["batch:TerminateJob"],
               resources: ["*"],
               conditions: { "ForAllValues:StringEquals": { "aws:TagKeys": ["AWS_BATCH_PARENT_JOB_ID"] } },
             }),
@@ -123,6 +128,13 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
         resources: [this.batchHead.role.roleArn],
       })
     );
+    this.batchHead.role.addToPrincipalPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["batch:TerminateJob"],
+        resources: ["*"],
+      })
+    );
   }
 
   protected getOutputs(): EngineOutputs {
@@ -162,15 +174,21 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
   }
 
   private renderAdapterLambda({ vpc, role, jobQueueArn, jobDefinitionArn, taskQueueArn, workflowRoleArn, fsapId, outputBucket }) {
-    return super.renderPythonLambda(this, "SnakemakeWesAdapterLambda", vpc, role, {
-      ENGINE_NAME: "snakemake",
-      JOB_QUEUE: jobQueueArn,
-      JOB_DEFINITION: jobDefinitionArn,
-      TASK_QUEUE: taskQueueArn,
-      WORKFLOW_ROLE: workflowRoleArn,
-      FSAP_ID: fsapId,
-      OUTPUT_DIR_S3_URI: outputBucket,
-      TIME: Date.now().toString(),
-    });
+    return super.renderPythonLambda(
+      this,
+      "SnakemakeWesAdapterLambda",
+      role,
+      {
+        ENGINE_NAME: "snakemake",
+        JOB_QUEUE: jobQueueArn,
+        JOB_DEFINITION: jobDefinitionArn,
+        TASK_QUEUE: taskQueueArn,
+        WORKFLOW_ROLE: workflowRoleArn,
+        FSAP_ID: fsapId,
+        OUTPUT_DIR_S3_URI: outputBucket,
+        TIME: Date.now().toString(),
+      },
+      vpc
+    );
   }
 }

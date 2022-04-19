@@ -65,6 +65,7 @@ export class BatchConstruct extends Construct {
       launchTemplateData: LaunchTemplateData.renderLaunchTemplateData(appParams.engineName),
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: Stack.of(this).tags.tagValues(),
+      usePublicSubnets: appParams.usePublicSubnets,
     });
   }
 

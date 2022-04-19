@@ -1,9 +1,12 @@
 import traceback
 import os
 import typing
+import time
 from abc import abstractmethod
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Optional
+from typing import Iterable
 
 import boto3
 from mypy_boto3_batch import BatchClient
@@ -180,7 +183,25 @@ class BatchAdapter(AbstractWESAdapter):
     def describe_jobs(self, job_ids: typing.List[str]) -> typing.List[JobDetailTypeDef]:
         if not job_ids:
             return []
-        return self.aws_batch.describe_jobs(jobs=job_ids)["jobs"]
+
+        jobs = []
+        job_ids_sets = chunks(job_ids, 100)
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            future_jobs = {
+                executor.submit(
+                    self.aws_batch.describe_jobs, jobs=job_ids_set
+                ): job_ids_set
+                for job_ids_set in job_ids_sets
+            }
+            for future in as_completed(future_jobs):
+                job_ids_set = future_jobs[future]
+                try:
+                    response = future.result(timeout=5)
+                    jobs += response["jobs"]
+                except Exception as e:
+                    self.logger.error(f"error retrieving jobs: {e}")
+
+        return jobs
 
     @abstractmethod
     def get_child_tasks(
@@ -230,7 +251,6 @@ class BatchAdapter(AbstractWESAdapter):
 
         start_time = to_iso(job_details.get("startedAt"))
         end_time = to_iso(job_details.get("stoppedAt"))
-        exitCode = job_details["container"].get("exitCode")
 
         return Log(
             name=task_name,
@@ -238,7 +258,7 @@ class BatchAdapter(AbstractWESAdapter):
             start_time=start_time,
             end_time=end_time,
             stdout=job_details["container"].get("logStreamName"),
-            exit_code=("" if exitCode == None else str(exitCode)),
+            exit_code=job_details["container"].get("exitCode"),
         )
 
 
@@ -246,3 +266,9 @@ def to_iso(epoch: Optional[int]) -> Optional[str]:
     if not epoch:
         return None
     return datetime.utcfromtimestamp(epoch / 1000.0).astimezone().isoformat()
+
+
+def chunks(l: list, n: int) -> Iterable[list]:
+    """split list l into chunks of size n"""
+    for i in range(0, len(l), n):
+        yield l[i : i + n]

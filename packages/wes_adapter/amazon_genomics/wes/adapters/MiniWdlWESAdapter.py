@@ -67,7 +67,7 @@ class MiniWdlWESAdapter(BatchAdapter):
 
     @property
     def workflow_type_versions(self):
-        return {"WDL": WorkflowTypeVersion(["1.0", "draft-2"])}
+        return {"WDL": WorkflowTypeVersion(["1.1", "1.0", "draft-2"])}
 
     def get_service_info(self):
         """Get information about Workflow Execution Service.

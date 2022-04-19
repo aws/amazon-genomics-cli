@@ -30,6 +30,13 @@ export class CromwellEngineConstruct extends EngineConstruct {
   public readonly engineLogGroup: ILogGroup;
   public readonly engineRole: IRole;
 
+  /**
+   * Delimiter for new log events as opposed to the log driver default of '\n'. With this cloudwatch logs will group
+   * the multiline statements from cromwell logging and allow filtering by workflow run id.
+   * @private
+   */
+  private readonly cromwellLogDateTimeFormat = "%Y-%m-%d";
+
   constructor(scope: Construct, id: string, props: CromwellEngineConstructProps) {
     super(scope, id);
     const params = props.contextParameters;
@@ -54,7 +61,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
 
     const lambda = this.renderAdapterLambda({
-      vpc: props.vpc,
+      vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
       role: this.adapterRole,
       engineLogGroupName: this.adapterLogGroup.logGroupName,
       jobQueueArn: props.jobQueue.jobQueueArn,
@@ -108,7 +115,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
       environment: serviceContainer.environment,
       containerName: serviceContainer.serviceName,
       image: createEcrImage(this, serviceContainer.imageConfig.designation),
-      logging: LogDriver.awsLogs({ logGroup, streamPrefix: id }),
+      logging: LogDriver.awsLogs({ logGroup, streamPrefix: id, datetimeFormat: this.cromwellLogDateTimeFormat }),
       portMappings: serviceContainer.containerPort ? [{ containerPort: serviceContainer.containerPort }] : [],
     });
 
@@ -123,15 +130,21 @@ export class CromwellEngineConstruct extends EngineConstruct {
     return engine;
   }
 
-  private renderAdapterLambda({ vpc, role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint }) {
-    return super.renderPythonLambda(this, "CromwellWesAdapterLambda", vpc, role, {
-      ENGINE_NAME: "cromwell",
-      ENGINE_ENDPOINT: engineEndpoint,
-      ENGINE_LOG_GROUP: engineLogGroupName,
-      JOB_QUEUE: jobQueueArn,
-      PROJECT_NAME: projectName,
-      CONTEXT_NAME: contextName,
-      USER_ID: userId,
-    });
+  private renderAdapterLambda({ role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint, vpc }) {
+    return super.renderPythonLambda(
+      this,
+      "CromwellWesAdapterLambda",
+      role,
+      {
+        ENGINE_NAME: "cromwell",
+        ENGINE_ENDPOINT: engineEndpoint,
+        ENGINE_LOG_GROUP: engineLogGroupName,
+        JOB_QUEUE: jobQueueArn,
+        PROJECT_NAME: projectName,
+        CONTEXT_NAME: contextName,
+        USER_ID: userId,
+      },
+      vpc
+    );
   }
 }
