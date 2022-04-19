@@ -1,13 +1,11 @@
 package version
 
 import (
-	"context"
 	"strings"
 	"time"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/rs/zerolog/log"
 )
@@ -48,9 +46,15 @@ func Check() (Result, error) {
 	}
 
 	channel := environment.LookUpEnvOrDefault(ChannelVarName, DefaultChannel)
-	cfg, err := config.LoadDefaultConfig(context.Background(), config.WithRegion("us-east-1"))
-	if err != nil {
-		return Result{}, err
+	// Make sure to make the version check anonymously, to avoid prompting for
+	// an MFA token if the user has one.
+	// We can't just use LoadDefaultConfig with WithCredentialsProvider and
+	// AnonymousCredentials because of
+	// <https://github.com/aws/aws-sdk-go-v2/issues/1174>.
+	// So we need to make the config manually.
+	cfg := aws.Config{
+		Region:      "us-east-1",
+		Credentials: aws.AnonymousCredentials{},
 	}
 	s3Client := newS3ClientFromConfig(cfg)
 	currentTime := getCurrentTime()

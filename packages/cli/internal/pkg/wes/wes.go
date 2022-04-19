@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/rs/zerolog/log"
 	wes "github.com/rsc/wes_client"
 )
@@ -60,10 +60,7 @@ func establishWesConnection(wesUrl string, profile string) (apiClient, error) {
 func getApiClient(url string, profile string) (apiClient, error) {
 	configuration := wes.NewConfiguration()
 	configuration.BasePath = url
-	config, err := config.LoadDefaultConfig(context.Background(), config.WithSharedConfigProfile(profile))
-	if err != nil {
-		return nil, err
-	}
+	config := aws.GetProfileConfig(profile)
 	apiClient, err := wes.NewAPISignedClient(configuration, config)
 	if err != nil {
 		return nil, err

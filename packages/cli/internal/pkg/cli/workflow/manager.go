@@ -474,6 +474,9 @@ func (m *Manager) setWesClient() {
 		return
 	}
 	m.wes, m.err = m.WesFactory(m.wesUrl)
+	if m.err != nil {
+		m.err = fmt.Errorf("unable to configure WES endpoint: %w", m.err)
+	}
 }
 
 func (m *Manager) saveAttachments() {
