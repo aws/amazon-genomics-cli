@@ -27,7 +27,7 @@ export class SecureService extends Construct {
 
     this.resource = new NetworkLoadBalancedFargateService(this, "Resource", {
       ...props,
-      publicLoadBalancer: false,
+      publicLoadBalancer: props.assignPublicIp,
       platformVersion: FargatePlatformVersion.VERSION1_4,
     });
     if (props.healthCheck) {
