@@ -46,14 +46,61 @@ or workflows run.
 
 Activating an account will also bootstrap the AWS Environment for CDK app deployments.
 
+#### Using an Existing S3 Bucket
+
 Amazon Genomics CLI requires an S3 bucket to store workflow results and associated information. If you prefer to use an existing bucket
 you can use the form  `agc account activate --bucket my-existing-bucket`. If you do this the AWS [IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html) role used to run
 Amazon Genomics CLI must be able to write to that bucket.
+
+#### Using an Existing VPC
 
 To use an existing VPC you can use the form  `agc account activate --vpc my-existing-vpc-id`. This VPC must have at least
 3 availability zones each with at least one private subnet. The private subnets must have connectivity to the internet, 
 such as via a NAT gateway, and connectivity to AWS services either through VPC endpoints or the internet. Amazon Genomics CLI will not
 modify the network topology of the specified VPC.
+
+#### Specifying Subnets
+
+When using an existing VPC you may need to specify which subnets of the VPC can be used for infrastructure. This is useful
+when only some private subnets have internet routing. To do this you can supply a comma separated list of subnet IDs using
+the `--subnets` flag, or repeat the flag multiple times. For example:
+
+`agc account activate --vpc my-existing-vpc-id --subnets subnet-id-1,subnet-id-2 --subnets subnet-id-3`
+
+We recommend a minimum of 3 subnets across availability zones to take advantage of EC2 instance availability and to
+ensure high availability of infrastructure.
+
+#### Using Only Public Subnets
+
+Amazon Genomics CLI can create a new VPC with only public subnets to use for its infrastructure using the `--usePublicSubnets` flag.
+
+`agc account activate --usePublicSubnets`
+
+{{% alert title="Warning" color="warning" %}}
+Currently, use of public subnets is only supported for contexts that use the Cromwell or Nextflow engines.
+{{% /alert %}}
+
+This can reduce costs by removing the need for NAT Gateways and VPC Gateway Endpoints to route internet traffic from private subnets.
+It will also reduce the number of Elastic IP Addresses consumed by your infrastructure. When using a VPC with only public
+subnets you will need to ensure that the contexts defined in `agc-project.yaml` files declare that they
+will use public subnets. For example:
+
+```yaml
+contexts:
+  myContext:
+    usePublicSubnets: true
+    engines:
+      - type: wdl
+        engine: cromwell
+```
+
+##### Security Considerations
+
+Although your infrastructure will be protected by security groups you should be aware that any manual modification of these may result in exposing your
+infrastructure to the internet. For this reason *we do **not** recommend using this configuration in production 
+or with sensitive data*.
+
+#### Updating
 
 Issuing account activate commands more than once effectively updates the core infrastructure with the difference between
 the two commands. For example, if you had previously activated the account using `agc account activate` and later invoked
@@ -62,7 +109,7 @@ and the identified VPC. The old VPC and S3 buckets will be *retained* according 
 
 If you initially activated the account with `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id` 
 and later invoked `agc account activate` then Amazon Genomics CLI will stop using the previous specified bucket, however the VPC will 
-be recalled and re-used. *ALL* of the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.
+be recalled and re-used. *ALL* the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.
 
 ### `deactivate`
 
@@ -93,7 +140,7 @@ by default so that you can view workflow results and logs even after deactivatio
 
 However, if you wish to have this infrastructure remain deployed, you are able to significantly reduce ongoing costs by using `agc account activate --usePublicSubnets`.
 This prevents the creation of private subnets with NAT gateways, and the use of VPC endpoints, both of which have associated ongoing costs.
-However please note that **you must also set `usePublicSubnets: true` in your `agc-config.yaml` if you choose to use this option**.
+Please note that **you must also set `usePublicSubnets: true` in your `agc-config.yaml` if you choose to use this option**.
 Please also note that this is not recommended for security-critical deployments, as it means that any edits to the stack security groups risk exposing worker nodes to the public internet.
 
 ### Network traffic

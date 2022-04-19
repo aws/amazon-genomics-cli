@@ -189,7 +189,7 @@ export class Batch extends Construct {
           vpc: options.vpc,
           type: computeType,
           maxvCpus: options.maxVCpus,
-          vpcSubnets: options.subnets,
+          vpcSubnets: options.usePublicSubnets ? undefined : options.subnets,
         },
       });
     }
@@ -216,7 +216,7 @@ export class Batch extends Construct {
           launchTemplateName: launchTemplate.launchTemplateName!,
         },
         computeResourcesTags: options.resourceTags,
-        vpcSubnets: options.subnets,
+        vpcSubnets: options.usePublicSubnets ? undefined : options.subnets,
       },
     });
   }
