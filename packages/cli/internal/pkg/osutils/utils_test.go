@@ -2,16 +2,15 @@ package osutils
 
 import (
 	"errors"
+	"io/fs"
+	"os"
+	"path/filepath"
+	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	iomocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/io"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
-
-	"io/fs"
-	"os"
-	"path/filepath"
-	"testing"
 )
 
 func TestDetermineHomeDir_Success(t *testing.T) {
