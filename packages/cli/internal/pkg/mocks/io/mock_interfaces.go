@@ -5,7 +5,9 @@
 package iomocks
 
 import (
+	io "io"
 	fs "io/fs"
+	os "os"
 	reflect "reflect"
 	time "time"
 
@@ -51,6 +53,21 @@ func (mr *MockOSMockRecorder) Chdir(dir interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Chdir", reflect.TypeOf((*MockOS)(nil).Chdir), dir)
 }
 
+// Create mocks base method.
+func (m *MockOS) Create(name string) (*os.File, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", name)
+	ret0, _ := ret[0].(*os.File)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockOSMockRecorder) Create(name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockOS)(nil).Create), name)
+}
+
 // IsNotExist mocks base method.
 func (m *MockOS) IsNotExist(err error) bool {
 	m.ctrl.T.Helper()
@@ -92,6 +109,21 @@ func (m *MockOS) MkdirTemp(dir, pattern string) (string, error) {
 func (mr *MockOSMockRecorder) MkdirTemp(dir, pattern interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MkdirTemp", reflect.TypeOf((*MockOS)(nil).MkdirTemp), dir, pattern)
+}
+
+// Open mocks base method.
+func (m *MockOS) Open(name string) (*os.File, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Open", name)
+	ret0, _ := ret[0].(*os.File)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Open indicates an expected call of Open.
+func (mr *MockOSMockRecorder) Open(name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Open", reflect.TypeOf((*MockOS)(nil).Open), name)
 }
 
 // Remove mocks base method.
@@ -150,6 +182,44 @@ func (m *MockOS) UserHomeDir() (string, error) {
 func (mr *MockOSMockRecorder) UserHomeDir() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserHomeDir", reflect.TypeOf((*MockOS)(nil).UserHomeDir))
+}
+
+// MockIO is a mock of IO interface.
+type MockIO struct {
+	ctrl     *gomock.Controller
+	recorder *MockIOMockRecorder
+}
+
+// MockIOMockRecorder is the mock recorder for MockIO.
+type MockIOMockRecorder struct {
+	mock *MockIO
+}
+
+// NewMockIO creates a new mock instance.
+func NewMockIO(ctrl *gomock.Controller) *MockIO {
+	mock := &MockIO{ctrl: ctrl}
+	mock.recorder = &MockIOMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockIO) EXPECT() *MockIOMockRecorder {
+	return m.recorder
+}
+
+// Copy mocks base method.
+func (m *MockIO) Copy(dst io.Writer, src io.Reader) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Copy", dst, src)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Copy indicates an expected call of Copy.
+func (mr *MockIOMockRecorder) Copy(dst, src interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Copy", reflect.TypeOf((*MockIO)(nil).Copy), dst, src)
 }
 
 // MockFileInfo is a mock of FileInfo interface.

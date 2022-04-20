@@ -2970,6 +2970,7 @@
       },
       "dependencies": {
         "@balena/dockerignore": {
+<<<<<<< HEAD
           "version": "1.0.2",
           "resolved": ""
         },
@@ -2984,12 +2985,25 @@
         "brace-expansion": {
           "version": "1.1.11",
           "resolved": "",
+=======
+          "version": "1.0.2"
+        },
+        "at-least-node": {
+          "version": "1.0.0"
+        },
+        "balanced-match": {
+          "version": "1.0.2"
+        },
+        "brace-expansion": {
+          "version": "1.1.11",
+>>>>>>> c83a67c (Specific Nextflow files are skipped. Updated utils.go and created unit tests.)
           "requires": {
             "balanced-match": "^1.0.0",
             "concat-map": "0.0.1"
           }
         },
         "case": {
+<<<<<<< HEAD
           "version": "1.6.3",
           "resolved": ""
         },
@@ -3000,6 +3014,15 @@
         "fs-extra": {
           "version": "9.1.0",
           "resolved": "",
+=======
+          "version": "1.6.3"
+        },
+        "concat-map": {
+          "version": "0.0.1"
+        },
+        "fs-extra": {
+          "version": "9.1.0",
+>>>>>>> c83a67c (Specific Nextflow files are skipped. Updated utils.go and created unit tests.)
           "requires": {
             "at-least-node": "^1.0.0",
             "graceful-fs": "^4.2.0",
@@ -3008,6 +3031,7 @@
           }
         },
         "graceful-fs": {
+<<<<<<< HEAD
           "version": "4.2.8",
           "resolved": ""
         },
@@ -3019,31 +3043,51 @@
         "jsonfile": {
           "version": "6.1.0",
           "resolved": "",
+=======
+          "version": "4.2.8"
+        },
+        "ignore": {
+          "version": "5.1.9"
+        },
+        "jsonfile": {
+          "version": "6.1.0",
+>>>>>>> c83a67c (Specific Nextflow files are skipped. Updated utils.go and created unit tests.)
           "requires": {
             "graceful-fs": "^4.1.6",
             "universalify": "^2.0.0"
           }
         },
         "jsonschema": {
+<<<<<<< HEAD
           "version": "1.4.0",
           "resolved": ""
         },
         "lru-cache": {
           "version": "6.0.0",
           "resolved": "",
+=======
+          "version": "1.4.0"
+        },
+        "lru-cache": {
+          "version": "6.0.0",
+>>>>>>> c83a67c (Specific Nextflow files are skipped. Updated utils.go and created unit tests.)
           "requires": {
             "yallist": "^4.0.0"
           }
         },
         "minimatch": {
           "version": "3.0.4",
+<<<<<<< HEAD
           "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz",
           "integrity": "sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==",
+=======
+>>>>>>> c83a67c (Specific Nextflow files are skipped. Updated utils.go and created unit tests.)
           "requires": {
             "brace-expansion": "^1.1.7"
           }
         },
         "punycode": {
+<<<<<<< HEAD
           "version": "2.1.1",
           "resolved": "https://registry.npmjs.org/punycode/-/punycode-2.1.1.tgz",
           "integrity": "sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A=="
@@ -3052,11 +3096,18 @@
           "version": "7.3.5",
           "resolved": "https://registry.npmjs.org/semver/-/semver-7.3.5.tgz",
           "integrity": "sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==",
+=======
+          "version": "2.1.1"
+        },
+        "semver": {
+          "version": "7.3.5",
+>>>>>>> c83a67c (Specific Nextflow files are skipped. Updated utils.go and created unit tests.)
           "requires": {
             "lru-cache": "^6.0.0"
           }
         },
         "universalify": {
+<<<<<<< HEAD
           "version": "2.0.0",
           "resolved": ""
         },
@@ -3067,6 +3118,15 @@
         "yaml": {
           "version": "1.10.2",
           "resolved": ""
+=======
+          "version": "2.0.0"
+        },
+        "yallist": {
+          "version": "4.0.0"
+        },
+        "yaml": {
+          "version": "1.10.2"
+>>>>>>> c83a67c (Specific Nextflow files are skipped. Updated utils.go and created unit tests.)
         }
       }
     },

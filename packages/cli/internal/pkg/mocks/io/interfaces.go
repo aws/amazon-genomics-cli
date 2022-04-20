@@ -1,7 +1,9 @@
 package iomocks
 
 import (
+	"io"
 	"io/fs"
+	"os"
 	"time"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
@@ -17,6 +19,12 @@ type OS interface {
 	Stat(name string) (fs.FileInfo, error)
 	MkdirAll(path string, perm fs.FileMode) error
 	IsNotExist(err error) bool
+	Create(name string) (*os.File, error)
+	Open(name string) (*os.File, error)
+}
+
+type IO interface {
+	Copy(dst io.Writer, src io.Reader) (written int64, err error)
 }
 
 type FileInfo interface {

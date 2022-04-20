@@ -63,13 +63,26 @@ func EnsureDirExistence(dirPath string) error {
 }
 
 func CopyFileRecursivelyToLocation(absoluteDestinationDir string, absoluteSourceDir string) error {
-	err := filepathWalkDir(absoluteSourceDir, func(currentPath string, dirEntry fs.DirEntry, err error) error {
+	err := filepathWalkDir(absoluteSourceDir, getWalkDirFn(absoluteDestinationDir, absoluteSourceDir))
+	return err
+}
+
+func getWalkDirFn(absoluteDestinationDir string, absoluteSourceDir string) fs.WalkDirFunc {
+	return func(currentPath string, dirEntry fs.DirEntry, err error) error {
 		if dirEntry == nil {
 			// There are several use cases when it can happen:
 			// 1. provided path doesn't exist
 			// 2. file or sub-directory got deleted after being listed by WalkDir
 			return fmt.Errorf("file '%s' doesn't exist", currentPath)
 		}
+
+		if dirEntry.Name() == ".nextflow" ||
+			dirEntry.Name() == ".snakemake" ||
+			dirEntry.Name() == "work" ||
+			strings.HasSuffix(currentPath, ".nextflow.log") {
+			return filepath.SkipDir
+		}
+
 		if !dirEntry.IsDir() {
 			srcFile, err := osOpen(currentPath)
 			if err != nil {
@@ -91,9 +104,7 @@ func CopyFileRecursivelyToLocation(absoluteDestinationDir string, absoluteSource
 			}
 		}
 		return nil
-	})
-
-	return err
+	}
 }
 
 func getAndCreateRelativePath(currentPath string, sourcePath string, destinationDir string) (string, error) {
