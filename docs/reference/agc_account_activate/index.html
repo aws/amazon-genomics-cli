@@ -30,15 +30,15 @@ Synopsis Activate AGC in an AWS account. AGC will use your default AWS credentia
 agc account activate [flags] Examples  Activate AGC in your AWS account with a custom S3 bucket and VPC. /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id Options  --bucket string The name of an S3 bucket that AGC will use to store its data." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_activate/" /><meta property="article:section" content="docs" />
-<meta property="article:published_time" content="2022-03-14T18:20:25+00:00" />
-<meta property="article:modified_time" content="2022-03-14T18:20:25+00:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<meta property="article:published_time" content="2022-04-20T17:03:51+00:00" />
+<meta property="article:modified_time" content="2022-04-20T17:03:51+00:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
 <meta itemprop="name" content="agc account activate">
 <meta itemprop="description" content="agc account activate Activate AGC in an AWS account.
 Synopsis Activate AGC in an AWS account. AGC will use your default AWS credentials to deploy all AWS resources it needs to that account and region.
-agc account activate [flags] Examples  Activate AGC in your AWS account with a custom S3 bucket and VPC. /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id Options  --bucket string The name of an S3 bucket that AGC will use to store its data."><meta itemprop="datePublished" content="2022-03-14T18:20:25+00:00" />
-<meta itemprop="dateModified" content="2022-03-14T18:20:25+00:00" />
-<meta itemprop="wordCount" content="219">
+agc account activate [flags] Examples  Activate AGC in your AWS account with a custom S3 bucket and VPC. /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id Options  --bucket string The name of an S3 bucket that AGC will use to store its data."><meta itemprop="datePublished" content="2022-04-20T17:03:51+00:00" />
+<meta itemprop="dateModified" content="2022-04-20T17:03:51+00:00" />
+<meta itemprop="wordCount" content="248">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="agc account activate"/>
 <meta name="twitter:description" content="agc account activate Activate AGC in an AWS account.
@@ -120,7 +120,7 @@ agc account activate [flags] Examples  Activate AGC in your AWS account with a c
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.793d2e9bb38f8a8180988a7cc0bb80a8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -142,7 +142,7 @@ agc account activate [flags] Examples  Activate AGC in your AWS account with a c
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.793d2e9bb38f8a8180988a7cc0bb80a8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -205,7 +205,9 @@ agc account activate [flags] Examples  Activate AGC in your AWS account with a c
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocsbest-practices-li">
   <a href="/amazon-genomics-cli/docs/best-practices/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsbest-practices"><span class="">Best Practices</span></a>
   <ul class="ul-2 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts-li">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicesiampermissions-li">
+  <a href="/amazon-genomics-cli/docs/best-practices/iampermissions/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicesiampermissions"><span class="">IAM Permissions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts-li">
   <a href="/amazon-genomics-cli/docs/best-practices/controllingcosts/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts"><span class="">Controlling Costs</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicesscalingworkloads-li">
   <a href="/amazon-genomics-cli/docs/best-practices/scalingworkloads/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicesscalingworkloads"><span class="">Scaling Workloads</span></a>
@@ -423,6 +425,8 @@ Activate AGC in your AWS account with a custom S3 bucket and VPC.
       --tags stringToString   A list of comma separated tags to be applied to all AGC resources in this account
                               (i.e. --tags &quot;k1=v1&quot;,&quot;k2=v2&quot;). Each key-value pair must be quoted as shown in the example,
                               otherwise the parsing will fail. (default [])
+      --usePublicSubnets      Do not create a NAT gateway or VPC endpoints, to lower operating costs. 
+                              You must enable the usePublicSubnets option in your project context if you use this flag.
       --vpc string            The ID of a VPC that AGC will run in. 
                               A new VPC will be created if not specified.
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>

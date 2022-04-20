@@ -111,7 +111,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.793d2e9bb38f8a8180988a7cc0bb80a8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -157,7 +157,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>1: <a href="#pg-21148db2156e43c72f13c8560b36bd66">Controlling Costs</a></li>
+<li>1: <a href="#pg-cf576bf82c29a560104084110ce14b80">IAM Permissions</a></li>
 
 
     
@@ -165,7 +165,15 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>2: <a href="#pg-8b17feddf25cde178c18afd784d6a9bd">Scaling Workloads</a></li>
+<li>2: <a href="#pg-21148db2156e43c72f13c8560b36bd66">Controlling Costs</a></li>
+
+
+    
+  
+    
+    
+	
+<li>3: <a href="#pg-8b17feddf25cde178c18afd784d6a9bd">Scaling Workloads</a></li>
 
 
     
@@ -197,7 +205,122 @@ This is the multi-page printable view of this section.
 
 <div class="td-content" style="">
     
-	<h1 id="pg-21148db2156e43c72f13c8560b36bd66">1 - Controlling Costs</h1>
+	<h1 id="pg-cf576bf82c29a560104084110ce14b80">1 - IAM Permissions</h1>
+    <div class="lead">Minimum IAM Permissions required to use AGC</div>
+	<p>Amazon Genomics CLI is used to deploy and interact with infrastructure in an AWS account. Amazon Genomics CLI will use
+the permissions of the current profile to perform its actions. The profile would either be the users profile or, if being
+run from an EC2 instance, the attached profile of the instance. No matter the source of the role it must have sufficient
+permissions to perform the necessary tasks. In addition, best practice recommends that the profile only grant minimal
+permissions to maintain security and prevent unintended action.</p>
+<h3 id="recommended-minimal-permissions">Recommended Minimal Permissions</h3>
+<p>As part of the Amazon Genomics CLI repository we have included a CDK project that can be used by an account administrator
+to generate the necessary minimum policies.</p>
+<h4 id="pre-requisites">Pre-requisites</h4>
+<p>Before generating the policies you need to do the following:</p>
+<ol>
+<li>Install <code>node</code> and <code>npm</code>. We recommend using node v14.17 installed via <code>nvm</code></li>
+<li>Install Amazon CDK (<code>npm install -g aws-cdk@latest</code>)</li>
+<li>An AWS account where you will use Amazon Genomics CLI</li>
+<li>A role in that account that allows the creation of IAM roles and policies</li>
+</ol>
+<h4 id="generate-roles-and-policies">Generate Roles and Policies</h4>
+<ol>
+<li>Clone the Amazon Genomics CLI repository locally: <code>git clone https://github.com/aws/amazon-genomics-cli.git</code></li>
+<li>cd <code>amazon-genomics-cli/extras/agc-minimal-permissions/</code></li>
+<li><code>npm install</code></li>
+<li><code>cdk deploy</code></li>
+</ol>
+<p>You will see output similar to the following:</p>
+<pre><code>✨  Synthesis time: 2.91s
+
+AgcPermissionsStack: deploying...
+AgcPermissionsStack: creating CloudFormation changeset...
+
+ ✅  AgcPermissionsStack
+
+✨  Deployment time: 44.39s
+
+Stack ARN:
+arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9
+
+✨  Total time: 47.3s
+</code></pre><p>Using the emitted Stack ARN you can identify the policies created. You can also inspect the stack in the CloudFormation console.</p>
+<p>For example:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">aws cloudformation describe-stack-resources --stack-name &lt;stack arn&gt;
+</code></pre></div><p>with output similar to:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">&#34;StackResources&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackName&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AgcPermissionsStack&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;LogicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;CDKMetadata&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;PhysicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceType&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AWS::CDK::Metadata&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;Timestamp&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2022-04-07T14:10:30.922000+00:00&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;CREATE_COMPLETE&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;DriftInformation&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#204a87;font-weight:bold">&#34;StackResourceDriftStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;NOT_CHECKED&#34;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackName&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AgcPermissionsStack&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;LogicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;agcadminpolicy25003180&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;PhysicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:iam::123456789123:policy/AgcPermissionsStack-agcadminpolicy25003180-1ST0KJ0I5J45R&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceType&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AWS::IAM::ManagedPolicy&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;Timestamp&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2022-04-07T14:10:41.597000+00:00&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;CREATE_COMPLETE&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;DriftInformation&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#204a87;font-weight:bold">&#34;StackResourceDriftStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;NOT_CHECKED&#34;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackName&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AgcPermissionsStack&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;LogicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;agcuserpolicy346A2D4F&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;PhysicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:iam::123456789123:policy/AgcPermissionsStack-agcuserpolicy346A2D4F-1X9U4HCQ8Z19U&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceType&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AWS::IAM::ManagedPolicy&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;Timestamp&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2022-04-07T14:10:41.981000+00:00&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;CREATE_COMPLETE&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;DriftInformation&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#204a87;font-weight:bold">&#34;StackResourceDriftStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;NOT_CHECKED&#34;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackName&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AgcPermissionsStack&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;LogicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;agcuserpolicycdk27FA61BC&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;PhysicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:iam::123456789123:policy/AgcPermissionsStack-agcuserpolicycdk27FA61BC-OXS49AINGPIG&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceType&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AWS::IAM::ManagedPolicy&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;Timestamp&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2022-04-07T14:10:41.747000+00:00&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;CREATE_COMPLETE&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;DriftInformation&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#204a87;font-weight:bold">&#34;StackResourceDriftStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;NOT_CHECKED&#34;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">]</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p>Three resources of type <code>AWS::IAM::ManagedPolicy</code> are created:</p>
+<ul>
+<li>The resource with a name similar to <code>agcadminpolicy25003180</code> identify policies which grant sufficient permission to run <code>agc account activate</code> and <code>agc account deactivate</code> and should be attached to the profile of users who need to perform that action</li>
+<li>Two resources with names similar to <code>agcuserpolicy346A2D4F</code> and <code>agcuserpolicycdk27FA61BC</code> identify policies which allow all other Amazon Genomics CLI actions. These should be attached to profiles that will use Amazon Genomics CLI day to day.</li>
+</ul>
+
+</div>
+
+
+
+    
+	
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-21148db2156e43c72f13c8560b36bd66">2 - Controlling Costs</h1>
     <div class="lead">Monitoring costs and design considerations to reduce costs</div>
 	<p>When you begin to run large scale workflows frequently it will become important to be able to understand the costs involved and
 how to optimize your workflow and use of Amazon Genomics CLI to reduce costs.</p>
@@ -292,7 +415,7 @@ use for Amazon Genomics CLI.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-8b17feddf25cde178c18afd784d6a9bd">2 - Scaling Workloads</h1>
+	<h1 id="pg-8b17feddf25cde178c18afd784d6a9bd">3 - Scaling Workloads</h1>
     <div class="lead">Making workflows run at scale</div>
 	<p>Workflows with considerable compute requirements can incur large costs and may fail due to infrastructure constraints.
 The following considerations will help you design workflows that will perform better at scale.</p>

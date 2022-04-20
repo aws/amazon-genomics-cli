@@ -15,6 +15,117 @@
     
     
     <item>
+      <title>Docs: IAM Permissions</title>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/best-practices/iampermissions/</link>
+      <pubDate>Thu, 07 Apr 2022 09:51:56 -0400</pubDate>
+      
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/best-practices/iampermissions/</guid>
+      <description>
+        
+        
+        &lt;p&gt;Amazon Genomics CLI is used to deploy and interact with infrastructure in an AWS account. Amazon Genomics CLI will use
+the permissions of the current profile to perform its actions. The profile would either be the users profile or, if being
+run from an EC2 instance, the attached profile of the instance. No matter the source of the role it must have sufficient
+permissions to perform the necessary tasks. In addition, best practice recommends that the profile only grant minimal
+permissions to maintain security and prevent unintended action.&lt;/p&gt;
+&lt;h3 id=&#34;recommended-minimal-permissions&#34;&gt;Recommended Minimal Permissions&lt;/h3&gt;
+&lt;p&gt;As part of the Amazon Genomics CLI repository we have included a CDK project that can be used by an account administrator
+to generate the necessary minimum policies.&lt;/p&gt;
+&lt;h4 id=&#34;pre-requisites&#34;&gt;Pre-requisites&lt;/h4&gt;
+&lt;p&gt;Before generating the policies you need to do the following:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Install &lt;code&gt;node&lt;/code&gt; and &lt;code&gt;npm&lt;/code&gt;. We recommend using node v14.17 installed via &lt;code&gt;nvm&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Install Amazon CDK (&lt;code&gt;npm install -g aws-cdk@latest&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;An AWS account where you will use Amazon Genomics CLI&lt;/li&gt;
+&lt;li&gt;A role in that account that allows the creation of IAM roles and policies&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;generate-roles-and-policies&#34;&gt;Generate Roles and Policies&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;Clone the Amazon Genomics CLI repository locally: &lt;code&gt;git clone https://github.com/aws/amazon-genomics-cli.git&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;cd &lt;code&gt;amazon-genomics-cli/extras/agc-minimal-permissions/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;npm install&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cdk deploy&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;You will see output similar to the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;✨  Synthesis time: 2.91s
+
+AgcPermissionsStack: deploying...
+AgcPermissionsStack: creating CloudFormation changeset...
+
+ ✅  AgcPermissionsStack
+
+✨  Deployment time: 44.39s
+
+Stack ARN:
+arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9
+
+✨  Total time: 47.3s
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Using the emitted Stack ARN you can identify the policies created. You can also inspect the stack in the CloudFormation console.&lt;/p&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;aws cloudformation describe-stack-resources --stack-name &amp;lt;stack arn&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;with output similar to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackResources&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;AgcPermissionsStack&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;LogicalResourceId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;CDKMetadata&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;PhysicalResourceId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;ResourceType&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;AWS::CDK::Metadata&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;Timestamp&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;2022-04-07T14:10:30.922000+00:00&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;ResourceStatus&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;CREATE_COMPLETE&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;DriftInformation&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+                &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackResourceDriftStatus&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;NOT_CHECKED&amp;#34;&lt;/span&gt;
+            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;},&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;AgcPermissionsStack&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;LogicalResourceId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;agcadminpolicy25003180&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;PhysicalResourceId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;arn:aws:iam::123456789123:policy/AgcPermissionsStack-agcadminpolicy25003180-1ST0KJ0I5J45R&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;ResourceType&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;AWS::IAM::ManagedPolicy&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;Timestamp&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;2022-04-07T14:10:41.597000+00:00&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;ResourceStatus&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;CREATE_COMPLETE&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;DriftInformation&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+                &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackResourceDriftStatus&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;NOT_CHECKED&amp;#34;&lt;/span&gt;
+            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;},&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;AgcPermissionsStack&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;LogicalResourceId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;agcuserpolicy346A2D4F&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;PhysicalResourceId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;arn:aws:iam::123456789123:policy/AgcPermissionsStack-agcuserpolicy346A2D4F-1X9U4HCQ8Z19U&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;ResourceType&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;AWS::IAM::ManagedPolicy&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;Timestamp&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;2022-04-07T14:10:41.981000+00:00&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;ResourceStatus&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;CREATE_COMPLETE&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;DriftInformation&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+                &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackResourceDriftStatus&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;NOT_CHECKED&amp;#34;&lt;/span&gt;
+            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;},&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackName&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;AgcPermissionsStack&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;LogicalResourceId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;agcuserpolicycdk27FA61BC&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;PhysicalResourceId&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;arn:aws:iam::123456789123:policy/AgcPermissionsStack-agcuserpolicycdk27FA61BC-OXS49AINGPIG&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;ResourceType&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;AWS::IAM::ManagedPolicy&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;Timestamp&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;2022-04-07T14:10:41.747000+00:00&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;ResourceStatus&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;CREATE_COMPLETE&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;
+            &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;DriftInformation&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;{&lt;/span&gt;
+                &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;&amp;#34;StackResourceDriftStatus&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;NOT_CHECKED&amp;#34;&lt;/span&gt;
+            &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+        &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+    &lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;
+&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Three resources of type &lt;code&gt;AWS::IAM::ManagedPolicy&lt;/code&gt; are created:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The resource with a name similar to &lt;code&gt;agcadminpolicy25003180&lt;/code&gt; identify policies which grant sufficient permission to run &lt;code&gt;agc account activate&lt;/code&gt; and &lt;code&gt;agc account deactivate&lt;/code&gt; and should be attached to the profile of users who need to perform that action&lt;/li&gt;
+&lt;li&gt;Two resources with names similar to &lt;code&gt;agcuserpolicy346A2D4F&lt;/code&gt; and &lt;code&gt;agcuserpolicycdk27FA61BC&lt;/code&gt; identify policies which allow all other Amazon Genomics CLI actions. These should be attached to profiles that will use Amazon Genomics CLI day to day.&lt;/li&gt;
+&lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: Controlling Costs</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/best-practices/controllingcosts/</link>
       <pubDate>Fri, 17 Sep 2021 18:01:56 -0400</pubDate>

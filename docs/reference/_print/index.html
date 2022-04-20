@@ -111,7 +111,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.793d2e9bb38f8a8180988a7cc0bb80a8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -562,6 +562,8 @@ Activate AGC in your AWS account with a custom S3 bucket and VPC.
       --tags stringToString   A list of comma separated tags to be applied to all AGC resources in this account
                               (i.e. --tags &quot;k1=v1&quot;,&quot;k2=v2&quot;). Each key-value pair must be quoted as shown in the example,
                               otherwise the parsing will fail. (default [])
+      --usePublicSubnets      Do not create a NAT gateway or VPC endpoints, to lower operating costs. 
+                              You must enable the usePublicSubnets option in your project context if you use this flag.
       --vpc string            The ID of a VPC that AGC will run in. 
                               A new VPC will be created if not specified.
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
@@ -1363,10 +1365,10 @@ If no start, end, or look back periods are set, this command will show logs from
 <h3 id="synopsis">Synopsis</h3>
 <p>Show workflow engine logs for a given context.
 If no start, end, or look back periods are set, this command will show logs from the last hour.</p>
-<pre><code>agc logs engine -c context_name [-f filter] [-s start_date] [-e end_date] [-l look_back] [-t] [flags]
+<pre><code>agc logs engine -c context_name [-r run_id] [-f filter] [-s start_date] [-e end_date] [-l look_back] [-t] [flags]
 </code></pre><h3 id="examples">Examples</h3>
 <pre><code>
-/code agc logs engine -c myCtx -s 2021/3/31 -e 2021/4/1 -f ERROR
+/code agc logs engine -c myCtx -r 1234-aed-32db -s 2021/3/31 -e 2021/4/1 -f ERROR
 </code></pre><h3 id="options">Options</h3>
 <pre><code>  -c, --context string     Name of context
   -e, --end string         A date to stop displaying logs.
@@ -1378,6 +1380,7 @@ If no start, end, or look back periods are set, this command will show logs from
   -h, --help               help for engine
   -l, --look-back string   A period of time to look back from now, such as &quot;2h45m&quot;.
                            Valid time units are &quot;s&quot;, &quot;m&quot;, and &quot;h&quot;.
+  -r, --run-id string      filter to engine logs to this workflow run id
   -s, --start string       A date to begin displaying logs.
                            Supports most date formats, such as 2021/03/31 or 8/8/2021 01:00:01 PM.
                            Times respect the system timezone.
@@ -1771,9 +1774,10 @@ Run the workflow named &quot;example-workflow&quot;, against the &quot;prod&quot
 using input parameters contained in file &quot;file:///Users/ec2-user/myproj/test-args.json&quot;
 /code $ agc workflow run example-workflow --context prod --inputsFile file:///Users/ec2-user/myproj/test-args.json
 </code></pre><h3 id="options">Options</h3>
-<pre><code>  -c, --context string      Name of context
-  -h, --help                help for run
-  -i, --inputsFile string   Inputs File Path
+<pre><code>  -c, --context string       Name of context
+  -h, --help                 help for run
+  -i, --inputsFile string    Inputs File Path
+  -o, --optionsFile string   Options file to use.
 </code></pre><h3 id="options-inherited-from-parent-commands">Options inherited from parent commands</h3>
 <pre><code>  -p, --awsProfile string   Use the provided AWS CLI profile.
       --format string       Format option for output. Valid options are: text, table, json

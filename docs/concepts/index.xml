@@ -58,11 +58,10 @@ modify the network topology of the specified VPC.&lt;/p&gt;
 &lt;p&gt;Issuing account activate commands more than once effectively updates the core infrastructure with the difference between
 the two commands. For example, if you had previously activated the account using &lt;code&gt;agc account activate&lt;/code&gt; and later invoked
 &lt;code&gt;agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id&lt;/code&gt; then Amazon Genomics CLI will update to use &lt;code&gt;my-existing-bucket&lt;/code&gt;
-and the identified VPC. The old VPC and related infrastructure will be destroyed. S3 buckets will be &lt;em&gt;retained&lt;/em&gt; according
-to their retention policy.&lt;/p&gt;
+and the identified VPC. The old VPC and S3 buckets will be &lt;em&gt;retained&lt;/em&gt; according to their retention policy.&lt;/p&gt;
 &lt;p&gt;If you initially activated the account with &lt;code&gt;agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id&lt;/code&gt;
-and later invoked &lt;code&gt;agc account activate&lt;/code&gt; then Amazon Genomics CLI will stop using the previous specified bucket and VPC. &lt;em&gt;ALL&lt;/em&gt; of the
-pre-existing S3 and VPC infrastructure will be retained and a new bucket and VPC will be created for use by Amazon Genomics CLI.&lt;/p&gt;
+and later invoked &lt;code&gt;agc account activate&lt;/code&gt; then Amazon Genomics CLI will stop using the previous specified bucket, however the VPC will
+be recalled and re-used. &lt;em&gt;ALL&lt;/em&gt; of the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.&lt;/p&gt;
 &lt;h3 id=&#34;deactivate&#34;&gt;&lt;code&gt;deactivate&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The &lt;code&gt;deactivate&lt;/code&gt; command is used to remove the core infrastructure deployed by Amazon Genomics CLI in the current region when an
 account is activated. The S3 bucket deployed by Amazon Genomics CLI and its contents are retained. If a VPC and/ or S3 bucket were
@@ -82,6 +81,10 @@ project name.&lt;/p&gt;
 as VPC NAT gateways and VPC Endpoints. If you no longer use Amazon Genomics CLI in a region we recommend you deactivate it. You may also
 wish to remove the S3 bucket along with its objects as well as the &lt;a href=&#34;https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/index.html&#34;&gt;CloudWatch&lt;/a&gt; logs produced by Amazon Genomics CLI. These are retained
 by default so that you can view workflow results and logs even after deactivation.&lt;/p&gt;
+&lt;p&gt;However, if you wish to have this infrastructure remain deployed, you are able to significantly reduce ongoing costs by using &lt;code&gt;agc account activate --usePublicSubnets&lt;/code&gt;.
+This prevents the creation of private subnets with NAT gateways, and the use of VPC endpoints, both of which have associated ongoing costs.
+However please note that &lt;strong&gt;you must also set &lt;code&gt;usePublicSubnets: true&lt;/code&gt; in your &lt;code&gt;agc-config.yaml&lt;/code&gt; if you choose to use this option&lt;/strong&gt;.
+Please also note that this is not recommended for security-critical deployments, as it means that any edits to the stack security groups risk exposing worker nodes to the public internet.&lt;/p&gt;
 &lt;h3 id=&#34;network-traffic&#34;&gt;Network traffic&lt;/h3&gt;
 &lt;p&gt;When running genomics workflows, network traffic can become a significant expense when the traffic is routed
 through NAT gateways into private subnets (where worker nodes are usually located). To minimize these costs we recommend
@@ -330,7 +333,19 @@ running within a context. When the max has been reached, additional jobs will be
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;context-commands&#34;&gt;Context Commands&lt;/h2&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;public-subnets&#34;&gt;Public Subnets&lt;/h3&gt;
+&lt;p&gt;In the interest of saving money, in particular if you intend to have the AGC stack deployed for a long period, you may choose to deploy in &amp;ldquo;public subnet&amp;rdquo; mode.
+To do this, you must first set up the core stack using &lt;code&gt;aws configure --usePublicSubnets&lt;/code&gt;, which will disable the creation of the NAT gateway and VPC endpoints which present an ongoing cost unrelated to your use of compute resources.
+After you have done this, you must also set &lt;code&gt;usePublicSubnets: true&lt;/code&gt; in all contexts you use:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;someCtx&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;usePublicSubnets&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This ensures that the AWS batch instances are deployed into a public subnet, which has no additional cost associated with it.
+However note that while these instances are given a security group that will block all incoming traffic, this is not as secure as using the default private subnet mode.&lt;/p&gt;
+&lt;h2 id=&#34;context-commands&#34;&gt;Context Commands&lt;/h2&gt;
 &lt;p&gt;A full reference of context commands is &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_context/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;describe&#34;&gt;&lt;code&gt;describe&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The command &lt;code&gt;agc context describe &amp;lt;context-name&amp;gt; [flags]&lt;/code&gt; will describe the named context as defined in the project YAML
@@ -400,6 +415,7 @@ cost for both components is available via &lt;a href=&#34;https://calculator.aws
 &lt;p&gt;Contexts using the &amp;ldquo;miniwdl&amp;rdquo; or &amp;ldquo;snakemake&amp;rdquo; engines use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
 workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use. An estimated cost assuming a
 total of 500 GB of workflow artifacts is available via &lt;a href=&#34;https://calculator.aws/#/estimate?id=4d19b43aa86fcc3af199c425bfcc55193592cbb4&#34;&gt;this link&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Refer to the &lt;a href=&#34;#public-subnets&#34;&gt;public subnets section&lt;/a&gt; if you are concerned about reducing these ongoing costs.&lt;/p&gt;
 &lt;h3 id=&#34;tags&#34;&gt;Tags&lt;/h3&gt;
 &lt;p&gt;All context infrastructure is &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/namespaces/#tags&#34;&gt;tagged&lt;/a&gt; with the context name, username and project name. These tags may be used to help
 differentiate costs.&lt;/p&gt;
@@ -581,7 +597,7 @@ the main workflow file and any supporting files:&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;inputFileURLs&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;No&lt;/td&gt;
-&lt;td&gt;An array of URLs to one or more JSON files that define the inputs to the workflow in the format expected by the relevant engine. inputFile URLs are resolved relative to the location of the &lt;code&gt;MANIFEST.json&lt;/code&gt;.&lt;/td&gt;
+&lt;td&gt;An array of URLs to one or more JSON files that define the inputs to the workflow in the format expected by the relevant engine. inputFile URLs are resolved relative to the location of the &lt;code&gt;MANIFEST.json&lt;/code&gt;&lt;br/&gt;&lt;br/&gt; If multiple files are listed in inputFiles URLs, they will be passed to Cromwell in the order specified as workflowInput.json, workflowInput_1.json, &amp;hellip; , workflowInput_5.json. (Note: Cromwell only supports up to 5 input.json files). If there are any properties in common between the files, values in higher numbered files will take precedence. See: &lt;a href=&#34;https://cromwell.readthedocs.io/en/stable/api/RESTAPI/#submit-a-workflow-for-execution&#34; target=&#34;_blank&#34;&gt;Cromwell Docs&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;optionFileURL&lt;/code&gt;&lt;/td&gt;
@@ -617,7 +633,16 @@ example:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run my-workflow --inputsFile inputs.json
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If the inputs file references local files, these will be synced with S3 and those files in S3 will be used when the workflow
 instance is run.&lt;/p&gt;
-&lt;h3 id=&#34;list&#34;&gt;&lt;code&gt;list&lt;/code&gt;&lt;/h3&gt;
+&lt;h4 id=&#34;workflow-optionfileurl&#34;&gt;&lt;code&gt;workflow optionFileUrl&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;An additional optionFileUrl can be provided using the &amp;lsquo;o&amp;rsquo; or &amp;lsquo;&amp;ndash;optionFileUrl&amp;rsquo; flag. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow run my-workflow --optionFileUrl optionFile.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;OptionFileUrl is only for use with engines that run in server mode (e.g. Cromwell).&lt;/p&gt;
+&lt;p&gt;Example option.json&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;{&lt;/span&gt;
+    &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;option_name_1&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;option value 1&amp;#34;&lt;/span&gt;,
+    &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;option_name_2&amp;#34;&lt;/span&gt;: &lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;option value 2&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#ce5c00;font-weight:bold&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;list&#34;&gt;&lt;code&gt;list&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The &lt;code&gt;agc workflow list&lt;/code&gt; command can be used to list all workflows that are specified in the current project.&lt;/p&gt;
 &lt;h3 id=&#34;describe&#34;&gt;&lt;code&gt;describe&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The &lt;code&gt;agc workflow describe &amp;lt;workflow-name&amp;gt;&lt;/code&gt; command will return detailed information about the named workflow based on

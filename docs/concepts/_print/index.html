@@ -111,7 +111,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.793d2e9bb38f8a8180988a7cc0bb80a8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -294,11 +294,10 @@ modify the network topology of the specified VPC.</p>
 <p>Issuing account activate commands more than once effectively updates the core infrastructure with the difference between
 the two commands. For example, if you had previously activated the account using <code>agc account activate</code> and later invoked
 <code>agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id</code> then Amazon Genomics CLI will update to use <code>my-existing-bucket</code>
-and the identified VPC. The old VPC and related infrastructure will be destroyed. S3 buckets will be <em>retained</em> according
-to their retention policy.</p>
+and the identified VPC. The old VPC and S3 buckets will be <em>retained</em> according to their retention policy.</p>
 <p>If you initially activated the account with <code>agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id</code>
-and later invoked <code>agc account activate</code> then Amazon Genomics CLI will stop using the previous specified bucket and VPC. <em>ALL</em> of the
-pre-existing S3 and VPC infrastructure will be retained and a new bucket and VPC will be created for use by Amazon Genomics CLI.</p>
+and later invoked <code>agc account activate</code> then Amazon Genomics CLI will stop using the previous specified bucket, however the VPC will
+be recalled and re-used. <em>ALL</em> of the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.</p>
 <h3 id="deactivate"><code>deactivate</code></h3>
 <p>The <code>deactivate</code> command is used to remove the core infrastructure deployed by Amazon Genomics CLI in the current region when an
 account is activated. The S3 bucket deployed by Amazon Genomics CLI and its contents are retained. If a VPC and/ or S3 bucket were
@@ -318,6 +317,10 @@ project name.</p>
 as VPC NAT gateways and VPC Endpoints. If you no longer use Amazon Genomics CLI in a region we recommend you deactivate it. You may also
 wish to remove the S3 bucket along with its objects as well as the <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/index.html">CloudWatch</a> logs produced by Amazon Genomics CLI. These are retained
 by default so that you can view workflow results and logs even after deactivation.</p>
+<p>However, if you wish to have this infrastructure remain deployed, you are able to significantly reduce ongoing costs by using <code>agc account activate --usePublicSubnets</code>.
+This prevents the creation of private subnets with NAT gateways, and the use of VPC endpoints, both of which have associated ongoing costs.
+However please note that <strong>you must also set <code>usePublicSubnets: true</code> in your <code>agc-config.yaml</code> if you choose to use this option</strong>.
+Please also note that this is not recommended for security-critical deployments, as it means that any edits to the stack security groups risk exposing worker nodes to the public internet.</p>
 <h3 id="network-traffic">Network traffic</h3>
 <p>When running genomics workflows, network traffic can become a significant expense when the traffic is routed
 through NAT gateways into private subnets (where worker nodes are usually located). To minimize these costs we recommend
@@ -578,7 +581,19 @@ running within a context. When the max has been reached, additional jobs will be
 </span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
-</span></code></pre></div><h2 id="context-commands">Context Commands</h2>
+</span></code></pre></div><h3 id="public-subnets">Public Subnets</h3>
+<p>In the interest of saving money, in particular if you intend to have the AGC stack deployed for a long period, you may choose to deploy in &ldquo;public subnet&rdquo; mode.
+To do this, you must first set up the core stack using <code>aws configure --usePublicSubnets</code>, which will disable the creation of the NAT gateway and VPC endpoints which present an ongoing cost unrelated to your use of compute resources.
+After you have done this, you must also set <code>usePublicSubnets: true</code> in all contexts you use:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">contexts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">someCtx</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">usePublicSubnets</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><p>This ensures that the AWS batch instances are deployed into a public subnet, which has no additional cost associated with it.
+However note that while these instances are given a security group that will block all incoming traffic, this is not as secure as using the default private subnet mode.</p>
+<h2 id="context-commands">Context Commands</h2>
 <p>A full reference of context commands is <a href="/amazon-genomics-cli/docs/reference/agc_context/">here</a></p>
 <h3 id="describe"><code>describe</code></h3>
 <p>The command <code>agc context describe &lt;context-name&gt; [flags]</code> will describe the named context as defined in the project YAML
@@ -648,6 +663,7 @@ cost for both components is available via <a href="https://calculator.aws/#/esti
 <p>Contexts using the &ldquo;miniwdl&rdquo; or &ldquo;snakemake&rdquo; engines use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
 workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use. An estimated cost assuming a
 total of 500 GB of workflow artifacts is available via <a href="https://calculator.aws/#/estimate?id=4d19b43aa86fcc3af199c425bfcc55193592cbb4">this link</a></p>
+<p>Refer to the <a href="#public-subnets">public subnets section</a> if you are concerned about reducing these ongoing costs.</p>
 <h3 id="tags">Tags</h3>
 <p>All context infrastructure is <a href="/amazon-genomics-cli/docs/concepts/namespaces/#tags">tagged</a> with the context name, username and project name. These tags may be used to help
 differentiate costs.</p>
@@ -837,7 +853,7 @@ the main workflow file and any supporting files:</p>
 <tr>
 <td><code>inputFileURLs</code></td>
 <td>No</td>
-<td>An array of URLs to one or more JSON files that define the inputs to the workflow in the format expected by the relevant engine. inputFile URLs are resolved relative to the location of the <code>MANIFEST.json</code>.</td>
+<td>An array of URLs to one or more JSON files that define the inputs to the workflow in the format expected by the relevant engine. inputFile URLs are resolved relative to the location of the <code>MANIFEST.json</code><br/><br/> If multiple files are listed in inputFiles URLs, they will be passed to Cromwell in the order specified as workflowInput.json, workflowInput_1.json, &hellip; , workflowInput_5.json. (Note: Cromwell only supports up to 5 input.json files). If there are any properties in common between the files, values in higher numbered files will take precedence. See: <a href="https://cromwell.readthedocs.io/en/stable/api/RESTAPI/#submit-a-workflow-for-execution" target="_blank">Cromwell Docs</a></td>
 </tr>
 <tr>
 <td><code>optionFileURL</code></td>
@@ -873,7 +889,16 @@ example:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">agc workflow run my-workflow --inputsFile inputs.json
 </code></pre></div><p>If the inputs file references local files, these will be synced with S3 and those files in S3 will be used when the workflow
 instance is run.</p>
-<h3 id="list"><code>list</code></h3>
+<h4 id="workflow-optionfileurl"><code>workflow optionFileUrl</code></h4>
+<p>An additional optionFileUrl can be provided using the &lsquo;o&rsquo; or &lsquo;&ndash;optionFileUrl&rsquo; flag. For example:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">agc workflow run my-workflow --optionFileUrl optionFile.json
+</code></pre></div><p>OptionFileUrl is only for use with engines that run in server mode (e.g. Cromwell).</p>
+<p>Example option.json</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#ce5c00;font-weight:bold">{</span>
+    <span style="color:#4e9a06">&#34;option_name_1&#34;</span>: <span style="color:#4e9a06">&#34;option value 1&#34;</span>,
+    <span style="color:#4e9a06">&#34;option_name_2&#34;</span>: <span style="color:#4e9a06">&#34;option value 2&#34;</span>
+<span style="color:#ce5c00;font-weight:bold">}</span>
+</code></pre></div><h3 id="list"><code>list</code></h3>
 <p>The <code>agc workflow list</code> command can be used to list all workflows that are specified in the current project.</p>
 <h3 id="describe"><code>describe</code></h3>
 <p>The <code>agc workflow describe &lt;workflow-name&gt;</code> command will return detailed information about the named workflow based on

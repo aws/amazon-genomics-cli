@@ -111,7 +111,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.793d2e9bb38f8a8180988a7cc0bb80a8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -233,7 +233,7 @@ This is the multi-page printable view of this section.
 </li>
 <li>Internet access</li>
 <li>An AWS Account</li>
-<li>An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions <a href="https://github.com/aws/amazon-genomics-cli/tree/main/extras/agc-minimal-permissions">here</a>.</li>
+<li>An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions <a href="/amazon-genomics-cli/docs/best-practices/iampermissions/">here</a></li>
 </ul>
 <p>Running Amazon Genomics CLI on Windows has not been tested, but it should run in WSL 2 with Ubuntu 20.04</p>
 <h2 id="prerequisite-installation">Prerequisite installation</h2>
@@ -410,6 +410,15 @@ Command completion is optional and not required to use Amazon Genomics CLI. To g
 </code></pre><p>This will create the core infrastructure that Amazon Genomics CLI needs to operate, which includes a DynamoDB table, an S3 bucket and a VPC. This will take ~5min to complete. You only need to do this once per account region.</p>
 <p>The DynamoDB table is used by the CLI for persistent state. The S3 bucket is used for durable workflow data and Amazon Genomics CLI metadata and the VPC is used to isolate compute resources. You can specify your own preexisting S3 Bucket or VPC if needed using <code>--bucket</code> and <code>--vpc</code> options.</p>
 <h3 id="cdk-bootstrap">CDK Bootstrap</h3>
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Attention</h4>
+
+    This step is NOT required when using Amazon Genomics CLI version 1.2 or above
+
+</div>
+
 <p>Amazon Genomics CLI uses AWS CDK to deploy infrastructure. Activating an account will bootstrap the AWS Environment for CDK app deployments.
 CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defined infrastructure. Full details are available
 <a href="https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html">here</a>.</p>

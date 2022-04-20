@@ -27,13 +27,13 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/concepts/contexts/" /><meta property="article:section" content="docs" />
 <meta property="article:published_time" content="2021-08-31T17:26:49-04:00" />
-<meta property="article:modified_time" content="2022-03-14T14:07:19-04:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<meta property="article:modified_time" content="2022-04-19T13:28:00-07:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
 <meta itemprop="name" content="Contexts">
 <meta itemprop="description" content="Contexts are the set of cloud resources used to run a workflow
 "><meta itemprop="datePublished" content="2021-08-31T17:26:49-04:00" />
-<meta itemprop="dateModified" content="2022-03-14T14:07:19-04:00" />
-<meta itemprop="wordCount" content="1628">
+<meta itemprop="dateModified" content="2022-04-19T13:28:00-07:00" />
+<meta itemprop="wordCount" content="1781">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Contexts"/>
 <meta name="twitter:description" content="Contexts are the set of cloud resources used to run a workflow
@@ -114,7 +114,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.793d2e9bb38f8a8180988a7cc0bb80a8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -136,7 +136,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.793d2e9bb38f8a8180988a7cc0bb80a8.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -199,7 +199,9 @@
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-amazon-genomics-clidocsbest-practices-li">
   <a href="/amazon-genomics-cli/docs/best-practices/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsbest-practices"><span class="">Best Practices</span></a>
   <ul class="ul-2 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts-li">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicesiampermissions-li">
+  <a href="/amazon-genomics-cli/docs/best-practices/iampermissions/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicesiampermissions"><span class="">IAM Permissions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts-li">
   <a href="/amazon-genomics-cli/docs/best-practices/controllingcosts/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts"><span class="">Controlling Costs</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicesscalingworkloads-li">
   <a href="/amazon-genomics-cli/docs/best-practices/scalingworkloads/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicesscalingworkloads"><span class="">Scaling Workloads</span></a>
@@ -334,6 +336,7 @@
       <ul>
         <li><a href="#instance-types">Instance Types</a></li>
         <li><a href="#max-vcpus">Max vCpus</a></li>
+        <li><a href="#public-subnets">Public Subnets</a></li>
       </ul>
     </li>
     <li><a href="#context-commands">Context Commands</a>
@@ -484,7 +487,19 @@ running within a context. When the max has been reached, additional jobs will be
 </span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
-</span></code></pre></div><h2 id="context-commands">Context Commands</h2>
+</span></code></pre></div><h3 id="public-subnets">Public Subnets</h3>
+<p>In the interest of saving money, in particular if you intend to have the AGC stack deployed for a long period, you may choose to deploy in &ldquo;public subnet&rdquo; mode.
+To do this, you must first set up the core stack using <code>aws configure --usePublicSubnets</code>, which will disable the creation of the NAT gateway and VPC endpoints which present an ongoing cost unrelated to your use of compute resources.
+After you have done this, you must also set <code>usePublicSubnets: true</code> in all contexts you use:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">contexts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">someCtx</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">usePublicSubnets</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><p>This ensures that the AWS batch instances are deployed into a public subnet, which has no additional cost associated with it.
+However note that while these instances are given a security group that will block all incoming traffic, this is not as secure as using the default private subnet mode.</p>
+<h2 id="context-commands">Context Commands</h2>
 <p>A full reference of context commands is <a href="/amazon-genomics-cli/docs/reference/agc_context/">here</a></p>
 <h3 id="describe"><code>describe</code></h3>
 <p>The command <code>agc context describe &lt;context-name&gt; [flags]</code> will describe the named context as defined in the project YAML
@@ -554,6 +569,7 @@ cost for both components is available via <a href="https://calculator.aws/#/esti
 <p>Contexts using the &ldquo;miniwdl&rdquo; or &ldquo;snakemake&rdquo; engines use EFS volumes as scratch space for workflow intermediates, caches and temporary files. Because many genomics
 workflows can accumulate several GB of intermediates per run we recommend destroying these contexts when not in use. An estimated cost assuming a
 total of 500 GB of workflow artifacts is available via <a href="https://calculator.aws/#/estimate?id=4d19b43aa86fcc3af199c425bfcc55193592cbb4">this link</a></p>
+<p>Refer to the <a href="#public-subnets">public subnets section</a> if you are concerned about reducing these ongoing costs.</p>
 <h3 id="tags">Tags</h3>
 <p>All context infrastructure is <a href="/amazon-genomics-cli/docs/concepts/namespaces/#tags">tagged</a> with the context name, username and project name. These tags may be used to help
 differentiate costs.</p>
@@ -574,7 +590,7 @@ code we recommend destroying any relevant running contexts and redeploying them.
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified March 14, 2022: <a href="https://github.com/aws/amazon-genomics-cli/commit/85147176ad058acca1cf87933ad8b56d04a11444">chore: added details about workflow filesystems (#372) (8514717)</a>
+  Last modified April 19, 2022: <a href="https://github.com/aws/amazon-genomics-cli/commit/7b120e788bd3d1ccd1d21f118c52123e70c31b9d">Merge pull request #408 from aws/bump/v1.4.0 (7b120e7)</a>
 </div>
 
 </div>

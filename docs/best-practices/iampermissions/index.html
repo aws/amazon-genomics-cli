@@ -18,25 +18,25 @@
 <link rel="icon" type="image/png" href="/amazon-genomics-cli/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/amazon-genomics-cli/favicons/android-192x192.png" sizes="192x192">
 
-<title>Controlling Costs | Amazon Genomics CLI</title>
-<meta name="description" content="Monitoring costs and design considerations to reduce costs
+<title>IAM Permissions | Amazon Genomics CLI</title>
+<meta name="description" content="Minimum IAM Permissions required to use AGC
 ">
-<meta property="og:title" content="Controlling Costs" />
-<meta property="og:description" content="Monitoring costs and design considerations to reduce costs
+<meta property="og:title" content="IAM Permissions" />
+<meta property="og:description" content="Minimum IAM Permissions required to use AGC
 " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/best-practices/controllingcosts/" /><meta property="article:section" content="docs" />
-<meta property="article:published_time" content="2021-09-17T18:01:56-04:00" />
+<meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/best-practices/iampermissions/" /><meta property="article:section" content="docs" />
+<meta property="article:published_time" content="2022-04-07T09:51:56-04:00" />
 <meta property="article:modified_time" content="2022-04-19T13:28:00-07:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
-<meta itemprop="name" content="Controlling Costs">
-<meta itemprop="description" content="Monitoring costs and design considerations to reduce costs
-"><meta itemprop="datePublished" content="2021-09-17T18:01:56-04:00" />
+<meta itemprop="name" content="IAM Permissions">
+<meta itemprop="description" content="Minimum IAM Permissions required to use AGC
+"><meta itemprop="datePublished" content="2022-04-07T09:51:56-04:00" />
 <meta itemprop="dateModified" content="2022-04-19T13:28:00-07:00" />
-<meta itemprop="wordCount" content="1187">
+<meta itemprop="wordCount" content="425">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Controlling Costs"/>
-<meta name="twitter:description" content="Monitoring costs and design considerations to reduce costs
+<meta name="twitter:title" content="IAM Permissions"/>
+<meta name="twitter:description" content="Minimum IAM Permissions required to use AGC
 "/>
 
 
@@ -199,10 +199,10 @@
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-amazon-genomics-clidocsbest-practices-li">
   <a href="/amazon-genomics-cli/docs/best-practices/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-amazon-genomics-clidocsbest-practices"><span class="">Best Practices</span></a>
   <ul class="ul-2 foldable">
-    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicesiampermissions-li">
-  <a href="/amazon-genomics-cli/docs/best-practices/iampermissions/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicesiampermissions"><span class="">IAM Permissions</span></a>
-</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts-li">
-  <a href="/amazon-genomics-cli/docs/best-practices/controllingcosts/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts"><span class="td-sidebar-nav-active-item">Controlling Costs</span></a>
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-amazon-genomics-clidocsbest-practicesiampermissions-li">
+  <a href="/amazon-genomics-cli/docs/best-practices/iampermissions/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicesiampermissions"><span class="td-sidebar-nav-active-item">IAM Permissions</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts-li">
+  <a href="/amazon-genomics-cli/docs/best-practices/controllingcosts/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicescontrollingcosts"><span class="">Controlling Costs</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsbest-practicesscalingworkloads-li">
   <a href="/amazon-genomics-cli/docs/best-practices/scalingworkloads/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsbest-practicesscalingworkloads"><span class="">Scaling Workloads</span></a>
 </li>
@@ -317,30 +317,16 @@
           <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
             
 <div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
-<a href="https://github.com/aws/amazon-genomics-cli/tree/main/site//content/en/docs/Best%20practices/controllingcosts.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa fa-file-alt fa-fw"></i> View page source</a>
-  <a href="https://github.com/aws/amazon-genomics-cli/edit/main/site//content/en/docs/Best%20practices/controllingcosts.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-  <a href="https://github.com/aws/amazon-genomics-cli/new/main/site//content/en/docs/Best%20practices/controllingcosts.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Create child page</a>
-  <a href="https://github.com/aws/amazon-genomics-cli/issues/new?title=Controlling%20Costs" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
+<a href="https://github.com/aws/amazon-genomics-cli/tree/main/site//content/en/docs/Best%20practices/iampermissions.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa fa-file-alt fa-fw"></i> View page source</a>
+  <a href="https://github.com/aws/amazon-genomics-cli/edit/main/site//content/en/docs/Best%20practices/iampermissions.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/aws/amazon-genomics-cli/new/main/site//content/en/docs/Best%20practices/iampermissions.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa fa-edit fa-fw"></i> Create child page</a>
+  <a href="https://github.com/aws/amazon-genomics-cli/issues/new?title=IAM%20Permissions" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fab fa-github fa-fw"></i> Create documentation issue</a>
   <a id="print" href="https://aws.github.io/amazon-genomics-cli/docs/best-practices/_print/"><i class="fa fa-print fa-fw"></i> Print entire section</a>
 
 </div>
 
             
 
-
-<div class="td-toc"><nav id="TableOfContents">
-  <ul>
-    <li><a href="#use-aws-cost-explorer-to-report-on-costs">Use AWS Cost Explorer to Report on Costs</a></li>
-    <li><a href="#optimizing-requested-container-resources">Optimizing Requested Container Resources</a></li>
-    <li><a href="#optimize-the-longest-running-and-most-parallel-tasks-first">Optimize the longest running, and most parallel tasks first</a></li>
-    <li><a href="#consider-cpu-and-memory-ratios">Consider CPU and memory ratios</a></li>
-    <li><a href="#consider-splitting-tasks-that-pipe-output">Consider splitting tasks that pipe output</a></li>
-    <li><a href="#use-the-most-cost-effective-instance-generation">Use the most cost-effective instance generation</a></li>
-    <li><a href="#deploy-amazon-genomics-cli-where-your-s3-data-is">Deploy Amazon Genomics CLI where your S3 data is</a></li>
-    <li><a href="#use-spot-instances">Use Spot Instances</a></li>
-    <li><a href="#use-private-ecr-registries">Use private ECR registries</a></li>
-  </ul>
-</nav></div>
 
 
 
@@ -378,14 +364,14 @@
     <a href="https://aws.github.io/amazon-genomics-cli/docs/best-practices/">Best Practices</a>
   </li>
   <li class="breadcrumb-item active" aria-current="page">
-    <a href="https://aws.github.io/amazon-genomics-cli/docs/best-practices/controllingcosts/">Controlling Costs</a>
+    <a href="https://aws.github.io/amazon-genomics-cli/docs/best-practices/iampermissions/">IAM Permissions</a>
   </li>
   </ol>
 </nav>
             
 <div class="td-content">
-	<h1>Controlling Costs</h1>
-	<div class="lead">Monitoring costs and design considerations to reduce costs</div>
+	<h1>IAM Permissions</h1>
+	<div class="lead">Minimum IAM Permissions required to use AGC</div>
 	<header class="article-meta">
 		
 		
@@ -401,84 +387,104 @@
 		
 		
 	</header>    
-	<p>When you begin to run large scale workflows frequently it will become important to be able to understand the costs involved and
-how to optimize your workflow and use of Amazon Genomics CLI to reduce costs.</p>
-<h2 id="use-aws-cost-explorer-to-report-on-costs">Use AWS Cost Explorer to Report on Costs</h2>
-<p>AWS Cost Explorer has an easy-to-use interface that lets you visualize, understand, and manage your AWS costs and usage over time.
-We recommend you use this tool to gain sight into the costs of running your genomics workflows. At the time of writing AWS Cost Explorer
-can only be enabled using the AWS Console so Amazon Genomics CLI won&rsquo;t be able to set this up for you. As a first step you will need to <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/ce-getting-started.html">enable cost explorer</a> for your
-AWS account.</p>
-<p>Amazon Genomics CLI will tag the infrastructure it creates with tags. Application, user, project and context tags are all generated as
-appropriate and these can be used as <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html">cost allocation tags</a>
-to determine which account costs are coming from Amazon Genomics CLI and which user, context and project.</p>
-<p>Within Cost Explorer the Amazon Genomics CLI tags will be referred to as <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/custom-tags.html">&ldquo;User Defined Cost Allocation Tags&rdquo;</a>.
-Before a tag can be used in a cost report it must be <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/activating-tags.html">activated</a>. Costs associated with
-tags are only available for infrastructure used <em>after</em> activation of a tag, so it will not be possible to retrospectively
-examine costs.</p>
-<h2 id="optimizing-requested-container-resources">Optimizing Requested Container Resources</h2>
-<p>Tasks in a workflow typically run in Docker containers. Depending on the workflow language there will be some kind of <code>runtime</code> definition that specifies the
-number of vCPUs and amount of RAM allocated to the task. For example, in WDL you could specify</p>
-<pre><code>  runtime {
-    docker: &quot;biocontainers/plink1.9:v1.90b6.6-181012-1-deb_cv1&quot;
-    memory: &quot;8 GB&quot;
-    cpu: 2
-  }
-</code></pre><p>The amount of resource allocated to each container ultimately impacts the cost to run a workflow. Optimally allocating
-resources leads to cost efficiency.</p>
-<h2 id="optimize-the-longest-running-and-most-parallel-tasks-first">Optimize the longest running, and most parallel tasks first</h2>
-<p>When optimizing a workflow, focus on those tasks that run the longest as well as those
-that have the largest number of parallel tasks as they will make up the majority of the workflow runtime and contribute
-most to the cost.</p>
-<h2 id="consider-cpu-and-memory-ratios">Consider CPU and memory ratios</h2>
-<p>EC2 workers for Cromwell AWS Batch compute environments are <code>c</code>, <code>m</code>, and <code>r</code> instance families that
-have vCPU to memory ratios of 1:2, 1:4 and 1:8 respectively. Engines that run container based workflows will typically attempt to fit containers to instances in
-the most optimal way depending on cost and size requirements, or they will delegate this to a service like AWS Batch. Given that a task requiring 16GB of RAM that could make
-use of all available CPUs, then to optimally pack the containers you should specify either 2, 4, or 8 vCPU. Other
-values could lead to inefficient packing meaning the resources of the EC2 container instance will be paid for but
-not optimally used.</p>
-<blockquote>
-<p>NOTE: Fully packing an instance can result in it becoming unresponsive if the tasks in the containers use 100%
-(or more if they start swapping) of the allocated resources. The instance may then be unresponsive to its management services or the workflow engine and may
-time out. To avoid this, always allow for a little overhead, especially in the smaller instances.</p>
-</blockquote>
-<p>The largest instance types deployed by default are from the <code>4xlarge</code> size which have 16 vCPU and up to 128 MB of RAM.</p>
-<h2 id="consider-splitting-tasks-that-pipe-output">Consider splitting tasks that pipe output</h2>
-<p>If a workflow task consists of a process that pipes <code>STDOUT</code> to another process then both processes will run in the same
-container and receive the same resources. If one task requires more resources than the other this might be inefficient,
-it may be better divided into two tasks each with its own <code>runtime</code> configuration. Note that this will require the
-intermediate <code>STDOUT</code> to be written to a file and copied between containers so if this output is very large then keeping
-the processes in the same task may be more efficient. Piping very large outputs may a lot of memory so
-your container will need an appropriate allocation of memory.</p>
-<h2 id="use-the-most-cost-effective-instance-generation">Use the most cost-effective instance generation</h2>
-<p>When you specify the <code>instanceTypes</code> in a context, as opposed to letting Amazon Genomics CLI do it for you, consider the cost and performance of the instance types with respect to your workflow requirements.
-Fifth generation EC2 types (<code>c5</code>, <code>m5</code>, <code>r5</code>) have a lower on-demand price and have higher clock speeds than their 4th
-generation counterparts (<code>c4</code>, <code>m4</code>, <code>r4</code>). Therefore, for on-demand compute environments, those instance types should be
-preferred. In spot compute environments we suggest using both 4th and 5th generation types as this increases the pool of
-available types meaning Batch will be able to choose the instance type that is cheapest and least likely to be
-interrupted.</p>
-<h2 id="deploy-amazon-genomics-cli-where-your-s3-data-is">Deploy Amazon Genomics CLI where your S3 data is</h2>
-<p>Genomics workflows may need to access considerable amounts of data stored in S3. Although S3 uses global namespaces, buckets
-do reside in regions. If you access a lot of S3 data it makes sense to deploy your Amazon Genomics CLI infrastructure in the same region
-to avoid cross region data charges.</p>
-<p>Further, if you use a custom VPC we recommend deploying a VPC endpoint for S3 so that you do no incur NAT Gateway charges
-for data coming from the same region. If you do not you might find that NAT Gateway charges are the largest part of your
-workflow run costs. If you allow Amazon Genomics CLI to create your VPC (the default), appropriate VPC endpoints will be setup for you.
-Note that VPC endpoints cannot avoid cross region data charges, so you will still want to deploy in the region where most of
-your data resides.</p>
-<h2 id="use-spot-instances">Use Spot Instances</h2>
-<p>The use of Spot instances can significantly reduce costs of running workflows. However, spot instances may be interrupted when EC2 demand
-is high. Some workflow engines, such as Cromwell, can support retries of tasks that fail due to Spot interruption (among other things).
-To enable this for Cromwell, include the <code>awsBatchRetryAttempts</code> parameter in the <code>runtime</code> section of a WDL task with an
-integer number of attempts.</p>
-<p>Even with retries, there is a risk that spot interruption will case a task or entire workflow to fail. Use of an engines call caching capabilities (if available)
-can help avoid repeating work if a partially complete workflow needs to be restarted du to Spot instance interruption.</p>
-<h2 id="use-private-ecr-registries">Use private ECR registries</h2>
-<p>Each task in a workflow requires access to a container image, and some of these images can be several GB if they contain
-large packages like GATK. This can lead to large NAT Gateway traffic charges. To avoid these charges, we recommend deploying
-copies of frequently used container images into your accounts private ECR registry.</p>
-<p>Amazon Genomics CLI deployed VPCs use a VPC gateway to talk to private ECR registries in your account thereby avoiding NAT Gateway traffic. The gateway is
-limited to registries in the same region as the VPC, so to avoid cross-region traffic you should deploy images into the region(s) that you
-use for Amazon Genomics CLI.</p>
+	<p>Amazon Genomics CLI is used to deploy and interact with infrastructure in an AWS account. Amazon Genomics CLI will use
+the permissions of the current profile to perform its actions. The profile would either be the users profile or, if being
+run from an EC2 instance, the attached profile of the instance. No matter the source of the role it must have sufficient
+permissions to perform the necessary tasks. In addition, best practice recommends that the profile only grant minimal
+permissions to maintain security and prevent unintended action.</p>
+<h3 id="recommended-minimal-permissions">Recommended Minimal Permissions</h3>
+<p>As part of the Amazon Genomics CLI repository we have included a CDK project that can be used by an account administrator
+to generate the necessary minimum policies.</p>
+<h4 id="pre-requisites">Pre-requisites</h4>
+<p>Before generating the policies you need to do the following:</p>
+<ol>
+<li>Install <code>node</code> and <code>npm</code>. We recommend using node v14.17 installed via <code>nvm</code></li>
+<li>Install Amazon CDK (<code>npm install -g aws-cdk@latest</code>)</li>
+<li>An AWS account where you will use Amazon Genomics CLI</li>
+<li>A role in that account that allows the creation of IAM roles and policies</li>
+</ol>
+<h4 id="generate-roles-and-policies">Generate Roles and Policies</h4>
+<ol>
+<li>Clone the Amazon Genomics CLI repository locally: <code>git clone https://github.com/aws/amazon-genomics-cli.git</code></li>
+<li>cd <code>amazon-genomics-cli/extras/agc-minimal-permissions/</code></li>
+<li><code>npm install</code></li>
+<li><code>cdk deploy</code></li>
+</ol>
+<p>You will see output similar to the following:</p>
+<pre><code>✨  Synthesis time: 2.91s
+
+AgcPermissionsStack: deploying...
+AgcPermissionsStack: creating CloudFormation changeset...
+
+ ✅  AgcPermissionsStack
+
+✨  Deployment time: 44.39s
+
+Stack ARN:
+arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9
+
+✨  Total time: 47.3s
+</code></pre><p>Using the emitted Stack ARN you can identify the policies created. You can also inspect the stack in the CloudFormation console.</p>
+<p>For example:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">aws cloudformation describe-stack-resources --stack-name &lt;stack arn&gt;
+</code></pre></div><p>with output similar to:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#204a87;font-weight:bold">&#34;StackResources&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">[</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackName&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AgcPermissionsStack&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;LogicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;CDKMetadata&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;PhysicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceType&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AWS::CDK::Metadata&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;Timestamp&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2022-04-07T14:10:30.922000+00:00&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;CREATE_COMPLETE&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;DriftInformation&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#204a87;font-weight:bold">&#34;StackResourceDriftStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;NOT_CHECKED&#34;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackName&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AgcPermissionsStack&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;LogicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;agcadminpolicy25003180&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;PhysicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:iam::123456789123:policy/AgcPermissionsStack-agcadminpolicy25003180-1ST0KJ0I5J45R&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceType&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AWS::IAM::ManagedPolicy&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;Timestamp&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2022-04-07T14:10:41.597000+00:00&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;CREATE_COMPLETE&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;DriftInformation&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#204a87;font-weight:bold">&#34;StackResourceDriftStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;NOT_CHECKED&#34;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackName&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AgcPermissionsStack&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;LogicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;agcuserpolicy346A2D4F&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;PhysicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:iam::123456789123:policy/AgcPermissionsStack-agcuserpolicy346A2D4F-1X9U4HCQ8Z19U&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceType&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AWS::IAM::ManagedPolicy&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;Timestamp&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2022-04-07T14:10:41.981000+00:00&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;CREATE_COMPLETE&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;DriftInformation&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#204a87;font-weight:bold">&#34;StackResourceDriftStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;NOT_CHECKED&#34;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">},</span>
+        <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackName&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AgcPermissionsStack&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;StackId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0-b67c-11ec-a5d3-0a1e6da159c9&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;LogicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;agcuserpolicycdk27FA61BC&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;PhysicalResourceId&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;arn:aws:iam::123456789123:policy/AgcPermissionsStack-agcuserpolicycdk27FA61BC-OXS49AINGPIG&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceType&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;AWS::IAM::ManagedPolicy&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;Timestamp&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;2022-04-07T14:10:41.747000+00:00&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;ResourceStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;CREATE_COMPLETE&#34;</span><span style="color:#000;font-weight:bold">,</span>
+            <span style="color:#204a87;font-weight:bold">&#34;DriftInformation&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#204a87;font-weight:bold">&#34;StackResourceDriftStatus&#34;</span><span style="color:#000;font-weight:bold">:</span> <span style="color:#4e9a06">&#34;NOT_CHECKED&#34;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">}</span>
+    <span style="color:#000;font-weight:bold">]</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></div><p>Three resources of type <code>AWS::IAM::ManagedPolicy</code> are created:</p>
+<ul>
+<li>The resource with a name similar to <code>agcadminpolicy25003180</code> identify policies which grant sufficient permission to run <code>agc account activate</code> and <code>agc account deactivate</code> and should be attached to the profile of users who need to perform that action</li>
+<li>Two resources with names similar to <code>agcuserpolicy346A2D4F</code> and <code>agcuserpolicycdk27FA61BC</code> identify policies which allow all other Amazon Genomics CLI actions. These should be attached to profiles that will use Amazon Genomics CLI day to day.</li>
+</ul>
 
 	
 	

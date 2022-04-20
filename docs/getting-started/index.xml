@@ -34,7 +34,7 @@
 &lt;/li&gt;
 &lt;li&gt;Internet access&lt;/li&gt;
 &lt;li&gt;An AWS Account&lt;/li&gt;
-&lt;li&gt;An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/tree/main/extras/agc-minimal-permissions&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/best-practices/iampermissions/&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Running Amazon Genomics CLI on Windows has not been tested, but it should run in WSL 2 with Ubuntu 20.04&lt;/p&gt;
 &lt;h2 id=&#34;prerequisite-installation&#34;&gt;Prerequisite installation&lt;/h2&gt;
@@ -203,6 +203,15 @@ Command completion is optional and not required to use Amazon Genomics CLI. To g
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will create the core infrastructure that Amazon Genomics CLI needs to operate, which includes a DynamoDB table, an S3 bucket and a VPC. This will take ~5min to complete. You only need to do this once per account region.&lt;/p&gt;
 &lt;p&gt;The DynamoDB table is used by the CLI for persistent state. The S3 bucket is used for durable workflow data and Amazon Genomics CLI metadata and the VPC is used to isolate compute resources. You can specify your own preexisting S3 Bucket or VPC if needed using &lt;code&gt;--bucket&lt;/code&gt; and &lt;code&gt;--vpc&lt;/code&gt; options.&lt;/p&gt;
 &lt;h3 id=&#34;cdk-bootstrap&#34;&gt;CDK Bootstrap&lt;/h3&gt;
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Attention&lt;/h4&gt;
+
+    This step is NOT required when using Amazon Genomics CLI version 1.2 or above
+
+&lt;/div&gt;
+
 &lt;p&gt;Amazon Genomics CLI uses AWS CDK to deploy infrastructure. Activating an account will bootstrap the AWS Environment for CDK app deployments.
 CDK Bootstrap deploys the infrastructure needed to allow CDK to deploy CDK defined infrastructure. Full details are available
 &lt;a href=&#34;https://docs.aws.amazon.com/cdk/latest/guide/bootstrapping.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
