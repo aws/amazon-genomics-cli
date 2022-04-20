@@ -322,7 +322,7 @@ func TestGetWalkDirFn(t *testing.T) {
 		},
 		"it skips suffix file: '.nextflow.log'": {
 			setupMocks:        func(mocksUtils MockUtils) {},
-			currentPath:       "/some/path/other/file.ext",
+			currentPath:       "/some/path/to/file.ext",
 			absSourceDir:      "/some/path/to/folder",
 			absDestinationDir: "/some/path/to",
 			expectedErr:       filepath.SkipDir,
@@ -331,7 +331,7 @@ func TestGetWalkDirFn(t *testing.T) {
 				fileMode:  32,
 				info:      nil,
 				infoError: nil,
-				name:      "some/path/to/file.nextflow.log",
+				name:      "some/path/file.nextflow.log",
 			},
 		},
 		"if it tries to open an invalid file, it fails - OsOpen": {
