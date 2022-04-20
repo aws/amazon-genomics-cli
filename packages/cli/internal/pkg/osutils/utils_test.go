@@ -172,10 +172,10 @@ func TestGetAndCreateRelativePath(t *testing.T) {
 				osMkdirAll = mocksUtils.mockOs.MkdirAll
 				osStat = mocksUtils.mockOs.Stat
 				osIsNotExist = mocksUtils.mockOs.IsNotExist
-				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path", gomock.Any()).Return(nil).Times(1)
+				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path", gomock.Any()).Return(nil)
 				doesNotExist := errors.New("Some error")
-				mocksUtils.mockOs.EXPECT().Stat("/some/other/path").Return(nil, doesNotExist).Times(1)
-				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
+				mocksUtils.mockOs.EXPECT().Stat("/some/other/path").Return(nil, doesNotExist)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true)
 			},
 			currentPath:    "/some/path/to/folder/file.ext",
 			sourcePath:     "/some/path/to/folder",
@@ -189,9 +189,9 @@ func TestGetAndCreateRelativePath(t *testing.T) {
 				osStat = mocksUtils.mockOs.Stat
 				osIsNotExist = mocksUtils.mockOs.IsNotExist
 				doesNotExist := errors.New("Some error")
-				mocksUtils.mockOs.EXPECT().Stat("/some/other/path/subfolder").Return(nil, doesNotExist).Times(1)
-				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
-				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path/subfolder", gomock.Any()).Return(nil).Times(1)
+				mocksUtils.mockOs.EXPECT().Stat("/some/other/path/subfolder").Return(nil, doesNotExist)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true)
+				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path/subfolder", gomock.Any()).Return(nil)
 			},
 			currentPath:    "/some/path/to/folder/subfolder/file.ext",
 			sourcePath:     "/some/path/to/folder",
@@ -205,9 +205,9 @@ func TestGetAndCreateRelativePath(t *testing.T) {
 				osStat = mocksUtils.mockOs.Stat
 				osIsNotExist = mocksUtils.mockOs.IsNotExist
 				doesNotExist := errors.New("Some error")
-				mocksUtils.mockOs.EXPECT().Stat("/some/other/path/some/path/to/folder/subfolder").Return(nil, doesNotExist).Times(1)
-				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
-				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path/some/path/to/folder/subfolder", gomock.Any()).Return(nil).Times(1)
+				mocksUtils.mockOs.EXPECT().Stat("/some/other/path/some/path/to/folder/subfolder").Return(nil, doesNotExist)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true)
+				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path/some/path/to/folder/subfolder", gomock.Any()).Return(nil)
 			},
 			currentPath:    "/some/path/to/folder/some/path/to/folder/subfolder/file.ext",
 			sourcePath:     "/some/path/to/folder",
@@ -221,10 +221,10 @@ func TestGetAndCreateRelativePath(t *testing.T) {
 				osStat = mocksUtils.mockOs.Stat
 				osIsNotExist = mocksUtils.mockOs.IsNotExist
 				doesNotExist := errors.New("Some error")
-				mocksUtils.mockOs.EXPECT().Stat("/some/other/path/subfolder").Return(nil, doesNotExist).Times(1)
-				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
+				mocksUtils.mockOs.EXPECT().Stat("/some/other/path/subfolder").Return(nil, doesNotExist)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true)
 				returnedError := errors.New("failed to create")
-				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path/subfolder", gomock.Any()).Return(returnedError).Times(1)
+				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path/subfolder", gomock.Any()).Return(returnedError)
 			},
 			currentPath:    "/some/path/to/folder/subfolder/file.ext",
 			sourcePath:     "/some/path/to/folder",
@@ -267,8 +267,6 @@ func TestGetWalkDirFn(t *testing.T) {
 		currentPath       string
 		absSourceDir      string
 		absDestinationDir string
-		errMessage        string
-		expectedOutput    string
 		expectedErr       error
 		dirEntry          fs.DirEntry
 	}{
@@ -277,7 +275,6 @@ func TestGetWalkDirFn(t *testing.T) {
 			currentPath:       "/some/path/to/folder/file.ext",
 			absSourceDir:      "/some/path/to/folder",
 			absDestinationDir: "/some/other/path",
-			expectedOutput:    "/some/other/path/file.ext",
 			expectedErr:       errors.New("file doesn't exist"),
 			dirEntry:          nil,
 		},
@@ -286,7 +283,6 @@ func TestGetWalkDirFn(t *testing.T) {
 			currentPath:       "/some/path/to/folder/file.ext",
 			absSourceDir:      "/some/path/to/folder",
 			absDestinationDir: "/some/path/to",
-			expectedOutput:    "/some/path/to/folder/file.ext",
 			expectedErr:       filepath.SkipDir,
 			dirEntry: TestDirEntry{
 				isDir:     false,
@@ -301,7 +297,6 @@ func TestGetWalkDirFn(t *testing.T) {
 			currentPath:       "/some/path/to/folder/file.ext",
 			absSourceDir:      "/some/path/to/folder",
 			absDestinationDir: "/some/path/to",
-			expectedOutput:    "/some/path/to/folder/file.ext",
 			expectedErr:       filepath.SkipDir,
 			dirEntry: TestDirEntry{
 				isDir:     false,
@@ -316,7 +311,6 @@ func TestGetWalkDirFn(t *testing.T) {
 			currentPath:       "/some/path/to/folder/file.ext",
 			absSourceDir:      "/some/path/to/folder",
 			absDestinationDir: "/some/path/to",
-			expectedOutput:    "/some/path/to/folder/file.ext",
 			expectedErr:       filepath.SkipDir,
 			dirEntry: TestDirEntry{
 				isDir:     true,
@@ -328,29 +322,27 @@ func TestGetWalkDirFn(t *testing.T) {
 		},
 		"it skips suffix file: '.nextflow.log'": {
 			setupMocks:        func(mocksUtils MockUtils) {},
-			currentPath:       "/some/path/to/folder/file.ext",
+			currentPath:       "/some/path/other/file.ext",
 			absSourceDir:      "/some/path/to/folder",
 			absDestinationDir: "/some/path/to",
-			expectedOutput:    "/some/path/to/folder/file.ext",
 			expectedErr:       filepath.SkipDir,
 			dirEntry: TestDirEntry{
 				isDir:     false,
 				fileMode:  32,
 				info:      nil,
 				infoError: nil,
-				name:      ".nextflow.log",
+				name:      "some/path/to/file.nextflow.log",
 			},
 		},
 		"if it tries to open an invalid file, it fails - OsOpen": {
 			setupMocks: func(mocksUtils MockUtils) {
 				osOpen = mocksUtils.mockOs.Open
 				var srcFile = &os.File{}
-				mocksUtils.mockOs.EXPECT().Open("/some/path/to/folder/file.ext").Return(srcFile, errors.New("error here"))
+				mocksUtils.mockOs.EXPECT().Open("/some/path/to/file.ext").Return(srcFile, errors.New("error here"))
 			},
-			currentPath:       "/some/path/to/folder/file.ext",
+			currentPath:       "/some/path/to/file.ext",
 			absSourceDir:      "/some/path/to/folder",
 			absDestinationDir: "/some/other/path",
-			expectedOutput:    "/some/path/to/folder/file.ext",
 			expectedErr:       errors.New("error here"),
 			dirEntry: TestDirEntry{
 				isDir:     false,
@@ -365,7 +357,6 @@ func TestGetWalkDirFn(t *testing.T) {
 			currentPath:       "/some/path/to/folder",
 			absSourceDir:      "/some/path/to/folder",
 			absDestinationDir: "/some/other/path",
-			expectedOutput:    "/some/other/path",
 			expectedErr:       nil,
 			dirEntry: TestDirEntry{
 				isDir:     true,
@@ -392,7 +383,6 @@ func TestGetWalkDirFn(t *testing.T) {
 			currentPath:       "/some/path/to/folder/file.ext",
 			absSourceDir:      "/some/path/to/folder",
 			absDestinationDir: "/some/other/path",
-			expectedOutput:    "/some/path/to/folder/file.ext",
 			expectedErr:       errors.New("some other error"),
 			dirEntry: TestDirEntry{
 				isDir:     false,
@@ -414,14 +404,13 @@ func TestGetWalkDirFn(t *testing.T) {
 				doesNotExist := errors.New("Some error")
 				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path", gomock.Any()).Return(nil)
 				mocksUtils.mockOs.EXPECT().Stat("/some/other/path").Return(nil, doesNotExist)
-				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true)
 				mocksUtils.mockOs.EXPECT().Open("/some/path/to/file.ext").Return(srcFile, nil)
 				mocksUtils.mockOs.EXPECT().Create("/some/other/path/file.ext").Return(dstFile, errors.New("new error"))
 			},
 			currentPath:       "/some/path/to/file.ext",
 			absSourceDir:      "/some/path/to",
 			absDestinationDir: "/some/other/path",
-			expectedOutput:    "/some/other/path/to/some/subfolder/file.ext",
 			expectedErr:       errors.New("new error"),
 			dirEntry: TestDirEntry{
 				isDir:     false,
@@ -431,7 +420,7 @@ func TestGetWalkDirFn(t *testing.T) {
 				name:      "",
 			},
 		},
-		"tries to create a file, it fails - IoCopy": { //err?
+		"tries to create a file, it fails - IoCopy": {
 			setupMocks: func(mocksUtils MockUtils) {
 				osMkdirAll = mocksUtils.mockOs.MkdirAll
 				osCreate = mocksUtils.mockOs.Create
@@ -442,9 +431,9 @@ func TestGetWalkDirFn(t *testing.T) {
 				var srcFile = &os.File{}
 				var dstFile = &os.File{}
 				doesNotExist := errors.New("Some error")
-				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path", gomock.Any()).Return(nil).Times(1)
-				mocksUtils.mockOs.EXPECT().Stat("/some/other/path").Return(nil, doesNotExist).Times(1)
-				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
+				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path", gomock.Any()).Return(nil)
+				mocksUtils.mockOs.EXPECT().Stat("/some/other/path").Return(nil, doesNotExist)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true)
 				mocksUtils.mockOs.EXPECT().Open("/some/path/to/file.ext").Return(srcFile, nil)
 				mocksUtils.mockOs.EXPECT().Create("/some/other/path/file.ext").Return(dstFile, nil)
 				mocksUtils.mockIo.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(int64(1), errors.New("new err"))
@@ -452,7 +441,6 @@ func TestGetWalkDirFn(t *testing.T) {
 			currentPath:       "/some/path/to/file.ext",
 			absSourceDir:      "/some/path/to",
 			absDestinationDir: "/some/other/path",
-			expectedOutput:    "/some/other/path/to/some/subfolder/file.ext",
 			expectedErr:       errors.New("new err"),
 			dirEntry: TestDirEntry{
 				isDir:     false,
@@ -473,9 +461,9 @@ func TestGetWalkDirFn(t *testing.T) {
 				var srcFile = &os.File{}
 				var dstFile = &os.File{}
 				doesNotExist := errors.New("Some error")
-				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path", gomock.Any()).Return(nil).Times(1)
-				mocksUtils.mockOs.EXPECT().Stat("/some/other/path").Return(nil, doesNotExist).Times(1)
-				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true).Times(1)
+				mocksUtils.mockOs.EXPECT().MkdirAll("/some/other/path", gomock.Any()).Return(nil)
+				mocksUtils.mockOs.EXPECT().Stat("/some/other/path").Return(nil, doesNotExist)
+				mocksUtils.mockOs.EXPECT().IsNotExist(doesNotExist).Return(true)
 				mocksUtils.mockOs.EXPECT().Open("/some/path/to/file.ext").Return(srcFile, nil)
 				mocksUtils.mockOs.EXPECT().Create("/some/other/path/file.ext").Return(dstFile, nil)
 				mocksUtils.mockIo.EXPECT().Copy(gomock.Any(), gomock.Any()).Return(int64(1), nil)
@@ -483,7 +471,6 @@ func TestGetWalkDirFn(t *testing.T) {
 			currentPath:       "/some/path/to/file.ext",
 			absSourceDir:      "/some/path/to",
 			absDestinationDir: "/some/other/path",
-			expectedOutput:    "/some/other/path/to/some/subfolder/file.ext",
 			expectedErr:       nil,
 			dirEntry: TestDirEntry{
 				isDir:     false,
