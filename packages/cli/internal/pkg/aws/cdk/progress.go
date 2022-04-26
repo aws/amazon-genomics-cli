@@ -194,6 +194,12 @@ func runProgressBar(ctx context.Context, description string, numberOfChannels in
 				if len(keyWithSteps) == numberOfChannels {
 					bar.SetCurrent(int64(currentStep))
 				}
+
+				if progressEvent.StepDescription != "" {
+					bar.Set("description", progressEvent.StepDescription)
+				} else {
+					bar.Set("description", description)
+				}
 			case <-ctx.Done():
 				close(receiver)
 				bar.SetCurrent(bar.Total()).Finish()

@@ -3,6 +3,7 @@ package cdk
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"regexp"
@@ -18,7 +19,10 @@ var ExecuteCdkCommand = executeCdkCommand
 var execCommand = exec.Command
 var progressRegex = regexp.MustCompile(`^.*\|\s*([0-9]+/[0-9]+)\s*\|(.*)`)
 
+// These can be swapped out to use fake versions during tests
 var osRemoveAll = os.RemoveAll
+var mfaInput io.Reader = os.Stdin   // Stream to get MFA codes from the user
+var mfaOutput io.Writer = os.Stdout // Stream to ask the user for MFA codes
 
 func executeCdkCommand(appDir string, commandArgs []string, executionName string) (ProgressStream, error) {
 	return executeCdkCommandAndCleanupDirectory(appDir, commandArgs, "", executionName)
@@ -30,7 +34,13 @@ func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, t
 	cmd := execCommand("npm", cmdArgs...)
 	cmd.Dir = appDir
 
-	progressChan, wait, err := processCommandOutputs(cmd, executionName)
+	// Note that cmd won't have any access to stdin, stdout, or stderr that go
+	// anywhere by default. It does not inherit our streams. This is a problem
+	// because sometimes the CDK needs to dialog interactively with the user to
+	// e.g. get MFA codes. So we make sure to forward along important output
+	// and do our own prompting in processCommandIO.
+
+	progressChan, wait, err := processCommandIO(cmd, executionName)
 	if err != nil {
 		deleteCDKOutputDir(tmpDir)
 		return nil, err
@@ -48,7 +58,7 @@ func executeCdkCommandAndCleanupDirectory(appDir string, commandArgs []string, t
 	return progressChan, nil
 }
 
-func processCommandOutputs(cmd *exec.Cmd, executionName string) (chan ProgressEvent, *sync.WaitGroup, error) {
+func processCommandIO(cmd *exec.Cmd, executionName string) (chan ProgressEvent, *sync.WaitGroup, error) {
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
@@ -58,10 +68,14 @@ func processCommandOutputs(cmd *exec.Cmd, executionName string) (chan ProgressEv
 	if err != nil {
 		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
 	}
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		return nil, nil, actionableerror.FindSuggestionForError(err, actionableerror.AwsErrorMessageToSuggestedActionMap)
+	}
 	if err := cmd.Start(); err != nil {
 		return nil, nil, fmt.Errorf("couldn't execute CDK deploy command: %w", err)
 	}
-	progressChan, wait := processOutputs(bufio.NewScanner(stdout), bufio.NewScanner(stderr), executionName)
+	progressChan, wait := processOutputs(bufio.NewScanner(stdout), bufio.NewScanner(stderr), stdin, executionName)
 	return progressChan, wait, nil
 }
 
@@ -74,7 +88,7 @@ func deleteCDKOutputDir(cdkOutputDir string) {
 	}
 }
 
-func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName string) (chan ProgressEvent, *sync.WaitGroup) {
+func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, stdin io.WriteCloser, executionName string) (chan ProgressEvent, *sync.WaitGroup) {
 	var wait sync.WaitGroup
 	wait.Add(2)
 	progressChan := make(chan ProgressEvent)
@@ -83,12 +97,59 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName 
 	}
 	go func() {
 		defer wait.Done()
+		// We can't just scan through lines, because the MFA prompt is a
+		// partial line and we need to see it. So scan runes instead and do our
+		// own line buffering.
+		stdout.Split(bufio.ScanRunes)
+		line := ""
 		for stdout.Scan() {
-			log.Debug().Msg(stdout.Text())
+			line += stdout.Text()
+			if strings.HasSuffix(line, "\n") {
+				// We got a whole line at this character
+				log.Debug().Msg(line[:len(line)-1])
+				line = ""
+			}
+			if strings.HasSuffix(line, ": ") && strings.HasPrefix(line, "MFA token for") {
+				// CDK may make MFA prompts here, so we need to forward them to the user.
+				// We also need to make sure to drop down a couple lines
+				// because if there's a progress spinner going it will just
+				// immediately clobber our prompt.
+				fmt.Fprintf(mfaOutput, "\n%s\n\n", line)
+				line = ""
+
+				oldStepDescription := currentEvent.StepDescription
+				currentEvent.StepDescription = "Waiting for MFA..."
+				progressChan <- *currentEvent
+
+				// And we need to read and pass along a code.
+				var reply string
+				fmt.Fscanln(mfaInput, &reply)
+
+				currentEvent.StepDescription = oldStepDescription
+				progressChan <- *currentEvent
+
+				_, err := stdin.Write([]byte(reply + "\n"))
+				if err != nil {
+					log.Error().Msgf("error encountered while forwarding MFA code: %v", err)
+				} else {
+					log.Debug().Msg("Sent MFA code")
+				}
+				// We only need to send at most one MFA code, and if we don't
+				// close its standard input we get stuck when the CDK is done
+				// with its work.
+				err = stdin.Close()
+				if err != nil {
+					log.Error().Msgf("error encountered while closing CDK input stream: %v", err)
+				}
+			}
+		}
+		if line != "" {
+			// Handle any last unterminated line
+			log.Debug().Msg(line)
 		}
 		err := stdout.Err()
 		if err != nil {
-			log.Debug().Msgf("error encountered while scanning stdout: %v", err)
+			log.Error().Msgf("error encountered while scanning stdout: %v", err)
 		}
 	}()
 	go func() {
@@ -99,7 +160,7 @@ func processOutputs(stdout *bufio.Scanner, stderr *bufio.Scanner, executionName 
 		}
 		err := stderr.Err()
 		if err != nil {
-			log.Debug().Msgf("error encountered while scanning stderr: %v", err)
+			log.Error().Msgf("error encountered while scanning stderr: %v", err)
 		}
 	}()
 	return progressChan, &wait
