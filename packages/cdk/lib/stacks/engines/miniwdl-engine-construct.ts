@@ -93,7 +93,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       jobDefinitionArn: this.miniwdlEngine.headJobDefinition.jobDefinitionArn,
       rootDirS3Uri: rootDirS3Uri,
       vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
-      customEnvs: props.contextParameters.adapterCustomEnvs,
+      customEnvs: props.contextParameters.customWesEnvVars,
     });
     this.adapterLogGroup = lambda.logGroup;
 

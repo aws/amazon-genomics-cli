@@ -22,7 +22,7 @@ func (client Client) Bootstrap(appDir string, context []string, executionName st
 	// Add AGC version and custom tags to the bootstrap stack.
 	agcVersionKey := constants.AgcVersionEnvKey + "="
 	customTagsKey := constants.CustomTagEnvKey + "="
-	adapterCustomEnvsKey := constants.AdapterCustomEnvEnvKey + "="
+	customWesEnvVarsKey := constants.CustomWesEnvVarEnvKey + "="
 	for _, c := range context {
 		if strings.HasPrefix(c, agcVersionKey) {
 			version := strings.TrimPrefix(c, agcVersionKey)
@@ -39,15 +39,15 @@ func (client Client) Bootstrap(appDir string, context []string, executionName st
 				cmdArgs = append(cmdArgs, "--tags", fmt.Sprintf("%s=%s", k, v))
 			}
 		}
-		if strings.HasPrefix(c, adapterCustomEnvsKey) {
-			jsonStr := strings.TrimPrefix(c, adapterCustomEnvsKey)
-			adapterCustomEnvsMap := make(map[string]interface{})
-			err := json.Unmarshal([]byte(jsonStr), &adapterCustomEnvsMap)
+		if strings.HasPrefix(c, customWesEnvVarsKey) {
+			jsonStr := strings.TrimPrefix(c, customWesEnvVarsKey)
+			customWesEnvVarsMap := make(map[string]interface{})
+			err := json.Unmarshal([]byte(jsonStr), &customWesEnvVarsMap)
 			if err != nil {
 				return nil, err
 			}
-			for k, v := range adapterCustomEnvsMap {
-				cmdArgs = append(cmdArgs, "--adapterCustomEnvs", fmt.Sprintf("%s=%s", k, v))
+			for k, v := range customWesEnvVarsMap {
+				cmdArgs = append(cmdArgs, "--customWesEnvVars", fmt.Sprintf("%s=%s", k, v))
 			}
 		}
 	}

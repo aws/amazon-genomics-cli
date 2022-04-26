@@ -26,7 +26,7 @@ const (
 	testUserEmail          = "bender@amazon.com"
 	testUserId             = "bender123"
 	testTags               = "{\"k1\":\"v1\",\"k2\":\"v2\"}"
-	testAdapterCustomEnvs  = "{\"k1\":\"v1\",\"k2\":\"v2\"}"
+	testCustomWesEnvVars   = "{\"k1\":\"v1\",\"k2\":\"v2\"}"
 )
 
 var (

@@ -108,7 +108,7 @@ export class ContextAppParameters {
   /**
    * Environment variables to be passed to
    */
-  public readonly adapterCustomEnvs?: { [key: string]: string };
+  public readonly customWesEnvVars?: { [key: string]: string };
 
   constructor(node: Node) {
     const instanceTypeStrings = getEnvStringListOrDefault(node, "BATCH_COMPUTE_INSTANCE_TYPES");
@@ -147,10 +147,10 @@ export class ContextAppParameters {
       this.customTags = {};
     }
 
-    const adapterCustomEnvs = getEnvStringOrDefault(node, "ADAPTER_CUSTOM_ENVS");
+    const customWesEnvVars = getEnvStringOrDefault(node, "CUSTOM_WES_ENV_VARS");
 
-    if (adapterCustomEnvs) {
-      this.adapterCustomEnvs = JSON.parse(adapterCustomEnvs);
+    if (customWesEnvVars) {
+      this.customWesEnvVars = JSON.parse(customWesEnvVars);
     }
   }
 

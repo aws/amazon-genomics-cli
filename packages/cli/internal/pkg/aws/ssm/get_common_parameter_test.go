@@ -76,14 +76,14 @@ func TestClient_GetCustomTags_ExpectedValue(t *testing.T) {
 	assert.Equal(t, tags, actual)
 }
 
-func TestClient_GetAdapterCustomEnvs_ExpectedValue(t *testing.T) {
-	adapterCustomEnvs := "adapterCustomEnvs"
+func TestClient_GetCustomWesEnvVars_ExpectedValue(t *testing.T) {
+	customWesEnvVars := "customWesEnvVars"
 	mockSsm := new(ssmMockClient)
 	client := &Client{mockSsm}
 	ctx := context.Background()
-	mockSsm.On("GetParameter", ctx, &ssm.GetParameterInput{Name: aws.String("/agc/_common/adapterCustomEnvs")}).
-		Return(&ssm.GetParameterOutput{Parameter: &types.Parameter{Value: aws.String(adapterCustomEnvs)}}, nil)
+	mockSsm.On("GetParameter", ctx, &ssm.GetParameterInput{Name: aws.String("/agc/_common/customWesEnvVars")}).
+		Return(&ssm.GetParameterOutput{Parameter: &types.Parameter{Value: aws.String(customWesEnvVars)}}, nil)
 
-	actual := client.GetAdapterCustomEnvs()
-	assert.Equal(t, adapterCustomEnvs, actual)
+	actual := client.GetCustomWesEnvVars()
+	assert.Equal(t, customWesEnvVars, actual)
 }

@@ -59,7 +59,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       taskQueueArn: this.batchWorkers.jobQueue.jobQueueArn,
       fsapId: this.snakemakeEngine.fsap.accessPointId,
       outputBucket: params.getEngineBucketPath(),
-      customEnvs: contextParameters.adapterCustomEnvs,
+      customEnvs: contextParameters.customWesEnvVars,
     });
     this.adapterLogGroup = lambda.logGroup;
 

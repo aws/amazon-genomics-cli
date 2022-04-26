@@ -44,7 +44,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return(testTags)
-				mockClients.ssmMock.EXPECT().GetAdapterCustomEnvs().Return(testAdapterCustomEnvs)
+				mockClients.ssmMock.EXPECT().GetCustomWesEnvVars().Return(testCustomWesEnvVars)
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["NEXTFLOW"]).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(44), testContextName3).After(clearContext).Return(mockClients.progressStream1, nil)
@@ -68,7 +68,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return("")
-				mockClients.ssmMock.EXPECT().GetAdapterCustomEnvs().Return("")
+				mockClients.ssmMock.EXPECT().GetCustomWesEnvVars().Return("")
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["NEXTFLOW"]).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(44), testContextName3).After(clearContext).Return(mockClients.progressStream1, nil)
@@ -93,7 +93,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Times(2).Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Times(2).Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Times(2).Return(testTags)
-				mockClients.ssmMock.EXPECT().GetAdapterCustomEnvs().Times(2).Return(testAdapterCustomEnvs)
+				mockClients.ssmMock.EXPECT().GetCustomWesEnvVars().Times(2).Return(testCustomWesEnvVars)
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["CROMWELL"]).Times(2).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				clearContext2 := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
@@ -120,7 +120,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return(testTags)
-				mockClients.ssmMock.EXPECT().GetAdapterCustomEnvs().Return(testAdapterCustomEnvs)
+				mockClients.ssmMock.EXPECT().GetCustomWesEnvVars().Return(testCustomWesEnvVars)
 				mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["CROMWELL"]).Return(fmt.Errorf("some error occurred"))
 				return mockClients
@@ -166,7 +166,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return(testTags)
-				mockClients.ssmMock.EXPECT().GetAdapterCustomEnvs().Return(testAdapterCustomEnvs)
+				mockClients.ssmMock.EXPECT().GetCustomWesEnvVars().Return(testCustomWesEnvVars)
 				mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				return mockClients
 			},
@@ -239,7 +239,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return(testTags)
-				mockClients.ssmMock.EXPECT().GetAdapterCustomEnvs().Return(testAdapterCustomEnvs)
+				mockClients.ssmMock.EXPECT().GetCustomWesEnvVars().Return(testCustomWesEnvVars)
 				mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(44), testContextName1).Return(nil, fmt.Errorf("some context error"))
 				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["CROMWELL"]).Return(nil)
@@ -259,7 +259,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return(testTags)
-				mockClients.ssmMock.EXPECT().GetAdapterCustomEnvs().Return(testAdapterCustomEnvs)
+				mockClients.ssmMock.EXPECT().GetCustomWesEnvVars().Return(testCustomWesEnvVars)
 				mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(fmt.Errorf("failed to clear context"))
 				return mockClients
 			},

@@ -69,7 +69,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
       contextName: params.contextName,
       userId: params.userId,
       engineEndpoint: this.engine.loadBalancer.loadBalancerDnsName,
-      customEnvs: params.adapterCustomEnvs,
+      customEnvs: params.customWesEnvVars,
     });
     this.adapterLogGroup = lambda.logGroup;
 

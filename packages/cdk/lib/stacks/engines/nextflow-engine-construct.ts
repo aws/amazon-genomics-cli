@@ -63,7 +63,7 @@ export class NextflowEngineConstruct extends EngineConstruct {
       jobDefinitionArn: this.nextflowEngine.headJobDefinition.jobDefinitionArn,
       engineLogGroupName: engineLogGroup.logGroupName,
       vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
-      customEnvs: props.contextParameters.adapterCustomEnvs,
+      customEnvs: props.contextParameters.customWesEnvVars,
     });
     this.adapterLogGroup = lambda.logGroup;
 
