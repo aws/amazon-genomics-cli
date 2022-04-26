@@ -1,6 +1,6 @@
 # use the upstream miniwdl container as a base image
 ARG MINIWDL_VERSION=v0.1.11
-FROM 337532070941.dkr.ecr.eu-central-1.amazonaws.com/miniwdl-aws:latest
+FROM ghcr.io/miniwdl-ext/miniwdl-aws:$MINIWDL_VERSION
 
 RUN yum update -y \
  && yum install -y \
