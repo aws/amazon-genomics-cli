@@ -41,11 +41,10 @@ which the server offers, available via API Gateway.
 Workflow tasks are submitted by Toil to an AWS Batch queue and run in
 Toil-provided containers using an AWS Compute Environment. Tasks which use the
 [CWL `DockerRequirement`](https://www.commonwl.org/user_guide/07-containers/index.html)
-will additionally be run under
-[Singularity](https://github.com/sylabs/singularity#readme). AWS Batch
-coordinates the elastic provisioning of EC2 instances (container hosts) based
-on the available work in the queue. Batch will place containers on container
-hosts as space allows.
+will additionally be run in sibling containers on the host Docker daemon. AWS
+Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on
+container hosts as space allows.
 
 #### Disk Expansion
 
