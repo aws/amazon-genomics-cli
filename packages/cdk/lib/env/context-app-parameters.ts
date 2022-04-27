@@ -105,6 +105,10 @@ export class ContextAppParameters {
    * Map of custom tags to be applied to all the infrastructure in the context.
    */
   public readonly customTags: { [key: string]: string };
+  /**
+   * Environment variables to be passed to
+   */
+  public readonly customWesEnvVars?: { [key: string]: string };
 
   constructor(node: Node) {
     const instanceTypeStrings = getEnvStringListOrDefault(node, "BATCH_COMPUTE_INSTANCE_TYPES");
@@ -141,6 +145,12 @@ export class ContextAppParameters {
       this.customTags = JSON.parse(tagsJson);
     } else {
       this.customTags = {};
+    }
+
+    const customWesEnvVars = getEnvStringOrDefault(node, "CUSTOM_WES_ENV_VARS");
+
+    if (customWesEnvVars) {
+      this.customWesEnvVars = JSON.parse(customWesEnvVars);
     }
   }
 

@@ -64,6 +64,12 @@ If you initially activated the account with `agc account activate --bucket my-ex
 and later invoked `agc account activate` then Amazon Genomics CLI will stop using the previous specified bucket, however the VPC will 
 be recalled and re-used. *ALL* of the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.
 
+To pass custom environment variables into WES Adapter you can use `agc account activate --customWesEnvVars "k1=v1","k2=v2","k3=[{ \"k4\": { \"k5\": \"v5\" } }]"`
+
+To pass custom environment variables into a Workflow Job you can pass `CUSTOM_WORKFLOW_JOB_ENVIRONMENTS` environment variable
+into WES Adapter `agc account activate --customWesEnvVars "CUSTOM_WORKFLOW_JOB_ENVIRONMENTS=[{ \"name\": \"MINIWDL__AWS__DESCRIBE_PERIOD\", \"value\": 10 }, { \"name\": \"MINIWDL__AWS__SUBMIT_PERIOD\", \"value\": 10 }]"`
+so `MINIWDL__AWS__DESCRIBE_PERIOD` and `MINIWDL__AWS__SUBMIT_PERIOD` environment vars will be passed into a Workflow Job
+
 ### `deactivate`
 
 The `deactivate` command is used to remove the core infrastructure deployed by Amazon Genomics CLI in the current region when an 

@@ -75,3 +75,15 @@ func TestClient_GetCustomTags_ExpectedValue(t *testing.T) {
 	actual := client.GetCustomTags()
 	assert.Equal(t, tags, actual)
 }
+
+func TestClient_GetCustomWesEnvVars_ExpectedValue(t *testing.T) {
+	customWesEnvVars := "customWesEnvVars"
+	mockSsm := new(ssmMockClient)
+	client := &Client{mockSsm}
+	ctx := context.Background()
+	mockSsm.On("GetParameter", ctx, &ssm.GetParameterInput{Name: aws.String("/agc/_common/customWesEnvVars")}).
+		Return(&ssm.GetParameterOutput{Parameter: &types.Parameter{Value: aws.String(customWesEnvVars)}}, nil)
+
+	actual := client.GetCustomWesEnvVars()
+	assert.Equal(t, customWesEnvVars, actual)
+}

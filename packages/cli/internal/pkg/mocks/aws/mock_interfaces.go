@@ -355,6 +355,20 @@ func (mr *MockSsmClientMockRecorder) GetCustomTags() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCustomTags", reflect.TypeOf((*MockSsmClient)(nil).GetCustomTags))
 }
 
+// GetCustomWesEnvVars mocks base method.
+func (m *MockSsmClient) GetCustomWesEnvVars() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCustomWesEnvVars")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetCustomWesEnvVars indicates an expected call of GetCustomWesEnvVars.
+func (mr *MockSsmClientMockRecorder) GetCustomWesEnvVars() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCustomWesEnvVars", reflect.TypeOf((*MockSsmClient)(nil).GetCustomWesEnvVars))
+}
+
 // GetOutputBucket mocks base method.
 func (m *MockSsmClient) GetOutputBucket() (string, error) {
 	m.ctrl.T.Helper()

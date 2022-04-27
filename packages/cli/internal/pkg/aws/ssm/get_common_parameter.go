@@ -10,9 +10,10 @@ import (
 )
 
 const (
-	parameterPrefix       = "/agc/_common"
-	outputBucketParameter = "bucket"
-	customTagsParameter   = "customTags"
+	parameterPrefix           = "/agc/_common"
+	outputBucketParameter     = "bucket"
+	customTagsParameter       = "customTags"
+	customWesEnvVarsParameter = "customWesEnvVars"
 )
 
 func (c *Client) GetCommonParameter(parameterSuffix string) (string, error) {
@@ -39,4 +40,11 @@ func (c *Client) GetCustomTags() string {
 
 	tags, _ := c.GetCommonParameter(customTagsParameter)
 	return tags
+}
+
+func (c *Client) GetCustomWesEnvVars() string {
+	// Adapter custom envs may not exist, so ignore the error
+
+	customWesEnvVars, _ := c.GetCommonParameter(customWesEnvVarsParameter)
+	return customWesEnvVars
 }

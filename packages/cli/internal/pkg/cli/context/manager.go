@@ -38,13 +38,14 @@ type baseProps struct {
 
 //nolint:structcheck
 type contextProps struct {
-	readBuckets      []string
-	readWriteBuckets []string
-	outputBucket     string
-	artifactBucket   string
-	artifactUrl      string
-	customTagsJson   string
-	contextEnv       contextEnvironment
+	readBuckets          []string
+	readWriteBuckets     []string
+	outputBucket         string
+	artifactBucket       string
+	artifactUrl          string
+	customTagsJson       string
+	customWesEnvVarsJson string
+	contextEnv           contextEnvironment
 }
 
 //nolint:structcheck
@@ -203,6 +204,14 @@ func (m *Manager) setCustomTags() {
 	m.customTagsJson = m.Ssm.GetCustomTags()
 }
 
+func (m *Manager) setCustomWesEnvVars() {
+	if m.err != nil {
+		return
+	}
+
+	m.customWesEnvVarsJson = m.Ssm.GetCustomWesEnvVars()
+}
+
 func (m *Manager) setContextEnv(contextName string) {
 	if m.err != nil {
 		return
@@ -221,6 +230,7 @@ func (m *Manager) setContextEnv(contextName string) {
 		UserEmail:            m.userEmail,
 		OutputBucketName:     m.outputBucket,
 		CustomTagsJson:       m.customTagsJson,
+		CustomWesEnvVarsJson: m.customWesEnvVarsJson,
 		ArtifactBucketName:   m.artifactBucket,
 		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
 		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),

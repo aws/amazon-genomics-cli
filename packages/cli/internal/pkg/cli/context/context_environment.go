@@ -11,12 +11,13 @@ const (
 )
 
 type contextEnvironment struct {
-	ProjectName      string
-	ContextName      string
-	UserId           string
-	UserEmail        string
-	OutputBucketName string
-	CustomTagsJson   string
+	ProjectName          string
+	ContextName          string
+	UserId               string
+	UserEmail            string
+	OutputBucketName     string
+	CustomTagsJson       string
+	CustomWesEnvVarsJson string
 
 	EngineName              string
 	FilesystemType          string
@@ -42,13 +43,14 @@ type contextEnvironment struct {
 
 func (input contextEnvironment) ToEnvironmentList() []string {
 	return environmentMapToList(map[string]string{
-		"PROJECT":       input.ProjectName,
-		"CONTEXT":       input.ContextName,
-		"USER_ID":       input.UserId,
-		"USER_EMAIL":    input.UserEmail,
-		"OUTPUT_BUCKET": input.OutputBucketName,
-		"AGC_VERSION":   version.Version,
-		"CUSTOM_TAGS":   input.CustomTagsJson,
+		"PROJECT":             input.ProjectName,
+		"CONTEXT":             input.ContextName,
+		"USER_ID":             input.UserId,
+		"USER_EMAIL":          input.UserEmail,
+		"OUTPUT_BUCKET":       input.OutputBucketName,
+		"AGC_VERSION":         version.Version,
+		"CUSTOM_TAGS":         input.CustomTagsJson,
+		"CUSTOM_WES_ENV_VARS": input.CustomWesEnvVarsJson,
 
 		"ENGINE_NAME":               input.EngineName,
 		"FILESYSTEM_TYPE":           input.FilesystemType,
