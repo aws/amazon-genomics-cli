@@ -70,7 +70,7 @@ export class ToilJobRole extends Role {
                 "sdb:BatchPutAttributes",
                 "sdb:DeleteAttributes",
                 "sdb:BatchDeleteAttributes",
-                "sdb:Select"
+                "sdb:Select",
               ],
               resources: [jobStoreSimpleDbArnPattern],
             }),
@@ -96,6 +96,7 @@ export class ToilJobRole extends Role {
                 "s3:GetBucketVersioning",
                 "s3:PutBucketVersioning",
                 "s3:HeadBucket",
+                "s3:HeadObject",
                 "s3:GetObject",
                 "s3:GetObjectVersion",
                 "s3:PutObject",
@@ -108,7 +109,7 @@ export class ToilJobRole extends Role {
                 "s3:PutObjectAcl",
                 "s3:ListBucketMultipartUploads",
                 "s3:ListMultipartUploadParts",
-                "s3:AbortMultipartUpload"
+                "s3:AbortMultipartUpload",
               ],
               resources: [jobStoreS3ArnPattern],
             }),
