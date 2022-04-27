@@ -21,16 +21,20 @@ export class ToilEngineRole extends ToilJobRole {
         account: Aws.ACCOUNT_ID,
         region: Aws.REGION,
         partition: Aws.PARTITION,
-        resource: "job-definition/*",
+        // Toil makes all its job definition names start with "toil-"
+        resource: "job-definition/toil-*",
         service: "batch",
       },
       scope as Stack
     );
     super(scope, id, props, {
+      // In addition to what jobs do, we need to be able to manipulate AWS
+      // Batch. 
       ToilEngineBatchPolicy: new ToilBatchPolicy({
         ...props,
         toilJobArnPattern: toilJobArnPattern,
       }),
+      // And we need to be able to pass the job role to AWS Batch jobs.
       ToilIamPassJobRole: new PolicyDocument({
         assignSids: true,
         statements: [

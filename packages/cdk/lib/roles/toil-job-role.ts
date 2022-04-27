@@ -58,7 +58,20 @@ export class ToilJobRole extends Role {
           statements: [
             new PolicyStatement({
               effect: Effect.ALLOW,
-              actions: ["sdb:*"],
+              // These are the SimpleDB IAM actions associated with the
+              // SimpleDB operations that the Toil AWS job store calls. They
+              // are most likely all used, but leaving each out has not been
+              // tested.
+              actions: [
+                "sdb:CreateDomain",
+                "sdb:DeleteDomain",
+                "sdb:GetAttributes",
+                "sdb:PutAttributes",
+                "sdb:BatchPutAttributes",
+                "sdb:DeleteAttributes",
+                "sdb:BatchDeleteAttributes",
+                "sdb:Select"
+              ],
               resources: [jobStoreSimpleDbArnPattern],
             }),
           ],
@@ -68,7 +81,35 @@ export class ToilJobRole extends Role {
           statements: [
             new PolicyStatement({
               effect: Effect.ALLOW,
-              actions: ["s3:*"],
+              // These are the IAM actions which seem relevant to the Boto3
+              // client and resource operations that the Toil AWS job store
+              // does on its job store bucket.
+              // It is possible some are not actually used, especially some of
+              // the get/list operations which may or may not actually be
+              // required to construct the associated Boto3 Resource objects.
+              // Leaving each out has not been tested.
+              actions: [
+                "s3:CreateBucket",
+                "s3:DeleteBucket",
+                "s3:GetBucketTagging",
+                "s3:PutBucketTagging",
+                "s3:GetBucketVersioning",
+                "s3:PutBucketVersioning",
+                "s3:HeadBucket",
+                "s3:GetObject",
+                "s3:GetObjectVersion",
+                "s3:PutObject",
+                "s3:ListBucket",
+                "s3:ListBucketVersions",
+                "s3:ListObjects",
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion",
+                "s3:GetObjectAcl",
+                "s3:PutObjectAcl",
+                "s3:ListBucketMultipartUploads",
+                "s3:ListMultipartUploadParts",
+                "s3:AbortMultipartUpload"
+              ],
               resources: [jobStoreS3ArnPattern],
             }),
           ],
