@@ -1,5 +1,5 @@
 import { RoleProps } from "aws-cdk-lib/aws-iam";
-import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { IMachineImage, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { ContextAppParameters } from "../env";
 import { Size } from "aws-cdk-lib";
 
@@ -28,4 +28,8 @@ export interface EngineOptions {
    * Parameters determined by the context.
    */
   readonly contextParameters: ContextAppParameters;
+  /**
+   * The AMI to use for compute environments. Ignored for Fargate environments
+   */
+  readonly computeEnvImage?: IMachineImage;
 }

@@ -1,5 +1,5 @@
 import { Size, Stack, StackProps } from "aws-cdk-lib";
-import { IVpc, SubnetSelection, Vpc } from "aws-cdk-lib/aws-ec2";
+import { IMachineImage, IVpc, MachineImage, SubnetSelection, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
 import { getCommonParameter, getCommonParameterList, subnetSelectionFromIds } from "../util";
 import {
@@ -10,6 +10,8 @@ import {
   VPC_NUMBER_SUBNETS_PARAMETER_NAME,
   VPC_PARAMETER_NAME,
   VPC_SUBNETS_PARAMETER_NAME,
+  IMAGE_PARAMETER_NAME,
+  APP_NAME,
 } from "../constants";
 import { ContextAppParameters } from "../env";
 import { BatchConstruct, BatchConstructProps } from "./engines/batch-construct";
@@ -27,6 +29,7 @@ export class ContextStack extends Stack {
   private readonly vpc: IVpc;
   private readonly iops: Size;
   private readonly subnets: SubnetSelection;
+  private readonly computeEnvImage: IMachineImage;
 
   constructor(scope: Construct, id: string, props: ContextStackProps) {
     super(scope, id, props);
@@ -35,6 +38,7 @@ export class ContextStack extends Stack {
     this.vpc = Vpc.fromLookup(this, "Vpc", { vpcId });
     const subnetIds = getCommonParameterList(this, VPC_SUBNETS_PARAMETER_NAME, VPC_NUMBER_SUBNETS_PARAMETER_NAME);
     this.subnets = subnetSelectionFromIds(this, subnetIds);
+    this.computeEnvImage = MachineImage.fromSsmParameter(`/${APP_NAME}/_common/${IMAGE_PARAMETER_NAME}`);
 
     const { contextParameters } = props;
     const { engineName } = contextParameters;
@@ -121,10 +125,12 @@ export class ContextStack extends Stack {
     }
 
     const commonEngineProps = this.getCommonEngineProps(props);
+    const computeEnvImage = this.computeEnvImage;
     new NextflowEngineConstruct(this, ENGINE_NEXTFLOW, {
       ...commonEngineProps,
       jobQueue,
       headQueue,
+      computeEnvImage,
     }).outputToParent();
   }
 
@@ -184,6 +190,7 @@ export class ContextStack extends Stack {
       vpc: this.vpc,
       subnets: this.subnets,
       iops: this.iops,
+      computeEnvImage: this.computeEnvImage,
       contextParameters,
     };
   }
@@ -226,6 +233,7 @@ export class ContextStack extends Stack {
       policyOptions: {
         managedPolicies: [],
       },
+      computeEnvImage: this.computeEnvImage,
     };
   }
 }

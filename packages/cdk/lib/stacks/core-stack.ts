@@ -1,11 +1,12 @@
 import { CfnOutput, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { AttributeType, BillingMode, ITable, ProjectionType, Table } from "aws-cdk-lib/aws-dynamodb";
-import { IParameter, StringListParameter, StringParameter } from "aws-cdk-lib/aws-ssm";
-import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, ISubnet, IVpc, Subnet, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
+import { IParameter, ParameterDataType, ParameterType, StringListParameter, StringParameter } from "aws-cdk-lib/aws-ssm";
+import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, ISubnet, IVpc, MachineImage, Subnet, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import {
   APP_NAME,
+  IMAGE_PARAMETER_NAME,
   PRODUCT_NAME,
   VPC_NUMBER_SUBNETS_PARAMETER_NAME,
   VPC_PARAMETER_ID,
@@ -18,6 +19,7 @@ import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import * as path from "path";
 import { homedir } from "os";
 import { Asset } from "aws-cdk-lib/aws-s3-assets";
+import { EcsOptimizedImage } from "aws-cdk-lib/aws-ecs";
 
 export interface ParameterProps {
   /**
@@ -102,6 +104,11 @@ export interface CoreStackProps extends StackProps {
    * @default false
    */
   usePublicSubnets?: boolean;
+
+  /**
+   * The AMI id used for compute environments and stored in SSM parameter store
+   */
+  imageId?: string;
 }
 
 const parameterPrefix = `/${APP_NAME}/_common/`;
@@ -145,6 +152,16 @@ export class CoreStack extends Stack {
     const subnets = this.getSubnets(props);
     this.addStringListParameter({ name: VPC_SUBNETS_PARAMETER_NAME, values: subnets.map((s) => s.subnetId) });
     this.addParameter({ name: VPC_NUMBER_SUBNETS_PARAMETER_NAME, value: `${subnets.length}` });
+
+    new StringParameter(this, "ComputeEnvImage", {
+      parameterName: `${parameterPrefix}${IMAGE_PARAMETER_NAME}`,
+      stringValue: props.imageId
+        ? MachineImage.lookup({ name: props.imageId! }).getImage(this).imageId
+        : EcsOptimizedImage.amazonLinux2().getImage(this).imageId,
+      type: ParameterType.STRING,
+      dataType: ParameterDataType.AWS_EC2_IMAGE,
+      description: "The image ID to use in EC2 compute environments",
+    });
   }
 
   private getSubnets(props: CoreStackProps): ISubnet[] {

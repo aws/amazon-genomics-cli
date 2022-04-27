@@ -8,7 +8,7 @@ import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { ENGINE_SNAKEMAKE } from "../../constants";
 import { Construct } from "constructs";
 import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
-import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { IMachineImage, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
@@ -28,12 +28,12 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
   constructor(scope: Construct, id: string, props: EngineOptions) {
     super(scope, id);
 
-    const { vpc, subnets, contextParameters } = props;
+    const { vpc, subnets, contextParameters, computeEnvImage } = props;
     const params = props.contextParameters;
 
     this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, ComputeResourceType.FARGATE);
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
-    this.batchWorkers = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, workerComputeType);
+    this.batchWorkers = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, workerComputeType, computeEnvImage);
 
     // Generate the engine that will run snakemake on batch
     this.snakemakeEngine = this.createSnakemakeEngine(props, this.batchHead, this.batchWorkers);
@@ -162,7 +162,14 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     });
   }
 
-  private renderBatch(id: string, vpc: IVpc, subnets: SubnetSelection, appParams: ContextAppParameters, computeType?: ComputeResourceType): Batch {
+  private renderBatch(
+    id: string,
+    vpc: IVpc,
+    subnets: SubnetSelection,
+    appParams: ContextAppParameters,
+    computeType?: ComputeResourceType,
+    computeEnvImage?: IMachineImage
+  ): Batch {
     return new Batch(this, id, {
       vpc,
       subnets,
@@ -173,6 +180,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: Stack.of(this).tags.tagValues(),
       workflowOrchestrator: ENGINE_SNAKEMAKE,
+      computeEnvImage,
     });
   }
 
