@@ -11,12 +11,12 @@ const (
 )
 
 type contextEnvironment struct {
-	ProjectName           string
-	ContextName           string
-	UserId                string
-	UserEmail             string
-	OutputBucketName      string
-	CustomTagsJson        string
+	ProjectName          string
+	ContextName          string
+	UserId               string
+	UserEmail            string
+	OutputBucketName     string
+	CustomTagsJson       string
 	CustomWesEnvVarsJson string
 
 	EngineName              string
