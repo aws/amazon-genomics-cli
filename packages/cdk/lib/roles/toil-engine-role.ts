@@ -29,7 +29,7 @@ export class ToilEngineRole extends ToilJobRole {
     );
     super(scope, id, props, {
       // In addition to what jobs do, we need to be able to manipulate AWS
-      // Batch. 
+      // Batch.
       ToilEngineBatchPolicy: new ToilBatchPolicy({
         ...props,
         toilJobArnPattern: toilJobArnPattern,
