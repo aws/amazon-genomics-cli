@@ -76,23 +76,28 @@ Amazon Genomics CLI can create a new VPC with only public subnets to use for its
 
 `agc account activate --usePublicSubnets`
 
-{{% alert title="Warning" color="warning" %}}
-Currently, use of public subnets is only supported for contexts that use the Cromwell or Nextflow engines.
-{{% /alert %}}
-
 This can reduce costs by removing the need for NAT Gateways and VPC Gateway Endpoints to route internet traffic from private subnets.
-It will also reduce the number of Elastic IP Addresses consumed by your infrastructure. When using a VPC with only public
-subnets you will need to ensure that the contexts defined in `agc-project.yaml` files declare that they
+It can also reduce the number of Elastic IP Addresses consumed by your infrastructure.
+
+{{% alert title="Warning" color="warning" %}}
+When using a VPC with only public subnets, you will need to ensure that the contexts defined in `agc-project.yaml` files declare that they
 will use public subnets. For example:
+{{% /alert %}}
 
 ```yaml
 contexts:
   myContext:
     usePublicSubnets: true
     engines:
-      - type: wdl
-        engine: cromwell
+      - type: nextflow
+        engine: nextflow
 ```
+
+{{% alert title="Warning" color="warning" %}}
+Currently, use of public subnets is only supported for contexts that use the Nextflow engine. Use of public IPs with the
+Cromwell server creates a security risk and will fail. Assignment of public IPs to AWS Batch Fargate tasks (as used by miniwdl and SnakeMake)
+is possible but will require changes to the WES adapters of those engines. If you need this please file a [feature request](https://github.com/aws/amazon-genomics-cli/issues/new?labels=enhancement) with your use case
+{{% /alert %}}
 
 ##### Security Considerations
 
@@ -101,16 +106,45 @@ infrastructure to the internet. For this reason *we do **not** recommend using t
 or with sensitive data*.
 
 #### Updating
+Issuing `account activate` commands more than once effectively updates the core infrastructure with the difference between
+the two commands according to the rules below.
 
-Issuing account activate commands more than once effectively updates the core infrastructure with the difference between
-the two commands. For example, if you had previously activated the account using `agc account activate` and later invoked
-`agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id` then Amazon Genomics CLI will update to use `my-existing-bucket`
-and the identified VPC. The old VPC and related infrastructure will be destroyed. S3 buckets will be *retained* according
-to their retention policy.
+##### Updating the VPC
 
-If you initially activated the account with `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id`
-and later invoked `agc account activate` then Amazon Genomics CLI will stop using the previous specified bucket and VPC. *ALL* of the
-pre-existing S3 and VPC infrastructure will be retained and a new bucket and VPC will be created for use by Amazon Genomics CLI.
+You may change the VPC used by issuing the command `agc account activate --vpc <vpc-id>`. If a `--vpc` argument is *not*
+provided as part of an `agc account activate` command then the last VPC used will be 'remembered' and used by default.
+
+If you wish to change to use a new default VPC created by Amazon Genomics CLI you must deactivate (`agc account deactivate`) 
+and reactivate with no `--vpc` flag.
+
+```shell
+agc account activate               # VPC 1 created.
+agc account activate --vpc-id abc  # VPC 1 destroyed and customer VPC abc used. 
+agc account activate               # VPC 2 created. Customer VPC retained.
+agc account deactivate             # AGC core infrastructure destroyed. Customer VPC abc retained.
+```
+
+##### Updating to Use Public Subnets Only
+
+If you wish to change the VPC to use public subnets only, or change it from public subnets to private subnets you must
+deactivate the account and reactivate it with (or without) the `--usePublicSubnets` flag. For example:
+
+```shell
+agc account activate --usePublicSubnets # New VPC with only public subnets
+agc account deactivate                  # VPC destroyed
+agc account activate                    # New VPC with private subnets
+```
+
+##### Updating Selected Subnets
+
+To change a VPC to use a different selection of subnets you must supply both the VPC id and the required subnet IDs.
+If you omit the `--subnets` flag, then future context deployments will use *all* private subnets of the VPC.
+
+```shell
+agc account activate --vpc <vpc-id> --subnets <subnet1,subnet2> # use subnets 1 and 2 of vpc-id 
+agc account activate --vpc <vpc-id> --subnets <subnet1,subnet4> # use subnets 1 and 4 of vpc-id
+agc account activate --vpc <vpc-id>                             # use all subnets of vpc-id
+```
 
 ### `deactivate`
 

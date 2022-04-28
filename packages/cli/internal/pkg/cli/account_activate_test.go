@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/version"
@@ -246,6 +247,84 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 			err := opts.Execute()
 			if tc.expectedErr != nil {
 				assert.Equal(t, err, tc.expectedErr)
+			} else {
+				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func Test_accountActivateOpts_validate(t *testing.T) {
+	origVerbose := logging.Verbose
+	defer func() { logging.Verbose = origVerbose }()
+	logging.Verbose = true
+
+	testCases := map[string]struct {
+		vpcId         string
+		subnets       []string
+		publicSubnets bool
+		expectedErr   error
+	}{
+		"subnets with VPC ID validates": {
+			vpcId:       testAccountVpcId,
+			subnets:     []string{testAccountSubnetId1, testAccountSubnetId2},
+			expectedErr: nil,
+		},
+		"subnets without VPC ID is invalid": {
+			subnets: []string{testAccountSubnetId1, testAccountSubnetId2},
+			expectedErr: &clierror.Error{
+				Command:         "account activate",
+				CommandVars:     accountActivateVars{subnets: []string{testAccountSubnetId1, testAccountSubnetId2}},
+				Cause:           fmt.Errorf("\"subnets\" cannot be supplied without supplying a \"vpc\" ID"),
+				SuggestedAction: "use the \"vpc\" flag to supply the identity of the VPC containing the subnets",
+			},
+		},
+		"VPC without subnets is valid": {
+			vpcId:       testAccountVpcId,
+			expectedErr: nil,
+		},
+		"Public subnets is valid": {
+			publicSubnets: true,
+			expectedErr:   nil,
+		},
+		"Public subnets with specific subnets is invalid": {
+			publicSubnets: true,
+			subnets:       []string{testAccountSubnetId1},
+			expectedErr: &clierror.Error{
+				Command:         "account activate",
+				CommandVars:     accountActivateVars{publicSubnets: true, subnets: []string{testAccountSubnetId1}},
+				Cause:           fmt.Errorf("\"subnets\" cannot be supplied without supplying a \"vpc\" ID"),
+				SuggestedAction: "use the \"vpc\" flag to supply the identity of the VPC containing the subnets",
+			},
+		},
+		"Public Subnets with VPC is invalid": {
+			publicSubnets: true,
+			vpcId:         testAccountVpcId,
+			expectedErr: &clierror.Error{
+				Command:         "account activate",
+				CommandVars:     accountActivateVars{publicSubnets: true, vpcId: testAccountVpcId},
+				Cause:           fmt.Errorf("both %[1]q and %[2]q cannot be specified together, as %[2]q involves creating a minimal VPC", accountVpcFlag, publicSubnetsFlag),
+				SuggestedAction: "Remove one or both of these flags",
+			},
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+
+			opts := &accountActivateOpts{
+				accountActivateVars: accountActivateVars{
+					vpcId:         tc.vpcId,
+					publicSubnets: tc.publicSubnets,
+					subnets:       tc.subnets,
+				},
+				imageRefs: testImageRefs,
+				region:    testAccountRegion,
+			}
+
+			err := opts.validate()
+			if tc.expectedErr != nil {
+				assert.Equal(t, tc.expectedErr, err)
 			} else {
 				assert.NoError(t, err)
 			}

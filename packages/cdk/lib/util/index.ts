@@ -72,13 +72,11 @@ export const renderServiceWithTaskDefinition = (
   serviceContainer: ServiceContainer,
   taskDefinition: TaskDefinition,
   vpc: IVpc,
-  subnets: SubnetSelection,
-  publicIp: boolean
+  subnets: SubnetSelection
 ): SecureService => {
   return new SecureService(scope, id, {
     vpc,
     taskSubnets: subnets,
-    assignPublicIp: publicIp,
     serviceName: serviceContainer.serviceName,
     taskDefinition: taskDefinition,
     healthCheck: {

@@ -47,6 +47,9 @@ export class ContextStack extends Stack {
         if (filesystemType != "S3") {
           throw Error(`'Cromwell' requires filesystem type 'S3'`);
         }
+        if (contextParameters.usePublicSubnets) {
+          throw Error(`'Cromwell cannot be securely deployed using public subnets'`);
+        }
         this.renderCromwellStack(props);
         break;
       case ENGINE_NEXTFLOW:
@@ -59,11 +62,17 @@ export class ContextStack extends Stack {
         if (filesystemType != "EFS") {
           throw Error(`'MiniWDL' requires filesystem type 'EFS'`);
         }
+        if (contextParameters.usePublicSubnets) {
+          throw Error(`'miniwdl is not currently supported using public subnets, please file a github issue detailing your use case'`);
+        }
         this.renderMiniwdlStack(props);
         break;
       case ENGINE_SNAKEMAKE:
         if (filesystemType != "EFS") {
           throw Error(`'Snakemake' requires filesystem type 'EFS'`);
+        }
+        if (contextParameters.usePublicSubnets) {
+          throw Error(`'snakemake is not currently supported using public subnets, please file a github issue detailing your use case'`);
         }
         this.renderSnakemakeStack(props);
         break;
