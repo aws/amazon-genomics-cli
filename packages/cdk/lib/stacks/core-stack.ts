@@ -156,7 +156,7 @@ export class CoreStack extends Stack {
     new StringParameter(this, "ComputeEnvImage", {
       parameterName: `${parameterPrefix}${IMAGE_PARAMETER_NAME}`,
       stringValue: props.imageId
-        ? MachineImage.lookup({ name: props.imageId! }).getImage(this).imageId
+        ? MachineImage.genericLinux({ [this.region]: props.imageId }).getImage(this).imageId
         : EcsOptimizedImage.amazonLinux2().getImage(this).imageId,
       type: ParameterType.STRING,
       dataType: ParameterDataType.AWS_EC2_IMAGE,
