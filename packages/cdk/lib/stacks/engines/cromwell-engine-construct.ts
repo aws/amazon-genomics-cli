@@ -57,7 +57,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
     });
 
     // TODO: Move log group creation into service construct and make it a property
-    this.engine = this.getEngineServiceDefinition(props.vpc, props.subnets, engineContainer, this.engineLogGroup, !!props.contextParameters.usePublicSubnets);
+    this.engine = this.getEngineServiceDefinition(props.vpc, props.subnets, engineContainer, this.engineLogGroup);
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
 
     const lambda = this.renderAdapterLambda({
@@ -89,7 +89,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
     };
   }
 
-  private getEngineServiceDefinition(vpc: IVpc, subnets: SubnetSelection, serviceContainer: ServiceContainer, logGroup: ILogGroup, publicIp: boolean) {
+  private getEngineServiceDefinition(vpc: IVpc, subnets: SubnetSelection, serviceContainer: ServiceContainer, logGroup: ILogGroup) {
     const id = "Engine";
     const fileSystem = new FileSystem(this, "EngineFileSystem", {
       vpc,
@@ -127,7 +127,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
       sourceVolume: volumeName,
     });
 
-    const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc, subnets, publicIp);
+    const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc, subnets);
     fileSystem.connections.allowDefaultPortFrom(engine.service);
     return engine;
   }

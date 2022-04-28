@@ -40,12 +40,13 @@ A new VPC will be created if not specified.`
 	publicSubnetsFlagDescription = `Do not create a NAT gateway or VPC endpoints, to lower operating costs. 
 You must enable the usePublicSubnets option in your project context if you use this flag.`
 	accountTagsDescription = `A list of comma separated tags to be applied to all AGC resources in this account
-(i.e. --tags "k1=v1","k2=v2"). Each key-value pair must be quoted as shown in the example,
+(e.g. --tags "k1=v1","k2=v2"). Each key-value pair must be quoted as shown in the example,
 otherwise the parsing will fail.`
 	subnetFlagDescription = `The list of private subnet IDs to use when specifying a VPC to run in. May only be used with the 
 '--vpc' flag. If not supplied then all private subnets of a VPC will be used as possible targets of compute infrastructure.
 Each subnet must have access to AWS service endpoints e.g. using VPC Gateway Endpoints or via a route to the public internet.
-Subnet names may be a comma separated list or supplied as repeated flags.`
+Subnet names may be a comma separated list or supplied as repeated flags. (e.g. '--subnets subnet-1234 --subnets subnet-2345, subnet-3456')
+`
 	cdkCoreDir   = ".agc/cdk/apps/core"
 	bucketPrefix = "agc"
 	activateKey  = "activate"
@@ -208,7 +209,7 @@ func (o *accountActivateOpts) validate() error {
 			"Remove one or both of these flags")
 	}
 
-	if o.subnets != nil && o.vpcId == "" {
+	if len(o.subnets) > 0 && o.vpcId == "" {
 		return o.generateValidationError(fmt.Errorf("%q cannot be supplied without supplying a %q ID", subnetsFlag, accountVpcFlag),
 			fmt.Sprintf("use the %q flag to supply the identity of the VPC containing the subnets", accountVpcFlag))
 	}
