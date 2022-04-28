@@ -16,8 +16,3 @@ contexts:
     engines:
       - type: snakemake
         engine: snakemake
-  spotContext:
-    requestSpotInstances: true
-    engines:
-      - type: snakemake
-        engine: snakemake
