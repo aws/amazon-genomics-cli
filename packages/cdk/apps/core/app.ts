@@ -48,7 +48,7 @@ if (customWesEnvVarsJsonString) {
   stackParameters.push({
     name: "customWesEnvVars",
     value: customWesEnvVarsJsonString,
-    description: "JSON string of custom env vars to be used to pass to WES adapter",
+    description: "JSON string of custom env vars to be passed to the WES adapter",
   });
 }
 
