@@ -15,8 +15,8 @@ type Engine struct {
 	Filesystem Filesystem `yaml:"filesystem,omitempty"`
 }
 type CustomWesEnvVar struct {
-    Key   string `yaml:"key"`
-    Value string `yaml:"value"`
+	Key   string `yaml:"key"`
+	Value string `yaml:"value"`
 }
 type Context struct {
 	InstanceTypes        []string          `yaml:"instanceTypes,omitempty"`
