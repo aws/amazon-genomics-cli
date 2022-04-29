@@ -264,7 +264,7 @@ func TestGetContext(t *testing.T) {
 									},
 								},
 							},
-							CustomWesEnvVars:[]CustomWesEnvVar(nil),
+							CustomWesEnvVars:[] CustomWesEnvVar(nil),
 						},
 					},
 				},
