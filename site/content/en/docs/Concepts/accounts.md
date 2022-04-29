@@ -70,6 +70,26 @@ the `--subnets` flag, or repeat the flag multiple times. For example:
 We recommend a minimum of 3 subnets across availability zones to take advantage of EC2 instance availability and to
 ensure high availability of infrastructure.
 
+#### Using a Specific AMI for Compute Environments
+
+Some organizations restrict the use of AMIs to a pre-approved list. By default, Amazon Genomics CLI uses the most recent
+version of the Amazon Linux 2 ECS Optimized AMI. To change this behavior you can supply the ID of an alternative AMI at
+account activation. This AMI will then be used for all compute environments used by all newly deployed contexts.
+
+```shell
+agc account activate --ami <ami-id>
+```
+
+There are some specific requirements that the AMI must comply with. It must be a private AMI from the same account that
+you will use for deploying Amazon Genomics CLI infrastructure. It must also be capable of successfully running all parts
+of the [LaunchTemplate](https://github.com/aws/amazon-genomics-cli/blob/main/packages/cdk/lib/constructs/launch-template-data.ts)
+executed at startup time including the [ecs-additions](https://github.com/aws/amazon-genomics-cli/tree/main/packages/cdk/lib/artifacts/batch-artifacts/ecs-additions) 
+dependencies. We recommend an ECS optimized image based on Amazon Linux 2, RHEL, Fedora or similar. 
+
+If the LaunchTemplate cannot complete successfully it will result in an EC2 instance that cannot join a
+compute-cluster and cannot complete workflow tasks. A common symptom of this is workflow tasks that become stuck in a "runnable"
+state but are never assigned to a cluster node.  
+
 #### Using Only Public Subnets
 
 Amazon Genomics CLI can create a new VPC with only public subnets to use for its infrastructure using the `--usePublicSubnets` flag.
@@ -144,6 +164,17 @@ If you omit the `--subnets` flag, then future context deployments will use *all*
 agc account activate --vpc <vpc-id> --subnets <subnet1,subnet2> # use subnets 1 and 2 of vpc-id 
 agc account activate --vpc <vpc-id> --subnets <subnet1,subnet4> # use subnets 1 and 4 of vpc-id
 agc account activate --vpc <vpc-id>                             # use all subnets of vpc-id
+```
+
+##### Updating the Compute-Environment AMI
+
+The compute-environment AMI can be changed by re-issuing the `account activate` command with (or without) the `--ami` flag.
+If the flag is not provided the latest Amazon Linux 2 ECS optimized image will be used.
+
+```shell
+agc account activate                    # Latest Amazon Linux ECS Optimized AMI used for all contexts
+agc account activate --ami <ami-1234>   # AMI 1234 used for new contexts
+agc account activate                    # Latest Amazon Linux ECS Optimized AMI used for new contexts
 ```
 
 ### `deactivate`
