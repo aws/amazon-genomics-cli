@@ -1,6 +1,7 @@
 package context
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"strings"
@@ -19,7 +20,6 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/storage"
 	"github.com/rs/zerolog/log"
-	"encoding/json"
 )
 
 const (
