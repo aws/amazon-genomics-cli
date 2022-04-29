@@ -216,10 +216,10 @@ func (m *Manager) setContextEnv(contextName string) {
 	}
 
 	customWesEnvVarsJsonBytes, err := json.Marshal(m.contextSpec.CustomWesEnvVars)
-    if err != nil {
-        m.err = err
-        return
-    }
+	if err != nil {
+		m.err = err
+		return
+	}
 
 	m.contextEnv = contextEnvironment{
 		ProjectName:          m.projectSpec.Name,
