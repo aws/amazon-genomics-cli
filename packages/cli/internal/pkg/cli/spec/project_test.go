@@ -37,7 +37,7 @@ func TestProjectYaml(t *testing.T) {
 								},
 							},
 						},
-						CustomWesEnvVars:[]CustomWesEnvVar{},
+						CustomWesEnvVars: []CustomWesEnvVar{},
 					},
 				},
 			},
@@ -105,7 +105,7 @@ schemaVersion: 0
 								},
 							},
 						},
-						CustomWesEnvVars:[]CustomWesEnvVar{},
+						CustomWesEnvVars: []CustomWesEnvVar{},
 					},
 					"ctx2": {
 						MaxVCpus: 256,
@@ -118,7 +118,7 @@ schemaVersion: 0
 								},
 							},
 						},
-						CustomWesEnvVars:[]CustomWesEnvVar{},
+						CustomWesEnvVars: []CustomWesEnvVar{},
 					},
 					"ctx3": {
 						MaxVCpus: 256,
@@ -128,7 +128,7 @@ schemaVersion: 0
 								Engine: "nextflow",
 							},
 						},
-						CustomWesEnvVars:[]CustomWesEnvVar{
+						CustomWesEnvVars: []CustomWesEnvVar{
 							{
 								Key:   "k1",
 								Value: "v1",
@@ -252,7 +252,7 @@ func TestGetContext(t *testing.T) {
 									},
 								},
 							},
-							CustomWesEnvVars:[]CustomWesEnvVar{},
+							CustomWesEnvVars: []CustomWesEnvVar{},
 						},
 						"ctx2": {
 							Engines: []Engine{
