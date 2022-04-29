@@ -12,4 +12,5 @@ const (
 	AgcVersionEnvKey    = "AGC_VERSION"
 	VpcIdEnvKey         = "VPC_ID"
 	PublicSubnetsEnvKey = "AGC_USE_PUBLIC_SUBNETS"
+	CustomWesEnvVarEnvKey = "CUSTOM_WES_ENV_VARS"
 )

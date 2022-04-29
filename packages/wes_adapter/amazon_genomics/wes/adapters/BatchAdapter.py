@@ -2,6 +2,7 @@ import traceback
 import os
 import typing
 import time
+import json
 from abc import abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
@@ -163,14 +164,38 @@ class BatchAdapter(AbstractWESAdapter):
             workflow_attachment=workflow_attachment,
         )
 
-        submit_job_response = self.aws_batch.submit_job(
-            jobName="agc-run-workflow",
-            jobQueue=self.job_queue,
-            jobDefinition=self.job_definition,
-            containerOverrides={
-                "command": command,
-            },
-        )
+        """
+        E.g. [{ "key": "k1", "value": { "k2": 15 } }, { "key": "k3", "value": 10 }]
+        """
+        if os.environ.get("CUSTOM_WORKFLOW_JOB_ENV_VARS") is not None:
+            custom_environments = os.environ["CUSTOM_WORKFLOW_JOB_ENV_VARS"]
+
+            environment = list(
+                map(
+                    lambda key_value: {
+                        "name": key_value["key"],
+                        # Convert to string if a value is JSON
+                        "value": json.dumps(key_value["value"]),
+                    },
+                    json.loads(custom_environments),
+                )
+            )
+
+            submit_job_response = self.aws_batch.submit_job(
+                jobName="agc-run-workflow",
+                jobQueue=self.job_queue,
+                jobDefinition=self.job_definition,
+                containerOverrides={"command": command, "environment": environment},
+            )
+        else:
+            submit_job_response = self.aws_batch.submit_job(
+                jobName="agc-run-workflow",
+                jobQueue=self.job_queue,
+                jobDefinition=self.job_definition,
+                containerOverrides={
+                    "command": command,
+                },
+            )
         return RunId(submit_job_response["jobId"])
 
     def describe_job(self, job_id: str) -> Optional[JobDetailTypeDef]:

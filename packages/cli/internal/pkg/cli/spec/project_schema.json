@@ -151,6 +151,27 @@
                 },
                 "required": ["type", "engine"]
               }
+            },
+            "customWesEnvVars": {
+              "type":[
+                "array",
+                "null"
+              ],
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                 },
+                "required": ["key", "value"]
+              }
             }
           },
           "required": [
