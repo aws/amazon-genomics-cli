@@ -59,7 +59,7 @@ var CommonImages = map[string]ecr.ImageReference{
 		RegistryId:     LookUpEnvOrDefault("ECR_TOIL_ACCOUNT_ID", DefaultEcrRegistry),
 		Region:         LookUpEnvOrDefault("ECR_TOIL_REGION", DefaultEcrRegion),
 		RepositoryName: LookUpEnvOrDefault("ECR_TOIL_REPOSITORY", "aws/toil-mirror"),
-		ImageTag:       LookUpEnvOrDefault("ECR_TOIL_TAG", DefaultMiniwdlTag),
+		ImageTag:       LookUpEnvOrDefault("ECR_TOIL_TAG", DefaultToilTag),
 	},
 }
 
