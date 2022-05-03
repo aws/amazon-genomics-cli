@@ -96,6 +96,7 @@ export class ToilJobRole extends Role {
                 "s3:GetBucketVersioning",
                 "s3:PutBucketVersioning",
                 "s3:HeadBucket",
+                "s3:GetBucketLocation",
                 "s3:HeadObject",
                 "s3:GetObject",
                 "s3:GetObjectVersion",
