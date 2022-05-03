@@ -229,7 +229,6 @@ For the `demo-wdl-project`, this should return something like:
 
 ```
 2021-09-02T05:14:47Z 𝒊  Listing workflows.
-WORKFLOWNAME    haplotype
 WORKFLOWNAME    hello
 WORKFLOWNAME    read
 WORKFLOWNAME    words-with-vowels
