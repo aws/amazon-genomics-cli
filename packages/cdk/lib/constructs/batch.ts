@@ -93,6 +93,7 @@ export interface BatchProps extends ComputeOptions {
 const defaultComputeType = ComputeResourceType.ON_DEMAND;
 
 export class Batch extends Construct {
+  // This is the role that the backing instances use, not the role that batch jobs run as.
   public readonly role: IRole;
   public readonly computeEnvironment: IComputeEnvironment;
   public readonly jobQueue: IJobQueue;

@@ -21,6 +21,7 @@ Currently, Amazon Genomics CLI's officially supported engines can be used to run
 | [Nextflow](https://www.nextflow.io)                       | [Nextflow DSL](https://www.nextflow.io/docs/latest/script.html)                            | Standard and DSL 2                                                                                                      | Head Process |
 | [miniwdl](https://miniwdl.readthedocs.io/en/latest/)      | [WDL](https://openwdl.org)                                                                 | [documented here](https://miniwdl.readthedocs.io/en/latest/runner_reference.html?highlight=errata#wdl-interoperability) | Head Process |
 | [Snakemake](https://snakemake.readthedocs.io/en/stable/)  | [Snakemake](https://snakemake.readthedocs.io/en/stable/snakefiles/writing_snakefiles.html) | All versions                                                                                                            | Head Process |
+| [Toil](http://toil.ucsc-cgl.org/)                | [CWL](https://www.commonwl.org/)                                                                    | All versions up to 1.2                                                                                                  | Server       |
 
 Overtime we plan to add additional engine and language support and provide the ability for third party developers to 
 develop engine plugins.

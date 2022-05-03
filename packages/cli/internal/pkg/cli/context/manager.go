@@ -87,8 +87,23 @@ var showExecution = cdk.ShowExecution
 var silentExecution = cdk.SilentExecution
 
 func (m *Manager) getEnvironmentVars() []string {
+	// Different engines will need different environment variables to define
+	// their Docker images.
+	engine := m.contextEnv.EngineName
+	var relevantImageKeys []string
+	relevantImageKeys = append(relevantImageKeys, strings.ToUpper(engine))
+	// Do one level of dependency resolution, without deduplication.
+	// If the dependency structure becomes more complex we will have to upgrade
+	// this algorithm.
+	var dependencyImageKeys []string
+	for _, imageKey := range relevantImageKeys {
+		dependencyImageKeys = append(dependencyImageKeys, environment.ImageDependencies[imageKey]...)
+	}
+	// And add them to the relevant images
+	relevantImageKeys = append(relevantImageKeys, dependencyImageKeys...)
 	var environmentVars []string
-	for imageName := range m.imageRefs {
+	for _, imageName := range relevantImageKeys {
+		// Each engine or other component has its own section in imageRefs
 		environmentVars = append(environmentVars,
 			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", imageName, m.imageRefs[imageName].RegistryId),
 			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.region),
