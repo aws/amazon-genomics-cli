@@ -15,7 +15,7 @@ const DefaultNextflowTag = "21.04.3"
 const DefaultWesTag = "0.1.0"
 const DefaultMiniwdlTag = "v0.1.11"
 const DefaultSnakemakeTag = "internal-fork"
-const DefaultToilTag = "v6.0.0"
+const DefaultToilTag = "5.7.0a1-f77554b28bbda7b112c5b058b31d5041299c38c9"
 
 const WesImageKey = "WES"
 const CromwellImageKey = "CROMWELL"
@@ -59,7 +59,7 @@ var CommonImages = map[string]ecr.ImageReference{
 		RegistryId:     LookUpEnvOrDefault("ECR_TOIL_ACCOUNT_ID", DefaultEcrRegistry),
 		Region:         LookUpEnvOrDefault("ECR_TOIL_REGION", DefaultEcrRegion),
 		RepositoryName: LookUpEnvOrDefault("ECR_TOIL_REPOSITORY", "aws/toil-mirror"),
-		ImageTag:       LookUpEnvOrDefault("ECR_TOIL_TAG", DefaultMiniwdlTag),
+		ImageTag:       LookUpEnvOrDefault("ECR_TOIL_TAG", DefaultToilTag),
 	},
 }
 
