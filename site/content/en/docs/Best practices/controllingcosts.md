@@ -53,7 +53,7 @@ most to the cost.
 
 EC2 workers for Cromwell AWS Batch compute environments are `c`, `m`, and `r` instance families that
 have vCPU to memory ratios of 1:2, 1:4 and 1:8 respectively. Engines that run container based workflows will typically attempt to fit containers to instances in
-the most optimal way depending on cost and size requirements, or they will delegate this to a service like AWS Batch. Given that a task requiring 16GB of RAM that could make
+the most optimal way depending on cost and size requirements, or they will delegate this to a service like AWS Batch. Given that a task requiring 16 GB of RAM that could make
 use of all available CPUs, then to optimally pack the containers you should specify either 2, 4, or 8 vCPU. Other
 values could lead to inefficient packing meaning the resources of the EC2 container instance will be paid for but
 not optimally used.
@@ -62,7 +62,7 @@ not optimally used.
 (or more if they start swapping) of the allocated resources. The instance may then be unresponsive to its management services or the workflow engine and may
 time out. To avoid this, always allow for a little overhead, especially in the smaller instances.
 
-The largest instance types deployed by default are from the `4xlarge` size which have 16 vCPU and up to 128 MB of RAM.
+The largest instance types deployed by default are from the `4xlarge` size which have 16 vCPU and up to 128 GB of RAM.
 
 ## Consider splitting tasks that pipe output
 
