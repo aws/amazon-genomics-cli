@@ -60,9 +60,9 @@ func BuildWorkflowRunCommand() *cobra.Command {
 This command prints a run Id for the created workflow instance.
 `,
 		Example: `
-Run the workflow named "example-workflow", against the "prod" context,
-using input parameters contained in file "file:///Users/ec2-user/myproj/test-args.json"
-/code $ agc workflow run example-workflow --context prod --inputsFile file:///Users/ec2-user/myproj/test-args.json`,
+Run the workflow named "myworkflow", against the "prod" context,
+using input parameters contained in file "/home/ec2-user/myproj/workflows/myworkflow/myworkflow.inputs.json"
+/code $ agc workflow run myworkflow --context prod --inputsFile workflows/myworkflow/myworkflow.inputs.json`,
 		Args: cobra.ExactArgs(1),
 		RunE: runCmdE(func(cmd *cobra.Command, args []string) error {
 			vars.WorkflowName = args[0]
