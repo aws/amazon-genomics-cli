@@ -338,6 +338,7 @@ func (m *Manager) uploadInputsToS3() {
 	absInputsPath, err := filepath.Abs(m.inputsPath)
 	if err != nil {
 		m.err = err
+		return
 	}
 	baseLocation := filepath.Dir(absInputsPath)
 	updateInputs, err := m.InputClient.UpdateInputs(baseLocation, m.input, m.bucketName, objectKey)
