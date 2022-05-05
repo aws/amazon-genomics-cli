@@ -4,9 +4,12 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -33,6 +36,22 @@ func newLogsAdapterOpts(vars logsAdapterVars) (*logsAdapterOpts, error) {
 func (o *logsAdapterOpts) Validate() error {
 	if err := o.validateFlags(); err != nil {
 		return err
+	}
+
+	// It's convenient for the tests to be able to not actually have the ctxManager set.
+	if o.ctxManager != nil {
+		ctxMap, err := o.ctxManager.List()
+		if err != nil {
+			return err
+		}
+
+		summary := ctxMap[o.contextName]
+		engine := summary.Engines[0].Engine
+		if engine == constants.TOIL {
+			// The Toil engine doesn't use an adapter, so we shouldn't let the user
+			// ask for adapter logs.
+			return fmt.Errorf("Context does not use an adapter because it is using the Toil engine")
+		}
 	}
 
 	return o.parseTime(o.logsSharedVars)

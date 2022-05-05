@@ -8,6 +8,7 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cwl"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
 	awsmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/aws"
 	contextmocks "github.com/aws/amazon-genomics-cli/internal/pkg/mocks/context"
 	"github.com/golang/mock/gomock"
@@ -56,6 +57,18 @@ func TestLogsAdapterOpts_Validate_FlagConflictError(t *testing.T) {
 	opts := logsAdapterOpts{logsAdapterVars: logsAdapterVars{logsSharedVars{startString: "1/1/1990", lookBack: "1h"}}}
 	err := opts.Validate()
 	assert.Equal(t, fmt.Errorf("a look back period cannot be specified together with start or end times"), err)
+}
+
+func TestLogsAdapterOpts_Validate_ToilError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	ctxMock := contextmocks.NewMockContextManager(ctrl)
+	opts := logsAdapterOpts{logsAdapterVars: logsAdapterVars{logsSharedVars: logsSharedVars{contextName: "myCtx"}}}
+	opts.ctxManager = ctxMock
+	ctxMock.EXPECT().List().Return(map[string]context.Summary{"myCtx": {Engines: []spec.Engine{{Engine: "toil"}}}}, nil)
+
+	err := opts.Validate()
+	assert.Equal(t, fmt.Errorf("Context does not use an adapter because it is using the Toil engine"), err)
 }
 
 func TestLogsAdapterOpts_Execute_Group(t *testing.T) {
