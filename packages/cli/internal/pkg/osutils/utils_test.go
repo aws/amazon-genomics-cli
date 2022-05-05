@@ -252,6 +252,25 @@ func TestGetAndCreateRelativePath(t *testing.T) {
 	}
 }
 
+func TestStripFileURLPrefix(t *testing.T) {
+	tests := map[string]struct {
+		url      string
+		expected string
+	}{
+		"NoPrefixAbs":   {"/home/user/file", "/home/user/file"},
+		"NoPrefixRel":   {"user/file", "user/file"},
+		"WithPrefixAbs": {"file:///home/user/file", "/home/user/file"},
+		"WithPrefixRel": {"file://user/file", "user/file"},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			actual := StripFileURLPrefix(test.url)
+			assert.Equal(t, test.expected, actual)
+		})
+	}
+}
+
 type MockUtils struct {
 	ctrl   *gomock.Controller
 	mockOs *iomocks.MockOS

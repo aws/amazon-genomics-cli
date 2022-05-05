@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 )
 
-type inputKey = string
-type inputUrl = interface{}
-type Input map[inputKey]inputUrl
+type Input map[string]interface{}
 
-func (i Input) ToString() (string, error) {
+func (i Input) String() string {
 	jsonBytes, err := json.Marshal(i)
-	return string(jsonBytes), err
+	if err != nil {
+		panic(err)
+	}
+	return string(jsonBytes)
 }
