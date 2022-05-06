@@ -38,17 +38,19 @@ func (o *logsAdapterOpts) Validate() error {
 		return err
 	}
 
-	if o.ctxManager != nil {
-		ctxMap, err := o.ctxManager.List()
-		if err != nil {
-			return err
-		}
+	if o.ctxManager == nil {
+		return fmt.Errorf("Context manager is not available!")
+	}
 
-		summary := ctxMap[o.contextName]
-		engine := summary.Engines[0].Engine
-		if !environment.UsesWesAdapter[engine] {
-			return fmt.Errorf("Contexts using the %s engine do not have adapters to collect logs from", engine)
-		}
+	ctxMap, err := o.ctxManager.List()
+	if err != nil {
+		return err
+	}
+
+	summary := ctxMap[o.contextName]
+	engine := summary.Engines[0].Engine
+	if !environment.UsesWesAdapter[engine] {
+		return fmt.Errorf("Contexts using the %s engine do not have adapters to collect logs from", engine)
 	}
 
 	return o.parseTime(o.logsSharedVars)
