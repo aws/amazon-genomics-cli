@@ -140,6 +140,9 @@ func (o accountActivateOpts) generateEnvVars() ([]string, error) {
 	if o.vpcId != "" {
 		environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.VpcIdEnvKey, o.vpcId))
 	}
+	if len(o.subnets) != 0 {
+		environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.AgcVpcSubnetsEnvKey, strings.Join(o.subnets, ",")))
+	}
 	return environmentVars, err
 }
 
