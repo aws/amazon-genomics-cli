@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
@@ -80,11 +79,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				defer close(mocks.progressStream)
 				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
 				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
-				mocks.cfnMock.EXPECT().GetStackOutputs(testCoreStackName).Return(
-					map[string]string{
-						"": testAccountVpcId,
-					}, cfn.StackDoesNotExistError,
-				)
 				vars := []string{
 					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
 					fmt.Sprintf("%s=agc-%s-%s", constants.AgcBucketNameEnvKey, testAccountId, testAccountRegion),
@@ -106,29 +100,12 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 			},
 			expectedErr: fmt.Errorf("some account error"),
 		},
-		"vpc error": {
-			vpcId: "",
-			setupMocks: func(t *testing.T) mockClients {
-				mocks := createMocks(t)
-				defer close(mocks.progressStream)
-				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
-				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
-				mocks.cfnMock.EXPECT().GetStackOutputs(testCoreStackName).Return(nil, fmt.Errorf("some vpcId exists error"))
-				return mocks
-			},
-			expectedErr: fmt.Errorf("some vpcId exists error"),
-		},
 		"new bucket with no default VPC": {
 			bucketName: testAccountBucketName,
 			setupMocks: func(t *testing.T) mockClients {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(false, nil)
-				mocks.cfnMock.EXPECT().GetStackOutputs(testCoreStackName).Return(
-					map[string]string{
-						"": testAccountVpcId,
-					}, cfn.StackDoesNotExistError,
-				)
 				vars := []string{
 					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
 					fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, testAccountBucketName),
@@ -146,7 +123,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
-				mocks.cfnMock.EXPECT().GetStackOutputs(testCoreStackName).Return(nil, cfn.StackDoesNotExistError)
 				vars := []string{
 					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
 					fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, testAccountBucketName),
@@ -177,71 +153,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				return mocks
 			},
 		},
-		"custom VPC with existing stack updates": {
-			vpcId: testAccountVpcId,
-			setupMocks: func(t *testing.T) mockClients {
-				mocks := createMocks(t)
-				defer close(mocks.progressStream)
-				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
-				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
-				vars := []string{
-					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
-					fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
-					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-					fmt.Sprintf("AGC_VERSION=%s", version.Version),
-					fmt.Sprintf("VPC_ID=%s", testAccountVpcId),
-				}
-				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
-				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
-				return mocks
-			},
-		},
-		"no custom VPC with existing stack updates with existing vpc id value": {
-			setupMocks: func(t *testing.T) mockClients {
-				mocks := createMocks(t)
-				defer close(mocks.progressStream)
-				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
-				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
-				existingVpc := "existing-vpc"
-				mocks.cfnMock.EXPECT().GetStackOutputs(testCoreStackName).Return(
-					map[string]string{
-						"VpcId": existingVpc,
-					}, cfn.StackDoesNotExistError,
-				)
-				vars := []string{
-					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
-					fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
-					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-					fmt.Sprintf("AGC_VERSION=%s", version.Version),
-				}
-				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
-				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
-				return mocks
-			},
-		},
-		"no Custom VPC with existing stack deployed that does not contain a VpcId in outputs": {
-			setupMocks: func(t *testing.T) mockClients {
-				mocks := createMocks(t)
-				defer close(mocks.progressStream)
-				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
-				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
-				existingVpc := ""
-				mocks.cfnMock.EXPECT().GetStackOutputs(testCoreStackName).Return(
-					map[string]string{
-						"": existingVpc,
-					}, cfn.StackDoesNotExistError,
-				)
-				vars := []string{
-					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
-					fmt.Sprintf("AGC_BUCKET_NAME=agc-%s-%s", testAccountId, testAccountRegion),
-					fmt.Sprintf("CREATE_AGC_BUCKET=%t", true),
-					fmt.Sprintf("AGC_VERSION=%s", version.Version),
-				}
-				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
-				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
-				return mocks
-			},
-		},
 		"bucket exists error": {
 			bucketName: testAccountBucketName,
 			setupMocks: func(t *testing.T) mockClients {
@@ -258,7 +169,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				mocks := createMocks(t)
 				defer close(mocks.progressStream)
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
-				mocks.cfnMock.EXPECT().GetStackOutputs(testCoreStackName).Return(nil, cfn.StackDoesNotExistError)
 				vars := []string{
 					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
 					fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, testAccountBucketName),
@@ -284,7 +194,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 				}
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
-				mocks.cfnMock.EXPECT().GetStackOutputs(testCoreStackName).Return(nil, cfn.StackDoesNotExistError)
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(nil, fmt.Errorf("some bootstrap error"))
 				return mocks
 			},
@@ -305,7 +214,6 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 				s3Client:  mocks.s3Mock,
 				cdkClient: mocks.cdkMock,
 				ecrClient: mocks.ecrMock,
-				cfnClient: mocks.cfnMock,
 				imageRefs: testImageRefs,
 				region:    testAccountRegion,
 			}
