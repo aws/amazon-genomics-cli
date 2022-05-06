@@ -68,7 +68,7 @@ func TestLogsAdapterOpts_Validate_ToilError(t *testing.T) {
 	ctxMock.EXPECT().List().Return(map[string]context.Summary{"myCtx": {Engines: []spec.Engine{{Engine: "toil"}}}}, nil)
 
 	err := opts.Validate()
-	assert.Equal(t, fmt.Errorf("Context does not use an adapter because it is using the Toil engine"), err)
+	assert.Equal(t, fmt.Errorf("Contexts using the toil engine do not have adapters to collect logs from"), err)
 }
 
 func TestLogsAdapterOpts_Execute_Group(t *testing.T) {

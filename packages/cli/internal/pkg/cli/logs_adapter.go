@@ -9,7 +9,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -46,10 +46,8 @@ func (o *logsAdapterOpts) Validate() error {
 
 		summary := ctxMap[o.contextName]
 		engine := summary.Engines[0].Engine
-		if engine == constants.TOIL {
-			// The Toil engine doesn't use an adapter, so we shouldn't let the user
-			// ask for adapter logs.
-			return fmt.Errorf("Context does not use an adapter because it is using the Toil engine")
+		if !environment.UsesWesAdapter[engine] {
+			return fmt.Errorf("Contexts using the %s engine do not have adapters to collect logs from", engine)
 		}
 	}
 
