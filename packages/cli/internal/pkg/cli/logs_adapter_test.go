@@ -103,7 +103,6 @@ func TestLogsAdapterOpts_Validate_FlagConflictError(t *testing.T) {
         logsSharedOpts:  logsSharedOpts{ctxManager: ctxMock},
         logsAdapterVars: logsAdapterVars{logsSharedVars{contextName: testContextName1, startString: "1/1/1990", lookBack: "1h"}},
     }
-    ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {Engines: []spec.Engine{{Engine: constants.CROMWELL}}}}, nil)
 	err := opts.Validate()
 	assert.Equal(t, fmt.Errorf("a look back period cannot be specified together with start or end times"), err)
 }
@@ -133,7 +132,6 @@ func TestLogsAdapterOpts_Execute_Group(t *testing.T) {
 		logsAdapterVars: logsAdapterVars{logsSharedVars{contextName: testContextName1}},
 	}
 
-    ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {Engines: []spec.Engine{{Engine: constants.CROMWELL}}}}, nil)
 	ctxMock.EXPECT().Info(testContextName1).Return(context.Detail{WesLogGroupName: testLogGroupName}, nil)
 	cwlMock.EXPECT().GetLogsPaginated(cwl.GetLogsInput{LogGroupName: testLogGroupName}).Return(logPaginatorMock)
 	gomock.InOrder(logPaginatorMock.EXPECT().HasMoreLogs().Return(true), logPaginatorMock.EXPECT().HasMoreLogs().Return(false))
@@ -153,7 +151,6 @@ func TestLogsAdapterOpts_Execute_InfoError(t *testing.T) {
 		logsAdapterVars: logsAdapterVars{logsSharedVars{contextName: testContextName1}},
 	}
 
-    ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {Engines: []spec.Engine{{Engine: constants.CROMWELL}}}}, nil)
     someErr := fmt.Errorf("some info error")
 	ctxMock.EXPECT().Info(testContextName1).Return(context.Detail{}, someErr)
 
@@ -172,7 +169,6 @@ func TestLogsAdapterOpts_Execute_LogError(t *testing.T) {
 		logsAdapterVars: logsAdapterVars{logsSharedVars{contextName: testContextName1}},
 	}
 
-    ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {Engines: []spec.Engine{{Engine: constants.CROMWELL}}}}, nil)
 	someErr := fmt.Errorf("some log error")
 	ctxMock.EXPECT().Info(testContextName1).Return(context.Detail{WesLogGroupName: testLogGroupName}, nil)
 	cwlMock.EXPECT().GetLogsPaginated(cwl.GetLogsInput{LogGroupName: testLogGroupName}).Return(logPaginatorMock)
@@ -194,7 +190,6 @@ func TestLogsAdapterOpts_Execute_Stream(t *testing.T) {
 	}
 	stream := make(chan cwl.StreamEvent)
 	go func() { stream <- cwl.StreamEvent{Logs: []string{"log"}}; close(stream) }()
-	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {Engines: []spec.Engine{{Engine: constants.CROMWELL}}}}, nil)
     ctxMock.EXPECT().Info(testContextName1).Return(context.Detail{WesLogGroupName: testLogGroupName}, nil)
 	cwlMock.EXPECT().StreamLogs(ctx.Background(), testLogGroupName).Return(stream)
 
@@ -214,7 +209,6 @@ func TestLogsAdapterOpts_Execute_StreamError(t *testing.T) {
 	someErr := fmt.Errorf("some stream error")
 	stream := make(chan cwl.StreamEvent)
 	go func() { stream <- cwl.StreamEvent{Err: someErr} }()
-	ctxMock.EXPECT().List().Return(map[string]context.Summary{testContextName1: {Engines: []spec.Engine{{Engine: constants.CROMWELL}}}}, nil)
     ctxMock.EXPECT().Info(testContextName1).Return(context.Detail{WesLogGroupName: testLogGroupName}, nil)
 	cwlMock.EXPECT().StreamLogs(ctx.Background(), testLogGroupName).Return(stream)
 
