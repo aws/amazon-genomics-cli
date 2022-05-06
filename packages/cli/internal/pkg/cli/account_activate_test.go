@@ -23,7 +23,6 @@ const (
 	testNextflowRepository = "test-nextflow-repo"
 	testMiniwdlRepository  = "test-miniwdl-repo"
 	testToilRepository     = "test-toil-repo"
-	testCoreStackName      = "Agc-Core"
 )
 
 var (
