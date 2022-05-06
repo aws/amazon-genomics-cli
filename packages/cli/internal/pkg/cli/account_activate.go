@@ -11,7 +11,6 @@ import (
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
