@@ -39,7 +39,7 @@ func (o *logsAdapterOpts) Validate() error {
 	}
 
 	if o.ctxManager == nil {
-		return fmt.Errorf("Context manager is not available!")
+		return fmt.Errorf("Context manager is not available")
 	}
 
 	ctxMap, err := o.ctxManager.List()

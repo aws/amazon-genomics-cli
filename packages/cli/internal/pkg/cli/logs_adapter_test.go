@@ -120,6 +120,15 @@ func TestLogsAdapterOpts_Validate_ToilError(t *testing.T) {
 	assert.Equal(t, fmt.Errorf("Contexts using the toil engine do not have adapters to collect logs from"), err)
 }
 
+func TestLogsAdapterOpts_Validate_MissingContextManagerError(t *testing.T) {
+	opts := logsAdapterOpts{
+		logsSharedOpts:  logsSharedOpts{ctxManager: nil},
+		logsAdapterVars: logsAdapterVars{logsSharedVars{contextName: testContextName1, startString: "abc"}},
+	}
+	err := opts.Validate()
+	assert.Equal(t, fmt.Errorf("Context manager is not available"), err)
+}
+
 func TestLogsAdapterOpts_Execute_Group(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
