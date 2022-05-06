@@ -1,13 +1,13 @@
 import { Aws } from "aws-cdk-lib";
-import { IVpc } from "aws-cdk-lib/aws-ec2";
+import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { FargateTaskDefinition, LogDriver } from "aws-cdk-lib/aws-ecs";
 import { ApiProxy, SecureService } from "../../constructs";
 import { IRole } from "aws-cdk-lib/aws-iam";
 import { createEcrImage, renderServiceWithTaskDefinition } from "../../util";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { EngineOptions, ServiceContainer } from "../../types";
-import { LogGroup, ILogGroup } from "aws-cdk-lib/aws-logs";
-import { EngineOutputs, EngineConstruct } from "./engine-construct";
+import { ILogGroup, LogGroup } from "aws-cdk-lib/aws-logs";
+import { EngineConstruct, EngineOutputs } from "./engine-construct";
 import { ToilJobRole } from "../../roles/toil-job-role";
 import { ToilEngineRole } from "../../roles/toil-engine-role";
 import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
@@ -55,7 +55,7 @@ export class ToilEngineConstruct extends EngineConstruct {
       TOIL_AWS_BATCH_JOB_ROLE_ARN: this.jobRole.roleArn,
     });
 
-    this.engine = this.getEngineServiceDefinition(props.vpc, engineContainer, this.engineLogGroup);
+    this.engine = this.getEngineServiceDefinition(props.vpc, props.subnets, engineContainer, this.engineLogGroup);
 
     // We don't use an adapter, so put the access-controlling proxy right in
     // front of the engine load balancer.
@@ -74,7 +74,7 @@ export class ToilEngineConstruct extends EngineConstruct {
     };
   }
 
-  private getEngineServiceDefinition(vpc: IVpc, serviceContainer: ServiceContainer, logGroup: ILogGroup) {
+  private getEngineServiceDefinition(vpc: IVpc, subnets: SubnetSelection, serviceContainer: ServiceContainer, logGroup: ILogGroup) {
     const id = "Engine";
     const definition = new FargateTaskDefinition(this, "EngineTaskDef", {
       taskRole: this.engineRole,
@@ -92,7 +92,6 @@ export class ToilEngineConstruct extends EngineConstruct {
       portMappings: serviceContainer.containerPort ? [{ containerPort: serviceContainer.containerPort }] : [],
     });
 
-    const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc);
-    return engine;
+    return renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc, subnets);
   }
 }
