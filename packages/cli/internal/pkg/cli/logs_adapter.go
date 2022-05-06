@@ -38,7 +38,6 @@ func (o *logsAdapterOpts) Validate() error {
 		return err
 	}
 
-	// It's convenient for the tests to be able to not actually have the ctxManager set.
 	if o.ctxManager != nil {
 		ctxMap, err := o.ctxManager.List()
 		if err != nil {
