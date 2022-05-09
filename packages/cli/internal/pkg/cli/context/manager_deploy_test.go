@@ -8,6 +8,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/golang/mock/gomock"
@@ -54,7 +55,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return(testTags)
-				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["NEXTFLOW"]).Return(nil)
+				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages[constants.NEXTFLOW]).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkAdaptedArgumentCount), testContextName3).After(clearContext).Return(mockClients.progressStream1, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
@@ -77,7 +78,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return("")
-				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["NEXTFLOW"]).Return(nil)
+				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages[constants.NEXTFLOW]).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkAdaptedArgumentCount), testContextName3).After(clearContext).Return(mockClients.progressStream1, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
@@ -100,7 +101,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return("")
-				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["TOIL"]).Return(nil)
+				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages[constants.TOIL]).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkBaseArgumentCount), testContextName4).After(clearContext).Return(mockClients.progressStream1, nil)
 				displayProgressBar = mockClients.cdkMock.DisplayProgressBar
@@ -124,7 +125,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetOutputBucket().Times(2).Return(testOutputBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Times(2).Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Times(2).Return(testTags)
-				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["CROMWELL"]).Times(2).Return(nil)
+				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages[constants.CROMWELL]).Times(2).Return(nil)
 				clearContext := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				clearContext2 := mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkAdaptedArgumentCount), testContextName1).After(clearContext).Return(mockClients.progressStream1, nil)
@@ -151,7 +152,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetCommonParameter("installed-artifacts/s3-root-url").Return(testArtifactBucket, nil)
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return(testTags)
 				mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
-				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["CROMWELL"]).Return(fmt.Errorf("some error occurred"))
+				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages[constants.CROMWELL]).Return(fmt.Errorf("some error occurred"))
 				return mockClients
 			},
 		},
@@ -269,7 +270,7 @@ func TestManager_Deploy(t *testing.T) {
 				mockClients.ssmMock.EXPECT().GetCustomTags().Return(testTags)
 				mockClients.cdkMock.EXPECT().ClearContext(filepath.Join(testHomeDir, ".agc/cdk/apps/context")).Return(nil)
 				mockClients.cdkMock.EXPECT().DeployApp(filepath.Join(testHomeDir, ".agc/cdk/apps/context"), gomock.Len(testCdkAdaptedArgumentCount), testContextName1).Return(nil, fmt.Errorf("some context error"))
-				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages["CROMWELL"]).Return(nil)
+				mockClients.ecrClientMock.EXPECT().VerifyImageExists(environment.CommonImages[constants.CROMWELL]).Return(nil)
 				return mockClients
 			},
 		},

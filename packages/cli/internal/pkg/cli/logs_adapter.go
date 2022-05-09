@@ -4,9 +4,12 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/context"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
@@ -33,6 +36,21 @@ func newLogsAdapterOpts(vars logsAdapterVars) (*logsAdapterOpts, error) {
 func (o *logsAdapterOpts) Validate() error {
 	if err := o.validateFlags(); err != nil {
 		return err
+	}
+
+	if o.ctxManager == nil {
+		return fmt.Errorf("Context manager is not available")
+	}
+
+	ctxMap, err := o.ctxManager.List()
+	if err != nil {
+		return err
+	}
+
+	summary := ctxMap[o.contextName]
+	engine := summary.Engines[0].Engine
+	if !environment.UsesWesAdapter[engine] {
+		return fmt.Errorf("Contexts using the %s engine do not have adapters to collect logs from", engine)
 	}
 
 	return o.parseTime(o.logsSharedVars)
