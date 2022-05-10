@@ -108,7 +108,7 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_WriteFileFails() {
 	expectedErr := errors.New("FileNotFound")
 	ic.mockFileWriter.EXPECT().WriteFile(tempProjectDirectory, inputFileString, os.FileMode(0644)).Return(expectedErr)
 
-	err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
+	err := ic.inputInstance.updateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
 	ic.Assert().Equal(err, expectedErr)
 }
 
@@ -120,7 +120,7 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_UploadFileFails() {
 	expectedErr := errors.New("FileNotFound")
 	ic.mockS3Client.EXPECT().UploadFile("bucketName", baseS3Key+"/"+testFile1, "dir/"+testFile1).AnyTimes().Return(expectedErr)
 
-	err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
+	err := ic.inputInstance.updateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
 	ic.Assert().Equal(err, expectedErr)
 }
 
@@ -132,7 +132,7 @@ func (ic *InputClientTestSuite) TestUpdateInputsInFile_MarshallFails() {
 	expectedErr := errors.New("FileNotFound")
 	ic.mockJson.EXPECT().Marshal(inputFile).Return(nil, expectedErr)
 
-	err := ic.inputInstance.UpdateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
+	err := ic.inputInstance.updateInputsInFile(initialProjectDirectory, inputFile, "bucketName", baseS3Key, tempProjectDirectory)
 	ic.Assert().Equal(err, expectedErr)
 }
 

@@ -5,18 +5,15 @@ package cli
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"path/filepath"
 	"strings"
 
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cdk"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/cfn"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/ecr"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/s3"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/aws/sts"
-	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/awsresources"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
@@ -60,7 +57,6 @@ type accountActivateOpts struct {
 	s3Client  s3.Interface
 	cdkClient cdk.Interface
 	ecrClient ecr.Interface
-	cfnClient cfn.Interface
 	imageRefs map[string]ecr.ImageReference
 	region    string
 }
@@ -71,7 +67,6 @@ func newAccountActivateOpts(vars accountActivateVars) (*accountActivateOpts, err
 		stsClient:           aws.StsClient(profile),
 		s3Client:            aws.S3Client(profile),
 		cdkClient:           cdk.NewClient(profile),
-		cfnClient:           aws.CfnClient(profile),
 		region:              aws.Region(profile),
 	}, nil
 }
@@ -135,35 +130,10 @@ func (o accountActivateOpts) generateEnvVars() ([]string, error) {
 		environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.CustomTagEnvKey, string(jsonBytes)))
 	}
 
-	vpcId, err := o.getVpcId()
-	if err != nil {
-		return nil, err
-	}
-	if vpcId != "" {
-		environmentVars = append(environmentVars, fmt.Sprintf("VPC_ID=%s", vpcId))
+	if o.vpcId != "" {
+		environmentVars = append(environmentVars, fmt.Sprintf("%s=%s", constants.VpcIdEnvKey, o.vpcId))
 	}
 	return environmentVars, err
-}
-
-func (o accountActivateOpts) getVpcId() (string, error) {
-	if o.vpcId != "" {
-		return o.vpcId, nil
-	} else {
-		coreStackName := awsresources.RenderCoreStackName()
-		stackOutputs, err := o.cfnClient.GetStackOutputs(coreStackName)
-		if err != nil {
-			if errors.Is(err, cfn.StackDoesNotExistError) {
-				log.Debug().Msgf("Cloudformation Stack '%s' does not exist", coreStackName)
-				return "", nil
-			} else {
-				return "", err
-			}
-		}
-		if vpcId, ok := stackOutputs["VpcId"]; ok {
-			return vpcId, nil
-		}
-	}
-	return "", nil
 }
 
 func (o accountActivateOpts) cdkBootstrap(cdkAppPath string, environmentVars []string) error {

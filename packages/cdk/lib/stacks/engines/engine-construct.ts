@@ -11,7 +11,7 @@ import { getCommonParameter } from "../../util";
 
 export interface EngineOutputs {
   accessLogGroup: ILogGroup;
-  adapterLogGroup: ILogGroup;
+  adapterLogGroup?: ILogGroup;
   engineLogGroup: ILogGroup;
   wesUrl: string;
 }
@@ -24,7 +24,8 @@ export abstract class EngineConstruct extends Construct {
   public outputToParent(): void {
     const outputs = this.getOutputs();
     new CfnOutput(Stack.of(this), "AccessLogGroupName", { value: outputs.accessLogGroup.logGroupName });
-    new CfnOutput(Stack.of(this), "AdapterLogGroupName", { value: outputs.adapterLogGroup.logGroupName });
+    // We don't always have a WES log group, but the AGC CLI always expects us to have an AdapterLogGroupName output
+    new CfnOutput(Stack.of(this), "AdapterLogGroupName", { value: outputs.adapterLogGroup ? outputs.adapterLogGroup.logGroupName : "" });
     new CfnOutput(Stack.of(this), "EngineLogGroupName", { value: outputs.engineLogGroup.logGroupName });
     new CfnOutput(Stack.of(this), "WesUrl", { value: outputs.wesUrl });
   }

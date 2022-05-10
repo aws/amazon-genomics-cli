@@ -36,11 +36,6 @@ workflows:
       language: wdl
       version: 1.0
     sourceURL: workflows/read.wdl
-  haplotype:
-    type:
-      language: wdl
-      version: 1.0
-    sourceURL: workflows/haplotypecaller-gvcf-gatk4.wdl
   words-with-vowels:
     type:
       language: wdl

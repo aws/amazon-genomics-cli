@@ -166,7 +166,11 @@ export class ContextAppParameters {
     return `${this.getContextBucketPath()}/${this.engineName}-execution`;
   }
 
-  public getEngineContainer(jobQueueArn: string): ServiceContainer {
+  /**
+   * This function defines the container that server-based engines (like Toil
+   * or Cromwell) will run their servers in. It is going to run on Fargate.
+   */
+  public getEngineContainer(jobQueueArn: string, additionalEnvVars?: { [key: string]: string }): ServiceContainer {
     return {
       serviceName: this.engineName,
       imageConfig: { designation: this.engineDesignation },
@@ -178,6 +182,7 @@ export class ContextAppParameters {
         S3BUCKET: this.outputBucketName,
         ROOT_DIR: this.getEngineBucketPath(),
         JOB_QUEUE_ARN: jobQueueArn,
+        ...additionalEnvVars,
       },
     };
   }
@@ -212,6 +217,9 @@ export class ContextAppParameters {
         break;
       case "snakemake":
         defFilesystem = "EFS";
+        break;
+      case "toil":
+        defFilesystem = "S3";
         break;
       default:
         throw Error(`Engine '${this.engineName}' is not supported`);

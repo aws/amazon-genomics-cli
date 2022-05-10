@@ -15,6 +15,7 @@ import (
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/clierror/actionableerror"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/config"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/cli/spec"
+	"github.com/aws/amazon-genomics-cli/internal/pkg/constants"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/environment"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/logging"
 	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
@@ -88,13 +89,23 @@ var showExecution = cdk.ShowExecution
 var silentExecution = cdk.SilentExecution
 
 func (m *Manager) getEnvironmentVars() []string {
+	// Different engines will need different environment variables to define
+	// their Docker images.
+	engine := m.contextEnv.EngineName
+	var relevantComponents []string
+	relevantComponents = append(relevantComponents, engine)
+	if environment.UsesWesAdapter[engine] {
+		relevantComponents = append(relevantComponents, constants.WES)
+	}
 	var environmentVars []string
-	for imageName := range m.imageRefs {
+	for _, component := range relevantComponents {
+		capComponent := strings.ToUpper(component)
+		// Each engine or other component has its own section in imageRefs
 		environmentVars = append(environmentVars,
-			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", imageName, m.imageRefs[imageName].RegistryId),
-			fmt.Sprintf("ECR_%s_REGION=%s", imageName, m.region),
-			fmt.Sprintf("ECR_%s_TAG=%s", imageName, m.imageRefs[imageName].ImageTag),
-			fmt.Sprintf("ECR_%s_REPOSITORY=%s", imageName, m.imageRefs[imageName].RepositoryName),
+			fmt.Sprintf("ECR_%s_ACCOUNT_ID=%s", capComponent, m.imageRefs[component].RegistryId),
+			fmt.Sprintf("ECR_%s_REGION=%s", capComponent, m.region),
+			fmt.Sprintf("ECR_%s_TAG=%s", capComponent, m.imageRefs[component].ImageTag),
+			fmt.Sprintf("ECR_%s_REPOSITORY=%s", capComponent, m.imageRefs[component].RepositoryName),
 		)
 	}
 
@@ -249,7 +260,7 @@ func (m *Manager) validateImage() {
 		return
 	}
 
-	imageRef, imageRefExists := m.imageRefs[strings.ToUpper(m.contextEnv.EngineName)]
+	imageRef, imageRefExists := m.imageRefs[m.contextEnv.EngineName]
 
 	// Need to make a copy to override the region to use the region from the customer's profile
 	imageRef = ecr.ImageReference{

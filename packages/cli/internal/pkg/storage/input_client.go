@@ -52,7 +52,7 @@ func (ic *InputInstance) UpdateInputReferencesAndUploadToS3(initialProjectDirect
 			return actionableerror.New(err, fmt.Sprintf("Please validate that the input JSON file %s exists", inputLocation))
 		}
 
-		err = ic.UpdateInputsInFile(initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation)
+		err = ic.updateInputsInFile(initialProjectDirectory, inputFile, bucketName, baseS3Key, fileLocation)
 		if err != nil {
 			return err
 		}
@@ -105,7 +105,7 @@ func (ic *InputInstance) UpdateInputs(initialProjectDirectory string, inputFile 
 	return updatedInputReferenceFile, nil
 }
 
-func (ic *InputInstance) UpdateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string, fileLocation string) error {
+func (ic *InputInstance) updateInputsInFile(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string, fileLocation string) error {
 	updatedInputReferenceFile, err := ic.UpdateInputs(initialProjectDirectory, inputFile, bucketName, baseS3Key)
 	if err != nil {
 		return err

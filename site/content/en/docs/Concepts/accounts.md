@@ -58,11 +58,12 @@ modify the network topology of the specified VPC.
 Issuing account activate commands more than once effectively updates the core infrastructure with the difference between
 the two commands. For example, if you had previously activated the account using `agc account activate` and later invoked
 `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id` then Amazon Genomics CLI will update to use `my-existing-bucket`
-and the identified VPC. The old VPC and S3 buckets will be *retained* according to their retention policy.
+and the identified VPC. The old VPC and related infrastructure will be destroyed. S3 buckets will be *retained* according
+to their retention policy.
 
-If you initially activated the account with `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id` 
-and later invoked `agc account activate` then Amazon Genomics CLI will stop using the previous specified bucket, however the VPC will 
-be recalled and re-used. *ALL* of the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.
+If you initially activated the account with `agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id`
+and later invoked `agc account activate` then Amazon Genomics CLI will stop using the previous specified bucket and VPC. *ALL* of the
+pre-existing S3 and VPC infrastructure will be retained and a new bucket and VPC will be created for use by Amazon Genomics CLI.
 
 ### `deactivate`
 
@@ -112,6 +113,7 @@ NAT gateways.
 
 When Amazon Genomics CLI creates a VPC it creates the following VPC endpoints:
 
+* `com.amazonaws.{region}.dynamodb`
 * `com.amazonaws.{region}.ecr.api`
 * `com.amazonaws.{region}.ecr.dkr`
 * `com.amazonaws.{region}.ecs`
@@ -120,9 +122,13 @@ When Amazon Genomics CLI creates a VPC it creates the following VPC endpoints:
 * `com.amazonaws.{region}.logs`
 * `com.amazonaws.{region}.s3`
 
-If you provide your own VPC we recommend that the VPC also has these endpoints. This will improve the security posture of
+If you provide your own VPC we recommend that the VPC has these endpoints. This will improve the security posture of
 Amazon Genomics CLI in your VPC and will also reduce NAT gateway traffic charges which can be substantial for genomics analyses that use
 large S3 objects and/ or large container images.
+
+If you are using Amazon Genomics CLI client on an EC2 instance in a subnet with no access to the internet you will need
+to have a VPC endpoint to `com.amazonaws.{region}.execute-api` so that the client can make calls to the REST services
+deployed during account activation.
 
 ## Technical Details.
 

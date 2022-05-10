@@ -6,8 +6,8 @@ package storage
 import (
 	"fmt"
 	"path/filepath"
-	"strings"
 
+	"github.com/aws/amazon-genomics-cli/internal/pkg/osutils"
 	"github.com/spf13/afero"
 )
 
@@ -30,7 +30,7 @@ func NewStorageInstance(fsOptional ...afero.Fs) (*StorageInstance, error) {
 // The filename can be a URL that is of the form file://<absolute-file-path> or
 // simply a filename.
 func (si *StorageInstance) ReadAsBytes(url string) ([]byte, error) {
-	data, err := si.fsUtils.ReadFile(stripFileURLPrefix(url))
+	data, err := si.fsUtils.ReadFile(osutils.StripFileURLPrefix(url))
 	if err != nil {
 		return nil, fmt.Errorf("couldn't read file %s: %w", url, err)
 	}
@@ -41,7 +41,7 @@ func (si *StorageInstance) ReadAsBytes(url string) ([]byte, error) {
 // The filename can be a URL that is of the form file://<absolute-file-path> or
 // simply a filename.
 func (si *StorageInstance) ReadAsString(url string) (string, error) {
-	data, err := si.ReadAsBytes(stripFileURLPrefix(url))
+	data, err := si.ReadAsBytes(osutils.StripFileURLPrefix(url))
 	return string(data), err
 }
 
@@ -51,7 +51,7 @@ func (si *StorageInstance) ReadAsString(url string) (string, error) {
 // if it does already exist. The directory that the file is in is created if it doesn't
 // already exist.
 func (si *StorageInstance) WriteFromBytes(url string, data []byte) error {
-	filename := stripFileURLPrefix(url)
+	filename := osutils.StripFileURLPrefix(url)
 	if err := si.fsUtils.MkdirAll(filepath.Dir(filename), 0755 /* -rwxr-xr-x */); err != nil {
 		return fmt.Errorf("couldn't create directories for file %s: %w", filename, err)
 	}
@@ -68,12 +68,4 @@ func (si *StorageInstance) WriteFromBytes(url string, data []byte) error {
 // already exist.
 func (si *StorageInstance) WriteFromString(url string, data string) error {
 	return si.WriteFromBytes(url, []byte(data))
-}
-
-func stripFileURLPrefix(filename string) string {
-	if strings.HasPrefix(filename, "file://") {
-		runes := []rune(filename)
-		filename = string(runes[7:])
-	}
-	return filename
 }
