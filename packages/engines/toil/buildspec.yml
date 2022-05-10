@@ -11,7 +11,7 @@ phases:
       - TOIL_IMAGE_URI=${TOIL_IMAGE_NAME}:${TOIL_VERSION}
   build:
     commands:
-      - docker build -t ${TOIL_IMAGE_URI} ./
+      - docker build -t ${TOIL_IMAGE_URI} --build-arg TOIL_VERSION=${TOIL_VERSION} ./packages/engines/toil
   post_build:
     commands:
       - docker save -o toil_image.tar ${TOIL_IMAGE_URI}
