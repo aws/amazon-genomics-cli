@@ -12,6 +12,11 @@ workflows:
       language: nextflow
       version: 1.0
     sourceURL: workflows/rnaseq
+  words:
+    type:
+      language: nextflow
+      version: dsl2
+    sourceURL: workflows/words
 data:
   - location: s3://1000genomes
     readOnly: true
