@@ -5,7 +5,7 @@ import { EngineConstruct, EngineOutputs } from "./engine-construct";
 import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
-import { IVpc } from "aws-cdk-lib/aws-ec2";
+import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { ENGINE_MINIWDL } from "../../constants";
 import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { BucketOperations } from "../../common/BucketOperations";
@@ -27,13 +27,13 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
   constructor(scope: Construct, id: string, props: EngineOptions) {
     super(scope, id);
 
-    const { vpc, contextParameters } = props;
+    const { vpc, contextParameters, subnets } = props;
     const params = props.contextParameters;
     const rootDirS3Uri = params.getEngineBucketPath();
 
-    this.batchHead = this.renderBatch("HeadBatch", vpc, contextParameters, ComputeResourceType.FARGATE);
+    this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, ComputeResourceType.FARGATE);
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
-    this.batchWorkers = this.renderBatch("TaskBatch", vpc, contextParameters, workerComputeType);
+    this.batchWorkers = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, workerComputeType);
 
     this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
     this.batchHead.role.addToPrincipalPolicy(
@@ -53,6 +53,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
 
     this.miniwdlEngine = new MiniWdlEngine(this, "MiniWdlEngine", {
       vpc: props.vpc,
+      subnets: props.subnets,
       iops: props.iops,
       rootDirS3Uri: rootDirS3Uri,
       engineBatch: this.batchHead,
@@ -93,6 +94,8 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       jobDefinitionArn: this.miniwdlEngine.headJobDefinition.jobDefinitionArn,
       rootDirS3Uri: rootDirS3Uri,
       vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
+      vcpSubnets: props.contextParameters.usePublicSubnets ? undefined : props.subnets,
+      usePublicSubnets: props.contextParameters.usePublicSubnets,
     });
     this.adapterLogGroup = lambda.logGroup;
 
@@ -127,9 +130,17 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     }
   }
 
-  private renderBatch(id: string, vpc: IVpc, appParams: ContextAppParameters, computeType?: ComputeResourceType): Batch {
+  private renderBatch(
+    id: string,
+    vpc: IVpc,
+    subnets: SubnetSelection,
+    appParams: ContextAppParameters,
+    computeType?: ComputeResourceType,
+    usePublicSubnets?: boolean
+  ): Batch {
     return new Batch(this, id, {
       vpc,
+      subnets,
       computeType,
       instanceTypes: appParams.instanceTypes,
       maxVCpus: appParams.maxVCpus,
@@ -137,6 +148,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: Stack.of(this).tags.tagValues(),
       workflowOrchestrator: ENGINE_MINIWDL,
+      usePublicSubnets,
     });
   }
 
@@ -144,7 +156,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     return [this.batchHead.role, this.batchWorkers.role];
   }
 
-  private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, rootDirS3Uri, vpc }) {
+  private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, rootDirS3Uri, vpc, vcpSubnets, usePublicSubnets }) {
     return super.renderPythonLambda(
       this,
       "MiniWDLWesAdapterLambda",
@@ -155,7 +167,8 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
         JOB_DEFINITION: jobDefinitionArn,
         OUTPUT_DIR_S3_URI: rootDirS3Uri,
       },
-      vpc
+      vpc,
+      usePublicSubnets ? undefined : vcpSubnets
     );
   }
 }

@@ -1,6 +1,6 @@
 import { Fn, Names, Stack } from "aws-cdk-lib";
 import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "@aws-cdk/aws-batch-alpha";
-import { CfnLaunchTemplate, InstanceType, IVpc, SubnetType } from "aws-cdk-lib/aws-ec2";
+import { CfnLaunchTemplate, InstanceType, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import {
   CfnInstanceProfile,
   Grant,
@@ -15,7 +15,7 @@ import {
 } from "aws-cdk-lib/aws-iam";
 import { getInstanceTypesForBatch } from "../util/instance-types";
 import { batchArn, ec2Arn } from "../util";
-import { APP_NAME, APP_TAG_KEY, TAGGED_RESOURCE_TYPES } from "../../lib/constants";
+import { APP_NAME, APP_TAG_KEY, TAGGED_RESOURCE_TYPES } from "../constants";
 import { CfnLaunchTemplateProps } from "aws-cdk-lib/aws-ec2/lib/ec2.generated";
 import { Construct } from "constructs";
 
@@ -24,6 +24,10 @@ export interface ComputeOptions {
    * The VPC to run the batch in.
    */
   vpc: IVpc;
+  /**
+   * Private subnets of VPC to use for Batch compute environments
+   */
+  subnets: SubnetSelection;
   /**
    * User data to make available to the instances.
    *
@@ -46,7 +50,7 @@ export interface ComputeOptions {
   instanceTypes?: InstanceType[];
 
   /**
-   * The maximum number of EC2 vCPUs that a compute environment can reach.
+   * The maximum number of EC2 vCPUs that a compute-environment can reach.
    *
    * Each vCPU is equivalent to 1,024 CPU shares.
    *
@@ -180,17 +184,13 @@ export class Batch extends Construct {
 
   private renderComputeEnvironment(options: ComputeOptions): IComputeEnvironment {
     const computeType = options.computeType || defaultComputeType;
-    const subnets = {
-      // Even if we use public subnets, CDK will assign security groups only allow minimal necessary inbound traffic
-      subnetType: options.usePublicSubnets ? SubnetType.PUBLIC : SubnetType.PRIVATE_WITH_NAT,
-    };
     if (computeType == ComputeResourceType.FARGATE || computeType == ComputeResourceType.FARGATE_SPOT) {
       return new ComputeEnvironment(this, "ComputeEnvironment", {
         computeResources: {
           vpc: options.vpc,
           type: computeType,
           maxvCpus: options.maxVCpus,
-          vpcSubnets: subnets,
+          vpcSubnets: options.usePublicSubnets ? undefined : options.subnets,
         },
       });
     }
@@ -217,7 +217,7 @@ export class Batch extends Construct {
           launchTemplateName: launchTemplate.launchTemplateName!,
         },
         computeResourcesTags: options.resourceTags,
-        vpcSubnets: subnets,
+        vpcSubnets: options.usePublicSubnets ? undefined : options.subnets,
       },
     });
   }

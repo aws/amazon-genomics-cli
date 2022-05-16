@@ -1,10 +1,19 @@
 import { CfnOutput, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { AttributeType, BillingMode, ITable, ProjectionType, Table } from "aws-cdk-lib/aws-dynamodb";
-import { IParameter, StringParameter } from "aws-cdk-lib/aws-ssm";
-import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, IVpc, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
+import { IParameter, StringListParameter, StringParameter } from "aws-cdk-lib/aws-ssm";
+import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, ISubnet, IVpc, Subnet, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
-import { PRODUCT_NAME, APP_NAME, VPC_PARAMETER_NAME, WES_KEY_PARAMETER_NAME, WES_BUCKET_NAME, VPC_PARAMETER_ID } from "../constants";
+import {
+  APP_NAME,
+  PRODUCT_NAME,
+  VPC_NUMBER_SUBNETS_PARAMETER_NAME,
+  VPC_PARAMETER_ID,
+  VPC_PARAMETER_NAME,
+  VPC_SUBNETS_PARAMETER_NAME,
+  WES_BUCKET_NAME,
+  WES_KEY_PARAMETER_NAME,
+} from "../constants";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import * as path from "path";
 import { homedir } from "os";
@@ -23,6 +32,26 @@ export interface ParameterProps {
   value: string;
   /**
    * The description for this parameter
+   *
+   * @default none
+   */
+  description?: string;
+}
+
+export interface ParameterListProps {
+  /**
+   * The name of this parameter.
+   *
+   * All parameter names are prefixed with "/agc/_common/".
+   */
+  name: string;
+  /**
+   * The values stored in this parameter. Values must not contain commas
+   */
+  values: string[];
+
+  /**
+   * The description of this parameter
    *
    * @default none
    */
@@ -50,6 +79,13 @@ export interface CoreStackProps extends StackProps {
    * @default - A new VPC is created
    */
   vpcId?: string;
+
+  /**
+   * A list of subnet ids from within the VPC specified by vpcId to use for infrastructure deployment
+   * @default - All private subnets are used
+   */
+  subnetIds?: string[];
+
   /**
    * A list of SSM parameters to create with the stack.
    *
@@ -105,6 +141,23 @@ export class CoreStack extends Stack {
     props.parameters?.forEach((parameterProps) => this.addParameter(parameterProps));
 
     new CfnOutput(this, "TableName", { value: this.table.tableName });
+
+    const subnets = this.getSubnets(props);
+    this.addStringListParameter({ name: VPC_SUBNETS_PARAMETER_NAME, values: subnets.map((s) => s.subnetId) });
+    this.addParameter({ name: VPC_NUMBER_SUBNETS_PARAMETER_NAME, value: `${subnets.length}` });
+  }
+
+  private getSubnets(props: CoreStackProps): ISubnet[] {
+    if (props.subnetIds) {
+      const subnets = props.subnetIds!.filter((v) => v.trim() != "");
+      if (subnets.length > 0) {
+        return subnets.map((s, i) => Subnet.fromSubnetId(this, `InfraSubnet${i}`, s));
+      }
+    }
+    if (props.usePublicSubnets) {
+      return this.vpc.publicSubnets;
+    }
+    return this.vpc.privateSubnets;
   }
 
   private renderVpc(vpcId?: string, publicSubnets?: boolean): IVpc {
@@ -223,6 +276,14 @@ export class CoreStack extends Stack {
     return new StringParameter(this, props.name, {
       parameterName: `${parameterPrefix}${props.name}`,
       stringValue: props.value,
+      description: props.description,
+    });
+  }
+
+  private addStringListParameter(props: ParameterListProps): StringListParameter {
+    return new StringListParameter(this, props.name, {
+      parameterName: `${parameterPrefix}${props.name}`,
+      stringListValue: props.values,
       description: props.description,
     });
   }
