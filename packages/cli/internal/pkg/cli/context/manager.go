@@ -1,6 +1,7 @@
 package context
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"strings"
@@ -225,6 +226,12 @@ func (m *Manager) setContextEnv(contextName string) {
 		return
 	}
 
+	customWesEnvVarsJsonBytes, err := json.Marshal(m.contextSpec.CustomWesEnvVars)
+	if err != nil {
+		m.err = err
+		return
+	}
+
 	m.contextEnv = contextEnvironment{
 		ProjectName:          m.projectSpec.Name,
 		ContextName:          contextName,
@@ -236,6 +243,7 @@ func (m *Manager) setContextEnv(contextName string) {
 		ReadBucketArns:       strings.Join(m.readBuckets, listDelimiter),
 		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
 		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
+		CustomWesEnvVarsJson: string(customWesEnvVarsJsonBytes),
 		MaxVCpus:             m.contextSpec.MaxVCpus,
 		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
 		UsePublicSubnets:     m.contextSpec.UsePublicSubnets,

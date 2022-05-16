@@ -106,6 +106,36 @@ contexts:
         engine: nextflow
 ```
 
+### Custom WES Adapter environment variables
+
+You may optionally specify custom environment variables to pass into WES Adapter
+```yaml
+contexts:
+  miniContext:
+    customWesEnvVars:
+      - key: k1
+        value: v1
+      - key: k2
+        value: "[{ \"key\": \"k3\", \"value\": 10 }, { \"key\": \"k4\", \"value\": \"v4\" }]"
+    engines:
+      - type: wdl
+        engine: miniwdl
+```
+
+### Custom Workflow job environment variables
+
+You may optionally specify `CUSTOM_WORKFLOW_JOB_ENV_VARS` WES Adapter environment variable to pass custom environment variables into Workflow Job
+```yaml
+contexts:
+  miniContext:
+    customWesEnvVars:
+      - key: CUSTOM_WORKFLOW_JOB_ENV_VARS
+        value: "[{ \"key\": \"MINIWDL__AWS__BOTO3_RETRIES\", \"value\": { \"max_attempts\": 15, \"mode\": \"standard\" } }, { \"key\": \"MINIWDL__AWS__DESCRIBE_PERIOD\", \"value\": 10 }, { \"key\": \"MINIWDL__AWS__SUBMIT_PERIOD\", \"value\": 10 }]"
+    engines:
+      - type: wdl
+        engine: miniwdl
+```
+
 ### Public Subnets
 
 In the interest of saving money, in particular if you intend to have the AGC stack deployed for a long period, you may choose to deploy in "public subnet" mode.

@@ -69,6 +69,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
       contextName: params.contextName,
       userId: params.userId,
       engineEndpoint: this.engine.loadBalancer.loadBalancerDnsName,
+      customEnvs: params.customWesEnvVars,
     });
     this.adapterLogGroup = lambda.logGroup;
 
@@ -130,21 +131,18 @@ export class CromwellEngineConstruct extends EngineConstruct {
     return engine;
   }
 
-  private renderAdapterLambda({ role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint, vpc }) {
-    return super.renderPythonLambda(
-      this,
-      "CromwellWesAdapterLambda",
-      role,
-      {
-        ENGINE_NAME: "cromwell",
-        ENGINE_ENDPOINT: engineEndpoint,
-        ENGINE_LOG_GROUP: engineLogGroupName,
-        JOB_QUEUE: jobQueueArn,
-        PROJECT_NAME: projectName,
-        CONTEXT_NAME: contextName,
-        USER_ID: userId,
-      },
-      vpc
-    );
+  private renderAdapterLambda({ role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint, vpc, customEnvs }) {
+    const environment = {
+      ...customEnvs,
+      ENGINE_NAME: "cromwell",
+      ENGINE_ENDPOINT: engineEndpoint,
+      ENGINE_LOG_GROUP: engineLogGroupName,
+      JOB_QUEUE: jobQueueArn,
+      PROJECT_NAME: projectName,
+      CONTEXT_NAME: contextName,
+      USER_ID: userId,
+    };
+
+    return super.renderPythonLambda(this, "CromwellWesAdapterLambda", role, environment, vpc);
   }
 }

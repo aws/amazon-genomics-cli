@@ -19,7 +19,7 @@ const (
 	// We check a lot of generated CDK commands to make sure they have the
 	// right number of command line arguments. How many should there be to
 	// start?
-	testCdkBaseArgumentCount = 27
+	testCdkBaseArgumentCount = 28
 	// And how many do we expect if the WES adapter images are also to be
 	// passed?
 	testCdkAdaptedArgumentCount = testCdkBaseArgumentCount + 4

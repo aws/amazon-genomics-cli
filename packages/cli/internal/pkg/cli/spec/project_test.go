@@ -37,6 +37,7 @@ func TestProjectYaml(t *testing.T) {
 								},
 							},
 						},
+						CustomWesEnvVars: []CustomWesEnvVar{},
 					},
 				},
 			},
@@ -69,6 +70,7 @@ contexts:
               engine: cromwell
               filesystem:
                 fsType: S3
+        customWesEnvVars: []
 `,
 		},
 		"empty": {
@@ -103,6 +105,7 @@ schemaVersion: 0
 								},
 							},
 						},
+						CustomWesEnvVars: []CustomWesEnvVar{},
 					},
 					"ctx2": {
 						MaxVCpus: 256,
@@ -115,6 +118,7 @@ schemaVersion: 0
 								},
 							},
 						},
+						CustomWesEnvVars: []CustomWesEnvVar{},
 					},
 					"ctx3": {
 						MaxVCpus: 256,
@@ -122,6 +126,12 @@ schemaVersion: 0
 							{
 								Type:   "nextflow",
 								Engine: "nextflow",
+							},
+						},
+						CustomWesEnvVars: []CustomWesEnvVar{
+							{
+								Key:   "k1",
+								Value: "v1",
 							},
 						},
 					},
@@ -156,6 +166,7 @@ contexts:
                 fsType: EFS
                 configuration:
                     provisionedThroughput: 50
+        customWesEnvVars: []
     ctx2:
         maxVCpus: 256
         engines:
@@ -163,11 +174,15 @@ contexts:
               engine: nextflow
               filesystem:
                 fsType: S3
+        customWesEnvVars: []
     ctx3:
         maxVCpus: 256
         engines:
             - type: nextflow
               engine: nextflow
+        customWesEnvVars:
+            - key: k1
+              value: v1
 `,
 		},
 	}
@@ -237,6 +252,7 @@ func TestGetContext(t *testing.T) {
 									},
 								},
 							},
+							CustomWesEnvVars: []CustomWesEnvVar{},
 						},
 						"ctx2": {
 							Engines: []Engine{
@@ -248,6 +264,7 @@ func TestGetContext(t *testing.T) {
 									},
 								},
 							},
+							CustomWesEnvVars: []CustomWesEnvVar(nil),
 						},
 					},
 				},
