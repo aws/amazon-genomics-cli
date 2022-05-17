@@ -6,7 +6,7 @@ import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import {
   APP_NAME,
-  IMAGE_PARAMETER_NAME,
+  COMPUTE_IMAGE_PARAMETER_NAME,
   PRODUCT_NAME,
   VPC_NUMBER_SUBNETS_PARAMETER_NAME,
   VPC_PARAMETER_ID,
@@ -154,7 +154,7 @@ export class CoreStack extends Stack {
     this.addParameter({ name: VPC_NUMBER_SUBNETS_PARAMETER_NAME, value: `${subnets.length}` });
 
     new StringParameter(this, "ComputeEnvImage", {
-      parameterName: `${parameterPrefix}${IMAGE_PARAMETER_NAME}`,
+      parameterName: `${parameterPrefix}${COMPUTE_IMAGE_PARAMETER_NAME}`,
       stringValue: props.imageId
         ? MachineImage.genericLinux({ [this.region]: props.imageId }).getImage(this).imageId
         : EcsOptimizedImage.amazonLinux2().getImage(this).imageId,

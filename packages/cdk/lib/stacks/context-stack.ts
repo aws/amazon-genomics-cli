@@ -10,7 +10,7 @@ import {
   VPC_NUMBER_SUBNETS_PARAMETER_NAME,
   VPC_PARAMETER_NAME,
   VPC_SUBNETS_PARAMETER_NAME,
-  IMAGE_PARAMETER_NAME,
+  COMPUTE_IMAGE_PARAMETER_NAME,
   APP_NAME,
 } from "../constants";
 import { ContextAppParameters } from "../env";
@@ -38,7 +38,7 @@ export class ContextStack extends Stack {
     this.vpc = Vpc.fromLookup(this, "Vpc", { vpcId });
     const subnetIds = getCommonParameterList(this, VPC_SUBNETS_PARAMETER_NAME, VPC_NUMBER_SUBNETS_PARAMETER_NAME);
     this.subnets = subnetSelectionFromIds(this, subnetIds);
-    this.computeEnvImage = MachineImage.fromSsmParameter(`/${APP_NAME}/_common/${IMAGE_PARAMETER_NAME}`);
+    this.computeEnvImage = MachineImage.fromSsmParameter(`/${APP_NAME}/_common/${COMPUTE_IMAGE_PARAMETER_NAME}`);
 
     const { contextParameters } = props;
     const { engineName } = contextParameters;
