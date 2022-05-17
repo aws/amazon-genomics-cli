@@ -5,7 +5,7 @@ import { EngineConstruct, EngineOutputs } from "./engine-construct";
 import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
-import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { IMachineImage, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { ENGINE_MINIWDL } from "../../constants";
 import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { BucketOperations } from "../../common/BucketOperations";
@@ -27,13 +27,13 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
   constructor(scope: Construct, id: string, props: EngineOptions) {
     super(scope, id);
 
-    const { vpc, contextParameters, subnets } = props;
+    const { vpc, contextParameters, subnets, computeEnvImage } = props;
     const params = props.contextParameters;
     const rootDirS3Uri = params.getEngineBucketPath();
 
     this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, ComputeResourceType.FARGATE);
     const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
-    this.batchWorkers = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, workerComputeType);
+    this.batchWorkers = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, workerComputeType, computeEnvImage);
 
     this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
     this.batchHead.role.addToPrincipalPolicy(
@@ -95,7 +95,6 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       rootDirS3Uri: rootDirS3Uri,
       vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
       vcpSubnets: props.contextParameters.usePublicSubnets ? undefined : props.subnets,
-      usePublicSubnets: props.contextParameters.usePublicSubnets,
     });
     this.adapterLogGroup = lambda.logGroup;
 
@@ -136,7 +135,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     subnets: SubnetSelection,
     appParams: ContextAppParameters,
     computeType?: ComputeResourceType,
-    usePublicSubnets?: boolean
+    computeEnvImage?: IMachineImage
   ): Batch {
     return new Batch(this, id, {
       vpc,
@@ -148,7 +147,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       awsPolicyNames: ["AmazonSSMManagedInstanceCore", "CloudWatchAgentServerPolicy"],
       resourceTags: Stack.of(this).tags.tagValues(),
       workflowOrchestrator: ENGINE_MINIWDL,
-      usePublicSubnets,
+      computeEnvImage,
     });
   }
 
@@ -156,7 +155,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     return [this.batchHead.role, this.batchWorkers.role];
   }
 
-  private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, rootDirS3Uri, vpc, vcpSubnets, usePublicSubnets }) {
+  private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, rootDirS3Uri, vpc, vcpSubnets }) {
     return super.renderPythonLambda(
       this,
       "MiniWDLWesAdapterLambda",
@@ -168,7 +167,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
         OUTPUT_DIR_S3_URI: rootDirS3Uri,
       },
       vpc,
-      usePublicSubnets ? undefined : vcpSubnets
+      vcpSubnets
     );
   }
 }

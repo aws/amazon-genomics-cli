@@ -1,4 +1,4 @@
-import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { IMachineImage, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { Stack } from "aws-cdk-lib";
 import { Batch } from "../../constructs";
 import { ContextAppParameters } from "../../env";
@@ -29,6 +29,10 @@ export interface BatchConstructProps {
    * Request On-Demand capacity to be created
    */
   readonly createOnDemandBatch: boolean;
+  /**
+   * AMI used for compute
+   */
+  readonly computeEnvImage?: IMachineImage;
 }
 
 export class BatchConstruct extends Construct {
@@ -38,13 +42,13 @@ export class BatchConstruct extends Construct {
   constructor(scope: Construct, id: string, props: BatchConstructProps) {
     super(scope, id);
 
-    const { vpc, contextParameters, createSpotBatch, createOnDemandBatch, subnets } = props;
+    const { vpc, contextParameters, createSpotBatch, createOnDemandBatch, subnets, computeEnvImage } = props;
     const { artifactBucketName, outputBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
     if (createSpotBatch) {
-      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, subnets, contextParameters, ComputeResourceType.SPOT);
+      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, subnets, contextParameters, ComputeResourceType.SPOT, computeEnvImage);
     }
     if (createOnDemandBatch) {
-      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, ComputeResourceType.ON_DEMAND);
+      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, ComputeResourceType.ON_DEMAND, computeEnvImage);
     }
 
     const artifactBucket = BucketOperations.importBucket(this, "ArtifactBucket", artifactBucketName);
@@ -60,11 +64,19 @@ export class BatchConstruct extends Construct {
     }
   }
 
-  private renderBatch(id: string, vpc: IVpc, subnets: SubnetSelection, appParams: ContextAppParameters, computeType?: ComputeResourceType): Batch {
+  private renderBatch(
+    id: string,
+    vpc: IVpc,
+    subnets: SubnetSelection,
+    appParams: ContextAppParameters,
+    computeType?: ComputeResourceType,
+    computeEnvImage?: IMachineImage
+  ): Batch {
     return new Batch(this, id, {
       vpc,
       computeType,
       subnets,
+      computeEnvImage,
       instanceTypes: appParams.instanceTypes,
       maxVCpus: appParams.maxVCpus,
       launchTemplateData: LaunchTemplateData.renderLaunchTemplateData(appParams.engineName),

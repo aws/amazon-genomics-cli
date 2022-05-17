@@ -87,6 +87,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=agc-%s-%s", constants.AgcBucketNameEnvKey, testAccountId, testAccountRegion),
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
+					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
@@ -114,6 +115,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, testAccountBucketName),
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
+					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
@@ -131,6 +133,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, testAccountBucketName),
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, false),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
+					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
@@ -149,6 +152,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, testAccountBucketName),
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
+					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
 					fmt.Sprintf("%s=%s", constants.VpcIdEnvKey, testAccountVpcId),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
@@ -169,6 +173,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, "agc-test-account-id-test-account-region"),
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
+					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
 					fmt.Sprintf("%s=%s", constants.VpcIdEnvKey, testAccountVpcId),
 					fmt.Sprintf("%s=%s,%s", constants.AgcVpcSubnetsEnvKey, testAccountSubnetId1, testAccountSubnetId2),
 				}
@@ -199,6 +204,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, testAccountBucketName),
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, false),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
+					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(
@@ -217,6 +223,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%s", constants.AgcBucketNameEnvKey, testAccountBucketName),
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, false),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
+					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
 				}
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(nil, fmt.Errorf("some bootstrap error"))

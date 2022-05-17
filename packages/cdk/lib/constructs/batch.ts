@@ -1,6 +1,6 @@
 import { Fn, Names, Stack } from "aws-cdk-lib";
 import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "@aws-cdk/aws-batch-alpha";
-import { CfnLaunchTemplate, InstanceType, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { CfnLaunchTemplate, IMachineImage, InstanceType, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import {
   CfnInstanceProfile,
   Grant,
@@ -73,6 +73,12 @@ export interface ComputeOptions {
    * @default false
    */
   usePublicSubnets?: boolean;
+
+  /**
+   * The machine image to use for compute
+   * @default managed by Batch
+   */
+  computeEnvImage?: IMachineImage;
 }
 
 export interface BatchProps extends ComputeOptions {
@@ -190,7 +196,7 @@ export class Batch extends Construct {
           vpc: options.vpc,
           type: computeType,
           maxvCpus: options.maxVCpus,
-          vpcSubnets: options.usePublicSubnets ? undefined : options.subnets,
+          vpcSubnets: options.subnets,
         },
       });
     }
@@ -211,13 +217,14 @@ export class Batch extends Construct {
         vpc: options.vpc,
         type: computeType,
         maxvCpus: options.maxVCpus,
+        image: options.computeEnvImage,
         instanceRole: instanceProfile.attrArn,
         instanceTypes: getInstanceTypesForBatch(options.instanceTypes, computeType, Stack.of(this).region),
         launchTemplate: launchTemplate && {
           launchTemplateName: launchTemplate.launchTemplateName!,
         },
         computeResourcesTags: options.resourceTags,
-        vpcSubnets: options.usePublicSubnets ? undefined : options.subnets,
+        vpcSubnets: options.subnets,
       },
     });
   }

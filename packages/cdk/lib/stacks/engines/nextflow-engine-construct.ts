@@ -9,6 +9,7 @@ import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
 import { Construct } from "constructs";
+import { IMachineImage } from "aws-cdk-lib/aws-ec2";
 
 export interface NextflowEngineConstructProps extends EngineOptions {
   /**
@@ -19,6 +20,10 @@ export interface NextflowEngineConstructProps extends EngineOptions {
    * AWS Batch JobQueue to use for running workflows.
    */
   readonly headQueue: IJobQueue;
+  /**
+   * Image used for the Nextflow head node
+   */
+  readonly computeEnvImage: IMachineImage;
 }
 
 export class NextflowEngineConstruct extends EngineConstruct {
