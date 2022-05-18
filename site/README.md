@@ -28,6 +28,47 @@ The Amazon Genomics CLI website is built with [hugo](https://gohugo.io/) and the
    $ npm install
    ```
 
+### Developing locally
+
+From the root of the repository, run `make start-docs`.
+Alternatively, you can:
+
+```bash
+$ cd site/
+$ hugo server -D
+```
+
+Then you should be able to access the website at [http://localhost:1313/](http://localhost:1313/). With the `-D` flag
+set, Hugo will render "draft" documents. To exclude these then remove the `-D` flag.
+
+#### Command Reference Generation
+
+The documentation will not build without the generated command reference
+Markdown files.
+
+Cobra (our command-line option parser) automatically generates Markdown
+reference documentation for all commands, from the main `agc` binary:
+
+```bash
+$ cd site/
+$ ../packages/cli/bin/local/agc --docs content/en/docs/Reference
+```
+
+The project-level Makefile will run this step automatically.
+
+#### Adding new content
+Follow the Docsy [guidance](https://www.docsy.dev/docs/adding-content/content/) for adding new content.
+
+Content should be added in `content/<lang>/docs` under the appropriate language folder (e.g `content/en/docs` for English language docs.)
+
+#### Styling content
+
+Docsy integrates by default with [bootstrap4](https://getbootstrap.com/docs/4.0/getting-started/introduction/), so we
+can leverage any of the classes available there.
+
+If you'd like to override any class that docsy itself generates, add the scss file under `assets/scss/`.
+You can find which files are available under `themes/docsy/assets/scss`.
+
 ### Releasing the latest docs to GitHub pages
 Once we are ready to release a new version of the docs, you can run `make build-docs`.
 Alternatively, you can:
@@ -46,33 +87,4 @@ $ git commit -m "docs: update website for agc vX.Y.Z"
 $ git push <remote> docs
 ```
 
-### Developing locally
 
-From the root of the repository, run `make start-docs`.  
-Alternatively, you can:
-
-```bash
-$ cd site/
-$ hugo server -D
-```
-
-Then you should be able to access the website at [http://localhost:1313/](http://localhost:1313/). With the `-D` flag
-set, Hugo will render "draft" documents. To exclude these then remove the `-D` flag.
-
-#### Adding new content
-Follow the Docsy [guidance](https://www.docsy.dev/docs/adding-content/content/) for adding new content.
-
-Content should be added in `content/<lang>/docs` under the appropriate language folder (e.g `content/en/docs` for English language docs.)
-
-#### Styling content
-
-Docsy integrates by default with [bootstrap4](https://getbootstrap.com/docs/4.0/getting-started/introduction/), so we
-can leverage any of the classes available there.
-
-If you'd like to override any class that docsy itself generates, add the scss file under `assets/scss/`.
-You can find which files are available under `themes/docsy/assets/scss`.
-
-### Command Reference Generation
-
-Cobra can automatically generate markdown reference for all commands. If `agc` is run in the root of this project and
-the folder `site/content/en/docs/Reference` is present then markdown will be generated (or updated) automatically. 

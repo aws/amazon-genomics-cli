@@ -1,0 +1,7 @@
+{
+    "script_file": {"class": "File", "path": "make-data.js"},
+    "script_arguments": [
+        "A", "B", "C", "D", "E", "F", "G",
+        "cats", "pigs", "dogs", "space weasles", "snacks"
+    ]
+}

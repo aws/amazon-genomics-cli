@@ -1,0 +1,61 @@
+# In /etc/yum.repos.d/rabbitmq.repo
+# From https://www.rabbitmq.com/install-rpm.html#package-cloud
+# Modified to request RHEL 7 packages.
+
+##
+## Zero dependency Erlang
+##
+
+[rabbitmq_erlang]
+name=rabbitmq_erlang
+baseurl=https://packagecloud.io/rabbitmq/erlang/el/7/$basearch
+repo_gpgcheck=1
+gpgcheck=1
+enabled=1
+# PackageCloud's repository key and RabbitMQ package signing key
+gpgkey=https://packagecloud.io/rabbitmq/erlang/gpgkey
+       https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
+
+[rabbitmq_erlang-source]
+name=rabbitmq_erlang-source
+baseurl=https://packagecloud.io/rabbitmq/erlang/el/7/SRPMS
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+# PackageCloud's repository key and RabbitMQ package signing key
+gpgkey=https://packagecloud.io/rabbitmq/erlang/gpgkey
+       https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
+
+##
+## RabbitMQ server
+##
+
+[rabbitmq_server]
+name=rabbitmq_server
+baseurl=https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+# PackageCloud's repository key and RabbitMQ package signing key
+gpgkey=https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey
+       https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
+
+[rabbitmq_server-source]
+name=rabbitmq_server-source
+baseurl=https://packagecloud.io/rabbitmq/rabbitmq-server/el/7/SRPMS
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300

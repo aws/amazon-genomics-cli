@@ -1,0 +1,22 @@
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    TOIL_IMAGE_NAME: "toil"
+    TOIL_VERSION_PREFIX: "5.7.0a1-"
+    TOIL_VERSION: "f77554b28bbda7b112c5b058b31d5041299c38c9"
+phases:
+  pre_build:
+    commands:
+      - TOIL_IMAGE_URI=${TOIL_IMAGE_NAME}:${TOIL_VERSION_PREFIX}${TOIL_VERSION}
+  build:
+    commands:
+      - docker build -t ${TOIL_IMAGE_URI} --build-arg TOIL_VERSION=${TOIL_VERSION} ./packages/engines/toil
+  post_build:
+    commands:
+      - docker save -o toil_image.tar ${TOIL_IMAGE_URI}
+
+artifacts:
+  files:
+    - toil_image.tar

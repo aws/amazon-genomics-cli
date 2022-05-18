@@ -12,11 +12,6 @@ workflows:
       language: wdl
       version: 1.0
     sourceURL: workflows/read
-  haplotype:
-    type:
-      language: wdl
-      version: 1.0
-    sourceURL: workflows/haplotype
   words-with-vowels:
     type:
       language: wdl

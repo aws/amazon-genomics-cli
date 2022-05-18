@@ -1,6 +1,6 @@
 import { RemovalPolicy } from "aws-cdk-lib";
 import { Aws } from "aws-cdk-lib";
-import { IVpc } from "aws-cdk-lib/aws-ec2";
+import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { FargateTaskDefinition, LogDriver } from "aws-cdk-lib/aws-ecs";
 import { ApiProxy, SecureService } from "../../constructs";
 import { IRole } from "aws-cdk-lib/aws-iam";
@@ -57,11 +57,12 @@ export class CromwellEngineConstruct extends EngineConstruct {
     });
 
     // TODO: Move log group creation into service construct and make it a property
-    this.engine = this.getEngineServiceDefinition(props.vpc, engineContainer, this.engineLogGroup);
+    this.engine = this.getEngineServiceDefinition(props.vpc, props.subnets, engineContainer, this.engineLogGroup);
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
 
     const lambda = this.renderAdapterLambda({
       vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
+      vpcSubnets: props.contextParameters.usePublicSubnets ? undefined : props.subnets,
       role: this.adapterRole,
       engineLogGroupName: this.adapterLogGroup.logGroupName,
       jobQueueArn: props.jobQueue.jobQueueArn,
@@ -88,10 +89,11 @@ export class CromwellEngineConstruct extends EngineConstruct {
     };
   }
 
-  private getEngineServiceDefinition(vpc: IVpc, serviceContainer: ServiceContainer, logGroup: ILogGroup) {
+  private getEngineServiceDefinition(vpc: IVpc, subnets: SubnetSelection, serviceContainer: ServiceContainer, logGroup: ILogGroup) {
     const id = "Engine";
     const fileSystem = new FileSystem(this, "EngineFileSystem", {
       vpc,
+      vpcSubnets: subnets,
       encrypted: true,
       removalPolicy: RemovalPolicy.DESTROY,
     });
@@ -125,12 +127,12 @@ export class CromwellEngineConstruct extends EngineConstruct {
       sourceVolume: volumeName,
     });
 
-    const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc);
+    const engine = renderServiceWithTaskDefinition(this, id, serviceContainer, definition, vpc, subnets);
     fileSystem.connections.allowDefaultPortFrom(engine.service);
     return engine;
   }
 
-  private renderAdapterLambda({ role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint, vpc }) {
+  private renderAdapterLambda({ role, jobQueueArn, engineLogGroupName, projectName, contextName, userId, engineEndpoint, vpc, vpcSubnets }) {
     return super.renderPythonLambda(
       this,
       "CromwellWesAdapterLambda",
@@ -144,7 +146,8 @@ export class CromwellEngineConstruct extends EngineConstruct {
         CONTEXT_NAME: contextName,
         USER_ID: userId,
       },
-      vpc
+      vpc,
+      vpcSubnets
     );
   }
 }

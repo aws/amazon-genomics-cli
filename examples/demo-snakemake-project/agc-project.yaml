@@ -19,8 +19,3 @@ contexts:
         resourceRequirements:
           vcpus: 2
           memoryLimit: 4096
-  spotContext:
-    requestSpotInstances: true
-    engines:
-      - type: snakemake
-        engine: snakemake

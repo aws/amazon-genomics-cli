@@ -26,11 +26,11 @@ export class MiniWdlEngine extends Engine {
   constructor(scope: Construct, id: string, props: MiniWdlEngineProps) {
     super(scope, id);
 
-    const { vpc, iops, rootDirS3Uri, engineBatch, workerBatch } = props;
+    const { vpc, subnets, iops, rootDirS3Uri, engineBatch, workerBatch } = props;
     if (iops?.toMebibytes() == 0 || iops == undefined) {
-      this.fileSystem = this.createFileSystemDefaultThroughput(vpc);
+      this.fileSystem = this.createFileSystemDefaultThroughput(vpc, subnets);
     } else {
-      this.fileSystem = this.createFileSystemIOPS(vpc, iops);
+      this.fileSystem = this.createFileSystemIOPS(vpc, subnets, iops);
     }
     const accessPoint = this.createAccessPoint(this.fileSystem);
 
