@@ -8,7 +8,9 @@ phases:
     commands:
       - (cd ~/.goenv; git pull)
       - goenv install
+      - go version
       - go env -w GOPROXY=direct
+      - go env -w GO111MODULE=on
       - make init
   pre_build:
     commands:
