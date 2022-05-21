@@ -21,5 +21,6 @@ export const ENGINE_CROMWELL = "cromwell";
 export const ENGINE_MINIWDL = "miniwdl";
 export const ENGINE_NEXTFLOW = "nextflow";
 export const ENGINE_SNAKEMAKE = "snakemake";
+export const ENGINE_TOIL = "toil";
 
 export const TAGGED_RESOURCE_TYPES: TaggedResourceTypes = ["volume"];

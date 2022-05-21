@@ -7,6 +7,7 @@ import {
   ENGINE_MINIWDL,
   ENGINE_NEXTFLOW,
   ENGINE_SNAKEMAKE,
+  ENGINE_TOIL,
   VPC_NUMBER_SUBNETS_PARAMETER_NAME,
   VPC_PARAMETER_NAME,
   VPC_SUBNETS_PARAMETER_NAME,
@@ -80,7 +81,7 @@ export class ContextStack extends Stack {
         }
         this.renderSnakemakeStack(props);
         break;
-      case "toil":
+      case ENGINE_TOIL:
         this.renderToilStack(props);
         break;
       default:
