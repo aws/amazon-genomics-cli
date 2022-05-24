@@ -1,0 +1,5 @@
+{
+  "image_file": {"class": "File", "location": "s3://spacenet-dataset/AOIs/AOI_1_Rio/PS-RGB/PS-RGB_mosaic_013022223112.tif"},
+  "image_directory": {"class": "Directory", "location": "s3://spacenet-dataset/Hosted-Datasets/fmow/fmow-rgb/val/lighthouse/lighthouse_8/"},
+  "image_filename": "lighthouse_8_0_rgb.jpg"
+}
