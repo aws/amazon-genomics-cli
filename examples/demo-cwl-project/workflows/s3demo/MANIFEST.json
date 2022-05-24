@@ -1,0 +1,7 @@
+{
+  "mainWorkflowURL": "s3demo.cwl",
+  "inputFileURLs": [
+    "inputs.json"
+  ],
+  "optionsFileURL": "options.json"
+}
