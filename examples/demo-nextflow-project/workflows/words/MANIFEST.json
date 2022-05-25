@@ -1,0 +1,6 @@
+{
+  "mainWorkflowURL": "main.nf",
+  "inputFileURLs": [
+    "params.json"
+  ]
+}

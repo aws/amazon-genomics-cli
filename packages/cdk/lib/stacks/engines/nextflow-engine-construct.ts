@@ -9,6 +9,7 @@ import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
 import { Construct } from "constructs";
+import { IMachineImage } from "aws-cdk-lib/aws-ec2";
 
 export interface NextflowEngineConstructProps extends EngineOptions {
   /**
@@ -19,6 +20,10 @@ export interface NextflowEngineConstructProps extends EngineOptions {
    * AWS Batch JobQueue to use for running workflows.
    */
   readonly headQueue: IJobQueue;
+  /**
+   * Image used for the Nextflow head node
+   */
+  readonly computeEnvImage: IMachineImage;
 }
 
 export class NextflowEngineConstruct extends EngineConstruct {
@@ -42,6 +47,7 @@ export class NextflowEngineConstruct extends EngineConstruct {
 
     this.nextflowEngine = new NextflowEngine(this, "NextflowEngine", {
       vpc: props.vpc,
+      subnets: props.subnets,
       jobQueueArn: props.jobQueue.jobQueueArn,
       rootDirS3Uri: params.getEngineBucketPath(),
       taskRole: engineRole,
@@ -63,6 +69,7 @@ export class NextflowEngineConstruct extends EngineConstruct {
       jobDefinitionArn: this.nextflowEngine.headJobDefinition.jobDefinitionArn,
       engineLogGroupName: engineLogGroup.logGroupName,
       vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
+      subnets: props.contextParameters.usePublicSubnets ? undefined : props.subnets,
     });
     this.adapterLogGroup = lambda.logGroup;
 
@@ -82,7 +89,7 @@ export class NextflowEngineConstruct extends EngineConstruct {
     };
   }
 
-  private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, engineLogGroupName, vpc }) {
+  private renderAdapterLambda({ role, jobQueueArn, jobDefinitionArn, engineLogGroupName, vpc, subnets }) {
     return super.renderPythonLambda(
       this,
       "NextflowWesAdapterLambda",
@@ -93,7 +100,8 @@ export class NextflowEngineConstruct extends EngineConstruct {
         JOB_DEFINITION: jobDefinitionArn,
         ENGINE_LOG_GROUP: engineLogGroupName,
       },
-      vpc
+      vpc,
+      subnets
     );
   }
 }

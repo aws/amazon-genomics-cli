@@ -43,6 +43,15 @@ func TestManager_List(t *testing.T) {
 						},
 					},
 				},
+				testContextName4: {
+					Name: testContextName4,
+					Engines: []spec.Engine{
+						{
+							Type:   "cwl",
+							Engine: "toil",
+						},
+					},
+				},
 			},
 			setupMocks: func(t *testing.T) mockClients {
 				mockClients := createMocks(t)

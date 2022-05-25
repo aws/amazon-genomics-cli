@@ -43,7 +43,7 @@ func TestProjectInit_Validate(t *testing.T) {
 			workflowType: "nextflow",
 		},
 		"invalid workflow type": {
-			expectedErr:  "invalid workflow type supplied: 'aBadEngineName'. Supported workflow types are: [nextflow snakemake wdl]",
+			expectedErr:  "invalid workflow type supplied: 'aBadEngineName'. Supported workflow types are: [cwl nextflow snakemake wdl]",
 			workflowType: "aBadEngineName",
 			projectName:  testProjectName,
 		},
@@ -90,6 +90,11 @@ func TestProjectInit_Execute(t *testing.T) {
 			projectName:    testProjectName,
 			engineName:     "nextflow",
 			expectedEngine: []spec.Engine{{Type: "nextflow", Engine: "nextflow"}},
+		},
+		"toil engine generation": {
+			projectName:    testProjectName,
+			engineName:     "cwl",
+			expectedEngine: []spec.Engine{{Type: "cwl", Engine: "toil"}},
 		},
 	}
 

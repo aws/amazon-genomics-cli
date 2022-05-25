@@ -1,0 +1,38 @@
+---
+name: CWLDemo
+schemaVersion: 1
+workflows:
+  hello:
+    type:
+      language: cwl
+      version: v1.2
+    sourceURL: workflows/hello/hello.cwl
+  nontrivial:
+    type:
+      language: cwl
+      version: v1.2
+    sourceURL: workflows/nontrivial
+  manyjobs:
+    type:
+      language: cwl
+      version: v1.2
+    sourceURL: workflows/manyjobs
+  s3demo:
+    type:
+      language: cwl
+      version: v1.2
+    sourceURL: workflows/s3demo
+data:
+  - location: s3://spacenet-dataset
+    readOnly: true
+contexts:
+  myContext:
+    engines:
+      - type: cwl
+        engine: toil
+
+  spotCtx:
+    requestSpotInstances: true
+    engines:
+      - type: cwl
+        engine: toil

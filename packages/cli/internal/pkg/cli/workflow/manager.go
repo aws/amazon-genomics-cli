@@ -73,7 +73,7 @@ type runProps struct {
 	path                 string
 	packPath             string
 	workflowUrl          string
-	inputUrl             string
+	inputsPath           string
 	input                Input
 	optionFileUrl        string
 	options              map[string]string
@@ -308,7 +308,7 @@ func (m *Manager) readInput(inputUrl string) {
 		return
 	}
 	log.Debug().Msgf("Input file override URL: %s", inputUrl)
-	m.inputUrl = inputUrl
+	m.inputsPath = osutils.StripFileURLPrefix(inputUrl) // We actually support only local files
 	bytes, err := m.Storage.ReadAsBytes(inputUrl)
 	if err != nil {
 		m.err = err
@@ -326,11 +326,7 @@ func (m *Manager) parseInputToArguments() {
 	if m.err != nil || m.input == nil {
 		return
 	}
-	arguments, err := m.input.ToString()
-	if err != nil {
-		m.err = err
-		return
-	}
+	arguments := m.input.String()
 	m.arguments = []string{arguments}
 }
 
@@ -339,7 +335,13 @@ func (m *Manager) uploadInputsToS3() {
 		return
 	}
 	objectKey := awsresources.RenderBucketDataKey(m.projectSpec.Name, m.userId)
-	updateInputs, err := m.InputClient.UpdateInputs(m.Project.GetLocation(), m.input, m.bucketName, objectKey)
+	absInputsPath, err := filepath.Abs(m.inputsPath)
+	if err != nil {
+		m.err = err
+		return
+	}
+	baseLocation := filepath.Dir(absInputsPath)
+	updateInputs, err := m.InputClient.UpdateInputs(baseLocation, m.input, m.bucketName, objectKey)
 	if err != nil {
 		m.err = fmt.Errorf("unable to sync s3://%s/%s: %w", m.bucketName, objectKey, err)
 		return
@@ -446,7 +448,7 @@ func (m *Manager) setWorkflowParameters() {
 		return
 	}
 	m.workflowParams = make(map[string]string)
-	if m.inputUrl == "" {
+	if m.inputsPath == "" {
 		return
 	}
 	m.workflowParams["workflowInputs"] = filepath.Base(m.attachments[0])
@@ -474,6 +476,9 @@ func (m *Manager) setWesClient() {
 		return
 	}
 	m.wes, m.err = m.WesFactory(m.wesUrl)
+	if m.err != nil {
+		m.err = fmt.Errorf("unable to configure WES endpoint: %w", m.err)
+	}
 }
 
 func (m *Manager) saveAttachments() {
@@ -481,7 +486,7 @@ func (m *Manager) saveAttachments() {
 		return
 	}
 
-	namePattern := fmt.Sprintf("%s_*", filepath.Base(m.inputUrl))
+	namePattern := fmt.Sprintf("%s_*", filepath.Base(m.inputsPath))
 	for _, arg := range m.arguments {
 		fileName, err := writeToTmp(namePattern, arg)
 		if err != nil {

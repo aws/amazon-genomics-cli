@@ -12,4 +12,6 @@ const (
 	AgcVersionEnvKey    = "AGC_VERSION"
 	VpcIdEnvKey         = "VPC_ID"
 	PublicSubnetsEnvKey = "AGC_USE_PUBLIC_SUBNETS"
+	AgcVpcSubnetsEnvKey = "AGC_VPC_SUBNETS"
+	AgcAmiEnvKey        = "AGC_AMI"
 )

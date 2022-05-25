@@ -1,0 +1,7 @@
+{
+    "mainWorkflowURL": "manyjobs.cwl",
+    "inputFileURLs": [
+      "inputs.json"
+    ],
+    "optionsFileURL": "options.json"
+}

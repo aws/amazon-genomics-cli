@@ -107,3 +107,11 @@ func getAndCreateRelativePath(currentPath string, sourcePath string, destination
 
 	return relativePath, nil
 }
+
+func StripFileURLPrefix(filename string) string {
+	if strings.HasPrefix(filename, "file://") {
+		runes := []rune(filename)
+		filename = string(runes[7:])
+	}
+	return filename
+}

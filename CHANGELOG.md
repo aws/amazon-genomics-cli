@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/aws/amazon-genomics-cli/compare/v1.5.0-rc1...v1.5.0) (2022-05-25)
+
+
+### Bug Fixes
+
+* enforce GO111MODULE=on for the build ([#457](https://github.com/aws/amazon-genomics-cli/issues/457)) ([412eff7](https://github.com/aws/amazon-genomics-cli/commit/412eff7dead0f8624fb2eaa7ad70efeedba63859))
+
 ## [1.4.0](https://github.com/aws/amazon-genomics-cli/compare/v1.3.0...v1.4.0) (2022-04-15)
 
 

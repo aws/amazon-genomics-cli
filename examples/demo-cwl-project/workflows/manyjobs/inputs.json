@@ -1,0 +1,4 @@
+{
+    "script_file": {"class": "File", "path": "make-a-little-data.js"},
+    "script_argument_count": 1000
+}

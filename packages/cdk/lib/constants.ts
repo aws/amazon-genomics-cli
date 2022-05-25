@@ -11,12 +11,16 @@ export const USER_EMAIL_TAG_KEY = `${APP_NAME}-user-email`;
 export const AGC_VERSION_KEY = `${APP_NAME}-version`;
 export const VPC_PARAMETER_NAME = "vpc";
 export const VPC_PARAMETER_ID = "VpcId";
+export const VPC_SUBNETS_PARAMETER_NAME = "InfraSubnets";
+export const VPC_NUMBER_SUBNETS_PARAMETER_NAME = "NumInfraSubnets";
 export const WES_KEY_PARAMETER_NAME = "WesAdapterZipKeyParameter";
 export const WES_BUCKET_NAME = "WesAdapterZipBucket";
+export const COMPUTE_IMAGE_PARAMETER_NAME = "ComputeEnvImage";
 
 export const ENGINE_CROMWELL = "cromwell";
 export const ENGINE_MINIWDL = "miniwdl";
 export const ENGINE_NEXTFLOW = "nextflow";
 export const ENGINE_SNAKEMAKE = "snakemake";
+export const ENGINE_TOIL = "toil";
 
 export const TAGGED_RESOURCE_TYPES: TaggedResourceTypes = ["volume"];
