@@ -27,23 +27,23 @@ AGC will use your default AWS credentials to deploy all …">
 <meta property="og:title" content="agc account activate" />
 <meta property="og:description" content="agc account activate Activate AGC in an AWS account.
 Synopsis Activate AGC in an AWS account. AGC will use your default AWS credentials to deploy all AWS resources it needs to that account and region.
-agc account activate [flags] Examples  Activate AGC in your AWS account with a custom S3 bucket and VPC. /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id Options  --bucket string The name of an S3 bucket that AGC will use to store its data." />
+agc account activate [flags] Examples  Activate AGC in your AWS account with a custom S3 bucket and VPC. /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id Options  --ami string The AMI that will be used by all workflow compute environments deployed in all contexts." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_activate/" /><meta property="article:section" content="docs" />
-<meta property="article:published_time" content="2022-04-20T17:03:51+00:00" />
-<meta property="article:modified_time" content="2022-04-20T17:03:51+00:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<meta property="article:published_time" content="2022-05-25T20:22:30+00:00" />
+<meta property="article:modified_time" content="2022-05-25T20:22:30+00:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
 <meta itemprop="name" content="agc account activate">
 <meta itemprop="description" content="agc account activate Activate AGC in an AWS account.
 Synopsis Activate AGC in an AWS account. AGC will use your default AWS credentials to deploy all AWS resources it needs to that account and region.
-agc account activate [flags] Examples  Activate AGC in your AWS account with a custom S3 bucket and VPC. /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id Options  --bucket string The name of an S3 bucket that AGC will use to store its data."><meta itemprop="datePublished" content="2022-04-20T17:03:51+00:00" />
-<meta itemprop="dateModified" content="2022-04-20T17:03:51+00:00" />
-<meta itemprop="wordCount" content="248">
+agc account activate [flags] Examples  Activate AGC in your AWS account with a custom S3 bucket and VPC. /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id Options  --ami string The AMI that will be used by all workflow compute environments deployed in all contexts."><meta itemprop="datePublished" content="2022-05-25T20:22:30+00:00" />
+<meta itemprop="dateModified" content="2022-05-25T20:22:30+00:00" />
+<meta itemprop="wordCount" content="350">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="agc account activate"/>
 <meta name="twitter:description" content="agc account activate Activate AGC in an AWS account.
 Synopsis Activate AGC in an AWS account. AGC will use your default AWS credentials to deploy all AWS resources it needs to that account and region.
-agc account activate [flags] Examples  Activate AGC in your AWS account with a custom S3 bucket and VPC. /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id Options  --bucket string The name of an S3 bucket that AGC will use to store its data."/>
+agc account activate [flags] Examples  Activate AGC in your AWS account with a custom S3 bucket and VPC. /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id Options  --ami string The AMI that will be used by all workflow compute environments deployed in all contexts."/>
 
 
 
@@ -120,7 +120,7 @@ agc account activate [flags] Examples  Activate AGC in your AWS account with a c
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.3ceb339afcde8270ff6cb7cf889c6a72.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -142,7 +142,7 @@ agc account activate [flags] Examples  Activate AGC in your AWS account with a c
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.3ceb339afcde8270ff6cb7cf889c6a72.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -225,6 +225,8 @@ agc account activate [flags] Examples  Activate AGC in your AWS account with a c
   <a href="/amazon-genomics-cli/docs/workflow-engines/filesystems/s3/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesfilesystemss3"><span class="">S3 Workflow Filesystem</span></a>
 </li>
   </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginestoil-li">
+  <a href="/amazon-genomics-cli/docs/workflow-engines/toil/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginestoil"><span class="">Toil</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginescromwell-li">
   <a href="/amazon-genomics-cli/docs/workflow-engines/cromwell/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginescromwell"><span class="">Cromwell</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesminiwdl-li">
@@ -419,11 +421,17 @@ it needs to that account and region.</p>
 Activate AGC in your AWS account with a custom S3 bucket and VPC.
 /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id
 </code></pre><h3 id="options">Options</h3>
-<pre><code>      --bucket string         The name of an S3 bucket that AGC will use to store its data.
+<pre><code>      --ami string            The AMI that will be used by all workflow compute environments deployed in all contexts.
+      --bucket string         The name of an S3 bucket that AGC will use to store its data.
                               An autogenerated name will be used if not specified. A new bucket will be created if the bucket does not exist.
   -h, --help                  help for activate
+      --subnets strings       The list of private subnet IDs to use when specifying a VPC to run in. May only be used with the 
+                              '--vpc' flag. If not supplied then all private subnets of a VPC will be used as possible targets of compute infrastructure.
+                              Each subnet must have access to AWS service endpoints e.g. using VPC Gateway Endpoints or via a route to the public internet.
+                              Subnet names may be a comma separated list or supplied as repeated flags. (e.g. '--subnets subnet-1234 --subnets subnet-2345, subnet-3456')
+                              
       --tags stringToString   A list of comma separated tags to be applied to all AGC resources in this account
-                              (i.e. --tags &quot;k1=v1&quot;,&quot;k2=v2&quot;). Each key-value pair must be quoted as shown in the example,
+                              (e.g. --tags &quot;k1=v1&quot;,&quot;k2=v2&quot;). Each key-value pair must be quoted as shown in the example,
                               otherwise the parsing will fail. (default [])
       --usePublicSubnets      Do not create a NAT gateway or VPC endpoints, to lower operating costs. 
                               You must enable the usePublicSubnets option in your project context if you use this flag.

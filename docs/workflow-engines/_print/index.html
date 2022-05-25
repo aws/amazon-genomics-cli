@@ -111,7 +111,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.3ceb339afcde8270ff6cb7cf889c6a72.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -192,7 +192,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>2: <a href="#pg-b812d6d6ccf08050a8b058f849258f24">Cromwell</a></li>
+<li>2: <a href="#pg-2545b4751912a9ded4164c210293fd69">Toil</a></li>
 
 
     
@@ -200,7 +200,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>3: <a href="#pg-ce78b9e5a84e9a8a9ba2d03b23c23514">miniwdl</a></li>
+<li>3: <a href="#pg-b812d6d6ccf08050a8b058f849258f24">Cromwell</a></li>
 
 
     
@@ -208,7 +208,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>4: <a href="#pg-213fbc809c7f219340e18bd5d4675202">Snakemake</a></li>
+<li>4: <a href="#pg-ce78b9e5a84e9a8a9ba2d03b23c23514">miniwdl</a></li>
 
 
     
@@ -216,7 +216,15 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>5: <a href="#pg-201f7953fd8f191a875eff2bec53af2d">Nextflow</a></li>
+<li>5: <a href="#pg-213fbc809c7f219340e18bd5d4675202">Snakemake</a></li>
+
+
+    
+  
+    
+    
+	
+<li>6: <a href="#pg-201f7953fd8f191a875eff2bec53af2d">Nextflow</a></li>
 
 
     
@@ -386,7 +394,64 @@ Contexts using these engines will use this filesystem by default.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-b812d6d6ccf08050a8b058f849258f24">2 - Cromwell</h1>
+	<h1 id="pg-2545b4751912a9ded4164c210293fd69">2 - Toil</h1>
+    <div class="lead">Details on the Toil engine deployed by Amazon Genomics CLI</div>
+	<h2 id="description">Description</h2>
+<p><a href="http://toil.ucsc-cgl.org/">Toil</a> is a workflow engine developed by the
+<a href="https://cglgenomics.ucsc.edu/">Computational Genomics Lab</a> at the
+<a href="https://genomics.ucsc.edu/">UC Santa Cruz Genomics Institute</a>. In Amazon Genomics
+CLI, Toil is an engine that can be deployed in a
+<a href="/amazon-genomics-cli/docs/concepts/contexts/">context</a> as an
+<a href="/amazon-genomics-cli/docs/concepts/engines/">engine</a> to run workflows based on the
+<a href="https://www.commonwl.org/">CWL</a> specification.</p>
+<p>Toil is an open source project distributed by UC Santa Cruz under the <a href="https://github.com/DataBiosphere/toil/blob/master/LICENSE">Apache 2
+license</a> and
+available on
+<a href="https://github.com/DataBiosphere/toil">GitHub</a>.</p>
+<h2 id="architecture">Architecture</h2>
+<p>There are two components of a Toil engine as deployed in an Amazon Genomics
+CLI context:</p>
+<h3 id="engine-service">Engine Service</h3>
+<p>The Toil engine is run in &ldquo;server mode&rdquo; as a container service in ECS. The
+engine can run multiple workflows asynchronously. Workflow tasks are run in an
+elastic <a href="#compute-environment">compute environment</a> and monitored by Toil.
+Amazon Genomics CLI communicates with the Toil engine via a GA4GH
+<a href="https://github.com/ga4gh/workflow-execution-service-schemas">WES</a> REST service
+which the server offers, available via API Gateway.</p>
+<h3 id="compute-environment">Compute Environment</h3>
+<p>Workflow tasks are submitted by Toil to an AWS Batch queue and run in
+Toil-provided containers using an AWS Compute Environment. Tasks which use the
+<a href="https://www.commonwl.org/user_guide/07-containers/index.html">CWL <code>DockerRequirement</code></a>
+will additionally be run in sibling containers on the host Docker daemon. AWS
+Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on
+container hosts as space allows.</p>
+<h4 id="disk-expansion">Disk Expansion</h4>
+<p>Container hosts in the Batch compute environment use EBS volumes as local
+scratch space. As an EBS volume approaches a capacity threshold, new EBS
+volumes will be attached and merged into the file system. These volumes are
+destroyed when AWS Batch terminates the container host. CWL disk space
+requirements are ignored by Toil when running against AWS Batch.</p>
+<p>This setup means that workflows that succeed on AGC may fail on other CWL
+runners (because they do not request enough disk space) and workflows that
+succeed on other CWL runners may fail on AGC (because they allocate disk space
+faster than the expansion process can react).</p>
+
+</div>
+
+
+
+    
+	
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-b812d6d6ccf08050a8b058f849258f24">3 - Cromwell</h1>
     <div class="lead">Details on the Cromwell engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="https://cromwell.readthedocs.io/en/stable/">Cromwell</a> is a workflow engine developed by the <a href="https://www.broadinstitute.org/">Broad Institute</a>.
@@ -456,7 +521,7 @@ and is ignored.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-ce78b9e5a84e9a8a9ba2d03b23c23514">3 - miniwdl</h1>
+	<h1 id="pg-ce78b9e5a84e9a8a9ba2d03b23c23514">4 - miniwdl</h1>
     <div class="lead">Details on the miniwdl engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="https://miniwdl.readthedocs.io/en/latest/index.html">miniwdl</a> is free open source software distributed under the MIT licence
@@ -514,7 +579,7 @@ adding the following key/ value pair.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-213fbc809c7f219340e18bd5d4675202">4 - Snakemake</h1>
+	<h1 id="pg-213fbc809c7f219340e18bd5d4675202">5 - Snakemake</h1>
     <div class="lead">Details on the Snakemake engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="https://snakemake.readthedocs.io/en/stable/">Snakemake</a> is free open source software distributed under the MIT licence
@@ -574,7 +639,7 @@ adding the following key/ value pair.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-201f7953fd8f191a875eff2bec53af2d">5 - Nextflow</h1>
+	<h1 id="pg-201f7953fd8f191a875eff2bec53af2d">6 - Nextflow</h1>
     <div class="lead">Details on the Nextflow engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="https://www.nextflow.io/">Nextflow</a> is free open source software distributed under the Apache 2.0 licence

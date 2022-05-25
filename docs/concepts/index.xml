@@ -48,21 +48,102 @@ for networking and storage this may be the easiest way to activate Amazon Genomi
 &lt;p&gt;You can activate an account using &lt;code&gt;agc account activate&lt;/code&gt;. An account must be activated before any contexts can be deployed
 or workflows run.&lt;/p&gt;
 &lt;p&gt;Activating an account will also bootstrap the AWS Environment for CDK app deployments.&lt;/p&gt;
+&lt;h4 id=&#34;using-an-existing-s3-bucket&#34;&gt;Using an Existing S3 Bucket&lt;/h4&gt;
 &lt;p&gt;Amazon Genomics CLI requires an S3 bucket to store workflow results and associated information. If you prefer to use an existing bucket
 you can use the form  &lt;code&gt;agc account activate --bucket my-existing-bucket&lt;/code&gt;. If you do this the AWS &lt;a href=&#34;https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html&#34;&gt;IAM&lt;/a&gt; role used to run
 Amazon Genomics CLI must be able to write to that bucket.&lt;/p&gt;
+&lt;h4 id=&#34;using-an-existing-vpc&#34;&gt;Using an Existing VPC&lt;/h4&gt;
 &lt;p&gt;To use an existing VPC you can use the form  &lt;code&gt;agc account activate --vpc my-existing-vpc-id&lt;/code&gt;. This VPC must have at least
 3 availability zones each with at least one private subnet. The private subnets must have connectivity to the internet,
 such as via a NAT gateway, and connectivity to AWS services either through VPC endpoints or the internet. Amazon Genomics CLI will not
 modify the network topology of the specified VPC.&lt;/p&gt;
-&lt;p&gt;Issuing account activate commands more than once effectively updates the core infrastructure with the difference between
-the two commands. For example, if you had previously activated the account using &lt;code&gt;agc account activate&lt;/code&gt; and later invoked
-&lt;code&gt;agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id&lt;/code&gt; then Amazon Genomics CLI will update to use &lt;code&gt;my-existing-bucket&lt;/code&gt;
-and the identified VPC. The old VPC and S3 buckets will be &lt;em&gt;retained&lt;/em&gt; according to their retention policy.&lt;/p&gt;
-&lt;p&gt;If you initially activated the account with &lt;code&gt;agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id&lt;/code&gt;
-and later invoked &lt;code&gt;agc account activate&lt;/code&gt; then Amazon Genomics CLI will stop using the previous specified bucket, however the VPC will
-be recalled and re-used. &lt;em&gt;ALL&lt;/em&gt; of the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.&lt;/p&gt;
-&lt;h3 id=&#34;deactivate&#34;&gt;&lt;code&gt;deactivate&lt;/code&gt;&lt;/h3&gt;
+&lt;h4 id=&#34;specifying-subnets&#34;&gt;Specifying Subnets&lt;/h4&gt;
+&lt;p&gt;When using an existing VPC you may need to specify which subnets of the VPC can be used for infrastructure. This is useful
+when only some private subnets have internet routing. To do this you can supply a comma separated list of subnet IDs using
+the &lt;code&gt;--subnets&lt;/code&gt; flag, or repeat the flag multiple times. For example:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;agc account activate --vpc my-existing-vpc-id --subnets subnet-id-1,subnet-id-2 --subnets subnet-id-3&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We recommend a minimum of 3 subnets across availability zones to take advantage of EC2 instance availability and to
+ensure high availability of infrastructure.&lt;/p&gt;
+&lt;h4 id=&#34;using-a-specific-ami-for-compute-environments&#34;&gt;Using a Specific AMI for Compute Environments&lt;/h4&gt;
+&lt;p&gt;Some organizations restrict the use of AMIs to a pre-approved list. By default, Amazon Genomics CLI uses the most recent
+version of the Amazon Linux 2 ECS Optimized AMI. To change this behavior you can supply the ID of an alternative AMI at
+account activation. This AMI will then be used for all compute environments used by all newly deployed contexts.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account activate --ami &amp;lt;ami-id&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are some specific requirements that the AMI must comply with. It must be a private AMI from the same account that
+you will use for deploying Amazon Genomics CLI infrastructure. It must also be capable of successfully running all parts
+of the &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/blob/main/packages/cdk/lib/constructs/launch-template-data.ts&#34;&gt;LaunchTemplate&lt;/a&gt;
+executed at startup time including the &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/tree/main/packages/cdk/lib/artifacts/batch-artifacts/ecs-additions&#34;&gt;ecs-additions&lt;/a&gt;
+dependencies. We recommend an ECS optimized image based on Amazon Linux 2, RHEL, Fedora or similar.&lt;/p&gt;
+&lt;p&gt;If the LaunchTemplate cannot complete successfully it will result in an EC2 instance that cannot join a
+compute-cluster and cannot complete workflow tasks. A common symptom of this is workflow tasks that become stuck in a &amp;ldquo;runnable&amp;rdquo;
+state but are never assigned to a cluster node.&lt;/p&gt;
+&lt;h4 id=&#34;using-only-public-subnets&#34;&gt;Using Only Public Subnets&lt;/h4&gt;
+&lt;p&gt;Amazon Genomics CLI can create a new VPC with only public subnets to use for its infrastructure using the &lt;code&gt;--usePublicSubnets&lt;/code&gt; flag.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;agc account activate --usePublicSubnets&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This can reduce costs by removing the need for NAT Gateways and VPC Gateway Endpoints to route internet traffic from private subnets.
+It can also reduce the number of Elastic IP Addresses consumed by your infrastructure.&lt;/p&gt;
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+
+    When using a VPC with only public subnets, you will need to ensure that the contexts defined in &lt;code&gt;agc-project.yaml&lt;/code&gt; files declare that they
+will use public subnets. For example:
+
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;myContext&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;usePublicSubnets&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+
+    Currently, use of public subnets is only supported for contexts that use the Nextflow engine. Use of public IPs with the
+Cromwell server creates a security risk and will fail. Assignment of public IPs to AWS Batch Fargate tasks (as used by miniwdl and SnakeMake)
+is possible but will require changes to the WES adapters of those engines. If you need this please file a &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/issues/new?labels=enhancement&#34;&gt;feature request&lt;/a&gt; with your use case
+
+&lt;/div&gt;
+
+&lt;h5 id=&#34;security-considerations&#34;&gt;Security Considerations&lt;/h5&gt;
+&lt;p&gt;Although your infrastructure will be protected by security groups you should be aware that any manual modification of these may result in exposing your
+infrastructure to the internet. For this reason &lt;em&gt;we do &lt;strong&gt;not&lt;/strong&gt; recommend using this configuration in production
+or with sensitive data&lt;/em&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;updating&#34;&gt;Updating&lt;/h4&gt;
+&lt;p&gt;Issuing &lt;code&gt;account activate&lt;/code&gt; commands more than once effectively updates the core infrastructure with the difference between
+the two commands according to the rules below.&lt;/p&gt;
+&lt;h5 id=&#34;updating-the-vpc&#34;&gt;Updating the VPC&lt;/h5&gt;
+&lt;p&gt;You may change the VPC used by issuing the command &lt;code&gt;agc account activate --vpc &amp;lt;vpc-id&amp;gt;&lt;/code&gt;. If a &lt;code&gt;--vpc&lt;/code&gt; argument is &lt;em&gt;not&lt;/em&gt;
+provided as part of an &lt;code&gt;agc account activate&lt;/code&gt; command then the last VPC used will be &amp;lsquo;remembered&amp;rsquo; and used by default.&lt;/p&gt;
+&lt;p&gt;If you wish to change to use a new default VPC created by Amazon Genomics CLI you must deactivate (&lt;code&gt;agc account deactivate&lt;/code&gt;)
+and reactivate with no &lt;code&gt;--vpc&lt;/code&gt; flag.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account activate               &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# VPC 1 created.&lt;/span&gt;
+agc account activate --vpc-id abc  &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# VPC 1 destroyed and customer VPC abc used. &lt;/span&gt;
+agc account activate               &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# VPC 2 created. Customer VPC retained.&lt;/span&gt;
+agc account deactivate             &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# AGC core infrastructure destroyed. Customer VPC abc retained.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id=&#34;updating-to-use-public-subnets-only&#34;&gt;Updating to Use Public Subnets Only&lt;/h5&gt;
+&lt;p&gt;If you wish to change the VPC to use public subnets only, or change it from public subnets to private subnets you must
+deactivate the account and reactivate it with (or without) the &lt;code&gt;--usePublicSubnets&lt;/code&gt; flag. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account activate --usePublicSubnets &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# New VPC with only public subnets&lt;/span&gt;
+agc account deactivate                  &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# VPC destroyed&lt;/span&gt;
+agc account activate                    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# New VPC with private subnets&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id=&#34;updating-selected-subnets&#34;&gt;Updating Selected Subnets&lt;/h5&gt;
+&lt;p&gt;To change a VPC to use a different selection of subnets you must supply both the VPC id and the required subnet IDs.
+If you omit the &lt;code&gt;--subnets&lt;/code&gt; flag, then future context deployments will use &lt;em&gt;all&lt;/em&gt; private subnets of the VPC.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account activate --vpc &amp;lt;vpc-id&amp;gt; --subnets &amp;lt;subnet1,subnet2&amp;gt; &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# use subnets 1 and 2 of vpc-id &lt;/span&gt;
+agc account activate --vpc &amp;lt;vpc-id&amp;gt; --subnets &amp;lt;subnet1,subnet4&amp;gt; &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# use subnets 1 and 4 of vpc-id&lt;/span&gt;
+agc account activate --vpc &amp;lt;vpc-id&amp;gt;                             &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# use all subnets of vpc-id&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id=&#34;updating-the-compute-environment-ami&#34;&gt;Updating the Compute-Environment AMI&lt;/h5&gt;
+&lt;p&gt;The compute-environment AMI can be changed by re-issuing the &lt;code&gt;account activate&lt;/code&gt; command with (or without) the &lt;code&gt;--ami&lt;/code&gt; flag.
+If the flag is not provided the latest Amazon Linux 2 ECS optimized image will be used.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account activate                    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Latest Amazon Linux ECS Optimized AMI used for all contexts&lt;/span&gt;
+agc account activate --ami &amp;lt;ami-1234&amp;gt;   &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# AMI 1234 used for new contexts&lt;/span&gt;
+agc account activate                    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Latest Amazon Linux ECS Optimized AMI used for new contexts&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;deactivate&#34;&gt;&lt;code&gt;deactivate&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The &lt;code&gt;deactivate&lt;/code&gt; command is used to remove the core infrastructure deployed by Amazon Genomics CLI in the current region when an
 account is activated. The S3 bucket deployed by Amazon Genomics CLI and its contents are retained. If a VPC and/ or S3 bucket were
 specified by the user during account activation these will also be retained. Any CloudWatch logs produced by Amazon Genomics CLI will
@@ -83,7 +164,7 @@ wish to remove the S3 bucket along with its objects as well as the &lt;a href=&#
 by default so that you can view workflow results and logs even after deactivation.&lt;/p&gt;
 &lt;p&gt;However, if you wish to have this infrastructure remain deployed, you are able to significantly reduce ongoing costs by using &lt;code&gt;agc account activate --usePublicSubnets&lt;/code&gt;.
 This prevents the creation of private subnets with NAT gateways, and the use of VPC endpoints, both of which have associated ongoing costs.
-However please note that &lt;strong&gt;you must also set &lt;code&gt;usePublicSubnets: true&lt;/code&gt; in your &lt;code&gt;agc-config.yaml&lt;/code&gt; if you choose to use this option&lt;/strong&gt;.
+Please note that &lt;strong&gt;you must also set &lt;code&gt;usePublicSubnets: true&lt;/code&gt; in your &lt;code&gt;agc-config.yaml&lt;/code&gt; if you choose to use this option&lt;/strong&gt;.
 Please also note that this is not recommended for security-critical deployments, as it means that any edits to the stack security groups risk exposing worker nodes to the public internet.&lt;/p&gt;
 &lt;h3 id=&#34;network-traffic&#34;&gt;Network traffic&lt;/h3&gt;
 &lt;p&gt;When running genomics workflows, network traffic can become a significant expense when the traffic is routed
@@ -97,6 +178,7 @@ NAT gateways.&lt;/p&gt;
 &lt;h3 id=&#34;vpc-endpoints&#34;&gt;VPC Endpoints&lt;/h3&gt;
 &lt;p&gt;When Amazon Genomics CLI creates a VPC it creates the following VPC endpoints:&lt;/p&gt;
 &lt;ul&gt;
+&lt;li&gt;&lt;code&gt;com.amazonaws.{region}.dynamodb&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.ecr.api&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.ecr.dkr&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.ecs&lt;/code&gt;&lt;/li&gt;
@@ -105,9 +187,12 @@ NAT gateways.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.logs&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.s3&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;If you provide your own VPC we recommend that the VPC also has these endpoints. This will improve the security posture of
+&lt;p&gt;If you provide your own VPC we recommend that the VPC has these endpoints. This will improve the security posture of
 Amazon Genomics CLI in your VPC and will also reduce NAT gateway traffic charges which can be substantial for genomics analyses that use
 large S3 objects and/ or large container images.&lt;/p&gt;
+&lt;p&gt;If you are using Amazon Genomics CLI client on an EC2 instance in a subnet with no access to the internet you will need
+to have a VPC endpoint to &lt;code&gt;com.amazonaws.{region}.execute-api&lt;/code&gt; so that the client can make calls to the REST services
+deployed during account activation.&lt;/p&gt;
 &lt;h2 id=&#34;technical-details&#34;&gt;Technical Details.&lt;/h2&gt;
 &lt;p&gt;Amazon Genomics CLI core infrastructure is defined in code and deployed by &lt;a href=&#34;https://aws.amazon.com/cdk/&#34;&gt;AWS CDK&lt;/a&gt;. The CDK app responsible for creating the core
 infrastructure can be found in &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/tree/main/packages/cdk/apps/core&#34;&gt;&lt;code&gt;packages/cdk/apps/core/&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
@@ -526,11 +611,6 @@ deployed &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomi
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;version&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1.0&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;sourceURL&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;workflows/read.wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;haplotype&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;version&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1.0&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;sourceURL&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;workflows/haplotypecaller-gvcf-gatk4.wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;words-with-vowels&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -731,6 +811,12 @@ to Amazon Genomics CLI through which it will submit workflows and workflow comma
 &lt;td&gt;&lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/snakefiles/writing_snakefiles.html&#34;&gt;Snakemake&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;All versions&lt;/td&gt;
 &lt;td&gt;Head Process&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;http://toil.ucsc-cgl.org/&#34;&gt;Toil&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.commonwl.org/&#34;&gt;CWL&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;All versions up to 1.2&lt;/td&gt;
+&lt;td&gt;Server&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;

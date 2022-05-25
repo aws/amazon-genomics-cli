@@ -27,13 +27,13 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/concepts/accounts/" /><meta property="article:section" content="docs" />
 <meta property="article:published_time" content="2021-09-02T13:52:05-04:00" />
-<meta property="article:modified_time" content="2022-04-19T13:28:00-07:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<meta property="article:modified_time" content="2022-05-25T09:19:28-07:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
 <meta itemprop="name" content="Accounts">
 <meta itemprop="description" content="How AWS Genomics CLI interacts with AWS Accounts
 "><meta itemprop="datePublished" content="2021-09-02T13:52:05-04:00" />
-<meta itemprop="dateModified" content="2022-04-19T13:28:00-07:00" />
-<meta itemprop="wordCount" content="1244">
+<meta itemprop="dateModified" content="2022-05-25T09:19:28-07:00" />
+<meta itemprop="wordCount" content="2032">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Accounts"/>
 <meta name="twitter:description" content="How AWS Genomics CLI interacts with AWS Accounts
@@ -114,7 +114,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.3ceb339afcde8270ff6cb7cf889c6a72.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -136,7 +136,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.3ceb339afcde8270ff6cb7cf889c6a72.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -219,6 +219,8 @@
   <a href="/amazon-genomics-cli/docs/workflow-engines/filesystems/s3/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesfilesystemss3"><span class="">S3 Workflow Filesystem</span></a>
 </li>
   </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginestoil-li">
+  <a href="/amazon-genomics-cli/docs/workflow-engines/toil/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginestoil"><span class="">Toil</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginescromwell-li">
   <a href="/amazon-genomics-cli/docs/workflow-engines/cromwell/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginescromwell"><span class="">Cromwell</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesminiwdl-li">
@@ -435,21 +437,102 @@ for networking and storage this may be the easiest way to activate Amazon Genomi
 <p>You can activate an account using <code>agc account activate</code>. An account must be activated before any contexts can be deployed
 or workflows run.</p>
 <p>Activating an account will also bootstrap the AWS Environment for CDK app deployments.</p>
+<h4 id="using-an-existing-s3-bucket">Using an Existing S3 Bucket</h4>
 <p>Amazon Genomics CLI requires an S3 bucket to store workflow results and associated information. If you prefer to use an existing bucket
 you can use the form  <code>agc account activate --bucket my-existing-bucket</code>. If you do this the AWS <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html">IAM</a> role used to run
 Amazon Genomics CLI must be able to write to that bucket.</p>
+<h4 id="using-an-existing-vpc">Using an Existing VPC</h4>
 <p>To use an existing VPC you can use the form  <code>agc account activate --vpc my-existing-vpc-id</code>. This VPC must have at least
 3 availability zones each with at least one private subnet. The private subnets must have connectivity to the internet,
 such as via a NAT gateway, and connectivity to AWS services either through VPC endpoints or the internet. Amazon Genomics CLI will not
 modify the network topology of the specified VPC.</p>
-<p>Issuing account activate commands more than once effectively updates the core infrastructure with the difference between
-the two commands. For example, if you had previously activated the account using <code>agc account activate</code> and later invoked
-<code>agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id</code> then Amazon Genomics CLI will update to use <code>my-existing-bucket</code>
-and the identified VPC. The old VPC and S3 buckets will be <em>retained</em> according to their retention policy.</p>
-<p>If you initially activated the account with <code>agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id</code>
-and later invoked <code>agc account activate</code> then Amazon Genomics CLI will stop using the previous specified bucket, however the VPC will
-be recalled and re-used. <em>ALL</em> of the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.</p>
-<h3 id="deactivate"><code>deactivate</code></h3>
+<h4 id="specifying-subnets">Specifying Subnets</h4>
+<p>When using an existing VPC you may need to specify which subnets of the VPC can be used for infrastructure. This is useful
+when only some private subnets have internet routing. To do this you can supply a comma separated list of subnet IDs using
+the <code>--subnets</code> flag, or repeat the flag multiple times. For example:</p>
+<p><code>agc account activate --vpc my-existing-vpc-id --subnets subnet-id-1,subnet-id-2 --subnets subnet-id-3</code></p>
+<p>We recommend a minimum of 3 subnets across availability zones to take advantage of EC2 instance availability and to
+ensure high availability of infrastructure.</p>
+<h4 id="using-a-specific-ami-for-compute-environments">Using a Specific AMI for Compute Environments</h4>
+<p>Some organizations restrict the use of AMIs to a pre-approved list. By default, Amazon Genomics CLI uses the most recent
+version of the Amazon Linux 2 ECS Optimized AMI. To change this behavior you can supply the ID of an alternative AMI at
+account activation. This AMI will then be used for all compute environments used by all newly deployed contexts.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">agc account activate --ami &lt;ami-id&gt;
+</code></pre></div><p>There are some specific requirements that the AMI must comply with. It must be a private AMI from the same account that
+you will use for deploying Amazon Genomics CLI infrastructure. It must also be capable of successfully running all parts
+of the <a href="https://github.com/aws/amazon-genomics-cli/blob/main/packages/cdk/lib/constructs/launch-template-data.ts">LaunchTemplate</a>
+executed at startup time including the <a href="https://github.com/aws/amazon-genomics-cli/tree/main/packages/cdk/lib/artifacts/batch-artifacts/ecs-additions">ecs-additions</a>
+dependencies. We recommend an ECS optimized image based on Amazon Linux 2, RHEL, Fedora or similar.</p>
+<p>If the LaunchTemplate cannot complete successfully it will result in an EC2 instance that cannot join a
+compute-cluster and cannot complete workflow tasks. A common symptom of this is workflow tasks that become stuck in a &ldquo;runnable&rdquo;
+state but are never assigned to a cluster node.</p>
+<h4 id="using-only-public-subnets">Using Only Public Subnets</h4>
+<p>Amazon Genomics CLI can create a new VPC with only public subnets to use for its infrastructure using the <code>--usePublicSubnets</code> flag.</p>
+<p><code>agc account activate --usePublicSubnets</code></p>
+<p>This can reduce costs by removing the need for NAT Gateways and VPC Gateway Endpoints to route internet traffic from private subnets.
+It can also reduce the number of Elastic IP Addresses consumed by your infrastructure.</p>
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+
+    When using a VPC with only public subnets, you will need to ensure that the contexts defined in <code>agc-project.yaml</code> files declare that they
+will use public subnets. For example:
+
+</div>
+
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">contexts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">myContext</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">usePublicSubnets</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">nextflow</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div>
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+
+    Currently, use of public subnets is only supported for contexts that use the Nextflow engine. Use of public IPs with the
+Cromwell server creates a security risk and will fail. Assignment of public IPs to AWS Batch Fargate tasks (as used by miniwdl and SnakeMake)
+is possible but will require changes to the WES adapters of those engines. If you need this please file a <a href="https://github.com/aws/amazon-genomics-cli/issues/new?labels=enhancement">feature request</a> with your use case
+
+</div>
+
+<h5 id="security-considerations">Security Considerations</h5>
+<p>Although your infrastructure will be protected by security groups you should be aware that any manual modification of these may result in exposing your
+infrastructure to the internet. For this reason <em>we do <strong>not</strong> recommend using this configuration in production
+or with sensitive data</em>.</p>
+<h4 id="updating">Updating</h4>
+<p>Issuing <code>account activate</code> commands more than once effectively updates the core infrastructure with the difference between
+the two commands according to the rules below.</p>
+<h5 id="updating-the-vpc">Updating the VPC</h5>
+<p>You may change the VPC used by issuing the command <code>agc account activate --vpc &lt;vpc-id&gt;</code>. If a <code>--vpc</code> argument is <em>not</em>
+provided as part of an <code>agc account activate</code> command then the last VPC used will be &lsquo;remembered&rsquo; and used by default.</p>
+<p>If you wish to change to use a new default VPC created by Amazon Genomics CLI you must deactivate (<code>agc account deactivate</code>)
+and reactivate with no <code>--vpc</code> flag.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">agc account activate               <span style="color:#8f5902;font-style:italic"># VPC 1 created.</span>
+agc account activate --vpc-id abc  <span style="color:#8f5902;font-style:italic"># VPC 1 destroyed and customer VPC abc used. </span>
+agc account activate               <span style="color:#8f5902;font-style:italic"># VPC 2 created. Customer VPC retained.</span>
+agc account deactivate             <span style="color:#8f5902;font-style:italic"># AGC core infrastructure destroyed. Customer VPC abc retained.</span>
+</code></pre></div><h5 id="updating-to-use-public-subnets-only">Updating to Use Public Subnets Only</h5>
+<p>If you wish to change the VPC to use public subnets only, or change it from public subnets to private subnets you must
+deactivate the account and reactivate it with (or without) the <code>--usePublicSubnets</code> flag. For example:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">agc account activate --usePublicSubnets <span style="color:#8f5902;font-style:italic"># New VPC with only public subnets</span>
+agc account deactivate                  <span style="color:#8f5902;font-style:italic"># VPC destroyed</span>
+agc account activate                    <span style="color:#8f5902;font-style:italic"># New VPC with private subnets</span>
+</code></pre></div><h5 id="updating-selected-subnets">Updating Selected Subnets</h5>
+<p>To change a VPC to use a different selection of subnets you must supply both the VPC id and the required subnet IDs.
+If you omit the <code>--subnets</code> flag, then future context deployments will use <em>all</em> private subnets of the VPC.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">agc account activate --vpc &lt;vpc-id&gt; --subnets &lt;subnet1,subnet2&gt; <span style="color:#8f5902;font-style:italic"># use subnets 1 and 2 of vpc-id </span>
+agc account activate --vpc &lt;vpc-id&gt; --subnets &lt;subnet1,subnet4&gt; <span style="color:#8f5902;font-style:italic"># use subnets 1 and 4 of vpc-id</span>
+agc account activate --vpc &lt;vpc-id&gt;                             <span style="color:#8f5902;font-style:italic"># use all subnets of vpc-id</span>
+</code></pre></div><h5 id="updating-the-compute-environment-ami">Updating the Compute-Environment AMI</h5>
+<p>The compute-environment AMI can be changed by re-issuing the <code>account activate</code> command with (or without) the <code>--ami</code> flag.
+If the flag is not provided the latest Amazon Linux 2 ECS optimized image will be used.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">agc account activate                    <span style="color:#8f5902;font-style:italic"># Latest Amazon Linux ECS Optimized AMI used for all contexts</span>
+agc account activate --ami &lt;ami-1234&gt;   <span style="color:#8f5902;font-style:italic"># AMI 1234 used for new contexts</span>
+agc account activate                    <span style="color:#8f5902;font-style:italic"># Latest Amazon Linux ECS Optimized AMI used for new contexts</span>
+</code></pre></div><h3 id="deactivate"><code>deactivate</code></h3>
 <p>The <code>deactivate</code> command is used to remove the core infrastructure deployed by Amazon Genomics CLI in the current region when an
 account is activated. The S3 bucket deployed by Amazon Genomics CLI and its contents are retained. If a VPC and/ or S3 bucket were
 specified by the user during account activation these will also be retained. Any CloudWatch logs produced by Amazon Genomics CLI will
@@ -470,7 +553,7 @@ wish to remove the S3 bucket along with its objects as well as the <a href="http
 by default so that you can view workflow results and logs even after deactivation.</p>
 <p>However, if you wish to have this infrastructure remain deployed, you are able to significantly reduce ongoing costs by using <code>agc account activate --usePublicSubnets</code>.
 This prevents the creation of private subnets with NAT gateways, and the use of VPC endpoints, both of which have associated ongoing costs.
-However please note that <strong>you must also set <code>usePublicSubnets: true</code> in your <code>agc-config.yaml</code> if you choose to use this option</strong>.
+Please note that <strong>you must also set <code>usePublicSubnets: true</code> in your <code>agc-config.yaml</code> if you choose to use this option</strong>.
 Please also note that this is not recommended for security-critical deployments, as it means that any edits to the stack security groups risk exposing worker nodes to the public internet.</p>
 <h3 id="network-traffic">Network traffic</h3>
 <p>When running genomics workflows, network traffic can become a significant expense when the traffic is routed
@@ -484,6 +567,7 @@ NAT gateways.</p>
 <h3 id="vpc-endpoints">VPC Endpoints</h3>
 <p>When Amazon Genomics CLI creates a VPC it creates the following VPC endpoints:</p>
 <ul>
+<li><code>com.amazonaws.{region}.dynamodb</code></li>
 <li><code>com.amazonaws.{region}.ecr.api</code></li>
 <li><code>com.amazonaws.{region}.ecr.dkr</code></li>
 <li><code>com.amazonaws.{region}.ecs</code></li>
@@ -492,9 +576,12 @@ NAT gateways.</p>
 <li><code>com.amazonaws.{region}.logs</code></li>
 <li><code>com.amazonaws.{region}.s3</code></li>
 </ul>
-<p>If you provide your own VPC we recommend that the VPC also has these endpoints. This will improve the security posture of
+<p>If you provide your own VPC we recommend that the VPC has these endpoints. This will improve the security posture of
 Amazon Genomics CLI in your VPC and will also reduce NAT gateway traffic charges which can be substantial for genomics analyses that use
 large S3 objects and/ or large container images.</p>
+<p>If you are using Amazon Genomics CLI client on an EC2 instance in a subnet with no access to the internet you will need
+to have a VPC endpoint to <code>com.amazonaws.{region}.execute-api</code> so that the client can make calls to the REST services
+deployed during account activation.</p>
 <h2 id="technical-details">Technical Details.</h2>
 <p>Amazon Genomics CLI core infrastructure is defined in code and deployed by <a href="https://aws.amazon.com/cdk/">AWS CDK</a>. The CDK app responsible for creating the core
 infrastructure can be found in <a href="https://github.com/aws/amazon-genomics-cli/tree/main/packages/cdk/apps/core"><code>packages/cdk/apps/core/</code></a>.</p>
@@ -502,7 +589,7 @@ infrastructure can be found in <a href="https://github.com/aws/amazon-genomics-c
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 19, 2022: <a href="https://github.com/aws/amazon-genomics-cli/commit/7b120e788bd3d1ccd1d21f118c52123e70c31b9d">Merge pull request #408 from aws/bump/v1.4.0 (7b120e7)</a>
+  Last modified May 25, 2022: <a href="https://github.com/aws/amazon-genomics-cli/commit/86d5072fa2100178ae3a1c4260bb60a0edec238b">Merge pull request #466 from aws/bump/v1.5.0 (86d5072)</a>
 </div>
 
 </div>

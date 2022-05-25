@@ -48,21 +48,102 @@ for networking and storage this may be the easiest way to activate Amazon Genomi
 &lt;p&gt;You can activate an account using &lt;code&gt;agc account activate&lt;/code&gt;. An account must be activated before any contexts can be deployed
 or workflows run.&lt;/p&gt;
 &lt;p&gt;Activating an account will also bootstrap the AWS Environment for CDK app deployments.&lt;/p&gt;
+&lt;h4 id=&#34;using-an-existing-s3-bucket&#34;&gt;Using an Existing S3 Bucket&lt;/h4&gt;
 &lt;p&gt;Amazon Genomics CLI requires an S3 bucket to store workflow results and associated information. If you prefer to use an existing bucket
 you can use the form  &lt;code&gt;agc account activate --bucket my-existing-bucket&lt;/code&gt;. If you do this the AWS &lt;a href=&#34;https://docs.aws.amazon.com/IAM/latest/UserGuide/index.html&#34;&gt;IAM&lt;/a&gt; role used to run
 Amazon Genomics CLI must be able to write to that bucket.&lt;/p&gt;
+&lt;h4 id=&#34;using-an-existing-vpc&#34;&gt;Using an Existing VPC&lt;/h4&gt;
 &lt;p&gt;To use an existing VPC you can use the form  &lt;code&gt;agc account activate --vpc my-existing-vpc-id&lt;/code&gt;. This VPC must have at least
 3 availability zones each with at least one private subnet. The private subnets must have connectivity to the internet,
 such as via a NAT gateway, and connectivity to AWS services either through VPC endpoints or the internet. Amazon Genomics CLI will not
 modify the network topology of the specified VPC.&lt;/p&gt;
-&lt;p&gt;Issuing account activate commands more than once effectively updates the core infrastructure with the difference between
-the two commands. For example, if you had previously activated the account using &lt;code&gt;agc account activate&lt;/code&gt; and later invoked
-&lt;code&gt;agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id&lt;/code&gt; then Amazon Genomics CLI will update to use &lt;code&gt;my-existing-bucket&lt;/code&gt;
-and the identified VPC. The old VPC and S3 buckets will be &lt;em&gt;retained&lt;/em&gt; according to their retention policy.&lt;/p&gt;
-&lt;p&gt;If you initially activated the account with &lt;code&gt;agc account activate --bucket my-existing-bucket --vpc my-existing-vpc-id&lt;/code&gt;
-and later invoked &lt;code&gt;agc account activate&lt;/code&gt; then Amazon Genomics CLI will stop using the previous specified bucket, however the VPC will
-be recalled and re-used. &lt;em&gt;ALL&lt;/em&gt; of the pre-existing S3 and VPC infrastructure will be retained and a new bucket will be created for use by Amazon Genomics CLI.&lt;/p&gt;
-&lt;h3 id=&#34;deactivate&#34;&gt;&lt;code&gt;deactivate&lt;/code&gt;&lt;/h3&gt;
+&lt;h4 id=&#34;specifying-subnets&#34;&gt;Specifying Subnets&lt;/h4&gt;
+&lt;p&gt;When using an existing VPC you may need to specify which subnets of the VPC can be used for infrastructure. This is useful
+when only some private subnets have internet routing. To do this you can supply a comma separated list of subnet IDs using
+the &lt;code&gt;--subnets&lt;/code&gt; flag, or repeat the flag multiple times. For example:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;agc account activate --vpc my-existing-vpc-id --subnets subnet-id-1,subnet-id-2 --subnets subnet-id-3&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We recommend a minimum of 3 subnets across availability zones to take advantage of EC2 instance availability and to
+ensure high availability of infrastructure.&lt;/p&gt;
+&lt;h4 id=&#34;using-a-specific-ami-for-compute-environments&#34;&gt;Using a Specific AMI for Compute Environments&lt;/h4&gt;
+&lt;p&gt;Some organizations restrict the use of AMIs to a pre-approved list. By default, Amazon Genomics CLI uses the most recent
+version of the Amazon Linux 2 ECS Optimized AMI. To change this behavior you can supply the ID of an alternative AMI at
+account activation. This AMI will then be used for all compute environments used by all newly deployed contexts.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account activate --ami &amp;lt;ami-id&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are some specific requirements that the AMI must comply with. It must be a private AMI from the same account that
+you will use for deploying Amazon Genomics CLI infrastructure. It must also be capable of successfully running all parts
+of the &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/blob/main/packages/cdk/lib/constructs/launch-template-data.ts&#34;&gt;LaunchTemplate&lt;/a&gt;
+executed at startup time including the &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/tree/main/packages/cdk/lib/artifacts/batch-artifacts/ecs-additions&#34;&gt;ecs-additions&lt;/a&gt;
+dependencies. We recommend an ECS optimized image based on Amazon Linux 2, RHEL, Fedora or similar.&lt;/p&gt;
+&lt;p&gt;If the LaunchTemplate cannot complete successfully it will result in an EC2 instance that cannot join a
+compute-cluster and cannot complete workflow tasks. A common symptom of this is workflow tasks that become stuck in a &amp;ldquo;runnable&amp;rdquo;
+state but are never assigned to a cluster node.&lt;/p&gt;
+&lt;h4 id=&#34;using-only-public-subnets&#34;&gt;Using Only Public Subnets&lt;/h4&gt;
+&lt;p&gt;Amazon Genomics CLI can create a new VPC with only public subnets to use for its infrastructure using the &lt;code&gt;--usePublicSubnets&lt;/code&gt; flag.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;agc account activate --usePublicSubnets&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This can reduce costs by removing the need for NAT Gateways and VPC Gateway Endpoints to route internet traffic from private subnets.
+It can also reduce the number of Elastic IP Addresses consumed by your infrastructure.&lt;/p&gt;
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+
+    When using a VPC with only public subnets, you will need to ensure that the contexts defined in &lt;code&gt;agc-project.yaml&lt;/code&gt; files declare that they
+will use public subnets. For example:
+
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;myContext&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;usePublicSubnets&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;nextflow&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+
+    Currently, use of public subnets is only supported for contexts that use the Nextflow engine. Use of public IPs with the
+Cromwell server creates a security risk and will fail. Assignment of public IPs to AWS Batch Fargate tasks (as used by miniwdl and SnakeMake)
+is possible but will require changes to the WES adapters of those engines. If you need this please file a &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/issues/new?labels=enhancement&#34;&gt;feature request&lt;/a&gt; with your use case
+
+&lt;/div&gt;
+
+&lt;h5 id=&#34;security-considerations&#34;&gt;Security Considerations&lt;/h5&gt;
+&lt;p&gt;Although your infrastructure will be protected by security groups you should be aware that any manual modification of these may result in exposing your
+infrastructure to the internet. For this reason &lt;em&gt;we do &lt;strong&gt;not&lt;/strong&gt; recommend using this configuration in production
+or with sensitive data&lt;/em&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;updating&#34;&gt;Updating&lt;/h4&gt;
+&lt;p&gt;Issuing &lt;code&gt;account activate&lt;/code&gt; commands more than once effectively updates the core infrastructure with the difference between
+the two commands according to the rules below.&lt;/p&gt;
+&lt;h5 id=&#34;updating-the-vpc&#34;&gt;Updating the VPC&lt;/h5&gt;
+&lt;p&gt;You may change the VPC used by issuing the command &lt;code&gt;agc account activate --vpc &amp;lt;vpc-id&amp;gt;&lt;/code&gt;. If a &lt;code&gt;--vpc&lt;/code&gt; argument is &lt;em&gt;not&lt;/em&gt;
+provided as part of an &lt;code&gt;agc account activate&lt;/code&gt; command then the last VPC used will be &amp;lsquo;remembered&amp;rsquo; and used by default.&lt;/p&gt;
+&lt;p&gt;If you wish to change to use a new default VPC created by Amazon Genomics CLI you must deactivate (&lt;code&gt;agc account deactivate&lt;/code&gt;)
+and reactivate with no &lt;code&gt;--vpc&lt;/code&gt; flag.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account activate               &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# VPC 1 created.&lt;/span&gt;
+agc account activate --vpc-id abc  &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# VPC 1 destroyed and customer VPC abc used. &lt;/span&gt;
+agc account activate               &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# VPC 2 created. Customer VPC retained.&lt;/span&gt;
+agc account deactivate             &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# AGC core infrastructure destroyed. Customer VPC abc retained.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id=&#34;updating-to-use-public-subnets-only&#34;&gt;Updating to Use Public Subnets Only&lt;/h5&gt;
+&lt;p&gt;If you wish to change the VPC to use public subnets only, or change it from public subnets to private subnets you must
+deactivate the account and reactivate it with (or without) the &lt;code&gt;--usePublicSubnets&lt;/code&gt; flag. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account activate --usePublicSubnets &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# New VPC with only public subnets&lt;/span&gt;
+agc account deactivate                  &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# VPC destroyed&lt;/span&gt;
+agc account activate                    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# New VPC with private subnets&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id=&#34;updating-selected-subnets&#34;&gt;Updating Selected Subnets&lt;/h5&gt;
+&lt;p&gt;To change a VPC to use a different selection of subnets you must supply both the VPC id and the required subnet IDs.
+If you omit the &lt;code&gt;--subnets&lt;/code&gt; flag, then future context deployments will use &lt;em&gt;all&lt;/em&gt; private subnets of the VPC.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account activate --vpc &amp;lt;vpc-id&amp;gt; --subnets &amp;lt;subnet1,subnet2&amp;gt; &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# use subnets 1 and 2 of vpc-id &lt;/span&gt;
+agc account activate --vpc &amp;lt;vpc-id&amp;gt; --subnets &amp;lt;subnet1,subnet4&amp;gt; &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# use subnets 1 and 4 of vpc-id&lt;/span&gt;
+agc account activate --vpc &amp;lt;vpc-id&amp;gt;                             &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# use all subnets of vpc-id&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h5 id=&#34;updating-the-compute-environment-ami&#34;&gt;Updating the Compute-Environment AMI&lt;/h5&gt;
+&lt;p&gt;The compute-environment AMI can be changed by re-issuing the &lt;code&gt;account activate&lt;/code&gt; command with (or without) the &lt;code&gt;--ami&lt;/code&gt; flag.
+If the flag is not provided the latest Amazon Linux 2 ECS optimized image will be used.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc account activate                    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Latest Amazon Linux ECS Optimized AMI used for all contexts&lt;/span&gt;
+agc account activate --ami &amp;lt;ami-1234&amp;gt;   &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# AMI 1234 used for new contexts&lt;/span&gt;
+agc account activate                    &lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;# Latest Amazon Linux ECS Optimized AMI used for new contexts&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;deactivate&#34;&gt;&lt;code&gt;deactivate&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The &lt;code&gt;deactivate&lt;/code&gt; command is used to remove the core infrastructure deployed by Amazon Genomics CLI in the current region when an
 account is activated. The S3 bucket deployed by Amazon Genomics CLI and its contents are retained. If a VPC and/ or S3 bucket were
 specified by the user during account activation these will also be retained. Any CloudWatch logs produced by Amazon Genomics CLI will
@@ -83,7 +164,7 @@ wish to remove the S3 bucket along with its objects as well as the &lt;a href=&#
 by default so that you can view workflow results and logs even after deactivation.&lt;/p&gt;
 &lt;p&gt;However, if you wish to have this infrastructure remain deployed, you are able to significantly reduce ongoing costs by using &lt;code&gt;agc account activate --usePublicSubnets&lt;/code&gt;.
 This prevents the creation of private subnets with NAT gateways, and the use of VPC endpoints, both of which have associated ongoing costs.
-However please note that &lt;strong&gt;you must also set &lt;code&gt;usePublicSubnets: true&lt;/code&gt; in your &lt;code&gt;agc-config.yaml&lt;/code&gt; if you choose to use this option&lt;/strong&gt;.
+Please note that &lt;strong&gt;you must also set &lt;code&gt;usePublicSubnets: true&lt;/code&gt; in your &lt;code&gt;agc-config.yaml&lt;/code&gt; if you choose to use this option&lt;/strong&gt;.
 Please also note that this is not recommended for security-critical deployments, as it means that any edits to the stack security groups risk exposing worker nodes to the public internet.&lt;/p&gt;
 &lt;h3 id=&#34;network-traffic&#34;&gt;Network traffic&lt;/h3&gt;
 &lt;p&gt;When running genomics workflows, network traffic can become a significant expense when the traffic is routed
@@ -97,6 +178,7 @@ NAT gateways.&lt;/p&gt;
 &lt;h3 id=&#34;vpc-endpoints&#34;&gt;VPC Endpoints&lt;/h3&gt;
 &lt;p&gt;When Amazon Genomics CLI creates a VPC it creates the following VPC endpoints:&lt;/p&gt;
 &lt;ul&gt;
+&lt;li&gt;&lt;code&gt;com.amazonaws.{region}.dynamodb&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.ecr.api&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.ecr.dkr&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.ecs&lt;/code&gt;&lt;/li&gt;
@@ -105,9 +187,12 @@ NAT gateways.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.logs&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.s3&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;If you provide your own VPC we recommend that the VPC also has these endpoints. This will improve the security posture of
+&lt;p&gt;If you provide your own VPC we recommend that the VPC has these endpoints. This will improve the security posture of
 Amazon Genomics CLI in your VPC and will also reduce NAT gateway traffic charges which can be substantial for genomics analyses that use
 large S3 objects and/ or large container images.&lt;/p&gt;
+&lt;p&gt;If you are using Amazon Genomics CLI client on an EC2 instance in a subnet with no access to the internet you will need
+to have a VPC endpoint to &lt;code&gt;com.amazonaws.{region}.execute-api&lt;/code&gt; so that the client can make calls to the REST services
+deployed during account activation.&lt;/p&gt;
 &lt;h2 id=&#34;technical-details&#34;&gt;Technical Details.&lt;/h2&gt;
 &lt;p&gt;Amazon Genomics CLI core infrastructure is defined in code and deployed by &lt;a href=&#34;https://aws.amazon.com/cdk/&#34;&gt;AWS CDK&lt;/a&gt;. The CDK app responsible for creating the core
 infrastructure can be found in &lt;a href=&#34;https://github.com/aws/amazon-genomics-cli/tree/main/packages/cdk/apps/core&#34;&gt;&lt;code&gt;packages/cdk/apps/core/&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
@@ -288,7 +373,6 @@ task hello {
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;agc workflow list
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For the &lt;code&gt;demo-wdl-project&lt;/code&gt;, this should return something like:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;2021-09-02T05:14:47Z 𝒊  Listing workflows.
-WORKFLOWNAME    haplotype
 WORKFLOWNAME    hello
 WORKFLOWNAME    read
 WORKFLOWNAME    words-with-vowels
@@ -655,6 +739,59 @@ on any deployed contexts or workflows defined in this project allowing costs to 
 &lt;p&gt;A project is purely a &lt;a href=&#34;https://en.wikipedia.org/wiki/YAML&#34;&gt;YAML&lt;/a&gt; definition. The values in the &lt;code&gt;agc-project.yaml&lt;/code&gt; file are used by CDK when Amazon Genomics CLI deploys contexts
 and when Amazon Genomics CLI runs workflows. The project itself has no direct infrastructure. The project &lt;code&gt;name&lt;/code&gt; is used to help namespace
 context infrastructure.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Toil</title>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/toil/</link>
+      <pubDate>Tue, 26 Apr 2022 15:34:00 -0400</pubDate>
+      
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/toil/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://toil.ucsc-cgl.org/&#34;&gt;Toil&lt;/a&gt; is a workflow engine developed by the
+&lt;a href=&#34;https://cglgenomics.ucsc.edu/&#34;&gt;Computational Genomics Lab&lt;/a&gt; at the
+&lt;a href=&#34;https://genomics.ucsc.edu/&#34;&gt;UC Santa Cruz Genomics Institute&lt;/a&gt;. In Amazon Genomics
+CLI, Toil is an engine that can be deployed in a
+&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt; as an
+&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/engines/&#34;&gt;engine&lt;/a&gt; to run workflows based on the
+&lt;a href=&#34;https://www.commonwl.org/&#34;&gt;CWL&lt;/a&gt; specification.&lt;/p&gt;
+&lt;p&gt;Toil is an open source project distributed by UC Santa Cruz under the &lt;a href=&#34;https://github.com/DataBiosphere/toil/blob/master/LICENSE&#34;&gt;Apache 2
+license&lt;/a&gt; and
+available on
+&lt;a href=&#34;https://github.com/DataBiosphere/toil&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
+&lt;p&gt;There are two components of a Toil engine as deployed in an Amazon Genomics
+CLI context:&lt;/p&gt;
+&lt;h3 id=&#34;engine-service&#34;&gt;Engine Service&lt;/h3&gt;
+&lt;p&gt;The Toil engine is run in &amp;ldquo;server mode&amp;rdquo; as a container service in ECS. The
+engine can run multiple workflows asynchronously. Workflow tasks are run in an
+elastic &lt;a href=&#34;#compute-environment&#34;&gt;compute environment&lt;/a&gt; and monitored by Toil.
+Amazon Genomics CLI communicates with the Toil engine via a GA4GH
+&lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service
+which the server offers, available via API Gateway.&lt;/p&gt;
+&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
+&lt;p&gt;Workflow tasks are submitted by Toil to an AWS Batch queue and run in
+Toil-provided containers using an AWS Compute Environment. Tasks which use the
+&lt;a href=&#34;https://www.commonwl.org/user_guide/07-containers/index.html&#34;&gt;CWL &lt;code&gt;DockerRequirement&lt;/code&gt;&lt;/a&gt;
+will additionally be run in sibling containers on the host Docker daemon. AWS
+Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on
+container hosts as space allows.&lt;/p&gt;
+&lt;h4 id=&#34;disk-expansion&#34;&gt;Disk Expansion&lt;/h4&gt;
+&lt;p&gt;Container hosts in the Batch compute environment use EBS volumes as local
+scratch space. As an EBS volume approaches a capacity threshold, new EBS
+volumes will be attached and merged into the file system. These volumes are
+destroyed when AWS Batch terminates the container host. CWL disk space
+requirements are ignored by Toil when running against AWS Batch.&lt;/p&gt;
+&lt;p&gt;This setup means that workflows that succeed on AGC may fail on other CWL
+runners (because they do not request enough disk space) and workflows that
+succeed on other CWL runners may fail on AGC (because they allocate disk space
+faster than the expansion process can react).&lt;/p&gt;
 
       </description>
     </item>
@@ -1347,11 +1484,6 @@ deployed &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomi
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;version&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1.0&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;sourceURL&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;workflows/read.wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;haplotype&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;version&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1.0&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;sourceURL&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;workflows/haplotypecaller-gvcf-gatk4.wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;words-with-vowels&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;language&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -1553,6 +1685,12 @@ to Amazon Genomics CLI through which it will submit workflows and workflow comma
 &lt;td&gt;All versions&lt;/td&gt;
 &lt;td&gt;Head Process&lt;/td&gt;
 &lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;http://toil.ucsc-cgl.org/&#34;&gt;Toil&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://www.commonwl.org/&#34;&gt;CWL&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;All versions up to 1.2&lt;/td&gt;
+&lt;td&gt;Server&lt;/td&gt;
+&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;Overtime we plan to add additional engine and language support and provide the ability for third party developers to
@@ -1703,7 +1841,7 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
     <item>
       <title>Docs: agc</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc/</guid>
       <description>
@@ -1743,7 +1881,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     <item>
       <title>Docs: agc account</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account/</guid>
       <description>
@@ -1776,7 +1914,7 @@ These commands should be used to install or remove AGC from your AWS account.&lt
     <item>
       <title>Docs: agc account activate</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_activate/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_activate/</guid>
       <description>
@@ -1794,11 +1932,17 @@ it needs to that account and region.&lt;/p&gt;
 Activate AGC in your AWS account with a custom S3 bucket and VPC.
 /code $ agc account activate --bucket my-custom-bucket --vpc my-vpc-id
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;      --bucket string         The name of an S3 bucket that AGC will use to store its data.
+&lt;pre&gt;&lt;code&gt;      --ami string            The AMI that will be used by all workflow compute environments deployed in all contexts.
+      --bucket string         The name of an S3 bucket that AGC will use to store its data.
                               An autogenerated name will be used if not specified. A new bucket will be created if the bucket does not exist.
   -h, --help                  help for activate
+      --subnets strings       The list of private subnet IDs to use when specifying a VPC to run in. May only be used with the 
+                              &#39;--vpc&#39; flag. If not supplied then all private subnets of a VPC will be used as possible targets of compute infrastructure.
+                              Each subnet must have access to AWS service endpoints e.g. using VPC Gateway Endpoints or via a route to the public internet.
+                              Subnet names may be a comma separated list or supplied as repeated flags. (e.g. &#39;--subnets subnet-1234 --subnets subnet-2345, subnet-3456&#39;)
+                              
       --tags stringToString   A list of comma separated tags to be applied to all AGC resources in this account
-                              (i.e. --tags &amp;quot;k1=v1&amp;quot;,&amp;quot;k2=v2&amp;quot;). Each key-value pair must be quoted as shown in the example,
+                              (e.g. --tags &amp;quot;k1=v1&amp;quot;,&amp;quot;k2=v2&amp;quot;). Each key-value pair must be quoted as shown in the example,
                               otherwise the parsing will fail. (default [])
       --usePublicSubnets      Do not create a NAT gateway or VPC endpoints, to lower operating costs. 
                               You must enable the usePublicSubnets option in your project context if you use this flag.
@@ -1821,7 +1965,7 @@ Install or remove AGC from your account.&lt;/li&gt;
     <item>
       <title>Docs: agc account deactivate</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_deactivate/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_deactivate/</guid>
       <description>
@@ -1861,7 +2005,7 @@ Install or remove AGC from your account.&lt;/li&gt;
     <item>
       <title>Docs: agc completion</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion/</guid>
       <description>
@@ -1893,7 +2037,7 @@ See each sub-command&amp;rsquo;s help for details on how to use the generated sc
     <item>
       <title>Docs: agc completion bash</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_bash/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_bash/</guid>
       <description>
@@ -1932,7 +2076,7 @@ $ agc completion bash &amp;gt; /usr/local/etc/bash_completion.d/agc&lt;/p&gt;
     <item>
       <title>Docs: agc completion fish</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_fish/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_fish/</guid>
       <description>
@@ -1966,7 +2110,7 @@ $ agc completion fish &amp;gt; ~/.config/fish/completions/agc.fish&lt;/p&gt;
     <item>
       <title>Docs: agc completion powershell</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_powershell/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_powershell/</guid>
       <description>
@@ -1999,7 +2143,7 @@ to your powershell profile.&lt;/p&gt;
     <item>
       <title>Docs: agc completion zsh</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_zsh/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_zsh/</guid>
       <description>
@@ -2037,7 +2181,7 @@ to enable it.  You can execute the following once:&lt;/p&gt;
     <item>
       <title>Docs: agc configure</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure/</guid>
       <description>
@@ -2070,7 +2214,7 @@ Configure local settings and preferences to customize the CLI experience.&lt;/p&
     <item>
       <title>Docs: agc configure describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_describe/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_describe/</guid>
       <description>
@@ -2104,7 +2248,7 @@ Configuration is stored per user.&lt;/li&gt;
     <item>
       <title>Docs: agc configure email</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_email/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_email/</guid>
       <description>
@@ -2132,7 +2276,7 @@ Configuration is stored per user.&lt;/li&gt;
     <item>
       <title>Docs: agc configure format</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_format/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_format/</guid>
       <description>
@@ -2160,7 +2304,7 @@ Configuration is stored per user.&lt;/li&gt;
     <item>
       <title>Docs: agc context</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context/</guid>
       <description>
@@ -2197,7 +2341,7 @@ particular context.&lt;/p&gt;
     <item>
       <title>Docs: agc context deploy</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_deploy/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_deploy/</guid>
       <description>
@@ -2240,7 +2384,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_describe/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_describe/</guid>
       <description>
@@ -2279,7 +2423,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context destroy</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_destroy/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_destroy/</guid>
       <description>
@@ -2316,7 +2460,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context list</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_list/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_list/</guid>
       <description>
@@ -2349,7 +2493,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context status</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_status/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_status/</guid>
       <description>
@@ -2384,7 +2528,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc logs</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs/</guid>
       <description>
@@ -2420,7 +2564,7 @@ access rights to.&lt;/p&gt;
     <item>
       <title>Docs: agc logs access</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_access/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_access/</guid>
       <description>
@@ -2466,7 +2610,7 @@ If no start, end, or look back periods are set, this command will show logs from
     <item>
       <title>Docs: agc logs adapter</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_adapter/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_adapter/</guid>
       <description>
@@ -2512,7 +2656,7 @@ If no start, end, or look back periods are set, this command will show logs from
     <item>
       <title>Docs: agc logs engine</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_engine/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_engine/</guid>
       <description>
@@ -2559,7 +2703,7 @@ If no start, end, or look back periods are set, this command will show logs from
     <item>
       <title>Docs: agc logs workflow</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_workflow/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_workflow/</guid>
       <description>
@@ -2605,7 +2749,7 @@ If the &amp;ndash;run flag is omitted then the latest workflow run is used.&lt;/
     <item>
       <title>Docs: agc project</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project/</guid>
       <description>
@@ -2637,7 +2781,7 @@ and contexts you are working with.&lt;/p&gt;
     <item>
       <title>Docs: agc project describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_describe/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_describe/</guid>
       <description>
@@ -2671,7 +2815,7 @@ DATA: Location ReadOnly&lt;/p&gt;
     <item>
       <title>Docs: agc project init</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_init/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_init/</guid>
       <description>
@@ -2682,14 +2826,14 @@ DATA: Location ReadOnly&lt;/p&gt;
 &lt;h3 id=&#34;synopsis&#34;&gt;Synopsis&lt;/h3&gt;
 &lt;p&gt;Initialize current directory with a new empty AGC project for a particular workflow type.
 Project specification file &amp;lsquo;agc-project.yaml&amp;rsquo; will be created in the current directory.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;agc project init project_name --workflow-type {wdl|nextflow|snakemake} [flags]
+&lt;pre&gt;&lt;code&gt;agc project init project_name --workflow-type {cwl|nextflow|snakemake|wdl} [flags]
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;
 Initialize a new project named &amp;quot;myProject&amp;quot;.
 /code $ agc project init myProject --workflow-type my_workflow_type
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help                   help for init
-  -w, --workflow-type string   uses the specified workflow type for the default context. Valid values include [nextflow snakemake wdl]
+  -w, --workflow-type string   uses the specified workflow type for the default context. Valid values include [cwl nextflow snakemake wdl]
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;      --format string   Format option for output. Valid options are: text, table, json
       --silent          Suppresses all diagnostic information.
@@ -2705,7 +2849,7 @@ Initialize a new project named &amp;quot;myProject&amp;quot;.
     <item>
       <title>Docs: agc project validate</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_validate/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_validate/</guid>
       <description>
@@ -2740,7 +2884,7 @@ DATA: Location ReadOnly&lt;/p&gt;
     <item>
       <title>Docs: agc workflow</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow/</guid>
       <description>
@@ -2779,7 +2923,7 @@ typed according to which workflow definition language they use (e.g. WDL).&lt;/p
     <item>
       <title>Docs: agc workflow describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_describe/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_describe/</guid>
       <description>
@@ -2813,7 +2957,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     <item>
       <title>Docs: agc workflow list</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_list/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
+      <pubDate>Wed, 25 May 2022 20:22:30 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_list/</guid>
       <description>
@@ -2829,34 +2973,6 @@ WORKFLOWNAME: Name&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc workflow list [flags]
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -h, --help   help for list
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
-      --format string       Format option for output. Valid options are: text, table, json
-      --silent              Suppresses all diagnostic information.
-  -v, --verbose             Display verbose diagnostic information.
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;see-also&#34;&gt;SEE ALSO&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/reference/agc_workflow/&#34;&gt;agc workflow&lt;/a&gt;	 - Commands for workflows.
-Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/li&gt;
-&lt;/ul&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: agc workflow output</title>
-      <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_output/</link>
-      <pubDate>Wed, 20 Apr 2022 17:03:51 +0000</pubDate>
-      
-      <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_output/</guid>
-      <description>
-        
-        
-        &lt;h2 id=&#34;agc-workflow-output&#34;&gt;agc workflow output&lt;/h2&gt;
-&lt;p&gt;Show the output for a workflow run in the current project.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;agc workflow output run_id [flags]
-&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options&#34;&gt;Options&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;  -h, --help   help for output
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;options-inherited-from-parent-commands&#34;&gt;Options inherited from parent commands&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;  -p, --awsProfile string   Use the provided AWS CLI profile.
       --format string       Format option for output. Valid options are: text, table, json

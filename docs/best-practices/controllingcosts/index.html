@@ -27,13 +27,13 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/best-practices/controllingcosts/" /><meta property="article:section" content="docs" />
 <meta property="article:published_time" content="2021-09-17T18:01:56-04:00" />
-<meta property="article:modified_time" content="2022-04-19T13:28:00-07:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<meta property="article:modified_time" content="2022-05-25T09:19:28-07:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
 <meta itemprop="name" content="Controlling Costs">
 <meta itemprop="description" content="Monitoring costs and design considerations to reduce costs
 "><meta itemprop="datePublished" content="2021-09-17T18:01:56-04:00" />
-<meta itemprop="dateModified" content="2022-04-19T13:28:00-07:00" />
-<meta itemprop="wordCount" content="1187">
+<meta itemprop="dateModified" content="2022-05-25T09:19:28-07:00" />
+<meta itemprop="wordCount" content="1188">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Controlling Costs"/>
 <meta name="twitter:description" content="Monitoring costs and design considerations to reduce costs
@@ -114,7 +114,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.3ceb339afcde8270ff6cb7cf889c6a72.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -136,7 +136,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.bef67cbabc0003e214afc4810ddbfcaa.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.3ceb339afcde8270ff6cb7cf889c6a72.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -219,6 +219,8 @@
   <a href="/amazon-genomics-cli/docs/workflow-engines/filesystems/s3/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginesfilesystemss3"><span class="">S3 Workflow Filesystem</span></a>
 </li>
   </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginestoil-li">
+  <a href="/amazon-genomics-cli/docs/workflow-engines/toil/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginestoil"><span class="">Toil</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginescromwell-li">
   <a href="/amazon-genomics-cli/docs/workflow-engines/cromwell/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-amazon-genomics-clidocsworkflow-enginescromwell"><span class="">Cromwell</span></a>
 </li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-amazon-genomics-clidocsworkflow-enginesminiwdl-li">
@@ -432,7 +434,7 @@ most to the cost.</p>
 <h2 id="consider-cpu-and-memory-ratios">Consider CPU and memory ratios</h2>
 <p>EC2 workers for Cromwell AWS Batch compute environments are <code>c</code>, <code>m</code>, and <code>r</code> instance families that
 have vCPU to memory ratios of 1:2, 1:4 and 1:8 respectively. Engines that run container based workflows will typically attempt to fit containers to instances in
-the most optimal way depending on cost and size requirements, or they will delegate this to a service like AWS Batch. Given that a task requiring 16GB of RAM that could make
+the most optimal way depending on cost and size requirements, or they will delegate this to a service like AWS Batch. Given that a task requiring 16 GB of RAM that could make
 use of all available CPUs, then to optimally pack the containers you should specify either 2, 4, or 8 vCPU. Other
 values could lead to inefficient packing meaning the resources of the EC2 container instance will be paid for but
 not optimally used.</p>
@@ -441,7 +443,7 @@ not optimally used.</p>
 (or more if they start swapping) of the allocated resources. The instance may then be unresponsive to its management services or the workflow engine and may
 time out. To avoid this, always allow for a little overhead, especially in the smaller instances.</p>
 </blockquote>
-<p>The largest instance types deployed by default are from the <code>4xlarge</code> size which have 16 vCPU and up to 128 MB of RAM.</p>
+<p>The largest instance types deployed by default are from the <code>4xlarge</code> size which have 16 vCPU and up to 128 GB of RAM.</p>
 <h2 id="consider-splitting-tasks-that-pipe-output">Consider splitting tasks that pipe output</h2>
 <p>If a workflow task consists of a process that pipes <code>STDOUT</code> to another process then both processes will run in the same
 container and receive the same resources. If one task requires more resources than the other this might be inefficient,
@@ -483,7 +485,7 @@ use for Amazon Genomics CLI.</p>
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified April 19, 2022: <a href="https://github.com/aws/amazon-genomics-cli/commit/7b120e788bd3d1ccd1d21f118c52123e70c31b9d">Merge pull request #408 from aws/bump/v1.4.0 (7b120e7)</a>
+  Last modified May 25, 2022: <a href="https://github.com/aws/amazon-genomics-cli/commit/86d5072fa2100178ae3a1c4260bb60a0edec238b">Merge pull request #466 from aws/bump/v1.5.0 (86d5072)</a>
 </div>
 
 </div>

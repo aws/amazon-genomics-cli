@@ -165,7 +165,7 @@ most to the cost.&lt;/p&gt;
 &lt;h2 id=&#34;consider-cpu-and-memory-ratios&#34;&gt;Consider CPU and memory ratios&lt;/h2&gt;
 &lt;p&gt;EC2 workers for Cromwell AWS Batch compute environments are &lt;code&gt;c&lt;/code&gt;, &lt;code&gt;m&lt;/code&gt;, and &lt;code&gt;r&lt;/code&gt; instance families that
 have vCPU to memory ratios of 1:2, 1:4 and 1:8 respectively. Engines that run container based workflows will typically attempt to fit containers to instances in
-the most optimal way depending on cost and size requirements, or they will delegate this to a service like AWS Batch. Given that a task requiring 16GB of RAM that could make
+the most optimal way depending on cost and size requirements, or they will delegate this to a service like AWS Batch. Given that a task requiring 16 GB of RAM that could make
 use of all available CPUs, then to optimally pack the containers you should specify either 2, 4, or 8 vCPU. Other
 values could lead to inefficient packing meaning the resources of the EC2 container instance will be paid for but
 not optimally used.&lt;/p&gt;
@@ -174,7 +174,7 @@ not optimally used.&lt;/p&gt;
 (or more if they start swapping) of the allocated resources. The instance may then be unresponsive to its management services or the workflow engine and may
 time out. To avoid this, always allow for a little overhead, especially in the smaller instances.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;The largest instance types deployed by default are from the &lt;code&gt;4xlarge&lt;/code&gt; size which have 16 vCPU and up to 128 MB of RAM.&lt;/p&gt;
+&lt;p&gt;The largest instance types deployed by default are from the &lt;code&gt;4xlarge&lt;/code&gt; size which have 16 vCPU and up to 128 GB of RAM.&lt;/p&gt;
 &lt;h2 id=&#34;consider-splitting-tasks-that-pipe-output&#34;&gt;Consider splitting tasks that pipe output&lt;/h2&gt;
 &lt;p&gt;If a workflow task consists of a process that pipes &lt;code&gt;STDOUT&lt;/code&gt; to another process then both processes will run in the same
 container and receive the same resources. If one task requires more resources than the other this might be inefficient,
