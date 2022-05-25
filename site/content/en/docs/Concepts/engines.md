@@ -53,7 +53,7 @@ contexts:
 ```
 
 The following snippet
-defines a Nextflow DSL engine of type `Nextflow` as part of the context named `spotContext` with a minimum requirement count of Cpus and Memory, when these are not provided the defaults would be used. (cpus:2, memory: 4096)
+defines a Nextflow DSL engine of type `Nextflow` as part of the context named `spotContext` with a minimum requirement count of Cpus and Memory, when these are not provided the defaults would be used.
 
 ```yaml
 contexts:

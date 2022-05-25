@@ -105,14 +105,20 @@ contexts:
       - type: nextflow
         engine: nextflow
 ```
-### Engine vCpus and Memory
-*default minimums:*
-*cpus:* 2
-*memory:* 4096
+### Engine vCpus and Memory default minimums:
 
-You may optionally specify the minimum number of vCpus and memory used in a context job.
+| Engine    | vCpus | Memory value (MiB) |
+|-----------|-------|--------------------|
+| Cromwell  | 2     | 16384              |
+| Nextflow  | 1     | 2048               |
+| miniwdl   | 2     | 4096               |
+| Snakemake | 2     | 4096               |
+| Toil      | 2     | 16384              |
 
-*note:* if these are not provided the defaults would be used.
+
+You may optionally specify the number of vCpus and memory used in a context job, vCpu count for engines Cromwell or Toil would be converted to cpu units, 1024 per each vCPU.
+
+*note:* if these are not provided the defaults on the table above would be used.
 ```yaml
 contexts:
   spotContext:

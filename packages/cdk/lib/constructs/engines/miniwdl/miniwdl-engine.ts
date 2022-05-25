@@ -42,8 +42,8 @@ export class MiniWdlEngine extends Engine {
       logGroup: this.logGroup,
       platformCapabilities: [PlatformCapabilities.FARGATE],
       container: {
-        vcpus: props.vcpus,
-        memoryLimitMiB: props.engineMemoryMiB,
+        vcpus: props.vcpus || 1,
+        memoryLimitMiB: props.engineMemoryMiB || 4096,
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
         image: createEcrImage(this, MINIWDL_IMAGE_DESIGNATION),

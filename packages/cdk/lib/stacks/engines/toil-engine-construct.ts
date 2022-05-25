@@ -12,6 +12,7 @@ import { ToilJobRole } from "../../roles/toil-job-role";
 import { ToilEngineRole } from "../../roles/toil-engine-role";
 import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { Construct } from "constructs";
+import { ContextAppParameters } from "../../env";
 
 export interface ToilEngineConstructProps extends EngineOptions {
   /**
@@ -55,7 +56,7 @@ export class ToilEngineConstruct extends EngineConstruct {
       TOIL_AWS_BATCH_JOB_ROLE_ARN: this.jobRole.roleArn,
     });
 
-    this.engine = this.getEngineServiceDefinition(props.vpc, props.subnets, engineContainer, this.engineLogGroup);
+    this.engine = this.getEngineServiceDefinition(props.vpc, props.subnets, engineContainer, this.engineLogGroup, params);
 
     // We don't use an adapter, so put the access-controlling proxy right in
     // front of the engine load balancer.
@@ -74,17 +75,23 @@ export class ToilEngineConstruct extends EngineConstruct {
     };
   }
 
-  private getEngineServiceDefinition(vpc: IVpc, subnets: SubnetSelection, serviceContainer: ServiceContainer, logGroup: ILogGroup) {
+  private getEngineServiceDefinition(
+    vpc: IVpc,
+    subnets: SubnetSelection,
+    serviceContainer: ServiceContainer,
+    logGroup: ILogGroup,
+    params: ContextAppParameters
+  ) {
     const id = "Engine";
     const definition = new FargateTaskDefinition(this, "EngineTaskDef", {
       taskRole: this.engineRole,
-      cpu: serviceContainer.cpu,
-      memoryLimitMiB: serviceContainer.memoryLimitMiB,
+      cpu: (params.vCpus ? params.vCpus * 1024 : undefined) || serviceContainer.cpu,
+      memoryLimitMiB: params.memoryLimitMiB || serviceContainer.memoryLimitMiB,
     });
 
     definition.addContainer(serviceContainer.serviceName, {
-      cpu: serviceContainer.cpu,
-      memoryLimitMiB: serviceContainer.memoryLimitMiB,
+      cpu: (params.vCpus ? params.vCpus * 1024 : undefined) || serviceContainer.cpu,
+      memoryLimitMiB: params.memoryLimitMiB || serviceContainer.memoryLimitMiB,
       environment: serviceContainer.environment,
       containerName: serviceContainer.serviceName,
       image: createEcrImage(this, serviceContainer.imageConfig.designation),

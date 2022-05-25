@@ -19,8 +19,8 @@ export class EngineJobDefinition extends JobDefinition {
           AWS_METADATA_SERVICE_NUM_ATTEMPTS: "10",
           ...props.container.environment,
         },
-        memoryLimitMiB: props.container.memoryLimitMiB || 4096,
-        vcpus: props.container.vcpus || 2,
+        memoryLimitMiB: props.container.memoryLimitMiB || 2048,
+        vcpus: props.container.vcpus || 1,
       },
     });
   }
