@@ -116,7 +116,7 @@ contexts:
 | Toil      | 2     | 16384              |
 
 
-You may optionally specify the number of vCpus and memory used in a context job, vCpu count for engines Cromwell or Toil would be converted to cpu units, 1024 per each vCPU.
+You may optionally specify the number of vCpus and memory used in a context definition, vCpu count for server engines such as Cromwell or Toil would be converted to cpu units, 1024 per each vCPU.
 
 *note:* if these are not provided the defaults on the table above would be used.
 ```yaml
