@@ -181,6 +181,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       resourceTags: Stack.of(this).tags.tagValues(),
       workflowOrchestrator: ENGINE_SNAKEMAKE,
       computeEnvImage,
+      usePublicSubnets: appParams.usePublicSubnets,
     });
   }
 

@@ -148,6 +148,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       resourceTags: Stack.of(this).tags.tagValues(),
       workflowOrchestrator: ENGINE_MINIWDL,
       computeEnvImage,
+      usePublicSubnets: appParams.usePublicSubnets,
     });
   }
 

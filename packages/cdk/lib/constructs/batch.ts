@@ -107,6 +107,7 @@ export class Batch extends Construct {
   public readonly role: IRole;
   public readonly computeEnvironment: IComputeEnvironment;
   public readonly jobQueue: IJobQueue;
+  public readonly assignPublicIp?: boolean;
 
   constructor(scope: Construct, id: string, props: BatchProps) {
     super(scope, id);
@@ -122,6 +123,8 @@ export class Batch extends Construct {
         },
       ],
     });
+
+    this.assignPublicIp = props.usePublicSubnets;
   }
 
   public grantJobAdministration(grantee: IGrantable, jobDefinitionName = "*"): Grant {
