@@ -115,8 +115,7 @@ contexts:
 
 {{% alert title="Warning" color="warning" %}}
 Currently, use of public subnets is only supported for contexts that use the Nextflow engine. Use of public IPs with the
-Cromwell server creates a security risk and will fail. Assignment of public IPs to AWS Batch Fargate tasks (as used by miniwdl and SnakeMake)
-is possible but will require changes to the WES adapters of those engines. If you need this please file a [feature request](https://github.com/aws/amazon-genomics-cli/issues/new?labels=enhancement) with your use case
+Cromwell server creates a security risk and will fail.
 {{% /alert %}}
 
 ##### Security Considerations
