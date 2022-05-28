@@ -55,6 +55,7 @@ export class SnakemakeEngine extends Engine {
         },
         volumes: [this.toVolume(this.fileSystem, this.fsap, this.volumeName)],
         mountPoints: [this.toMountPoint("/mnt/efs", this.volumeName)],
+        assignPublicIp: engineBatch.assignPublicIp,
       },
     });
   }

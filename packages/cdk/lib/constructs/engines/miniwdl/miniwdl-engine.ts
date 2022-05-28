@@ -54,6 +54,7 @@ export class MiniWdlEngine extends Engine {
         },
         volumes: [this.toVolume(this.fileSystem, accessPoint, this.volumeName)],
         mountPoints: [this.toMountPoint("/mnt/efs", this.volumeName)],
+        assignPublicIp: engineBatch.assignPublicIp,
       },
     });
   }
