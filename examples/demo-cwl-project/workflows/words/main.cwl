@@ -19,20 +19,14 @@ steps:
     out: [countFile]
     run:
       class: CommandLineTool
-      baseCommand: ["bash", "script.sh"]
+      baseCommand: grep
       inputs:
         words: File
         vowel: string
-      requirements:
-        InitialWorkDirRequirement:
-          listing:
-            - entryname: script.sh
-              entry: |-
-                set -e
-                VOWEL=$(inputs.vowel)
-                WORD_FILE=$(inputs.words.path)
-
-                grep \${VOWEL} \${WORD_FILE} | wc -l
+      arguments:
+        - $(inputs.vowel)
+        - $(inputs.words.path)
+        - --count
       outputs:
         countFile:
           type: stdout
