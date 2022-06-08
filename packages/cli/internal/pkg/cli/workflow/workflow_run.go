@@ -2,7 +2,7 @@ package workflow
 
 import "fmt"
 
-func (m *Manager) RunWorkflow(contextName, workflowName, argumentsUrl string, optionFileUrl string) (string, error) {
+func (m *Manager) RunWorkflow(contextName, workflowName, inputsFileUrl string, optionFileUrl string) (string, error) {
 	m.readProjectSpec()
 	m.setWorkflowSpec(workflowName)
 	m.readConfig()
@@ -19,7 +19,7 @@ func (m *Manager) RunWorkflow(contextName, workflowName, argumentsUrl string, op
 		m.cleanUpWorkflow()
 	}
 	m.calculateFinalLocation()
-	m.readInput(argumentsUrl)
+	m.readInput(inputsFileUrl)
 	m.uploadInputsToS3()
 	m.parseInputToArguments()
 	m.readOptionFile(optionFileUrl)
