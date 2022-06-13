@@ -541,13 +541,14 @@ func (m *Manager) runWorkflow() {
 	if m.err != nil {
 		return
 	}
-	log.Debug().Msgf("running workflow at '%s' with language '%s' and version '%s' using attachments '[%s]', workflow parameters '%s' and engine parameters '%s'",
+	log.Debug().Msgf("calling WES client run_workflow with workflow_url: '%s', workflow_type: '%s', workflow_type_version: '%s', workflow_attachment: '[%s]', workflow_params: '%s', workflow_engine_parameters: '%s'",
 		m.workflowUrl,
 		m.workflowSpec.Type.Language,
 		m.workflowSpec.Type.Version,
 		strings.Join(m.attachments, ", "),
 		fmt.Sprint(m.workflowParams),
 		fmt.Sprint(m.workflowEngineParams))
+
 	m.runId, m.err = m.wes.RunWorkflow(
 		context.Background(),
 		option.WorkflowUrl(m.workflowUrl),
