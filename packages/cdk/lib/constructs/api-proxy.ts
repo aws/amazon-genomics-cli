@@ -42,6 +42,11 @@ export interface ApiProxyProps {
    * @default - ID of the RestApi construct.
    */
   apiName?: string;
+
+  /**
+   * Type of endpoint to use. Default is REGIONAL
+   */
+  endpointType?: EndpointType;
 }
 
 export class ApiProxy extends Construct {
@@ -58,7 +63,7 @@ export class ApiProxy extends Construct {
     this.accessLogGroup = new LogGroup(this, "AccessLogGroup");
     this.restApi = new RestApi(this, "Resource", {
       restApiName: props.apiName,
-      endpointTypes: [EndpointType.REGIONAL],
+      endpointTypes: [props.endpointType ? props.endpointType : EndpointType.REGIONAL],
       description: "API proxy endpoint for a service",
       apiKeySourceType: ApiKeySourceType.HEADER,
       deployOptions: {

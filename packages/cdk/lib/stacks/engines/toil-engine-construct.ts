@@ -12,6 +12,7 @@ import { ToilJobRole } from "../../roles/toil-job-role";
 import { ToilEngineRole } from "../../roles/toil-engine-role";
 import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { Construct } from "constructs";
+import { EndpointType } from "aws-cdk-lib/aws-apigateway";
 
 export interface ToilEngineConstructProps extends EngineOptions {
   /**
@@ -63,6 +64,7 @@ export class ToilEngineConstruct extends EngineConstruct {
       apiName: `${params.projectName}${params.contextName}${engineContainer.serviceName}ApiProxy`,
       loadBalancer: this.engine.loadBalancer,
       allowedAccountIds: [Aws.ACCOUNT_ID],
+      endpointType: props.endpointType ?? EndpointType.REGIONAL,
     });
   }
 
