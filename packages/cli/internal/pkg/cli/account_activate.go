@@ -47,7 +47,7 @@ Each subnet must have access to AWS service endpoints e.g. using VPC Gateway End
 Subnet names may be a comma separated list or supplied as repeated flags. (e.g. '--subnets subnet-1234 --subnets subnet-2345, subnet-3456')
 `
 	amiFlagDescription          = `The AMI that will be used by all workflow compute environments deployed in all contexts.`
-	endPointTypeFlagDescription = `May be one of REGIONAL or PRIVATE, default is REGIONAL. If set to REGION then the API
+	endPointTypeFlagDescription = `May be one of REGIONAL or PRIVATE, default is REGIONAL. If set to REGIONAL then the API
 for any deployed context can be reached by allowed clients within the same region. If set to PRIVATE, then the AGC client
 must be running on a computer with access to the VPC network, such as an EC2 within the VPC.`
 	cdkCoreDir   = ".agc/cdk/apps/core"
@@ -168,6 +168,7 @@ func (o accountActivateOpts) cdkBootstrap(cdkAppPath string, environmentVars []s
 }
 
 func (o accountActivateOpts) deployCoreInfrastructure(cdkAppPath string, environmentVars []string) error {
+	log.Debug().Msgf("deploying core infrastructure using app at '%s' with environment variables '%v'", cdkAppPath, environmentVars)
 	progressStream, err := o.cdkClient.DeployApp(cdkAppPath, environmentVars, activateKey)
 	if err != nil {
 		return err
@@ -176,6 +177,7 @@ func (o accountActivateOpts) deployCoreInfrastructure(cdkAppPath string, environ
 }
 
 func (o *accountActivateOpts) validate() error {
+	log.Debug().Msgf("validating account activate options")
 	if o.publicSubnets && o.vpcId != "" {
 		return o.generateValidationError(
 			fmt.Errorf("both %[1]q and %[2]q cannot be specified together, as %[2]q involves creating a minimal VPC", accountVpcFlag, publicSubnetsFlag),
@@ -242,7 +244,7 @@ Activate AGC in your AWS account with a custom S3 bucket and VPC.
 			if err := opts.validate(); err != nil {
 				return err
 			}
-			log.Info().Msgf("Activating AGC with values '%v'", vars)
+			log.Info().Msgf("Activating AGC with values '%+v'", vars)
 			if err := opts.Execute(); err != nil {
 				return clierror.New("account activate", vars, err)
 			}
