@@ -1,5 +1,4 @@
-import { RemovalPolicy } from "aws-cdk-lib";
-import { Aws } from "aws-cdk-lib";
+import { Aws, RemovalPolicy } from "aws-cdk-lib";
 import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { FargateTaskDefinition, LogDriver } from "aws-cdk-lib/aws-ecs";
 import { ApiProxy, SecureService } from "../../constructs";
@@ -8,12 +7,13 @@ import { createEcrImage, renderServiceWithTaskDefinition } from "../../util";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { FileSystem } from "aws-cdk-lib/aws-efs";
 import { EngineOptions, ServiceContainer } from "../../types";
-import { LogGroup, ILogGroup } from "aws-cdk-lib/aws-logs";
-import { EngineOutputs, EngineConstruct } from "./engine-construct";
+import { ILogGroup, LogGroup } from "aws-cdk-lib/aws-logs";
+import { EngineConstruct, EngineOutputs } from "./engine-construct";
 import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
 import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { Construct } from "constructs";
+import { EndpointType } from "aws-cdk-lib/aws-apigateway";
 
 export interface CromwellEngineConstructProps extends EngineOptions {
   /**
@@ -77,6 +77,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
       apiName: `${params.projectName}${params.contextName}${engineContainer.serviceName}ApiProxy`,
       lambda,
       allowedAccountIds: [Aws.ACCOUNT_ID],
+      endpointType: props.endpointType ?? EndpointType.REGIONAL,
     });
   }
 

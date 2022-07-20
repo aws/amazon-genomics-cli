@@ -3,6 +3,9 @@ import { IMachineImage, IVpc, MachineImage, SubnetSelection, Vpc } from "aws-cdk
 import { Construct } from "constructs";
 import { getCommonParameter, getCommonParameterList, subnetSelectionFromIds } from "../util";
 import {
+  APP_NAME,
+  COMPUTE_IMAGE_PARAMETER_NAME,
+  ENDPOINT_TYPE_PARAMETER_NAME,
   ENGINE_CROMWELL,
   ENGINE_MINIWDL,
   ENGINE_NEXTFLOW,
@@ -11,8 +14,6 @@ import {
   VPC_NUMBER_SUBNETS_PARAMETER_NAME,
   VPC_PARAMETER_NAME,
   VPC_SUBNETS_PARAMETER_NAME,
-  COMPUTE_IMAGE_PARAMETER_NAME,
-  APP_NAME,
 } from "../constants";
 import { ContextAppParameters } from "../env";
 import { BatchConstruct, BatchConstructProps } from "./engines/batch-construct";
@@ -21,6 +22,7 @@ import { NextflowEngineConstruct } from "./engines/nextflow-engine-construct";
 import { MiniwdlEngineConstruct } from "./engines/miniwdl-engine-construct";
 import { SnakemakeEngineConstruct } from "./engines/snakemake-engine-construct";
 import { ToilEngineConstruct } from "./engines/toil-engine-construct";
+import { EndpointType } from "aws-cdk-lib/aws-apigateway";
 
 export interface ContextStackProps extends StackProps {
   readonly contextParameters: ContextAppParameters;
@@ -31,6 +33,7 @@ export class ContextStack extends Stack {
   private readonly iops: Size;
   private readonly subnets: SubnetSelection;
   private readonly computeEnvImage: IMachineImage;
+  private readonly endpointType: EndpointType;
 
   constructor(scope: Construct, id: string, props: ContextStackProps) {
     super(scope, id, props);
@@ -40,6 +43,21 @@ export class ContextStack extends Stack {
     const subnetIds = getCommonParameterList(this, VPC_SUBNETS_PARAMETER_NAME, VPC_NUMBER_SUBNETS_PARAMETER_NAME);
     this.subnets = subnetSelectionFromIds(this, subnetIds);
     this.computeEnvImage = MachineImage.fromSsmParameter(`/${APP_NAME}/_common/${COMPUTE_IMAGE_PARAMETER_NAME}`);
+
+    const typeName = getCommonParameter(this, ENDPOINT_TYPE_PARAMETER_NAME);
+    switch (typeName) {
+      case EndpointType.REGIONAL.toString():
+        this.endpointType = EndpointType.REGIONAL;
+        break;
+      case EndpointType.PRIVATE.toString():
+        this.endpointType = EndpointType.PRIVATE;
+        break;
+      default:
+        throw Error(
+          `The endpoint type '${typeName}' is not currently supported. Use one of ${EndpointType.REGIONAL.toString()} ` +
+            `or ${EndpointType.PRIVATE.toString()} or file a github issue describing your use case.`
+        );
+    }
 
     const { contextParameters } = props;
     const { engineName } = contextParameters;
@@ -235,6 +253,7 @@ export class ContextStack extends Stack {
         managedPolicies: [],
       },
       computeEnvImage: this.computeEnvImage,
+      endpointType: this.endpointType,
     };
   }
 }

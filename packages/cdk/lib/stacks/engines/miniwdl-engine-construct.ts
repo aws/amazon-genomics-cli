@@ -15,6 +15,7 @@ import { BatchPolicies } from "../../roles/policies/batch-policies";
 import { EngineOptions } from "../../types";
 import { Construct } from "constructs";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
+import { EndpointType } from "aws-cdk-lib/aws-apigateway";
 
 export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -102,6 +103,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       apiName: `${params.projectName}${params.userId}${params.contextName}MiniWdlApiProxy`,
       lambda,
       allowedAccountIds: [Aws.ACCOUNT_ID],
+      endpointType: props.endpointType ?? EndpointType.REGIONAL,
     });
   }
 
