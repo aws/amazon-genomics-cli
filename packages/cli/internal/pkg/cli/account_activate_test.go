@@ -78,7 +78,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 		expectedErr  error
 	}{
 		"default setup with private endpoint": {
-			endpointType: PRIVATE_ENDPOINT_TYPE,
+			endpointType: PrivateEndpointType,
 			expectedErr:  nil,
 			setupMocks: func(t *testing.T) mockClients {
 				mocks := createMocks(t)
@@ -91,7 +91,7 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
-					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, PRIVATE_ENDPOINT_TYPE),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, PrivateEndpointType),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
@@ -307,7 +307,7 @@ func Test_accountActivateOpts_validate(t *testing.T) {
 		"subnets with VPC ID validates": {
 			vpcId:        testAccountVpcId,
 			subnets:      []string{testAccountSubnetId1, testAccountSubnetId2},
-			endpointType: REGIONAL_ENDPOINT_TYPE,
+			endpointType: RegionalEndpointType,
 			expectedErr:  nil,
 		},
 		"subnets without VPC ID is invalid": {
@@ -321,21 +321,21 @@ func Test_accountActivateOpts_validate(t *testing.T) {
 		},
 		"VPC without subnets is valid": {
 			vpcId:        testAccountVpcId,
-			endpointType: REGIONAL_ENDPOINT_TYPE,
+			endpointType: RegionalEndpointType,
 			expectedErr:  nil,
 		},
 		"Public subnets is valid": {
 			publicSubnets: true,
-			endpointType:  REGIONAL_ENDPOINT_TYPE,
+			endpointType:  RegionalEndpointType,
 			expectedErr:   nil,
 		},
 		"Public subnets with specific subnets is invalid": {
 			publicSubnets: true,
-			endpointType:  REGIONAL_ENDPOINT_TYPE,
+			endpointType:  RegionalEndpointType,
 			subnets:       []string{testAccountSubnetId1},
 			expectedErr: &clierror.Error{
 				Command:         "account activate",
-				CommandVars:     accountActivateVars{publicSubnets: true, subnets: []string{testAccountSubnetId1}, endpointType: REGIONAL_ENDPOINT_TYPE},
+				CommandVars:     accountActivateVars{publicSubnets: true, subnets: []string{testAccountSubnetId1}, endpointType: RegionalEndpointType},
 				Cause:           fmt.Errorf("\"subnets\" cannot be supplied without supplying a \"vpc\" ID"),
 				SuggestedAction: "use the \"vpc\" flag to supply the identity of the VPC containing the subnets",
 			},
@@ -343,16 +343,16 @@ func Test_accountActivateOpts_validate(t *testing.T) {
 		"Public Subnets with VPC is invalid": {
 			publicSubnets: true,
 			vpcId:         testAccountVpcId,
-			endpointType:  REGIONAL_ENDPOINT_TYPE,
+			endpointType:  RegionalEndpointType,
 			expectedErr: &clierror.Error{
 				Command:         "account activate",
-				CommandVars:     accountActivateVars{publicSubnets: true, vpcId: testAccountVpcId, endpointType: REGIONAL_ENDPOINT_TYPE},
+				CommandVars:     accountActivateVars{publicSubnets: true, vpcId: testAccountVpcId, endpointType: RegionalEndpointType},
 				Cause:           fmt.Errorf("both %[1]q and %[2]q cannot be specified together, as %[2]q involves creating a minimal VPC", accountVpcFlag, publicSubnetsFlag),
 				SuggestedAction: "Remove one or both of these flags",
 			},
 		},
 		"Private endpoint type is valid": {
-			endpointType: PRIVATE_ENDPOINT_TYPE,
+			endpointType: PrivateEndpointType,
 			expectedErr:  nil,
 		},
 		"Other endpoints are not valid": {
@@ -360,7 +360,7 @@ func Test_accountActivateOpts_validate(t *testing.T) {
 			expectedErr: &clierror.Error{
 				Command:         "account activate",
 				CommandVars:     accountActivateVars{endpointType: otherEndpointType},
-				Cause:           fmt.Errorf("invalid endpointType '%s', endpointType must be one of %s or %s", otherEndpointType, REGIONAL_ENDPOINT_TYPE, PRIVATE_ENDPOINT_TYPE),
+				Cause:           fmt.Errorf("invalid endpointType '%s', endpointType must be one of %s or %s", otherEndpointType, RegionalEndpointType, PrivateEndpointType),
 				SuggestedAction: "use one of the allowed endpoint types",
 			},
 		},
