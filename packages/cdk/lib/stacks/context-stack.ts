@@ -1,8 +1,9 @@
 import { Size, Stack, StackProps } from "aws-cdk-lib";
 import { IMachineImage, IVpc, MachineImage, SubnetSelection, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
-import { getCommonParameter, getCommonParameterList, subnetSelectionFromIds } from "../util";
+import { endpointTypeFromString, getCommonParameter, getCommonParameterList, subnetSelectionFromIds } from "../util";
 import {
+  API_GATEWAY_VPC_ENDPOINT_ID_PARAMETER_NAME,
   APP_NAME,
   COMPUTE_IMAGE_PARAMETER_NAME,
   ENDPOINT_TYPE_PARAMETER_NAME,
@@ -34,6 +35,7 @@ export class ContextStack extends Stack {
   private readonly subnets: SubnetSelection;
   private readonly computeEnvImage: IMachineImage;
   private readonly endpointType: EndpointType;
+  private readonly apiGatewayVpcEndpointId;
 
   constructor(scope: Construct, id: string, props: ContextStackProps) {
     super(scope, id, props);
@@ -44,20 +46,8 @@ export class ContextStack extends Stack {
     this.subnets = subnetSelectionFromIds(this, subnetIds);
     this.computeEnvImage = MachineImage.fromSsmParameter(`/${APP_NAME}/_common/${COMPUTE_IMAGE_PARAMETER_NAME}`);
 
-    const typeName = getCommonParameter(this, ENDPOINT_TYPE_PARAMETER_NAME);
-    switch (typeName) {
-      case EndpointType.REGIONAL.toString():
-        this.endpointType = EndpointType.REGIONAL;
-        break;
-      case EndpointType.PRIVATE.toString():
-        this.endpointType = EndpointType.PRIVATE;
-        break;
-      default:
-        throw Error(
-          `The endpoint type '${typeName}' is not currently supported. Use one of ${EndpointType.REGIONAL.toString()} ` +
-            `or ${EndpointType.PRIVATE.toString()} or file a github issue describing your use case.`
-        );
-    }
+    this.endpointType = endpointTypeFromString(getCommonParameter(this, ENDPOINT_TYPE_PARAMETER_NAME));
+    this.apiGatewayVpcEndpointId = getCommonParameter(this, API_GATEWAY_VPC_ENDPOINT_ID_PARAMETER_NAME);
 
     const { contextParameters } = props;
     const { engineName } = contextParameters;
@@ -254,6 +244,7 @@ export class ContextStack extends Stack {
       },
       computeEnvImage: this.computeEnvImage,
       endpointType: this.endpointType,
+      apiGatewayVpcEndpointId: this.apiGatewayVpcEndpointId,
     };
   }
 }

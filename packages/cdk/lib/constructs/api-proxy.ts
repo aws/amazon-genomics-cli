@@ -5,7 +5,7 @@ import {
   ApiKeySourceType,
   AuthorizationType,
   ConnectionType,
-  EndpointType,
+  EndpointConfiguration,
   HttpIntegration,
   Integration,
   LambdaIntegration,
@@ -46,7 +46,7 @@ export interface ApiProxyProps {
   /**
    * Type of endpoint to use. Default is REGIONAL
    */
-  endpointType?: EndpointType;
+  endpointConfiguration?: EndpointConfiguration;
 }
 
 export class ApiProxy extends Construct {
@@ -63,7 +63,7 @@ export class ApiProxy extends Construct {
     this.accessLogGroup = new LogGroup(this, "AccessLogGroup");
     this.restApi = new RestApi(this, "Resource", {
       restApiName: props.apiName,
-      endpointTypes: [props.endpointType ? props.endpointType : EndpointType.REGIONAL],
+      endpointConfiguration: props.endpointConfiguration,
       description: "API proxy endpoint for a service",
       apiKeySourceType: ApiKeySourceType.HEADER,
       deployOptions: {

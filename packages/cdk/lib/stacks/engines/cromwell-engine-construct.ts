@@ -14,6 +14,7 @@ import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
 import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { Construct } from "constructs";
 import { EndpointType } from "aws-cdk-lib/aws-apigateway";
+import { apiGatewayVpcEndpointFromId } from "../index";
 
 export interface CromwellEngineConstructProps extends EngineOptions {
   /**
@@ -77,7 +78,10 @@ export class CromwellEngineConstruct extends EngineConstruct {
       apiName: `${params.projectName}${params.contextName}${engineContainer.serviceName}ApiProxy`,
       lambda,
       allowedAccountIds: [Aws.ACCOUNT_ID],
-      endpointType: props.endpointType ?? EndpointType.REGIONAL,
+      endpointConfiguration: {
+        types: [props.endpointType ?? EndpointType.REGIONAL],
+        vpcEndpoints: apiGatewayVpcEndpointFromId(this, props.apiGatewayVpcEndpoint),
+      },
     });
   }
 

@@ -5,6 +5,7 @@ import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, ISubnet, IVp
 import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import {
+  API_GATEWAY_VPC_ENDPOINT_ID_PARAMETER_NAME,
   APP_NAME,
   COMPUTE_IMAGE_PARAMETER_NAME,
   ENDPOINT_TYPE_PARAMETER_NAME,
@@ -116,6 +117,11 @@ export interface CoreStackProps extends StackProps {
    * The endpoint type to use for APIGateway endpoints. Default is "REGIONAL"
    */
   endpointType?: EndpointType;
+
+  /**
+   * Optional ID for an apiGateway endpoint if access to PRIVATE endpointTypes require this in the VPC.
+   */
+  apiGatewayVpcEndpointId?: string;
 }
 
 const parameterPrefix = `/${APP_NAME}/_common/`;
@@ -172,7 +178,13 @@ export class CoreStack extends Stack {
 
     this.addParameter({
       name: ENDPOINT_TYPE_PARAMETER_NAME,
-      value: props.endpointType ? props.endpointType : EndpointType.REGIONAL,
+      value: props.endpointType ?? EndpointType.REGIONAL,
+      description: "The type of API Gateway endpoint to use for WES APIs",
+    });
+    this.addParameter({
+      name: API_GATEWAY_VPC_ENDPOINT_ID_PARAMETER_NAME,
+      value: props.apiGatewayVpcEndpointId ?? "",
+      description: "The ID of the API Gateway VPC endpoint to use",
     });
   }
 
