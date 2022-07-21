@@ -10,6 +10,7 @@ import { Protocol } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { IVpc, Subnet, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { LogConfiguration, LogDriver as BatchLogDriver } from "@aws-cdk/aws-batch-alpha";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
+import { EndpointType } from "aws-cdk-lib/aws-apigateway";
 
 export const getContext = (node: Node, key: string): string => {
   const context = getContextOrDefault(node, key, undefined);
@@ -109,4 +110,19 @@ export function subnetSelectionFromIds(scope: Construct, subnetIds: string[]): S
   });
 
   return { subnets };
+}
+
+export function endpointTypeFromString(type: string): EndpointType {
+  let endpointType;
+  switch (type) {
+    case EndpointType.REGIONAL.toString():
+      endpointType = EndpointType.REGIONAL;
+      break;
+    case EndpointType.PRIVATE.toString():
+      endpointType = EndpointType.PRIVATE;
+      break;
+    default:
+      new Error(`the endpoint type '${type}' is not currently supported`);
+  }
+  return endpointType;
 }

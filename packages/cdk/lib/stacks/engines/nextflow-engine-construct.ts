@@ -11,6 +11,7 @@ import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
 import { Construct } from "constructs";
 import { IMachineImage } from "aws-cdk-lib/aws-ec2";
 import { EndpointType } from "aws-cdk-lib/aws-apigateway";
+import { apiGatewayVpcEndpointFromId } from "../index";
 
 export interface NextflowEngineConstructProps extends EngineOptions {
   /**
@@ -78,7 +79,10 @@ export class NextflowEngineConstruct extends EngineConstruct {
       apiName: `${params.projectName}${params.userId}${params.contextName}NextflowApiProxy`,
       lambda,
       allowedAccountIds: [Aws.ACCOUNT_ID],
-      endpointType: props.endpointType ?? EndpointType.REGIONAL,
+      endpointConfiguration: {
+        types: [props.endpointType ?? EndpointType.REGIONAL],
+        vpcEndpoints: apiGatewayVpcEndpointFromId(this, props.apiGatewayVpcEndpoint),
+      },
     });
   }
 

@@ -38,4 +38,6 @@ export interface EngineOptions {
    * The API Gateway endpoint type. Default is REGIONAL
    */
   readonly endpointType?: EndpointType;
+
+  readonly apiGatewayVpcEndpoint?: string;
 }
