@@ -15,4 +15,5 @@ const (
 	AgcVpcSubnetsEnvKey   = "AGC_VPC_SUBNETS"
 	AgcAmiEnvKey          = "AGC_AMI"
 	AgcEndpointTypeEnvKey = "AGC_ENDPOINT_TYPE"
+	AgcEndpointIdEnvKey   = "AGC_API_GATEWAY_VPC_ENDPOINT_ID"
 )
