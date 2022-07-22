@@ -17,6 +17,7 @@ import { BucketOperations } from "../../common/BucketOperations";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
 import { IFunction } from "aws-cdk-lib/aws-lambda";
 import { EndpointType } from "aws-cdk-lib/aws-apigateway";
+import { apiGatewayVpcEndpointFromId } from "../index";
 
 export class SnakemakeEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -109,7 +110,10 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       apiName: `${params.projectName}${params.userId}${params.contextName}SnakemakeApiProxy`,
       lambda,
       allowedAccountIds: [Aws.ACCOUNT_ID],
-      endpointType: props.endpointType ?? EndpointType.REGIONAL,
+      endpointConfiguration: {
+        types: [props.endpointType ?? EndpointType.REGIONAL],
+        vpcEndpoints: apiGatewayVpcEndpointFromId(this, props.apiGatewayVpcEndpointId),
+      },
     });
   }
 

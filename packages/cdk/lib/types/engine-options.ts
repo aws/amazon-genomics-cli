@@ -39,5 +39,5 @@ export interface EngineOptions {
    */
   readonly endpointType?: EndpointType;
 
-  readonly apiGatewayVpcEndpoint?: string;
+  readonly apiGatewayVpcEndpointId?: string;
 }

@@ -106,7 +106,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       allowedAccountIds: [Aws.ACCOUNT_ID],
       endpointConfiguration: {
         types: [props.endpointType ?? EndpointType.REGIONAL],
-        vpcEndpoints: apiGatewayVpcEndpointFromId(this, props.apiGatewayVpcEndpoint),
+        vpcEndpoints: apiGatewayVpcEndpointFromId(this, props.apiGatewayVpcEndpointId),
       },
     });
   }
