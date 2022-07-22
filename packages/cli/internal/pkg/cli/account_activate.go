@@ -200,7 +200,7 @@ func (o *accountActivateOpts) validate() error {
 			"use one of the allowed endpoint types")
 	}
 
-	if o.endpointId != "" && (o.vpcId == "" || o.endpointId != PrivateEndpointType) {
+	if o.endpointId != "" && (o.vpcId == "" || o.endpointType != PrivateEndpointType) {
 		return o.generateValidationError(fmt.Errorf("to specify an endpoint id you must also specify a vpc id and set the enpoint type to PRIVATE"),
 			fmt.Sprintf("use the %s flag to provide a VPC id and the %s flag to specify a PRIVATE endpoint type", accountVpcFlag, endpointTypeFlag))
 	}

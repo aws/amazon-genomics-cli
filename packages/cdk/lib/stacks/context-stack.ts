@@ -35,7 +35,7 @@ export class ContextStack extends Stack {
   private readonly subnets: SubnetSelection;
   private readonly computeEnvImage: IMachineImage;
   private readonly endpointType: EndpointType;
-  private readonly apiGatewayVpcEndpointId;
+  private readonly apiGatewayVpcEndpointId: string;
 
   constructor(scope: Construct, id: string, props: ContextStackProps) {
     super(scope, id, props);
