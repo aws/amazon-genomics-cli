@@ -119,6 +119,15 @@ Cromwell server creates a security risk and will fail. Assignment of public IPs 
 is possible but will require changes to the WES adapters of those engines. If you need this please file a [feature request](https://github.com/aws/amazon-genomics-cli/issues/new?labels=enhancement) with your use case
 {{% /alert %}}
 
+#### Using Private API Gateway endpoints
+
+When AGC creates API Gateway endpoints it will default to creating [`REGIONAL` endpoints](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-endpoint-types.html) with public DNS records. While the endpoints are secured by IAM,
+they can be called from anywhere. This is advantageous if your Amazon Genomics CLI client is installed on a computer that is not in the cloud, however, if you only intend to install the Amazon Genomics CLI client on compute instances in the cloud or
+having a private network route to the VPC you may want to use `PRIVATE` endpoints. You can enable this using the `--endpointType` flag. Once enabled any endpoints created will use this endpoint type.
+
+In addition, you may choose to use the `--enpointId` flag for setting the VPC endpoint ID for calls that are made to API Gateway. This
+can be useful when `--endpointTypeFlag` is set to PRIVATE and would only be useful with a predefined VPC declared using the `--vpc` flag.  The endpoint must already exist in that VPC.
+
 ##### Security Considerations
 
 Although your infrastructure will be protected by security groups you should be aware that any manual modification of these may result in exposing your

@@ -52,7 +52,7 @@ Subnet names may be a comma separated list or supplied as repeated flags. (e.g. 
 for any deployed context can be reached by allowed clients within the same region. If set to PRIVATE, then the AGC client
 must be running on a computer with access to the VPC network, such as an EC2 within the VPC.`
 	endpointIdFlagDescription = `Allows the setting of the VPC endpoint ID for calls that are made to API Gateway. This
-is can be useful when --endpointTypeFlag is set to PRIVATE and would only be useful with a VPC declared using the --vpc flag.
+can be useful when --endpointTypeFlag is set to PRIVATE and would only be useful with a VPC declared using the --vpc flag.
 The endpoint must already exist in that VPC.`
 	cdkCoreDir   = ".agc/cdk/apps/core"
 	bucketPrefix = "agc"
