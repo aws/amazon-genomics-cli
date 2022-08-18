@@ -125,7 +125,7 @@ When AGC creates API Gateway endpoints it will default to creating [`REGIONAL` e
 they can be called from anywhere. This is advantageous if your Amazon Genomics CLI client is installed on a computer that is not in the cloud, however, if you only intend to install the Amazon Genomics CLI client on compute instances in the cloud or
 having a private network route to the VPC you may want to use `PRIVATE` endpoints. You can enable this using the `--endpointType` flag. Once enabled any endpoints created will use this endpoint type.
 
-In addition, you may choose to use the `--enpointId` flag for setting the VPC endpoint ID for calls that are made to API Gateway. This
+In addition, you may choose to use the `--endpointId` flag for setting the VPC endpoint ID for calls that are made to API Gateway. This
 can be useful when `--endpointTypeFlag` is set to PRIVATE and would only be useful with a predefined VPC declared using the `--vpc` flag.  The endpoint must already exist in that VPC.
 
 ##### Security Considerations
