@@ -58,8 +58,8 @@ run-integ-test:
 
 .PHONY: tools format
 tools:
-	GOBIN=${GOBIN} go get github.com/golang/mock/mockgen
-	GOBIN=${GOBIN} go get golang.org/x/tools/cmd/goimports
+	GOBIN=${GOBIN} go install github.com/golang/mock/mockgen@v1.6.0
+	GOBIN=${GOBIN} go install golang.org/x/tools/cmd/goimports@v0.1.12
 
 start-docs:
 	cd ${SOURDE_DOCS} &&\
