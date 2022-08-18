@@ -3,7 +3,6 @@ package storage
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -21,8 +20,8 @@ func NewInputClient(S3 s3.Interface) *InputInstance {
 }
 
 var (
-	ioutilReadFile  = ioutil.ReadFile
-	ioutilWriteFile = ioutil.WriteFile
+	ioutilReadFile  = os.ReadFile
+	ioutilWriteFile = os.WriteFile
 	jsonUnmarshall  = json.Unmarshal
 	jsonMarshall    = json.Marshal
 	stat            = os.Stat

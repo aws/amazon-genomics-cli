@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -35,10 +34,10 @@ var (
 	removeFile                    = os.Remove
 	removeAll                     = os.RemoveAll
 	osStat                        = os.Stat
-	createTempDir                 = ioutil.TempDir
+	createTempDir                 = os.MkdirTemp
 	copyFileRecursivelyToLocation = osutils.CopyFileRecursivelyToLocation
 	writeToTmp                    = func(namePattern, content string) (string, error) {
-		f, err := ioutil.TempFile("", namePattern)
+		f, err := os.CreateTemp("", namePattern)
 		if err != nil {
 			return "", err
 		}
