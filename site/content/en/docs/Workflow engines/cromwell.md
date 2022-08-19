@@ -20,7 +20,7 @@ Cromwell is an open source project distributed by the Broad Institute under the 
 
 Some minor customizations where made to the AWS Backend adapter for Cromwell to facilitate improved scalability and cross
 region S3 bucket access when deployed with Amazon Genomics CLI. The fork containing these customizations is available [here](https://github.com/markjschreiber/cromwell)
-and we are working to contribute these bask to the main code base.
+and we are working to contribute these back to the main code base.
 
 ## Architecture
 
