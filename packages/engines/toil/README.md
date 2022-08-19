@@ -52,7 +52,7 @@ docker push ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:lates
 
 ### Building and Deploying on ARM
 
-If you are running on an ARM architecture system, `docker build` will try and build a Docker image for an ARM host. This will not work for two reasons. First, AGC uses AMD64 hosts and needs an AMD64 image. Second, the build will fail because the Erlang packages used by RabbitMQ are only available for AMD64. On ARM, the Erlang dependency will not be satisfiable:
+If you are running on an ARM architecture system, `docker build` will try and build a Docker image for an ARM host. This will not work for two reasons. First, Amazon Genomics CLI uses AMD64 hosts and needs an AMD64 image. Second, the build will fail because the Erlang packages used by RabbitMQ are only available for AMD64. On ARM, the Erlang dependency will not be satisfiable:
 
 ```
 #10 28.22 --> Processing Dependency: erlang >= 23.2 for package: rabbitmq-server-3.10.0-1.el7.noarch
