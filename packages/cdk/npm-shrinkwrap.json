@@ -1,6 +1,6 @@
 {
   "name": "cdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -14,14 +14,14 @@
       }
     },
     "@aws-cdk/aws-batch-alpha": {
-      "version": "2.2.0-alpha.0",
-      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-batch-alpha/-/aws-batch-alpha-2.2.0-alpha.0.tgz",
-      "integrity": "sha512-EKu9JxICZZ0dKFOdm8gC/DDhSclRgbgGbU255InUpQn8ehyz07rsAVpkK+45dkZx4oBjF7vW88bgqlv5HOJvBA=="
+      "version": "2.38.1-alpha.0",
+      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-batch-alpha/-/aws-batch-alpha-2.38.1-alpha.0.tgz",
+      "integrity": "sha512-gwbwAjbeW6oq0L3hnlD6fv4gr/J78WVpbAAETqlAP1U5Z8JKN1pXqtpyyc4B+imb85jh9VFNF2K1NBGsgoa4aA=="
     },
     "@aws-cdk/aws-lambda-python-alpha": {
-      "version": "2.2.0-alpha.0",
-      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-lambda-python-alpha/-/aws-lambda-python-alpha-2.2.0-alpha.0.tgz",
-      "integrity": "sha512-YOpgvxc4NRa/4ZsiuCrWc7E+tOaCqCupXDJcUmyZZMc+/0oWLTPymfIcNkbh0EBxclk699s/CAiHxu3LLx3elA=="
+      "version": "2.38.1-alpha.0",
+      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-lambda-python-alpha/-/aws-lambda-python-alpha-2.38.1-alpha.0.tgz",
+      "integrity": "sha512-DyFy+JQAOZtiYNaou8jYVSzU7BS9zck1drs7oFGnImcqmDWNTji14kRMlkd91G4xufipPIHGPPjXO30rZn2ODQ=="
     },
     "@babel/code-frame": {
       "version": "7.12.11",
@@ -1240,61 +1240,54 @@
       "dev": true
     },
     "aws-cdk": {
-      "version": "2.20.0",
-      "resolved": "https://registry.npmjs.org/aws-cdk/-/aws-cdk-2.20.0.tgz",
-      "integrity": "sha512-rs9LTpvrlbsMcenZ3t7TuLDGbHhbnDocrE63Xb2PT++VptR/A8svllK8k1W7hPl77L9QS75GNK5gh+ShkEzsnw==",
+      "version": "2.38.1",
+      "resolved": "https://registry.npmjs.org/aws-cdk/-/aws-cdk-2.38.1.tgz",
+      "integrity": "sha512-bIHRCkmbXBmJWw1Gq5UsAUUYKABuE/ah1iAA14hXLS8+9AJlF/Ptn+NsUCt9K5v17cRqtUoeaOAMAPrZs8l+YA==",
       "dev": true,
       "requires": {
         "fsevents": "2.3.2"
       }
     },
     "aws-cdk-lib": {
-      "version": "2.2.0",
-      "resolved": "https://registry.npmjs.org/aws-cdk-lib/-/aws-cdk-lib-2.2.0.tgz",
-      "integrity": "sha512-WgNWgA35abebtK0vAEWi/U6j1re1/8DA6FhXFuemtYglAk5OBA11oJSaa642yVtEUa90yzGvLMjszFWspmL3Tw==",
+      "version": "2.38.1",
+      "resolved": "https://registry.npmjs.org/aws-cdk-lib/-/aws-cdk-lib-2.38.1.tgz",
+      "integrity": "sha512-vEgJBUzL1yqlSMYGjipl+eRwy900x3RmbVzTcxKdCZvhtBMQ1hqJAMgVswvoyA5EnvfELLlz9ufm+qdKGs9DxQ==",
       "requires": {
         "@balena/dockerignore": "^1.0.2",
         "case": "1.6.3",
         "fs-extra": "^9.1.0",
-        "ignore": "^5.1.9",
-        "jsonschema": "^1.4.0",
-        "minimatch": "^3.0.4",
+        "ignore": "^5.2.0",
+        "jsonschema": "^1.4.1",
+        "minimatch": "^3.1.2",
         "punycode": "^2.1.1",
-        "semver": "^7.3.5",
+        "semver": "^7.3.7",
         "yaml": "1.10.2"
       },
       "dependencies": {
         "@balena/dockerignore": {
-          "version": "1.0.2",
-          "resolved": ""
+          "version": "1.0.2"
         },
         "at-least-node": {
-          "version": "1.0.0",
-          "resolved": ""
+          "version": "1.0.0"
         },
         "balanced-match": {
-          "version": "1.0.2",
-          "resolved": ""
+          "version": "1.0.2"
         },
         "brace-expansion": {
           "version": "1.1.11",
-          "resolved": "",
           "requires": {
             "balanced-match": "^1.0.0",
             "concat-map": "0.0.1"
           }
         },
         "case": {
-          "version": "1.6.3",
-          "resolved": ""
+          "version": "1.6.3"
         },
         "concat-map": {
-          "version": "0.0.1",
-          "resolved": ""
+          "version": "0.0.1"
         },
         "fs-extra": {
           "version": "9.1.0",
-          "resolved": "",
           "requires": {
             "at-least-node": "^1.0.0",
             "graceful-fs": "^4.2.0",
@@ -1303,61 +1296,50 @@
           }
         },
         "graceful-fs": {
-          "version": "4.2.8",
-          "resolved": ""
+          "version": "4.2.10"
         },
         "ignore": {
-          "version": "5.1.9",
-          "resolved": ""
+          "version": "5.2.0"
         },
         "jsonfile": {
           "version": "6.1.0",
-          "resolved": "",
           "requires": {
             "graceful-fs": "^4.1.6",
             "universalify": "^2.0.0"
           }
         },
         "jsonschema": {
-          "version": "1.4.0",
-          "resolved": ""
+          "version": "1.4.1"
         },
         "lru-cache": {
           "version": "6.0.0",
-          "resolved": "",
           "requires": {
             "yallist": "^4.0.0"
           }
         },
         "minimatch": {
-          "version": "3.0.4",
-          "resolved": "",
+          "version": "3.1.2",
           "requires": {
             "brace-expansion": "^1.1.7"
           }
         },
         "punycode": {
-          "version": "2.1.1",
-          "resolved": ""
+          "version": "2.1.1"
         },
         "semver": {
-          "version": "7.3.5",
-          "resolved": "",
+          "version": "7.3.7",
           "requires": {
             "lru-cache": "^6.0.0"
           }
         },
         "universalify": {
-          "version": "2.0.0",
-          "resolved": ""
+          "version": "2.0.0"
         },
         "yallist": {
-          "version": "4.0.0",
-          "resolved": ""
+          "version": "4.0.0"
         },
         "yaml": {
-          "version": "1.10.2",
-          "resolved": ""
+          "version": "1.10.2"
         }
       }
     },
@@ -1741,9 +1723,9 @@
       "dev": true
     },
     "constructs": {
-      "version": "10.0.114",
-      "resolved": "https://registry.npmjs.org/constructs/-/constructs-10.0.114.tgz",
-      "integrity": "sha512-er6NTso71PfZ+D9EfwtZmWJpTkDWUlKYkFHAlpT+DJ8Z7gUshEe8m4pq9PSYmKnKCKj3gta/Cq17W6a4hkg+Kw=="
+      "version": "10.1.86",
+      "resolved": "https://registry.npmjs.org/constructs/-/constructs-10.1.86.tgz",
+      "integrity": "sha512-yEC7T93oQU6pEhJlooqSq5JKNGOqMiOvmmnZtJxFBOmCNhUDddNmewb0/9K+FPMFMJn4MQ4G0qNGAaEqVgAyFg=="
     },
     "convert-source-map": {
       "version": "1.8.0",
