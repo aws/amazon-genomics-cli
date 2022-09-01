@@ -1,0 +1,6 @@
+{
+    "mainWorkflowURL": "main.cwl",
+    "inputFileURLs": [
+      "inputs.json"
+    ]
+}
