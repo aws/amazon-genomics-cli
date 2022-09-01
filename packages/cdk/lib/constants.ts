@@ -16,6 +16,8 @@ export const VPC_NUMBER_SUBNETS_PARAMETER_NAME = "NumInfraSubnets";
 export const WES_KEY_PARAMETER_NAME = "WesAdapterZipKeyParameter";
 export const WES_BUCKET_NAME = "WesAdapterZipBucket";
 export const COMPUTE_IMAGE_PARAMETER_NAME = "ComputeEnvImage";
+export const ENDPOINT_TYPE_PARAMETER_NAME = "EndpointType";
+export const API_GATEWAY_VPC_ENDPOINT_ID_PARAMETER_NAME = "ApiGatewayVpcEndpointId";
 
 export const ENGINE_CROMWELL = "cromwell";
 export const ENGINE_MINIWDL = "miniwdl";

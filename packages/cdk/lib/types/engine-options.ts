@@ -2,6 +2,7 @@ import { RoleProps } from "aws-cdk-lib/aws-iam";
 import { IMachineImage, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { ContextAppParameters } from "../env";
 import { Size } from "aws-cdk-lib";
+import { EndpointType } from "aws-cdk-lib/aws-apigateway";
 
 export type PolicyOptions = Pick<RoleProps, "inlinePolicies" | "managedPolicies">;
 
@@ -32,4 +33,11 @@ export interface EngineOptions {
    * The AMI to use for compute environments. Ignored for Fargate environments
    */
   readonly computeEnvImage?: IMachineImage;
+
+  /**
+   * The API Gateway endpoint type. Default is REGIONAL
+   */
+  readonly endpointType?: EndpointType;
+
+  readonly apiGatewayVpcEndpointId?: string;
 }

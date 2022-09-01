@@ -5,8 +5,10 @@ import { GatewayVpcEndpointAwsService, InterfaceVpcEndpointService, ISubnet, IVp
 import { Bucket, BucketEncryption, IBucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
 import {
+  API_GATEWAY_VPC_ENDPOINT_ID_PARAMETER_NAME,
   APP_NAME,
   COMPUTE_IMAGE_PARAMETER_NAME,
+  ENDPOINT_TYPE_PARAMETER_NAME,
   PRODUCT_NAME,
   VPC_NUMBER_SUBNETS_PARAMETER_NAME,
   VPC_PARAMETER_ID,
@@ -20,6 +22,7 @@ import * as path from "path";
 import { homedir } from "os";
 import { Asset } from "aws-cdk-lib/aws-s3-assets";
 import { EcsOptimizedImage } from "aws-cdk-lib/aws-ecs";
+import { EndpointType } from "aws-cdk-lib/aws-apigateway";
 
 export interface ParameterProps {
   /**
@@ -109,6 +112,16 @@ export interface CoreStackProps extends StackProps {
    * The AMI id used for compute environments and stored in SSM parameter store
    */
   imageId?: string;
+
+  /**
+   * The endpoint type to use for APIGateway endpoints. Default is "REGIONAL"
+   */
+  endpointType?: EndpointType;
+
+  /**
+   * Optional ID for an apiGateway endpoint if access to PRIVATE endpointTypes require this in the VPC.
+   */
+  apiGatewayVpcEndpointId?: string;
 }
 
 const parameterPrefix = `/${APP_NAME}/_common/`;
@@ -161,6 +174,17 @@ export class CoreStack extends Stack {
       type: ParameterType.STRING,
       dataType: ParameterDataType.AWS_EC2_IMAGE,
       description: "The image ID to use in EC2 compute environments",
+    });
+
+    this.addParameter({
+      name: ENDPOINT_TYPE_PARAMETER_NAME,
+      value: props.endpointType ?? EndpointType.REGIONAL,
+      description: "The type of API Gateway endpoint to use for WES APIs",
+    });
+    this.addParameter({
+      name: API_GATEWAY_VPC_ENDPOINT_ID_PARAMETER_NAME,
+      value: props.apiGatewayVpcEndpointId ?? "",
+      description: "The ID of the API Gateway VPC endpoint to use",
     });
   }
 
