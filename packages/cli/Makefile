@@ -1,6 +1,5 @@
 BINARY_NAME=agc
 PACKAGES=./internal...
-SOURCE_DOCS=${PWD}/site
 VERSION_FILE=../../version.json
 GOBIN=${PWD}/bin/tools
 COVERAGE=coverage.out
@@ -17,14 +16,6 @@ all: format test build
 build: compile-local
 
 release: compile-darwin compile-linux compile-windows
-
-release-docker:
-	docker build -t aws/rosalind . &&\
-	docker create -ti --name amazon-rosalind-builder aws/rosalind &&\
-	docker cp amazon-rosalind-builder:/rosalind/bin/local/ . &&\
-	docker rm -f amazon-rosalind-builder
-	@echo "Built binaries under ./local/"
-
 
 compile-local:
 	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION} ./cmd/application
@@ -58,20 +49,8 @@ run-integ-test:
 
 .PHONY: tools format
 tools:
-	GOBIN=${GOBIN} go get github.com/golang/mock/mockgen
-	GOBIN=${GOBIN} go get golang.org/x/tools/cmd/goimports
-
-start-docs:
-	cd ${SOURDE_DOCS} &&\
-	git submodule update --init --recursive &&\
-	hugo server -D
-
-build-docs:
-	cd ${SOURDE_DOCS} &&\
-	git submodule update --init --recursive &&\
-	npm install &&\
-	hugo &&\
-	cd ..
+	GOBIN=${GOBIN} go install github.com/golang/mock/mockgen@v1.6.0
+	GOBIN=${GOBIN} go install golang.org/x/tools/cmd/goimports@v0.1.12
 
 gen-mocks:
 	${GOBIN}/mockgen -source=./internal/pkg/mocks/aws/interfaces.go -package=awsmocks -destination=./internal/pkg/mocks/aws/mock_interfaces.go

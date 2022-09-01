@@ -26,7 +26,7 @@ const (
 
 type runWorkflowVars struct {
 	WorkflowName string
-	Arguments    string
+	InputsFile   string
 	OptionFile   string
 	ContextName  string
 }
@@ -48,7 +48,7 @@ func (o *runWorkflowOpts) Validate() error {
 }
 
 func (o *runWorkflowOpts) Execute() (string, error) {
-	return o.wfManager.RunWorkflow(o.ContextName, o.WorkflowName, o.Arguments, o.OptionFile)
+	return o.wfManager.RunWorkflow(o.ContextName, o.WorkflowName, o.InputsFile, o.OptionFile)
 }
 
 func BuildWorkflowRunCommand() *cobra.Command {
@@ -71,7 +71,7 @@ using input parameters contained in file "/home/ec2-user/myproj/workflows/mywork
 				return clierror.New("workflow run", vars, err)
 			}
 			log.Info().Msgf("Running workflow. Workflow name: '%s', InputsFile: '%s', OptionFile: '%s', Context: '%s'",
-				opts.WorkflowName, opts.Arguments, opts.OptionFile, opts.ContextName)
+				opts.WorkflowName, opts.InputsFile, opts.OptionFile, opts.ContextName)
 			if err := opts.Validate(); err != nil {
 				return err
 			}
@@ -84,7 +84,7 @@ using input parameters contained in file "/home/ec2-user/myproj/workflows/mywork
 		}),
 		ValidArgsFunction: NewWorkflowAutoComplete().GetWorkflowAutoComplete(),
 	}
-	cmd.Flags().StringVarP(&vars.Arguments, inputsFileFlag, inputsFileFlagShort, "", inputsFileFlagDescription)
+	cmd.Flags().StringVarP(&vars.InputsFile, inputsFileFlag, inputsFileFlagShort, "", inputsFileFlagDescription)
 	cmd.Flags().StringVarP(&vars.OptionFile, optionFileFlag, optionFileFlagShort, "", optionFileFlagDescription)
 	cmd.Flags().StringVarP(&vars.ContextName, contextFlag, contextFlagShort, "", contextFlagDescription)
 	aliasFn := func(f *pflag.FlagSet, name string) pflag.NormalizedName {

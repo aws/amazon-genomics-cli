@@ -21,7 +21,7 @@ func (s Summary) IsEmpty() bool {
 	return reflect.ValueOf(s).IsZero()
 }
 
-//IsServerProcessEngine Does the workflow engine run as a server process? A server process engine has one to many
+// IsServerProcessEngine Does the workflow engine run as a server process? A server process engine has one to many
 // mapping with workflow runs. The engine can be used to run multiple workflows and the process is re-used and long running.
 func (s *Summary) IsServerProcessEngine() bool {
 	return serverProcessEngines[s.Engines[0].Engine]

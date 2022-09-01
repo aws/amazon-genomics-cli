@@ -26,6 +26,8 @@ const (
 	testNextflowRepository = "test-nextflow-repo"
 	testMiniwdlRepository  = "test-miniwdl-repo"
 	testToilRepository     = "test-toil-repo"
+	otherEndpointType      = "OTHER"
+	endpointId             = "endpoint-id"
 )
 
 var (
@@ -69,12 +71,59 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 	logging.Verbose = true
 
 	testCases := map[string]struct {
-		vpcId       string
-		subnets     []string
-		bucketName  string
-		setupMocks  func(*testing.T) mockClients
-		expectedErr error
+		vpcId        string
+		subnets      []string
+		bucketName   string
+		endpointType string
+		endpointId   string
+		setupMocks   func(*testing.T) mockClients
+		expectedErr  error
 	}{
+		"default setup with private endpoint": {
+			endpointType: PrivateEndpointType,
+			expectedErr:  nil,
+			setupMocks: func(t *testing.T) mockClients {
+				mocks := createMocks(t)
+				defer close(mocks.progressStream)
+				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
+				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
+				vars := []string{
+					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
+					fmt.Sprintf("%s=agc-%s-%s", constants.AgcBucketNameEnvKey, testAccountId, testAccountRegion),
+					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
+					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
+					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, PrivateEndpointType),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointIdEnvKey, ""),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
+				return mocks
+			},
+		},
+		"default setup with private endpoint and endpoint id": {
+			endpointType: PrivateEndpointType,
+			endpointId:   endpointId,
+			expectedErr:  nil,
+			setupMocks: func(t *testing.T) mockClients {
+				mocks := createMocks(t)
+				defer close(mocks.progressStream)
+				mocks.stsMock.EXPECT().GetAccount().Return(testAccountId, nil)
+				mocks.s3Mock.EXPECT().BucketExists("agc-test-account-id-test-account-region").Return(false, nil)
+				vars := []string{
+					fmt.Sprintf("%s=%t", constants.PublicSubnetsEnvKey, false),
+					fmt.Sprintf("%s=agc-%s-%s", constants.AgcBucketNameEnvKey, testAccountId, testAccountRegion),
+					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
+					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
+					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, PrivateEndpointType),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointIdEnvKey, endpointId),
+				}
+				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
+				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
+				return mocks
+			},
+		},
 		"generated bucket with no default VPC": {
 			bucketName: "",
 			setupMocks: func(t *testing.T) mockClients {
@@ -88,6 +137,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointIdEnvKey, ""),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
@@ -116,6 +167,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointIdEnvKey, ""),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
@@ -134,6 +187,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, false),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointIdEnvKey, ""),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(gomock.Any(), vars, "activate").Return(mocks.progressStream, nil)
@@ -153,6 +208,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointIdEnvKey, ""),
 					fmt.Sprintf("%s=%s", constants.VpcIdEnvKey, testAccountVpcId),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
@@ -174,6 +231,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, true),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointIdEnvKey, ""),
 					fmt.Sprintf("%s=%s", constants.VpcIdEnvKey, testAccountVpcId),
 					fmt.Sprintf("%s=%s,%s", constants.AgcVpcSubnetsEnvKey, testAccountSubnetId1, testAccountSubnetId2),
 				}
@@ -205,6 +264,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, false),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointIdEnvKey, ""),
 				}
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(mocks.progressStream, nil)
 				mocks.cdkMock.EXPECT().DeployApp(
@@ -224,6 +285,8 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 					fmt.Sprintf("%s=%t", constants.CreateBucketEnvKey, false),
 					fmt.Sprintf("%s=%s", constants.AgcVersionEnvKey, version.Version),
 					fmt.Sprintf("%s=%s", constants.AgcAmiEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointTypeEnvKey, ""),
+					fmt.Sprintf("%s=%s", constants.AgcEndpointIdEnvKey, ""),
 				}
 				mocks.s3Mock.EXPECT().BucketExists(testAccountBucketName).Return(true, nil)
 				mocks.cdkMock.EXPECT().Bootstrap(gomock.Any(), vars, "bootstrap").Return(nil, fmt.Errorf("some bootstrap error"))
@@ -239,9 +302,11 @@ func TestAccountActivateOpts_Execute(t *testing.T) {
 			defer mocks.ctrl.Finish()
 			opts := &accountActivateOpts{
 				accountActivateVars: accountActivateVars{
-					bucketName: tc.bucketName,
-					vpcId:      tc.vpcId,
-					subnets:    tc.subnets,
+					bucketName:   tc.bucketName,
+					vpcId:        tc.vpcId,
+					subnets:      tc.subnets,
+					endpointType: tc.endpointType,
+					endpointId:   tc.endpointId,
 				},
 				stsClient: mocks.stsMock,
 				s3Client:  mocks.s3Mock,
@@ -270,12 +335,15 @@ func Test_accountActivateOpts_validate(t *testing.T) {
 		vpcId         string
 		subnets       []string
 		publicSubnets bool
+		endpointType  string
+		endpointId    string
 		expectedErr   error
 	}{
 		"subnets with VPC ID validates": {
-			vpcId:       testAccountVpcId,
-			subnets:     []string{testAccountSubnetId1, testAccountSubnetId2},
-			expectedErr: nil,
+			vpcId:        testAccountVpcId,
+			subnets:      []string{testAccountSubnetId1, testAccountSubnetId2},
+			endpointType: RegionalEndpointType,
+			expectedErr:  nil,
 		},
 		"subnets without VPC ID is invalid": {
 			subnets: []string{testAccountSubnetId1, testAccountSubnetId2},
@@ -287,19 +355,22 @@ func Test_accountActivateOpts_validate(t *testing.T) {
 			},
 		},
 		"VPC without subnets is valid": {
-			vpcId:       testAccountVpcId,
-			expectedErr: nil,
+			vpcId:        testAccountVpcId,
+			endpointType: RegionalEndpointType,
+			expectedErr:  nil,
 		},
 		"Public subnets is valid": {
 			publicSubnets: true,
+			endpointType:  RegionalEndpointType,
 			expectedErr:   nil,
 		},
 		"Public subnets with specific subnets is invalid": {
 			publicSubnets: true,
+			endpointType:  RegionalEndpointType,
 			subnets:       []string{testAccountSubnetId1},
 			expectedErr: &clierror.Error{
 				Command:         "account activate",
-				CommandVars:     accountActivateVars{publicSubnets: true, subnets: []string{testAccountSubnetId1}},
+				CommandVars:     accountActivateVars{publicSubnets: true, subnets: []string{testAccountSubnetId1}, endpointType: RegionalEndpointType},
 				Cause:           fmt.Errorf("\"subnets\" cannot be supplied without supplying a \"vpc\" ID"),
 				SuggestedAction: "use the \"vpc\" flag to supply the identity of the VPC containing the subnets",
 			},
@@ -307,11 +378,46 @@ func Test_accountActivateOpts_validate(t *testing.T) {
 		"Public Subnets with VPC is invalid": {
 			publicSubnets: true,
 			vpcId:         testAccountVpcId,
+			endpointType:  RegionalEndpointType,
 			expectedErr: &clierror.Error{
 				Command:         "account activate",
-				CommandVars:     accountActivateVars{publicSubnets: true, vpcId: testAccountVpcId},
+				CommandVars:     accountActivateVars{publicSubnets: true, vpcId: testAccountVpcId, endpointType: RegionalEndpointType},
 				Cause:           fmt.Errorf("both %[1]q and %[2]q cannot be specified together, as %[2]q involves creating a minimal VPC", accountVpcFlag, publicSubnetsFlag),
 				SuggestedAction: "Remove one or both of these flags",
+			},
+		},
+		"Private endpoint type is valid": {
+			endpointType: PrivateEndpointType,
+			expectedErr:  nil,
+		},
+		"Other endpoints are not valid": {
+			endpointType: otherEndpointType,
+			expectedErr: &clierror.Error{
+				Command:         "account activate",
+				CommandVars:     accountActivateVars{endpointType: otherEndpointType},
+				Cause:           fmt.Errorf("invalid endpointType '%s', endpointType must be one of %s or %s", otherEndpointType, RegionalEndpointType, PrivateEndpointType),
+				SuggestedAction: "use one of the allowed endpoint types",
+			},
+		},
+		"Endpoint ID with no VPC is not valid": {
+			endpointType: PrivateEndpointType,
+			endpointId:   endpointId,
+			expectedErr: &clierror.Error{
+				Command:         "account activate",
+				CommandVars:     accountActivateVars{endpointType: PrivateEndpointType, endpointId: endpointId},
+				Cause:           fmt.Errorf("to specify an endpoint id you must also specify a vpc id and set the enpoint type to PRIVATE"),
+				SuggestedAction: "use the vpc flag to provide a VPC id and the endpointType flag to specify a PRIVATE endpoint type",
+			},
+		},
+		"Endpoint ID with no Private endpoint type is not valid": {
+			endpointType: RegionalEndpointType,
+			endpointId:   endpointId,
+			vpcId:        testAccountVpcId,
+			expectedErr: &clierror.Error{
+				Command:         "account activate",
+				CommandVars:     accountActivateVars{endpointType: RegionalEndpointType, endpointId: endpointId, vpcId: testAccountVpcId},
+				Cause:           fmt.Errorf("to specify an endpoint id you must also specify a vpc id and set the enpoint type to PRIVATE"),
+				SuggestedAction: "use the vpc flag to provide a VPC id and the endpointType flag to specify a PRIVATE endpoint type",
 			},
 		},
 	}
@@ -324,6 +430,8 @@ func Test_accountActivateOpts_validate(t *testing.T) {
 					vpcId:         tc.vpcId,
 					publicSubnets: tc.publicSubnets,
 					subnets:       tc.subnets,
+					endpointType:  tc.endpointType,
+					endpointId:    tc.endpointId,
 				},
 				imageRefs: testImageRefs,
 				region:    testAccountRegion,

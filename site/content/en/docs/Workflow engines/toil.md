@@ -4,7 +4,7 @@ date: 2022-04-26T15:34:00-04:00
 draft: false
 weight: 20
 description: >
-    Details on the Toil engine deployed by Amazon Genomics CLI
+    Details on the Toil engine (CWL mode) deployed by Amazon Genomics CLI
 ---
 
 ## Description
@@ -14,8 +14,10 @@ description: >
 [UC Santa Cruz Genomics Institute](https://genomics.ucsc.edu/). In Amazon Genomics
 CLI, Toil is an engine that can be deployed in a
 [context]( {{< relref "../Concepts/contexts" >}} ) as an
-[engine]( {{< relref "../Concepts/engines">}} ) to run workflows based on the
-[CWL](https://www.commonwl.org/) specification.
+[engine]( {{< relref "../Concepts/engines">}} ) to run workflows written in the
+[Common Workflow Language](https://www.commonwl.org/) (CWL) standard, version
+[v1.0](https://www.commonwl.org/v1.0/), [v1.1](https://www.commonwl.org/v1.1/),
+and [v1.2](https://www.commonwl.org/v1.2/) (or mixed versions).
 
 Toil is an open source project distributed by UC Santa Cruz under the [Apache 2
 license](https://github.com/DataBiosphere/toil/blob/master/LICENSE) and

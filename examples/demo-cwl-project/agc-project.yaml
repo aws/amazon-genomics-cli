@@ -22,6 +22,14 @@ workflows:
       language: cwl
       version: v1.0
     sourceURL: workflows/words
+  s3demo:
+    type:
+      language: cwl
+      version: v1.2
+    sourceURL: workflows/s3demo
+data:
+  - location: s3://spacenet-dataset
+    readOnly: true
 contexts:
   myContext:
     engines:
