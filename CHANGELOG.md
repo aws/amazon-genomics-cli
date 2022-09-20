@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.1](https://github.com/aws/amazon-genomics-cli/compare/v1.5.0...v1.5.1) (2022-09-08)
+
+
+### Bug Fixes
+
+* updated CDK packages ([#511](https://github.com/aws/amazon-genomics-cli/pull/511)) ([1140da1](https://github.com/aws/amazon-genomics-cli/commit/1140da166f0f2a9512ef1fb2ce022105d3afa9d8))
+* bump nextflow version to 22.04.1 ([#450](https://github.com/aws/amazon-genomics-cli/issues/450)) ([4296ee7](https://github.com/aws/amazon-genomics-cli/commit/4296ee7316620cdf71bf14786433ae41bafff999)), closes [#387](https://github.com/aws/amazon-genomics-cli/issues/387)
+
 ## [1.5.0](https://github.com/aws/amazon-genomics-cli/compare/v1.5.0-rc1...v1.5.0) (2022-05-25)
 
 
