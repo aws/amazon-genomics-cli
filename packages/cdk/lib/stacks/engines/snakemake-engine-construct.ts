@@ -2,7 +2,7 @@ import { Aws, Stack } from "aws-cdk-lib";
 import { SnakemakeEngine } from "../../constructs/engines/snakemake/snakemake-engine";
 import { EngineOptions } from "../../types";
 import { ApiProxy, Batch } from "../../constructs";
-import { EngineConstruct, EngineOutputs } from "./engine-construct";
+import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { ENGINE_SNAKEMAKE } from "../../constants";
@@ -16,8 +16,6 @@ import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import { BucketOperations } from "../../common/BucketOperations";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
 import { IFunction } from "aws-cdk-lib/aws-lambda";
-import { EndpointType } from "aws-cdk-lib/aws-apigateway";
-import { apiGatewayVpcEndpointFromId } from "../index";
 
 export class SnakemakeEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -66,7 +64,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     this.adapterLogGroup = lambda.logGroup;
 
     // Generate our api gateway proxy
-    this.apiProxy = this.createApiProxy(props, lambda);
+    this.apiProxy = this.createApiProxy(params, lambda);
   }
 
   private createAdapterRole(): Role {
@@ -104,16 +102,11 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     });
   }
 
-  private createApiProxy(props: EngineOptions, lambda: IFunction): ApiProxy {
-    const params = props.contextParameters;
+  private createApiProxy(params: ContextAppParameters, lambda: IFunction): ApiProxy {
     return new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}SnakemakeApiProxy`,
       lambda,
       allowedAccountIds: [Aws.ACCOUNT_ID],
-      endpointConfiguration: {
-        types: [props.endpointType ?? EndpointType.REGIONAL],
-        vpcEndpoints: apiGatewayVpcEndpointFromId(this, props.apiGatewayVpcEndpointId),
-      },
     });
   }
 

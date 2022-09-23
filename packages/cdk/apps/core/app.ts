@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import { App } from "aws-cdk-lib";
 import "source-map-support/register";
-import { getContextOrDefault, endpointTypeFromString } from "../../lib/util";
+import { getContextOrDefault } from "../../lib/util";
 import { CoreStack } from "../../lib/stacks";
 import { Maybe } from "../../lib/types";
-import { AGC_VERSION_KEY, APP_ENV_NAME, APP_NAME, APP_TAG_KEY, PRODUCT_NAME } from "../../lib/constants";
+import { APP_TAG_KEY, APP_NAME, PRODUCT_NAME, APP_ENV_NAME, AGC_VERSION_KEY } from "../../lib/constants";
 import { getEnvString } from "../../lib/env";
 
 const app = new App();
@@ -19,8 +19,6 @@ const createNewBucket = getContextOrDefault(app.node, `CREATE_${APP_ENV_NAME}_BU
 const usePublicSubnets = getContextOrDefault(app.node, `${APP_ENV_NAME}_USE_PUBLIC_SUBNETS`, "false").toLowerCase() == "true";
 const subnetIds = getContextOrDefault<Maybe<string>>(app.node, `${APP_ENV_NAME}_VPC_SUBNETS`)?.split(",");
 const imageId = getContextOrDefault(app.node, `${APP_ENV_NAME}_AMI`);
-const endpointType = endpointTypeFromString(getContextOrDefault(app.node, `${APP_ENV_NAME}_ENDPOINT_TYPE`, "REGIONAL"));
-const apiGatewayVpcEndpointId = getContextOrDefault(app.node, `${APP_ENV_NAME}_API_GATEWAY_VPC_ENDPOINT_ID`, "");
 
 const stackParameters = [
   {
@@ -66,6 +64,4 @@ new CoreStack(app, `${PRODUCT_NAME}-Core`, {
   parameters: stackParameters,
   subnetIds: subnetIds,
   imageId: imageId,
-  endpointType: endpointType,
-  apiGatewayVpcEndpointId: apiGatewayVpcEndpointId,
 });
