@@ -3,15 +3,13 @@ import { NextflowEngine } from "../../constructs/engines/nextflow/nextflow-engin
 import { EngineOptions } from "../../types";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { ApiProxy } from "../../constructs";
-import { EngineConstruct, EngineOutputs } from "./engine-construct";
+import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
 import { Construct } from "constructs";
 import { IMachineImage } from "aws-cdk-lib/aws-ec2";
-import { EndpointType } from "aws-cdk-lib/aws-apigateway";
-import { apiGatewayVpcEndpointFromId } from "../index";
 
 export interface NextflowEngineConstructProps extends EngineOptions {
   /**
@@ -79,10 +77,6 @@ export class NextflowEngineConstruct extends EngineConstruct {
       apiName: `${params.projectName}${params.userId}${params.contextName}NextflowApiProxy`,
       lambda,
       allowedAccountIds: [Aws.ACCOUNT_ID],
-      endpointConfiguration: {
-        types: [props.endpointType ?? EndpointType.REGIONAL],
-        vpcEndpoints: apiGatewayVpcEndpointFromId(this, props.apiGatewayVpcEndpointId),
-      },
     });
   }
 
