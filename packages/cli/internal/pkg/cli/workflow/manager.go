@@ -119,6 +119,12 @@ type workflowOutputProps struct {
 	workflowRunLogOutputs map[string]interface{}
 }
 
+type manifestProps struct {
+	mainWorkFlowURL string   `json:"mainWorkFlowURL"`
+	inputFileURLs   []string `json:"inputFileURLs"`
+	engineOptions	string	 `json:"engineOptions"`
+}
+
 type Manager struct {
 	Project     storage.ProjectClient
 	Config      storage.ConfigClient
@@ -312,7 +318,7 @@ func (m *Manager) uploadWorkflowToS3() {
 	if m.err != nil {
 		return
 	}
-	err := copyFileRecursivelyToLocation("extra", m.path)
+	err := copyFileRecursivelyToLocation("extra", filepath.Join(m.path, "MANIFEST.json"))
 
 	if err != nil {
 		m.err = err
