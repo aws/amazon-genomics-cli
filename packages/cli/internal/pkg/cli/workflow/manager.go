@@ -73,6 +73,7 @@ type runProps struct {
 	path                 string
 	packPath             string
 	workflowUrl          string
+	manifestPath         string
 	inputsPath           string
 	input                Input
 	optionFileUrl        string
@@ -309,6 +310,12 @@ func (m *Manager) calculateFinalLocation() {
 
 func (m *Manager) uploadWorkflowToS3() {
 	if m.err != nil {
+		return
+	}
+	err := copyFileRecursivelyToLocation("extra", m.path)
+
+	if err != nil {
+		m.err = err
 		return
 	}
 	objectKey := fmt.Sprintf("%s/%s", m.baseWorkflowKey, workflowZip)
