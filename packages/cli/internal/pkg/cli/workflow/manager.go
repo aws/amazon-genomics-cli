@@ -120,9 +120,9 @@ type workflowOutputProps struct {
 }
 
 type manifestProps struct {
-	mainWorkFlowURL string   `json:"mainWorkFlowURL"`
-	inputFileURLs   []string `json:"inputFileURLs"`
-	engineOptions	string	 `json:"engineOptions"`
+	MainWorkFlowURL string   `json:"mainWorkFlowURL"`
+	InputFileURLs   []string `json:"inputFileURLs"`
+	EngineOptions   string   `json:"engineOptions"`
 }
 
 type Manager struct {
@@ -318,7 +318,8 @@ func (m *Manager) uploadWorkflowToS3() {
 	if m.err != nil {
 		return
 	}
-	err := copyFileRecursivelyToLocation("extra", filepath.Join(m.path, "MANIFEST.json"))
+	err := copyFileRecursivelyToLocation("extra", m.path)
+	m.manifestPath = filepath.Join("extra", "MANIFEST.json")
 
 	if err != nil {
 		m.err = err
@@ -338,6 +339,7 @@ func (m *Manager) readInput(inputUrl string) {
 	}
 	log.Debug().Msgf("Input file override URL: %s", inputUrl)
 	m.inputsPath = osutils.StripFileURLPrefix(inputUrl) // We actually support only local files
+	m.parseAndAddToManifest()
 	bytes, err := m.Storage.ReadAsBytes(inputUrl)
 	log.Debug().Msgf("content is:\n'%s'", string(bytes))
 	if err != nil {
@@ -359,6 +361,30 @@ func (m *Manager) parseInputToArguments() {
 	arguments := m.input.String()
 	log.Debug().Msgf("arguments are: '%s'", arguments)
 	m.arguments = []string{arguments}
+}
+
+func (m *Manager) parseAndAddToManifest() {
+	bytes, err := m.Storage.ReadAsBytes(m.manifestPath)
+	if err != nil {
+		m.err = err
+		return
+	}
+	var data manifestProps
+	if err := json.Unmarshal(bytes, &data); err != nil {
+		m.err = err
+		return
+	}
+	data.InputFileURLs = append(data.InputFileURLs, m.inputsPath)
+	bytes, err = json.Marshal(data)
+	if err != nil {
+		m.err = err
+		return
+	}
+	err = m.Storage.WriteFromBytes(m.manifestPath, bytes)
+	if err != nil {
+		m.err = err
+		return
+	}
 }
 
 func (m *Manager) uploadInputsToS3() {
