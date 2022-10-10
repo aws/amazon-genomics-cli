@@ -25,9 +25,3 @@ contexts:
     engines:
       - type: nextflow
         engine: nextflow
-
-  spotContext:
-    requestSpotInstances: true
-    engines:
-      - type: nextflow
-        engine: nextflow

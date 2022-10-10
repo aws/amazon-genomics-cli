@@ -35,9 +35,3 @@ contexts:
     engines:
       - type: cwl
         engine: toil
-
-  spotCtx:
-    requestSpotInstances: true
-    engines:
-      - type: cwl
-        engine: toil

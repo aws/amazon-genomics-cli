@@ -63,10 +63,3 @@ contexts:
     engines:
       - type: wdl
         engine: miniwdl
-
-  # The spot context uses EC2 spot instances which are usually cheaper but may be interrupted
-  spotCtx:
-    requestSpotInstances: true
-    engines:
-      - type: wdl
-        engine: miniwdl
