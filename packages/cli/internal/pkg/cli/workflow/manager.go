@@ -318,9 +318,8 @@ func (m *Manager) uploadWorkflowToS3() {
 	if m.err != nil {
 		return
 	}
+	log.Debug().Msgf("copying %s to extra directory", m.path)
 	err := copyFileRecursivelyToLocation("extra", m.path)
-	m.manifestPath = filepath.Join("extra", "MANIFEST.json")
-
 	if err != nil {
 		m.err = err
 		return
@@ -339,7 +338,6 @@ func (m *Manager) readInput(inputUrl string) {
 	}
 	log.Debug().Msgf("Input file override URL: %s", inputUrl)
 	m.inputsPath = osutils.StripFileURLPrefix(inputUrl) // We actually support only local files
-	m.parseAndAddToManifest()
 	bytes, err := m.Storage.ReadAsBytes(inputUrl)
 	log.Debug().Msgf("content is:\n'%s'", string(bytes))
 	if err != nil {
@@ -364,6 +362,11 @@ func (m *Manager) parseInputToArguments() {
 }
 
 func (m *Manager) parseAndAddToManifest() {
+	if m.err != nil || m.inputsPath == "" {
+		return
+	}
+	m.manifestPath = filepath.Join("extra", "MANIFEST.json")
+	log.Debug().Msgf("Reading %s", m.manifestPath)
 	bytes, err := m.Storage.ReadAsBytes(m.manifestPath)
 	if err != nil {
 		m.err = err
@@ -573,6 +576,14 @@ func (m *Manager) cleanUpAttachments() {
 			log.Warn().Msgf("Failed to clean up temporary file '%s': %s", attachment, err)
 		}
 	}
+	log.Debug().Msgf("removing extra directory")
+	err := removeAll("extra")
+	if err != nil {
+		log.Warn().Msgf("Failed to remove extra directory")
+		m.err = err
+		return
+	}
+
 }
 
 func (m *Manager) runWorkflow() {
