@@ -595,10 +595,15 @@ export class AgcPermissions {
             }),
             new PolicyStatement({
                 effect: Effect.ALLOW,
-                actions: actions("apigateway", "*"),
+                actions: actions("apigateway", "GET", "POST", "PUT", "DELETE", "PATCH"),
                 resources: [
                     this.arn({service: "apigateway", region: "*", account: "", resource: "*"}),
-                ]
+                ],
+                conditions: {
+                    "StringEquals": {
+                        "aws:ResourceTag/application-name": "agc"
+                    }
+                },
             })
         ]
     }
