@@ -119,7 +119,7 @@ type workflowOutputProps struct {
 	workflowRunLogOutputs map[string]interface{}
 }
 
-type manifestProps struct {
+type ManifestProps struct {
 	MainWorkFlowURL string   `json:"mainWorkFlowURL"`
 	InputFileURLs   []string `json:"inputFileURLs"`
 	EngineOptions   string   `json:"engineOptions"`
@@ -318,8 +318,8 @@ func (m *Manager) uploadWorkflowToS3() {
 	if m.err != nil {
 		return
 	}
-	log.Debug().Msgf("copying %s to extra directory", m.path)
-	err := copyFileRecursivelyToLocation("extra", m.path)
+	log.Debug().Msgf("copying %s to temp directory", m.path)
+	err := copyFileRecursivelyToLocation("temp", m.path)
 	if err != nil {
 		m.err = err
 		return
@@ -361,18 +361,20 @@ func (m *Manager) parseInputToArguments() {
 	m.arguments = []string{arguments}
 }
 
-func (m *Manager) parseAndAddToManifest() {
+// writeTempManifest writes the inputsFile included in the command line to the temporary MANIFEST.json located in temp directory
+// This function is only called if there is a path included in the command line with the --inputsFile flag
+func (m *Manager) writeTempManifest() {
 	if m.err != nil || m.inputsPath == "" {
 		return
 	}
-	m.manifestPath = filepath.Join("extra", "MANIFEST.json")
+	m.manifestPath = filepath.Join("temp", "MANIFEST.json")
 	log.Debug().Msgf("Reading %s", m.manifestPath)
 	bytes, err := m.Storage.ReadAsBytes(m.manifestPath)
 	if err != nil {
 		m.err = err
 		return
 	}
-	var data manifestProps
+	var data ManifestProps
 	if err := json.Unmarshal(bytes, &data); err != nil {
 		m.err = err
 		return
@@ -568,6 +570,16 @@ func (m *Manager) saveAttachments() {
 	}
 }
 
+func (m *Manager) removeTempManifest() {
+	log.Debug().Msgf("removing temp directory")
+	err := removeAll("temp")
+	if err != nil {
+		log.Warn().Msgf("Failed to remove temp directory")
+		m.err = err
+		return
+	}
+}
+
 func (m *Manager) cleanUpAttachments() {
 	for _, attachment := range m.attachments {
 		log.Debug().Msgf("cleaning up '%s'", attachment)
@@ -576,14 +588,7 @@ func (m *Manager) cleanUpAttachments() {
 			log.Warn().Msgf("Failed to clean up temporary file '%s': %s", attachment, err)
 		}
 	}
-	log.Debug().Msgf("removing extra directory")
-	err := removeAll("extra")
-	if err != nil {
-		log.Warn().Msgf("Failed to remove extra directory")
-		m.err = err
-		return
-	}
-
+	m.removeTempManifest()
 }
 
 func (m *Manager) runWorkflow() {
