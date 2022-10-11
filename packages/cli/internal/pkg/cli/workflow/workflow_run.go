@@ -20,7 +20,7 @@ func (m *Manager) RunWorkflow(contextName, workflowName, inputsFileUrl string, o
 	}
 	m.calculateFinalLocation()
 	m.readInput(inputsFileUrl)
-	m.parseAndAddToManifest()
+	m.writeTempManifest()
 	m.uploadInputsToS3()
 	m.parseInputToArguments()
 	m.readOptionFile(optionFileUrl)
