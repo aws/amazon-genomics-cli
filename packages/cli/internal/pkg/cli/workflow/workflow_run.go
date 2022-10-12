@@ -11,18 +11,20 @@ func (m *Manager) RunWorkflow(contextName, workflowName, inputsFileUrl string, o
 	m.validateContextIsDeployed(contextName)
 	m.setOutputBucket()
 	m.parseWorkflowLocation()
+	m.readInput(inputsFileUrl) // initialize temp folder here, then delete once we get to packWorkflowPath?
+	m.initializeTempDir()
+	m.writeTempManifest()
+	m.uploadInputsToS3()
+	m.parseInputToArguments()
 	if m.isUploadRequired() {
 		m.setBaseObjectKey(contextName, workflowName)
 		m.setWorkflowPath()
-		m.packWorkflowPath()
+		m.packWorkflowPath() // where temp folder is initially created
 		m.uploadWorkflowToS3()
 		m.cleanUpWorkflow()
 	}
 	m.calculateFinalLocation()
-	m.readInput(inputsFileUrl)
-	m.writeTempManifest()
-	m.uploadInputsToS3()
-	m.parseInputToArguments()
+	// where everything was
 	m.readOptionFile(optionFileUrl)
 	m.setContextStackInfo(contextName)
 	m.setWesUrl()

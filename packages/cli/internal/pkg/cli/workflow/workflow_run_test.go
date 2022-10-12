@@ -44,8 +44,6 @@ const (
 	testWorkflowKey          = "project/" + testProjectName + "/userid/" + testUserId + "/context/" + testContext1Name + "/workflow/" + testLocalWorkflowName
 	testWorkflowZipKey       = testWorkflowKey + "/workflow.zip"
 	testWorkflowLocalUrl     = "workflow/path/file.wdl"
-	testMANIFESTPath         = "temp/MANIFEST.json"
-	testMANIFEST             = `{"mainWorkflowURL": "haplotypecaller-gvcf-gatk4.wdl","inputFileURLs": ["haplotypecaller-gvcf-gatk4.hg38.wgs.inputs.json"],"engineOptions": "--no-cache"}`
 	testFullWorkflowLocalUrl = testProjectFileDir + "/" + testWorkflowLocalUrl
 	testTempDir              = "/directory/workflow"
 	testWorkflowS3Url        = "s3://workflow/path/file.wdl"
@@ -54,6 +52,9 @@ const (
 	testArgsFileName         = "args.txt"
 	testArgumentsDir         = "workflow/path/"
 	testArgumentsPath        = testArgumentsDir + testArgsFileName
+	testMANIFESTPath         = testTempDir + "/MANIFEST.json"
+	testMANIFEST             = `{"mainWorkflowURL": "haplotypecaller-gvcf-gatk4.wdl","inputFileURLs": ["haplotypecaller-gvcf-gatk4.hg38.wgs.inputs.json"],"engineOptions": "--no-cache"}`
+	testAppendedMANIFEST     = "{\"mainWorkFlowURL\":\"haplotypecaller-gvcf-gatk4.wdl\",\"inputFileURLs\":[\"haplotypecaller-gvcf-gatk4.hg38.wgs.inputs.json\",\"" + testArgumentsDir + testArgsFileName + "\"],\"engineOptions\":\"--no-cache\"}"
 	testOptionFileName       = "test.json"
 	testOptionFilePath       = "file://path/to/" + testOptionFileName
 	testWesUrl               = "https://TestWesUrl.com/prod"
@@ -109,9 +110,9 @@ func (s *WorkflowRunTestSuite) formatManifestBytesToString() gomock.Matcher {
 			}),
 		gomock.WantFormatter(
 			gomock.StringerFunc(func() string {
-				return fmt.Sprintf("%s", s.testAppendedMANIFEST)
+				return fmt.Sprintf("%s", testAppendedMANIFEST)
 			}),
-			gomock.Eq([]byte(s.testAppendedMANIFEST)),
+			gomock.Eq([]byte(testAppendedMANIFEST)),
 		),
 	)
 	return eq
@@ -145,7 +146,6 @@ func (s *WorkflowRunTestSuite) BeforeTest(_, _ string) {
 	s.workAbsDir, err = os.Getwd()
 	require.NoError(s.T(), err)
 	s.inputsAbsDir = filepath.Join(s.workAbsDir, testArgumentsDir)
-	s.testAppendedMANIFEST = "{\"mainWorkFlowURL\":\"haplotypecaller-gvcf-gatk4.wdl\",\"inputFileURLs\":[\"haplotypecaller-gvcf-gatk4.hg38.wgs.inputs.json\",\"" + filepath.Join(testArgumentsDir, testArgsFileName) + "\"],\"engineOptions\":\"--no-cache\"}"
 
 	s.manager = &Manager{
 		Project:     s.mockProjectClient,
@@ -230,7 +230,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_LocalFile_WithS3Args() {
 	s.mockDdb.EXPECT().WriteWorkflowInstance(context.Background(), s.wfInstance).Return(nil)
 	s.mockOs.EXPECT().Remove(testCompressedTmpPath).After(uploadCall).Return(nil)
 	s.mockOs.EXPECT().Remove(testTmpAttachmentPath).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, testArgumentsPath, "")
 	if s.Assert().NoError(err) {
@@ -265,7 +264,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_LocalFile_WithLocalArgs() {
 	s.mockDdb.EXPECT().WriteWorkflowInstance(context.Background(), s.wfInstance).Return(nil)
 	s.mockOs.EXPECT().Remove(testCompressedTmpPath).After(uploadCall).Return(nil)
 	s.mockOs.EXPECT().Remove(testTmpAttachmentPath).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, testArgumentsPath, "")
 	if s.Assert().NoError(err) {
@@ -290,7 +288,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_LocalFile_NoArgs() {
 	s.mockWes.EXPECT().RunWorkflow(context.Background(), gomock.Any()).Return(testRun1Id, nil)
 	s.mockDdb.EXPECT().WriteWorkflowInstance(context.Background(), s.wfInstance).Return(nil)
 	s.mockOs.EXPECT().Remove(testCompressedTmpPath).After(uploadCall).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, "", "")
 	if s.Assert().NoError(err) {
@@ -303,12 +300,12 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_LocalFile_OptionsFile() {
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
+	s.mockTmp.EXPECT().TempDir("", "workflow_*").Return(testTempDir, nil)
 	s.mockCfn.EXPECT().GetStackInfo(testContext1Stack).Return(s.testStackInfo, nil)
 	s.mockStorageClient.EXPECT().ReadAsBytes(testOptionFilePath).Return([]byte(testOptionFileLocal), nil)
 	s.mockWes.EXPECT().RunWorkflow(context.Background(), gomock.Any()).Return(testRun1Id, nil)
 	s.wfInstance.WorkflowName = testS3WorkflowName
 	s.mockDdb.EXPECT().WriteWorkflowInstance(context.Background(), s.wfInstance).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testS3WorkflowName, "", testOptionFilePath)
 	if s.Assert().NoError(err) {
 		s.Assert().Equal(testRun1Id, actualId)
@@ -320,7 +317,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_S3Object_WithLocalArgs() {
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
-	fmt.Printf("%s, Jonathan", testArgumentsPath)
 	s.mockStorageClient.EXPECT().ReadAsBytes(testArgumentsPath).Return([]byte(testInputLocal), nil)
 	s.mockStorageClient.EXPECT().ReadAsBytes(testMANIFESTPath).Return([]byte(testMANIFEST), nil)
 	s.mockStorageClient.EXPECT().WriteFromBytes(testMANIFESTPath, s.formatManifestBytesToString()).Return(nil)
@@ -337,7 +333,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_S3Object_WithLocalArgs() {
 	s.wfInstance.WorkflowName = testS3WorkflowName
 	s.mockDdb.EXPECT().WriteWorkflowInstance(context.Background(), s.wfInstance).Return(nil)
 	s.mockOs.EXPECT().Remove(testTmpAttachmentPath).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testS3WorkflowName, testArgumentsPath, "")
 	if s.Assert().NoError(err) {
@@ -350,11 +345,11 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_S3Object_NoArgs() {
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
+	s.mockTmp.EXPECT().TempDir("", "workflow_*").AnyTimes().Return(testTempDir, nil)
 	s.mockCfn.EXPECT().GetStackInfo(testContext1Stack).Return(s.testStackInfo, nil)
 	s.mockWes.EXPECT().RunWorkflow(context.Background(), gomock.Any()).Return(testRun1Id, nil)
 	s.wfInstance.WorkflowName = testS3WorkflowName
 	s.mockDdb.EXPECT().WriteWorkflowInstance(context.Background(), s.wfInstance).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testS3WorkflowName, "", "")
 	if s.Assert().NoError(err) {
@@ -365,7 +360,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_S3Object_NoArgs() {
 func (s *WorkflowRunTestSuite) TestRunWorkflow_ReadProjectSpecFailure() {
 	errorMessage := "failed to read project specification"
 	s.mockProjectClient.EXPECT().Read().Return(spec.Project{}, errors.New(errorMessage))
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, "", "", "")
 	if s.Assert().Error(err) {
@@ -376,7 +370,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_ReadProjectSpecFailure() {
 
 func (s *WorkflowRunTestSuite) TestRunWorkflow_MissingWorkflowSpec() {
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, "dummy", "", "")
 	if s.Assert().Error(err) {
@@ -390,7 +383,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_InvalidWorkflowDefinitionUrl() {
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testInvalidWorkflowName, "", "")
 	if s.Assert().Error(err) {
@@ -404,12 +396,12 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_CompressionFailed() {
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	errorMessage := "cannot compress file"
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
+	s.mockTmp.EXPECT().TempDir("", "workflow_*").AnyTimes().Return(testTempDir, nil)
 	s.mockProjectClient.EXPECT().GetLocation().Return(testProjectFileDir)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 	s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
 	s.mockFileInfo.EXPECT().IsDir().Return(false)
 	s.mockZip.EXPECT().CompressToTmp(testFullWorkflowLocalUrl).Return("", errors.New(errorMessage))
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, "", "")
 	if s.Assert().Error(err) {
@@ -424,7 +416,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_SSMClientFailed() {
 	errorMessage := "cannot connect to SSM"
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return("", errors.New(errorMessage))
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, "", "")
 	if s.Assert().Error(err) {
@@ -444,7 +435,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_UploadToS3Failed() {
 	s.mockInputClient.EXPECT().UpdateInputReferencesAndUploadToS3(testFullWorkflowLocalUrl, testTempDir, testOutputBucket, testWorkflowKey).Return(nil)
 	s.mockTmp.EXPECT().TempDir("", "workflow_*").Return(testTempDir, nil)
 	s.mockOs.EXPECT().RemoveAll(testTempDir).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 	s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
 	s.mockFileInfo.EXPECT().IsDir().Return(true)
 	s.mockZip.EXPECT().CompressToTmp(testTempDir).Return(testCompressedTmpPath, nil)
@@ -463,18 +453,8 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_ReadArgsFailed() {
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	errorMessage := "cannot read input"
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
-	s.mockProjectClient.EXPECT().GetLocation().Return(testProjectFileDir)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
-	s.mockInputClient.EXPECT().UpdateInputReferencesAndUploadToS3(testFullWorkflowLocalUrl, testTempDir, testOutputBucket, testWorkflowKey).Return(nil)
-	s.mockTmp.EXPECT().TempDir("", "workflow_*").Return(testTempDir, nil)
-	s.mockOs.EXPECT().RemoveAll(testTempDir).Return(nil)
-	s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
-	s.mockFileInfo.EXPECT().IsDir().Return(true)
-	s.mockZip.EXPECT().CompressToTmp(testTempDir).Return(testCompressedTmpPath, nil)
-	s.mockS3Client.EXPECT().UploadFile(testOutputBucket, testWorkflowZipKey, testCompressedTmpPath).Return(nil)
 	s.mockStorageClient.EXPECT().ReadAsBytes(testArgumentsPath).Return([]byte{}, errors.New(errorMessage))
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
-	s.mockOs.EXPECT().Remove(testCompressedTmpPath).Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, testArgumentsPath, "")
 	if s.Assert().Error(err) {
@@ -491,21 +471,20 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_UploadInputFailed() {
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
 	s.mockProjectClient.EXPECT().GetLocation().AnyTimes().Return(testProjectFileDir)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
-	s.mockInputClient.EXPECT().UpdateInputReferencesAndUploadToS3(testFullWorkflowLocalUrl, testTempDir, testOutputBucket, testWorkflowKey).Return(nil)
 	s.mockTmp.EXPECT().TempDir("", "workflow_*").AnyTimes().Return(testTempDir, nil)
-	s.mockOs.EXPECT().RemoveAll(testTempDir).Return(nil)
-	s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
-	s.mockFileInfo.EXPECT().IsDir().Return(true)
-	s.mockZip.EXPECT().CompressToTmp(testTempDir).Return(testCompressedTmpPath, nil)
-	s.mockS3Client.EXPECT().UploadFile(testOutputBucket, testWorkflowZipKey, testCompressedTmpPath).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 	s.mockStorageClient.EXPECT().ReadAsBytes(testArgumentsPath).Return([]byte(testInputLocal), nil)
-	s.mockOs.EXPECT().Remove(testCompressedTmpPath).Return(nil)
 	s.mockStorageClient.EXPECT().ReadAsBytes(testMANIFESTPath).Return([]byte(testMANIFEST), nil)
 	s.mockStorageClient.EXPECT().WriteFromBytes(testMANIFESTPath, s.formatManifestBytesToString()).Return(nil)
 	testInputS3Map := make(map[string]interface{})
 	_ = json.Unmarshal([]byte(testInputLocal), &testInputS3Map)
 	s.mockInputClient.EXPECT().UpdateInputs(s.inputsAbsDir, testInputS3Map, testOutputBucket, testFilePathKey).Return(nil, errors.New(errorMessage))
+	// s.mockInputClient.EXPECT().UpdateInputReferencesAndUploadToS3(testFullWorkflowLocalUrl, testTempDir, testOutputBucket, testWorkflowKey).Return(nil)
+	// s.mockOs.EXPECT().RemoveAll(testTempDir).Return(nil)
+	// s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
+	// s.mockFileInfo.EXPECT().IsDir().Return(true)
+	// s.mockZip.EXPECT().CompressToTmp(testTempDir).Return(testCompressedTmpPath, nil)
+	// s.mockS3Client.EXPECT().UploadFile(testOutputBucket, testWorkflowZipKey, testCompressedTmpPath).Return(nil)
+	// s.mockOs.EXPECT().Remove(testCompressedTmpPath).Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, testArgumentsPath, "")
 	if s.Assert().Error(err) {
@@ -519,13 +498,13 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_CfnFailed() {
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	errorMessage := "cannot call CFN"
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
+	s.mockTmp.EXPECT().TempDir("", "workflow_*").AnyTimes().Return(testTempDir, nil)
 	s.mockProjectClient.EXPECT().GetLocation().Return(testProjectFileDir)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 	s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
 	s.mockFileInfo.EXPECT().IsDir().Return(false)
 	s.mockZip.EXPECT().CompressToTmp(testFullWorkflowLocalUrl).Return(testCompressedTmpPath, nil)
 	s.mockS3Client.EXPECT().UploadFile(testOutputBucket, testWorkflowZipKey, testCompressedTmpPath).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 	s.mockCfn.EXPECT().GetStackInfo(testContext1Stack).Return(cfn.StackInfo{}, errors.New(errorMessage))
 	s.mockOs.EXPECT().Remove(testCompressedTmpPath).Return(nil)
 
@@ -541,12 +520,12 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_CfnMissingWesUrlFailed() {
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	errorMessage := "wes endpoint for workflow type 'TypeLanguage' is missing in engine stack 'TestStackId'"
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
+	s.mockTmp.EXPECT().TempDir("", "workflow_*").AnyTimes().Return(testTempDir, nil)
 	s.mockProjectClient.EXPECT().GetLocation().Return(testProjectFileDir)
 	s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
 	s.mockFileInfo.EXPECT().IsDir().Return(false)
 	s.mockZip.EXPECT().CompressToTmp(testFullWorkflowLocalUrl).Return(testCompressedTmpPath, nil)
 	s.mockS3Client.EXPECT().UploadFile(testOutputBucket, testWorkflowZipKey, testCompressedTmpPath).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 	stackInfo := cfn.StackInfo{
 		Id:      testStackId,
@@ -567,16 +546,15 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_WesFailed() {
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	errorMessage := "cannot call WES"
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
+	s.mockTmp.EXPECT().TempDir("", "workflow_*").AnyTimes().Return(testTempDir, nil)
 	s.mockProjectClient.EXPECT().GetLocation().Return(testProjectFileDir)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
 	s.mockInputClient.EXPECT().UpdateInputReferencesAndUploadToS3(testFullWorkflowLocalUrl, testTempDir, testOutputBucket, testWorkflowKey).Return(nil)
-	s.mockTmp.EXPECT().TempDir("", "workflow_*").Return(testTempDir, nil)
 	s.mockOs.EXPECT().RemoveAll(testTempDir).Return(nil)
 	s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
 	s.mockFileInfo.EXPECT().IsDir().Return(true)
 	s.mockZip.EXPECT().CompressToTmp(testTempDir).Return(testCompressedTmpPath, nil)
 	s.mockS3Client.EXPECT().UploadFile(testOutputBucket, testWorkflowZipKey, testCompressedTmpPath).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 	s.mockCfn.EXPECT().GetStackInfo(testContext1Stack).Return(s.testStackInfo, nil)
 	s.mockWes.EXPECT().RunWorkflow(context.Background(), gomock.Any()).Return("", errors.New(errorMessage))
 	s.mockOs.EXPECT().Remove(testCompressedTmpPath).Return(nil)
@@ -593,7 +571,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_DeployValidationFailed() {
 	errorMessage := "context 'TestContext1' is not deployed"
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, cfn.StackDoesNotExistError)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, "", "")
 	if s.Assert().Error(err) {
@@ -607,7 +584,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_DeployValidationCfnFailed() {
 	errorMessage := "some cfn error"
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, errors.New(errorMessage))
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, "", "")
 	if s.Assert().Error(err) {
@@ -621,12 +597,8 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_CreateTempDir() {
 	s.mockCfn.EXPECT().GetStackStatus(testContext1Stack).Return(types.StackStatusCreateComplete, nil)
 	errorMessage := "cannot dir error"
 	s.mockProjectClient.EXPECT().Read().Return(s.testProjSpec, nil)
-	s.mockProjectClient.EXPECT().GetLocation().Return(testProjectFileDir)
 	s.mockSsmClient.EXPECT().GetOutputBucket().Return(testOutputBucket, nil)
-	s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
-	s.mockFileInfo.EXPECT().IsDir().Return(true)
 	s.mockTmp.EXPECT().TempDir("", "workflow_*").Return("", errors.New(errorMessage))
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, "", "")
 	if s.Assert().Error(err) {
@@ -647,7 +619,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_CopyError() {
 	s.mockFileInfo.EXPECT().IsDir().Return(true)
 	s.mockInputClient.EXPECT().UpdateInputReferencesAndUploadToS3(testFullWorkflowLocalUrl, testTempDir, testOutputBucket, testWorkflowKey).Return(errors.New(errorMessage))
 	s.mockOs.EXPECT().RemoveAll(testTempDir).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, "", "")
 	if s.Assert().Error(err) {
@@ -679,7 +650,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_RemoveErrorStillWorks() {
 	s.mockCfn.EXPECT().GetStackInfo(testContext1Stack).Return(s.testStackInfo, nil)
 	s.mockWes.EXPECT().RunWorkflow(context.Background(), gomock.Any()).Return(testRun1Id, nil)
 	s.mockDdb.EXPECT().WriteWorkflowInstance(context.Background(), s.wfInstance).Return(nil)
-	s.mockOs.EXPECT().RemoveAll("temp").Return(nil)
 	s.mockOs.EXPECT().Remove(testCompressedTmpPath).After(uploadCall).Return(nil)
 	s.mockOs.EXPECT().Remove(testTmpAttachmentPath).Return(nil)
 

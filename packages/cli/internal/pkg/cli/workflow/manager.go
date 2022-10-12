@@ -31,6 +31,7 @@ import (
 var (
 	compressToTmp                 = zipfile.CompressToTmp
 	workflowZip                   = "workflow.zip"
+	manifestFilename              = "MANIFEST.json"
 	removeFile                    = os.Remove
 	removeAll                     = os.RemoveAll
 	osStat                        = os.Stat
@@ -74,6 +75,7 @@ type runProps struct {
 	packPath             string
 	workflowUrl          string
 	manifestPath         string
+	tempPath             string
 	inputsPath           string
 	input                Input
 	optionFileUrl        string
@@ -249,41 +251,36 @@ func (m *Manager) packWorkflowPath() {
 		return
 	}
 
-	var absoluteWorkflowPath string
+	// var absoluteWorkflowPath string
 	if fileInfo.IsDir() {
-		absoluteWorkflowPath, err = createTempDir("", "workflow_*")
-		log.Debug().Msgf("workflow path '%s' is a directory, packing contents ...", absoluteWorkflowPath)
-		if err != nil {
-			m.err = err
-			return
-		}
-		defer func() {
-			err = removeAll(absoluteWorkflowPath)
-			if err != nil {
-				log.Warn().Msgf("Failed to delete temporary folder '%s'", m.packPath)
-			}
-		}()
+		// absoluteWorkflowPath, err = createTempDir("", "workflow_*")
+		log.Debug().Msgf("workflow path '%s' is a directory, packing contents ...", m.tempPath)
+		// if err != nil {
+		// 	m.err = err
+		// 	return
+		// }
+		defer m.deleteTempDir()
 
-		log.Debug().Msgf("recursively copying content of '%s' to '%s'", m.path, absoluteWorkflowPath)
-		err = copyFileRecursivelyToLocation(absoluteWorkflowPath, m.path)
-		if err != nil {
-			log.Error().Err(err)
-			m.err = err
-			return
-		}
+		// log.Debug().Msgf("recursively copying content of '%s' to '%s'", m.path, m.tempPath)
+		// err = copyFileRecursivelyToLocation(absoluteWorkflowPath, m.path)
+		// if err != nil {
+		// 	log.Error().Err(err)
+		// 	m.err = err
+		// 	return
+		// }
 
 		log.Debug().Msgf("updating file references and loading packed content to '%s/%s'", m.bucketName, m.baseWorkflowKey)
-		err = m.InputClient.UpdateInputReferencesAndUploadToS3(m.path, absoluteWorkflowPath, m.bucketName, m.baseWorkflowKey)
+		err = m.InputClient.UpdateInputReferencesAndUploadToS3(m.path, m.tempPath, m.bucketName, m.baseWorkflowKey)
 		if err != nil {
 			log.Error().Err(err)
 			m.err = err
 			return
 		}
 	} else {
-		absoluteWorkflowPath = m.path
+		m.tempPath = m.path
 	}
 
-	m.packPath, m.err = compressToTmp(absoluteWorkflowPath)
+	m.packPath, m.err = compressToTmp(m.tempPath)
 }
 
 func (m *Manager) setOutputBucket() {
@@ -361,13 +358,43 @@ func (m *Manager) parseInputToArguments() {
 	m.arguments = []string{arguments}
 }
 
+func (m *Manager) initializeTempDir() {
+	if m.err != nil {
+		return
+	}
+	var err error
+	m.tempPath, err = createTempDir("", "workflow_*")
+	log.Debug().Msgf("created temp directory at: '%s'", m.tempPath)
+	if err != nil {
+		m.err = err
+		return
+	}
+	log.Debug().Msgf("recursively copying content of '%s' to '%s'", m.path, m.tempPath)
+	err = copyFileRecursivelyToLocation(m.tempPath, m.path)
+	if err != nil {
+		log.Error().Err(err)
+		m.err = err
+		return
+	}
+}
+
+func (m *Manager) deleteTempDir() {
+	if m.tempPath == "" {
+		return
+	}
+	err := removeAll(m.tempPath)
+	if err != nil {
+		log.Warn().Msgf("Failed to delete temporary folder '%s'", m.tempPath)
+	}
+}
+
 // writeTempManifest writes the inputsFile included in the command line to the temporary MANIFEST.json located in temp directory
 // This function is only called if there is a path included in the command line with the --inputsFile flag
 func (m *Manager) writeTempManifest() {
 	if m.err != nil || m.inputsPath == "" {
 		return
 	}
-	m.manifestPath = filepath.Join("temp", "MANIFEST.json")
+	m.manifestPath = filepath.Join(m.tempPath, manifestFilename)
 	log.Debug().Msgf("Reading %s", m.manifestPath)
 	bytes, err := m.Storage.ReadAsBytes(m.manifestPath)
 	if err != nil {
@@ -570,16 +597,6 @@ func (m *Manager) saveAttachments() {
 	}
 }
 
-func (m *Manager) removeTempManifest() {
-	log.Debug().Msgf("removing temp directory")
-	err := removeAll("temp")
-	if err != nil {
-		log.Warn().Msgf("Failed to remove temp directory")
-		m.err = err
-		return
-	}
-}
-
 func (m *Manager) cleanUpAttachments() {
 	for _, attachment := range m.attachments {
 		log.Debug().Msgf("cleaning up '%s'", attachment)
@@ -588,7 +605,6 @@ func (m *Manager) cleanUpAttachments() {
 			log.Warn().Msgf("Failed to clean up temporary file '%s': %s", attachment, err)
 		}
 	}
-	m.removeTempManifest()
 }
 
 func (m *Manager) runWorkflow() {
