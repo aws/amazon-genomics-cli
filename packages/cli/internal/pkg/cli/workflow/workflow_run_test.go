@@ -478,13 +478,6 @@ func (s *WorkflowRunTestSuite) TestRunWorkflow_UploadInputFailed() {
 	testInputS3Map := make(map[string]interface{})
 	_ = json.Unmarshal([]byte(testInputLocal), &testInputS3Map)
 	s.mockInputClient.EXPECT().UpdateInputs(s.inputsAbsDir, testInputS3Map, testOutputBucket, testFilePathKey).Return(nil, errors.New(errorMessage))
-	// s.mockInputClient.EXPECT().UpdateInputReferencesAndUploadToS3(testFullWorkflowLocalUrl, testTempDir, testOutputBucket, testWorkflowKey).Return(nil)
-	// s.mockOs.EXPECT().RemoveAll(testTempDir).Return(nil)
-	// s.mockOs.EXPECT().Stat(testFullWorkflowLocalUrl).Return(s.mockFileInfo, nil)
-	// s.mockFileInfo.EXPECT().IsDir().Return(true)
-	// s.mockZip.EXPECT().CompressToTmp(testTempDir).Return(testCompressedTmpPath, nil)
-	// s.mockS3Client.EXPECT().UploadFile(testOutputBucket, testWorkflowZipKey, testCompressedTmpPath).Return(nil)
-	// s.mockOs.EXPECT().Remove(testCompressedTmpPath).Return(nil)
 
 	actualId, err := s.manager.RunWorkflow(testContext1Name, testLocalWorkflowName, testArgumentsPath, "")
 	if s.Assert().Error(err) {

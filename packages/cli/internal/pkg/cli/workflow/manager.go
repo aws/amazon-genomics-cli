@@ -251,24 +251,9 @@ func (m *Manager) packWorkflowPath() {
 		return
 	}
 
-	// var absoluteWorkflowPath string
 	if fileInfo.IsDir() {
-		// absoluteWorkflowPath, err = createTempDir("", "workflow_*")
 		log.Debug().Msgf("workflow path '%s' is a directory, packing contents ...", m.tempPath)
-		// if err != nil {
-		// 	m.err = err
-		// 	return
-		// }
 		defer m.deleteTempDir()
-
-		// log.Debug().Msgf("recursively copying content of '%s' to '%s'", m.path, m.tempPath)
-		// err = copyFileRecursivelyToLocation(absoluteWorkflowPath, m.path)
-		// if err != nil {
-		// 	log.Error().Err(err)
-		// 	m.err = err
-		// 	return
-		// }
-
 		log.Debug().Msgf("updating file references and loading packed content to '%s/%s'", m.bucketName, m.baseWorkflowKey)
 		err = m.InputClient.UpdateInputReferencesAndUploadToS3(m.path, m.tempPath, m.bucketName, m.baseWorkflowKey)
 		if err != nil {
