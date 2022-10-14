@@ -14,14 +14,14 @@
       }
     },
     "@aws-cdk/aws-batch-alpha": {
-      "version": "2.38.1-alpha.0",
-      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-batch-alpha/-/aws-batch-alpha-2.38.1-alpha.0.tgz",
-      "integrity": "sha512-gwbwAjbeW6oq0L3hnlD6fv4gr/J78WVpbAAETqlAP1U5Z8JKN1pXqtpyyc4B+imb85jh9VFNF2K1NBGsgoa4aA=="
+      "version": "2.46.0-alpha.0",
+      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-batch-alpha/-/aws-batch-alpha-2.46.0-alpha.0.tgz",
+      "integrity": "sha512-zUDu9zg5G66wV8+GtVG2XiC7uVc8lTCDLYth2jU6BGXe91WpFZO0nAp4dkNVN+HlrJSKrogNq34uskcGPPiQ4Q=="
     },
     "@aws-cdk/aws-lambda-python-alpha": {
-      "version": "2.38.1-alpha.0",
-      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-lambda-python-alpha/-/aws-lambda-python-alpha-2.38.1-alpha.0.tgz",
-      "integrity": "sha512-DyFy+JQAOZtiYNaou8jYVSzU7BS9zck1drs7oFGnImcqmDWNTji14kRMlkd91G4xufipPIHGPPjXO30rZn2ODQ=="
+      "version": "2.46.0-alpha.0",
+      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-lambda-python-alpha/-/aws-lambda-python-alpha-2.46.0-alpha.0.tgz",
+      "integrity": "sha512-Z/dDABe48E4IYB31iihHPL+jVfenGE6yLZDu+CE7EwUUOKAlU4nNSpFfhc5pmpZ4P9lnWCT87qLUlxNO8OEg1Q=="
     },
     "@babel/code-frame": {
       "version": "7.12.11",
@@ -1240,18 +1240,18 @@
       "dev": true
     },
     "aws-cdk": {
-      "version": "2.38.1",
-      "resolved": "https://registry.npmjs.org/aws-cdk/-/aws-cdk-2.38.1.tgz",
-      "integrity": "sha512-bIHRCkmbXBmJWw1Gq5UsAUUYKABuE/ah1iAA14hXLS8+9AJlF/Ptn+NsUCt9K5v17cRqtUoeaOAMAPrZs8l+YA==",
+      "version": "2.46.0",
+      "resolved": "https://registry.npmjs.org/aws-cdk/-/aws-cdk-2.46.0.tgz",
+      "integrity": "sha512-5pacxA1zMMxxyJKhTGk22/64lV3Nb4dZMY8RW4KfzZWQz8TnsIipd0Ks37rowQd7O2+VFkITvl86Socjewr5VQ==",
       "dev": true,
       "requires": {
         "fsevents": "2.3.2"
       }
     },
     "aws-cdk-lib": {
-      "version": "2.38.1",
-      "resolved": "https://registry.npmjs.org/aws-cdk-lib/-/aws-cdk-lib-2.38.1.tgz",
-      "integrity": "sha512-vEgJBUzL1yqlSMYGjipl+eRwy900x3RmbVzTcxKdCZvhtBMQ1hqJAMgVswvoyA5EnvfELLlz9ufm+qdKGs9DxQ==",
+      "version": "2.46.0",
+      "resolved": "https://registry.npmjs.org/aws-cdk-lib/-/aws-cdk-lib-2.46.0.tgz",
+      "integrity": "sha512-3MRslNEk7qqUMMkqIrzs/T44dz9r5FG83+HaoELEVCdEEBccogDnTS4OaJZ3BYiQLLS4f3FETgi+w4SS2RwMTQ==",
       "requires": {
         "@balena/dockerignore": "^1.0.2",
         "case": "1.6.3",
@@ -1260,34 +1260,41 @@
         "jsonschema": "^1.4.1",
         "minimatch": "^3.1.2",
         "punycode": "^2.1.1",
-        "semver": "^7.3.7",
+        "semver": "^7.3.8",
         "yaml": "1.10.2"
       },
       "dependencies": {
         "@balena/dockerignore": {
-          "version": "1.0.2"
+          "version": "1.0.2",
+          "bundled": true
         },
         "at-least-node": {
-          "version": "1.0.0"
+          "version": "1.0.0",
+          "bundled": true
         },
         "balanced-match": {
-          "version": "1.0.2"
+          "version": "1.0.2",
+          "bundled": true
         },
         "brace-expansion": {
           "version": "1.1.11",
+          "bundled": true,
           "requires": {
             "balanced-match": "^1.0.0",
             "concat-map": "0.0.1"
           }
         },
         "case": {
-          "version": "1.6.3"
+          "version": "1.6.3",
+          "bundled": true
         },
         "concat-map": {
-          "version": "0.0.1"
+          "version": "0.0.1",
+          "bundled": true
         },
         "fs-extra": {
           "version": "9.1.0",
+          "bundled": true,
           "requires": {
             "at-least-node": "^1.0.0",
             "graceful-fs": "^4.2.0",
@@ -1296,50 +1303,61 @@
           }
         },
         "graceful-fs": {
-          "version": "4.2.10"
+          "version": "4.2.10",
+          "bundled": true
         },
         "ignore": {
-          "version": "5.2.0"
+          "version": "5.2.0",
+          "bundled": true
         },
         "jsonfile": {
           "version": "6.1.0",
+          "bundled": true,
           "requires": {
             "graceful-fs": "^4.1.6",
             "universalify": "^2.0.0"
           }
         },
         "jsonschema": {
-          "version": "1.4.1"
+          "version": "1.4.1",
+          "bundled": true
         },
         "lru-cache": {
           "version": "6.0.0",
+          "bundled": true,
           "requires": {
             "yallist": "^4.0.0"
           }
         },
         "minimatch": {
           "version": "3.1.2",
+          "bundled": true,
           "requires": {
             "brace-expansion": "^1.1.7"
           }
         },
         "punycode": {
-          "version": "2.1.1"
+          "version": "2.1.1",
+          "bundled": true
         },
         "semver": {
-          "version": "7.3.7",
+          "version": "7.3.8",
+          "bundled": true,
           "requires": {
             "lru-cache": "^6.0.0"
           }
         },
         "universalify": {
-          "version": "2.0.0"
+          "version": "2.0.0",
+          "bundled": true
         },
         "yallist": {
-          "version": "4.0.0"
+          "version": "4.0.0",
+          "bundled": true
         },
         "yaml": {
-          "version": "1.10.2"
+          "version": "1.10.2",
+          "bundled": true
         }
       }
     },
