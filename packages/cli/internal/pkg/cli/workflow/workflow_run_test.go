@@ -55,7 +55,7 @@ const (
 	testArgumentsPath        = testArgumentsDir + testArgsFileName
 	testMANIFESTPath         = testTempDir + "/MANIFEST.json"
 	testMANIFEST             = `{"mainWorkflowURL": "haplotypecaller-gvcf-gatk4.wdl","inputFileURLs": ["haplotypecaller-gvcf-gatk4.hg38.wgs.inputs.json"],"engineOptions": "--no-cache"}`
-	testAppendedMANIFEST     = "{\"mainWorkFlowURL\":\"haplotypecaller-gvcf-gatk4.wdl\",\"inputFileURLs\":[\"haplotypecaller-gvcf-gatk4.hg38.wgs.inputs.json\",\"" + testArgumentsDir + testArgsFileName + "\"],\"engineOptions\":\"--no-cache\"}"
+	testAppendedMANIFEST     = "{\"mainWorkFlowURL\":\"haplotypecaller-gvcf-gatk4.wdl\",\"inputFileURLs\":[\"haplotypecaller-gvcf-gatk4.hg38.wgs.inputs.json\",\"" + testArgsFileName + "\"],\"engineOptions\":\"--no-cache\"}"
 	testOptionFileName       = "test.json"
 	testOptionFilePath       = "file://path/to/" + testOptionFileName
 	testWesUrl               = "https://TestWesUrl.com/prod"

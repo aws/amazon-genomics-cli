@@ -36,7 +36,6 @@ var (
 	removeAll                     = os.RemoveAll
 	osStat                        = os.Stat
 	createTempDir                 = os.MkdirTemp
-	copyFile                      = osutils.CopyFile
 	copyFileRecursivelyToLocation = osutils.CopyFileRecursivelyToLocation
 	writeToTmp                    = func(namePattern, content string) (string, error) {
 		f, err := os.CreateTemp("", namePattern)
@@ -256,7 +255,7 @@ func (m *Manager) packWorkflowPath() {
 		log.Debug().Msgf("workflow path '%s' is a directory, packing contents ...", m.tempPath)
 		defer m.deleteTempDir()
 		log.Debug().Msgf("updating file references and loading packed content to '%s/%s'", m.bucketName, m.baseWorkflowKey)
-		// err = m.InputClient.UpdateInputReferencesAndUploadToS3(m.path, m.tempPath, m.bucketName, m.baseWorkflowKey)
+		err = m.InputClient.UpdateInputReferencesAndUploadToS3(m.path, m.tempPath, m.bucketName, m.baseWorkflowKey)
 		if err != nil {
 			log.Error().Err(err)
 			m.err = err
@@ -406,7 +405,7 @@ func (m *Manager) writeTempManifest() {
 		m.err = err
 		return
 	}
-	data.InputFileURLs = append(data.InputFileURLs, m.inputsPath)
+	data.InputFileURLs = append(data.InputFileURLs, filepath.Base(m.inputsPath))
 	bytes, err = json.Marshal(data)
 	if err != nil {
 		m.err = err
