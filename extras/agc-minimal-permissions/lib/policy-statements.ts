@@ -597,7 +597,7 @@ export class AgcPermissions {
                 effect: Effect.ALLOW,
                 actions: actions("apigateway", "GET", "POST", "PUT", "DELETE", "PATCH"),
                 resources: [
-                    this.arn({service: "apigateway", region: "*", account: "", resource: "*"}),
+                    this.arn({service: "apigateway", region: "*", resource: "*"}),
                 ],
                 conditions: {
                     "StringEquals": {
