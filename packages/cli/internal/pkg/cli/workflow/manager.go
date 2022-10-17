@@ -36,6 +36,7 @@ var (
 	removeAll                     = os.RemoveAll
 	osStat                        = os.Stat
 	createTempDir                 = os.MkdirTemp
+	copyFile                      = osutils.CopyFile
 	copyFileRecursivelyToLocation = osutils.CopyFileRecursivelyToLocation
 	writeToTmp                    = func(namePattern, content string) (string, error) {
 		f, err := os.CreateTemp("", namePattern)
@@ -255,7 +256,7 @@ func (m *Manager) packWorkflowPath() {
 		log.Debug().Msgf("workflow path '%s' is a directory, packing contents ...", m.tempPath)
 		defer m.deleteTempDir()
 		log.Debug().Msgf("updating file references and loading packed content to '%s/%s'", m.bucketName, m.baseWorkflowKey)
-		err = m.InputClient.UpdateInputReferencesAndUploadToS3(m.path, m.tempPath, m.bucketName, m.baseWorkflowKey)
+		// err = m.InputClient.UpdateInputReferencesAndUploadToS3(m.path, m.tempPath, m.bucketName, m.baseWorkflowKey)
 		if err != nil {
 			log.Error().Err(err)
 			m.err = err
@@ -300,12 +301,6 @@ func (m *Manager) uploadWorkflowToS3() {
 	if m.err != nil {
 		return
 	}
-	log.Debug().Msgf("copying %s to temp directory", m.path)
-	err := copyFileRecursivelyToLocation("temp", m.path)
-	if err != nil {
-		m.err = err
-		return
-	}
 	objectKey := fmt.Sprintf("%s/%s", m.baseWorkflowKey, workflowZip)
 	log.Debug().Msgf("updloading '%s' to 's3://%s/%s", m.packPath, m.bucketName, objectKey)
 	m.err = m.S3.UploadFile(m.bucketName, objectKey, m.packPath)
@@ -332,6 +327,26 @@ func (m *Manager) readInput(inputUrl string) {
 		return
 	}
 	m.input = input
+}
+
+func (m *Manager) copyInputToTemp() {
+	if m.err != nil || m.inputsPath == "" {
+		return
+	}
+	log.Debug().Msgf("Copying input file to temp: %s", m.tempPath)
+	absInputsPath, err := filepath.Abs(m.inputsPath)
+	bytes, err := m.Storage.ReadAsBytes(m.inputsPath)
+
+	if err != nil {
+		m.err = err
+		return
+	}
+	dest := filepath.Join(m.tempPath, filepath.Base(absInputsPath))
+	err = m.Storage.WriteFromBytes(dest, bytes)
+	if err != nil {
+		m.err = err
+		return
+	}
 }
 
 func (m *Manager) parseInputToArguments() {
@@ -380,7 +395,7 @@ func (m *Manager) writeTempManifest() {
 		return
 	}
 	m.manifestPath = filepath.Join(m.tempPath, manifestFilename)
-	log.Debug().Msgf("Reading %s", m.manifestPath)
+	log.Debug().Msgf("Reading temp manifest %s", m.manifestPath)
 	bytes, err := m.Storage.ReadAsBytes(m.manifestPath)
 	if err != nil {
 		m.err = err
