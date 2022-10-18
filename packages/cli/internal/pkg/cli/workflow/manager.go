@@ -31,7 +31,7 @@ import (
 var (
 	compressToTmp                 = zipfile.CompressToTmp
 	workflowZip                   = "workflow.zip"
-	manifestFilename              = "MANIFEST.json"
+	manifestFilename              = storage.ManifestFileName
 	removeFile                    = os.Remove
 	removeAll                     = os.RemoveAll
 	osStat                        = os.Stat
@@ -227,7 +227,9 @@ func (m *Manager) isUploadRequired() bool {
 	scheme := strings.ToLower(m.parsedSourceURL.Scheme)
 	m.isLocal = scheme == "" || scheme == "file"
 	log.Debug().Msgf("workflow location is local? '%t', upload is required? '%t'", m.isLocal, m.isLocal)
-	return m.isLocal
+	inputIncluded := m.inputsPath != ""
+	log.Debug().Msgf("does input file exist? '%t'", inputIncluded)
+	return m.isLocal || inputIncluded
 }
 
 func (m *Manager) setWorkflowPath() {
