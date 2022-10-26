@@ -122,7 +122,7 @@ type workflowOutputProps struct {
 }
 
 type ManifestProps struct {
-	MainWorkFlowURL string   `json:"mainWorkFlowURL"`
+	MainWorkflowURL string   `json:"mainWorkflowURL"`
 	InputFileURLs   []string `json:"inputFileURLs"`
 	EngineOptions   string   `json:"engineOptions"`
 }
@@ -238,6 +238,7 @@ func (m *Manager) setWorkflowPath() {
 	}
 	projectLocation := m.Project.GetLocation()
 	workflowPath := m.parsedSourceURL.Path
+	log.Debug().Msgf("location ay: %s \n workflow %s", projectLocation, workflowPath)
 	m.path = filepath.Join(projectLocation, workflowPath)
 	log.Debug().Msgf("workflow path is '%s", m.path)
 }
