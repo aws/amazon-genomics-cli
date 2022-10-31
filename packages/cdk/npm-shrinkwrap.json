@@ -1266,19 +1266,19 @@
       "dependencies": {
         "@balena/dockerignore": {
           "version": "1.0.2",
-          "bundled": true
+          "resolved": ""
         },
         "at-least-node": {
           "version": "1.0.0",
-          "bundled": true
+          "resolved": ""
         },
         "balanced-match": {
           "version": "1.0.2",
-          "bundled": true
+          "resolved": ""
         },
         "brace-expansion": {
           "version": "1.1.11",
-          "bundled": true,
+          "resolved": "",
           "requires": {
             "balanced-match": "^1.0.0",
             "concat-map": "0.0.1"
@@ -1286,15 +1286,15 @@
         },
         "case": {
           "version": "1.6.3",
-          "bundled": true
+          "resolved": ""
         },
         "concat-map": {
           "version": "0.0.1",
-          "bundled": true
+          "resolved": ""
         },
         "fs-extra": {
           "version": "9.1.0",
-          "bundled": true,
+          "resolved": "",
           "requires": {
             "at-least-node": "^1.0.0",
             "graceful-fs": "^4.2.0",
@@ -1304,15 +1304,15 @@
         },
         "graceful-fs": {
           "version": "4.2.10",
-          "bundled": true
+          "resolved": ""
         },
         "ignore": {
           "version": "5.2.0",
-          "bundled": true
+          "resolved": ""
         },
         "jsonfile": {
           "version": "6.1.0",
-          "bundled": true,
+          "resolved": "",
           "requires": {
             "graceful-fs": "^4.1.6",
             "universalify": "^2.0.0"
@@ -1320,44 +1320,44 @@
         },
         "jsonschema": {
           "version": "1.4.1",
-          "bundled": true
+          "resolved": ""
         },
         "lru-cache": {
           "version": "6.0.0",
-          "bundled": true,
+          "resolved": "",
           "requires": {
             "yallist": "^4.0.0"
           }
         },
         "minimatch": {
           "version": "3.1.2",
-          "bundled": true,
+          "resolved": "",
           "requires": {
             "brace-expansion": "^1.1.7"
           }
         },
         "punycode": {
           "version": "2.1.1",
-          "bundled": true
+          "resolved": ""
         },
         "semver": {
           "version": "7.3.8",
-          "bundled": true,
+          "resolved": "",
           "requires": {
             "lru-cache": "^6.0.0"
           }
         },
         "universalify": {
           "version": "2.0.0",
-          "bundled": true
+          "resolved": ""
         },
         "yallist": {
           "version": "4.0.0",
-          "bundled": true
+          "resolved": ""
         },
         "yaml": {
           "version": "1.10.2",
-          "bundled": true
+          "resolved": ""
         }
       }
     },

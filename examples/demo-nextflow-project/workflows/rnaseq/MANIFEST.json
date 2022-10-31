@@ -3,5 +3,5 @@
   "inputFileURLs": [
     "inputs.json"
   ],
-  "engineOptions": "-resume"
+  "engineOptions": "-resume -r v1.2"
 }
