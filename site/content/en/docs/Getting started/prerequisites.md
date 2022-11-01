@@ -33,8 +33,8 @@ sudo apt-get install -y nodejs
 
 ```
 sudo apt install awscli
-`aws configure`
-`# ... set access key ID, secret access key, and region`
+aws configure
+# ... set access key ID, secret access key, and region
 ```
 
 ### Amazon Linux 2 (e.g. on an EC2 instance)
@@ -42,8 +42,8 @@ sudo apt install awscli
 * Install node
 
 ```
-`curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
-sudo yum install -y nodejs`
+curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
+sudo yum install -y nodejs
 ```
 
 * If you have not already done so, configure your AWS credentials and default region
@@ -63,13 +63,13 @@ aws configure
 * Install node
 
 ```
-`brew install node`
+brew install node
 ```
 
 * Install and configure AWS CLI
 
 ```
-`brew install awscli`
+brew install awscli
 aws configure
 # ... set access key ID, secret access key, and region
 ```

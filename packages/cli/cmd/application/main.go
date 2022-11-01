@@ -64,7 +64,7 @@ func main() {
 	}
 }
 
-//BuildCommandDocsForHugo Generates markdown suitable for rendering by Hugo. Will only generate pages if 'dir' exists
+// BuildCommandDocsForHugo Generates markdown suitable for rendering by Hugo. Will only generate pages if 'dir' exists
 func BuildCommandDocsForHugo(cmd *cobra.Command, dir string) error {
 
 	if _, err := os.Stat(dir); os.IsNotExist(err) {

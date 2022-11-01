@@ -36,5 +36,6 @@ type ConfigClient interface {
 
 type InputClient interface {
 	UpdateInputReferencesAndUploadToS3(initialProjectDirectory string, tempProjectDirectory string, bucketName string, baseS3Key string) error
+	// UpdateInputs scans entries in the inputFile, if they are local files then they will be loaded to S3 and the URI of the input will be updated with the S3 URI
 	UpdateInputs(initialProjectDirectory string, inputFile map[string]interface{}, bucketName string, baseS3Key string) (map[string]interface{}, error)
 }
