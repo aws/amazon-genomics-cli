@@ -105,7 +105,31 @@ contexts:
       - type: nextflow
         engine: nextflow
 ```
+### Engine vCpus and Memory default minimums:
 
+| Engine    | vCpus | Memory value (MiB) |
+|-----------|-------|--------------------|
+| Cromwell  | 2     | 16384              |
+| Nextflow  | 1     | 2048               |
+| miniwdl   | 2     | 4096               |
+| Snakemake | 2     | 4096               |
+| Toil      | 2     | 16384              |
+
+
+You may optionally specify the number of vCpus and memory used in a context definition, vCpu count for server engines such as Cromwell or Toil would be converted to cpu units, 1024 per each vCPU.
+
+*note:* if these are not provided the defaults on the table above would be used.
+```yaml
+contexts:
+  spotContext:
+    requestSpotInstances: true
+    engines:
+      - type: nextflow
+        engine: nextflow
+        resourceRequirements:
+          vcpus: 2
+          memoryLimit: 6144
+```
 ### Public Subnets
 
 In the interest of saving money, in particular if you intend to have the AGC stack deployed for a long period, you may choose to deploy in "public subnet" mode.

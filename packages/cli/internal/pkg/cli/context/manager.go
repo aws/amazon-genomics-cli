@@ -237,6 +237,8 @@ func (m *Manager) setContextEnv(contextName string) {
 		ReadWriteBucketArns:  strings.Join(m.readWriteBuckets, listDelimiter),
 		InstanceTypes:        strings.Join(m.contextSpec.InstanceTypes, listDelimiter),
 		MaxVCpus:             m.contextSpec.MaxVCpus,
+		VCpus:                context.Engines[0].ResourceRequirements.VCpus,
+		MemoryLimitMiB:       context.Engines[0].ResourceRequirements.MemoryLimitMiB,
 		RequestSpotInstances: m.contextSpec.RequestSpotInstances,
 		UsePublicSubnets:     m.contextSpec.UsePublicSubnets,
 		// TODO: we default to a single engine in a context for now

@@ -46,6 +46,8 @@ export class NextflowEngineConstruct extends EngineConstruct {
     });
 
     this.nextflowEngine = new NextflowEngine(this, "NextflowEngine", {
+      vcpus: params.vCpus,
+      engineMemoryMiB: params.memoryLimitMiB,
       vpc: props.vpc,
       subnets: props.subnets,
       jobQueueArn: props.jobQueue.jobQueueArn,

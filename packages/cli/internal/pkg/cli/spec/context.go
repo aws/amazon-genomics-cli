@@ -10,10 +10,17 @@ type Filesystem struct {
 	Configuration FSConfig `yaml:"configuration,omitempty"`
 }
 type Engine struct {
-	Type       string     `yaml:"type"`
-	Engine     string     `yaml:"engine"`
-	Filesystem Filesystem `yaml:"filesystem,omitempty"`
+	Type                 string              `yaml:"type"`
+	Engine               string              `yaml:"engine"`
+	ResourceRequirements ResourceRequirement `yaml:"resourceRequirements,omitempty"`
+	Filesystem           Filesystem          `yaml:"filesystem,omitempty"`
 }
+
+type ResourceRequirement struct {
+	VCpus          int `yaml:"vcpus,omitempty"`
+	MemoryLimitMiB int `yaml:"memoryLimit,omitempty"`
+}
+
 type Context struct {
 	InstanceTypes        []string `yaml:"instanceTypes,omitempty"`
 	RequestSpotInstances bool     `yaml:"requestSpotInstances,omitempty"`

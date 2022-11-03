@@ -12,13 +12,14 @@ export interface MiniWdlEngineProps extends EngineProps {
   readonly engineBatch: Batch;
   readonly workerBatch: Batch;
   readonly iops?: Size;
+  readonly vcpus?: number;
+  readonly engineMemoryMiB?: number;
 }
 
 const MINIWDL_IMAGE_DESIGNATION = "miniwdl";
 
 export class MiniWdlEngine extends Engine {
   readonly headJobDefinition: JobDefinition;
-  private readonly engineMemoryMiB = 4096;
   private readonly volumeName = "efs";
   readonly fileSystem: FileSystem;
 
@@ -41,7 +42,8 @@ export class MiniWdlEngine extends Engine {
       logGroup: this.logGroup,
       platformCapabilities: [PlatformCapabilities.FARGATE],
       container: {
-        memoryLimitMiB: this.engineMemoryMiB,
+        vcpus: props.vcpus || 1,
+        memoryLimitMiB: props.engineMemoryMiB || 4096,
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
         image: createEcrImage(this, MINIWDL_IMAGE_DESIGNATION),

@@ -93,6 +93,8 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
 
   private createSnakemakeEngine(props: EngineOptions, batchHead: Batch, batchWorkers: Batch): SnakemakeEngine {
     return new SnakemakeEngine(this, "SnakemakeEngine", {
+      vcpus: props.contextParameters.vCpus,
+      engineMemoryMiB: props.contextParameters.memoryLimitMiB,
       vpc: props.vpc,
       subnets: props.subnets,
       iops: props.iops,

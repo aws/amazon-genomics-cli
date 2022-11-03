@@ -12,6 +12,8 @@ export interface SnakemakeEngineProps extends EngineProps {
   readonly engineBatch: Batch;
   readonly workerBatch: Batch;
   readonly iops?: Size;
+  readonly vcpus?: number;
+  readonly engineMemoryMiB?: number;
 }
 
 const SNAKEMAKE_IMAGE_DESIGNATION = "snakemake";
@@ -19,7 +21,6 @@ const SNAKEMAKE_IMAGE_DESIGNATION = "snakemake";
 export class SnakemakeEngine extends Engine {
   readonly headJobDefinition: JobDefinition;
   private readonly volumeName = "efs";
-  private readonly engineMemoryMiB = 4096;
   public readonly fsap: AccessPoint;
   public readonly fileSystem: FileSystem;
 
@@ -41,7 +42,8 @@ export class SnakemakeEngine extends Engine {
       logGroup: this.logGroup,
       platformCapabilities: [PlatformCapabilities.FARGATE],
       container: {
-        memoryLimitMiB: this.engineMemoryMiB,
+        vcpus: props.vcpus || 1,
+        memoryLimitMiB: props.engineMemoryMiB || 4096,
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
         image: createEcrImage(this, SNAKEMAKE_IMAGE_DESIGNATION),

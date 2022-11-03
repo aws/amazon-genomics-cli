@@ -14,6 +14,7 @@ import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
 import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { Construct } from "constructs";
+import {ContextAppParameters} from "../../env";
 
 export interface CromwellEngineConstructProps extends EngineOptions {
   /**
@@ -57,7 +58,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
     });
 
     // TODO: Move log group creation into service construct and make it a property
-    this.engine = this.getEngineServiceDefinition(props.vpc, props.subnets, engineContainer, this.engineLogGroup);
+    this.engine = this.getEngineServiceDefinition(props.vpc, props.subnets, engineContainer, this.engineLogGroup, params);
     this.adapterLogGroup = new LogGroup(this, "AdapterLogGroup");
 
     const lambda = this.renderAdapterLambda({
@@ -89,7 +90,13 @@ export class CromwellEngineConstruct extends EngineConstruct {
     };
   }
 
-  private getEngineServiceDefinition(vpc: IVpc, subnets: SubnetSelection, serviceContainer: ServiceContainer, logGroup: ILogGroup) {
+  private getEngineServiceDefinition(
+    vpc: IVpc,
+    subnets: SubnetSelection,
+    serviceContainer: ServiceContainer,
+    logGroup: ILogGroup,
+    params: ContextAppParameters
+  ) {
     const id = "Engine";
     const fileSystem = new FileSystem(this, "EngineFileSystem", {
       vpc,
@@ -99,8 +106,8 @@ export class CromwellEngineConstruct extends EngineConstruct {
     });
     const definition = new FargateTaskDefinition(this, "EngineTaskDef", {
       taskRole: this.engineRole,
-      cpu: serviceContainer.cpu,
-      memoryLimitMiB: serviceContainer.memoryLimitMiB,
+      cpu: (params.vCpus ? params.vCpus * 1024 : undefined) || serviceContainer.cpu,
+      memoryLimitMiB: params.memoryLimitMiB || serviceContainer.memoryLimitMiB,
     });
 
     const volumeName = "cromwell-executions";
@@ -112,8 +119,8 @@ export class CromwellEngineConstruct extends EngineConstruct {
     });
 
     const container = definition.addContainer(serviceContainer.serviceName, {
-      cpu: serviceContainer.cpu,
-      memoryLimitMiB: serviceContainer.memoryLimitMiB,
+      cpu: (params.vCpus ? params.vCpus * 1024 : undefined) || serviceContainer.cpu,
+      memoryLimitMiB: params.memoryLimitMiB || serviceContainer.memoryLimitMiB,
       environment: serviceContainer.environment,
       containerName: serviceContainer.serviceName,
       image: createEcrImage(this, serviceContainer.imageConfig.designation),
