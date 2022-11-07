@@ -14,14 +14,14 @@
       }
     },
     "@aws-cdk/aws-batch-alpha": {
-      "version": "2.46.0-alpha.0",
-      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-batch-alpha/-/aws-batch-alpha-2.46.0-alpha.0.tgz",
-      "integrity": "sha512-zUDu9zg5G66wV8+GtVG2XiC7uVc8lTCDLYth2jU6BGXe91WpFZO0nAp4dkNVN+HlrJSKrogNq34uskcGPPiQ4Q=="
+      "version": "2.50.0-alpha.0",
+      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-batch-alpha/-/aws-batch-alpha-2.50.0-alpha.0.tgz",
+      "integrity": "sha512-iWRLGoUGLt8YBHsjJeLPHYse1zpsqShYXViK3FG9kL41y9/NyKg340LjUBMwgpawugivvzq0RF1nimIsrrzXRQ=="
     },
     "@aws-cdk/aws-lambda-python-alpha": {
-      "version": "2.46.0-alpha.0",
-      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-lambda-python-alpha/-/aws-lambda-python-alpha-2.46.0-alpha.0.tgz",
-      "integrity": "sha512-Z/dDABe48E4IYB31iihHPL+jVfenGE6yLZDu+CE7EwUUOKAlU4nNSpFfhc5pmpZ4P9lnWCT87qLUlxNO8OEg1Q=="
+      "version": "2.50.0-alpha.0",
+      "resolved": "https://registry.npmjs.org/@aws-cdk/aws-lambda-python-alpha/-/aws-lambda-python-alpha-2.50.0-alpha.0.tgz",
+      "integrity": "sha512-FvizvDW0QViA/VLIWl90IKbsWcPPypMtqau27+Se3+oM1rXZra2eWZn187plXozzECdkqpLDOMv0cLGysPShPg=="
     },
     "@babel/code-frame": {
       "version": "7.12.11",
@@ -1240,18 +1240,18 @@
       "dev": true
     },
     "aws-cdk": {
-      "version": "2.46.0",
-      "resolved": "https://registry.npmjs.org/aws-cdk/-/aws-cdk-2.46.0.tgz",
-      "integrity": "sha512-5pacxA1zMMxxyJKhTGk22/64lV3Nb4dZMY8RW4KfzZWQz8TnsIipd0Ks37rowQd7O2+VFkITvl86Socjewr5VQ==",
+      "version": "2.50.0",
+      "resolved": "https://registry.npmjs.org/aws-cdk/-/aws-cdk-2.50.0.tgz",
+      "integrity": "sha512-55vmKTf2DZRqioumVfXn+S0H9oAbpRK3HFHY8EjZ5ykR5tq2+XiMWEZkYduX2HJhVAeHJJIS6h+Okk3smZjeqw==",
       "dev": true,
       "requires": {
         "fsevents": "2.3.2"
       }
     },
     "aws-cdk-lib": {
-      "version": "2.46.0",
-      "resolved": "https://registry.npmjs.org/aws-cdk-lib/-/aws-cdk-lib-2.46.0.tgz",
-      "integrity": "sha512-3MRslNEk7qqUMMkqIrzs/T44dz9r5FG83+HaoELEVCdEEBccogDnTS4OaJZ3BYiQLLS4f3FETgi+w4SS2RwMTQ==",
+      "version": "2.50.0",
+      "resolved": "https://registry.npmjs.org/aws-cdk-lib/-/aws-cdk-lib-2.50.0.tgz",
+      "integrity": "sha512-deDbZTI7oyu3rqUyqjwhP6tnUO8MD70lE98yR65xiYty4yXBpsWKbeH3s1wNLpLAWS3hWJYyMtjZ4ZfC35NtVg==",
       "requires": {
         "@balena/dockerignore": "^1.0.2",
         "case": "1.6.3",

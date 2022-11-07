@@ -1,4 +1,4 @@
-FROM golang:1.14
+FROM golang:1.19.3
 
 RUN apt-get update
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
