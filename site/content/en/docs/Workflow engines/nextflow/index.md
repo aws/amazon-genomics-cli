@@ -19,18 +19,20 @@ The source code for Nextflow is available on [GitHub](https://github.com/nextflo
 
 There are four components of a Nextflow engine as deployed in an Amazon Genomics CLI context:
 
+![Image of infrastructure deployed in a Nextflow context](NextflowContextArch.png "Nextflow Context Architecture")
+
 ### WES Adapter
 
 Amazon Genomics CLI communicates with the Nextflow engine via a GA4GH [WES](https://github.com/ga4gh/workflow-execution-service-schemas) REST service. The WES Adapter implements
 the WES standard and translates WES calls into calls to the Nextflow head process.
 
-### Engine Batch Job
+### Head Compute Environment
 
 For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the Nextflow process responsible
 for running that workflow. These Nextflow "head" jobs are run in an "On-demand" compute environment even when the actual workflow
 tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.
 
-### Compute Environment
+### Task Compute Environment
 
 Workflow tasks are submitted by the Nextflow head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
 Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)

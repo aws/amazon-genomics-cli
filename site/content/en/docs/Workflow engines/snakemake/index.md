@@ -2,7 +2,7 @@
 title: "Snakemake"
 date: 2021-10-01T17:27:31-04:00
 draft: false
-weight: 30
+weight: 40
 description: >
     Details on the Snakemake engine deployed by Amazon Genomics CLI
 ---
@@ -19,24 +19,27 @@ Amazon Genomics CLI snakemake uses Batch to distribute the underlying tasks.
 
 There are four components of a snakemake engine as deployed in an Amazon Genomics CLI context:
 
+![Image of infrastructure deployed in a SnakeMake context](SnakeMakeContextArch.png "SnakeMake Context Architecture")
+
+
 ### WES Adapter
 
 Amazon Genomics CLI communicates with the snakemake engine via a GA4GH [WES](https://github.com/ga4gh/workflow-execution-service-schemas) REST service. The WES Adapter implements
 the WES standard and translates WES calls into calls to the snakemake head process.
 
-### Engine Batch Job
+### Head Compute Environment
 
 For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the snakemake process responsible
 for running that workflow. These snakemake "head" jobs are run in an "On-demand" AWS Fargate compute environment even when the actual workflow
 tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator. 
 
-### Compute Environment
+### Task Compute Environment
 
 Workflow tasks are submitted by the snakemake head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
 Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
 based on the available work in the queue. Batch will place containers on container hosts as space allows.
 
-#### EFS scratch space and S3 localization
+#### Session Cache and Input Localization
 
 Any context with a snakemake engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from the workflow
 are localized to the volume by jobs that the snakemake engine spawns to copy these files to the volume. Outputs are copied back 

@@ -13,8 +13,8 @@ description: >
 [Computational Genomics Lab](https://cglgenomics.ucsc.edu/) at the
 [UC Santa Cruz Genomics Institute](https://genomics.ucsc.edu/). In Amazon Genomics
 CLI, Toil is an engine that can be deployed in a
-[context]( {{< relref "../Concepts/contexts" >}} ) as an
-[engine]( {{< relref "../Concepts/engines">}} ) to run workflows written in the
+[context]( {{< relref "../../Concepts/contexts" >}} ) as an
+[engine]( {{< relref "../../Concepts/engines">}} ) to run workflows written in the
 [Common Workflow Language](https://www.commonwl.org/) (CWL) standard, version
 [v1.0](https://www.commonwl.org/v1.0/), [v1.1](https://www.commonwl.org/v1.1/),
 and [v1.2](https://www.commonwl.org/v1.2/) (or mixed versions).
@@ -29,7 +29,10 @@ available on
 There are two components of a Toil engine as deployed in an Amazon Genomics
 CLI context:
 
-### Engine Service
+![Image of infrastructure deployed in a Toil context](ToilContextArch.png "Toil Context Architecture")
+
+
+### Toil Server
 
 The Toil engine is run in "server mode" as a container service in ECS. The
 engine can run multiple workflows asynchronously. Workflow tasks are run in an
@@ -38,7 +41,7 @@ Amazon Genomics CLI communicates with the Toil engine via a GA4GH
 [WES](https://github.com/ga4gh/workflow-execution-service-schemas) REST service
 which the server offers, available via API Gateway.
 
-### Compute Environment
+### Task Compute Environment
 
 Workflow tasks are submitted by Toil to an AWS Batch queue and run in
 Toil-provided containers using an AWS Compute Environment. Tasks which use the
