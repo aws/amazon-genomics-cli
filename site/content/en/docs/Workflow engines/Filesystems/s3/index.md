@@ -40,5 +40,5 @@ the workflow quicker. The best price-performance configuration will vary by work
 
 ### Supporting Engines
 
-The [Cromwell]( {{< relref "../cromwell" >}} ) and [Nextflow]( {{< relref "../nextflow" >}} ) engines both support the use of Amazon S3 as a filesystem.
+The [Cromwell]( {{< relref "../../cromwell" >}} ) and [Nextflow]( {{< relref "../../nextflow" >}} ) engines both support the use of Amazon S3 as a filesystem.
 Contexts using these engines will use this filesystem by default.

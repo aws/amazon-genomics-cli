@@ -16,12 +16,14 @@
     "@aws-cdk/aws-batch-alpha": {
       "version": "2.50.0-alpha.0",
       "resolved": "https://registry.npmjs.org/@aws-cdk/aws-batch-alpha/-/aws-batch-alpha-2.50.0-alpha.0.tgz",
-      "integrity": "sha512-iWRLGoUGLt8YBHsjJeLPHYse1zpsqShYXViK3FG9kL41y9/NyKg340LjUBMwgpawugivvzq0RF1nimIsrrzXRQ=="
+      "integrity": "sha512-iWRLGoUGLt8YBHsjJeLPHYse1zpsqShYXViK3FG9kL41y9/NyKg340LjUBMwgpawugivvzq0RF1nimIsrrzXRQ==",
+      "requires": {}
     },
     "@aws-cdk/aws-lambda-python-alpha": {
       "version": "2.50.0-alpha.0",
       "resolved": "https://registry.npmjs.org/@aws-cdk/aws-lambda-python-alpha/-/aws-lambda-python-alpha-2.50.0-alpha.0.tgz",
-      "integrity": "sha512-FvizvDW0QViA/VLIWl90IKbsWcPPypMtqau27+Se3+oM1rXZra2eWZn187plXozzECdkqpLDOMv0cLGysPShPg=="
+      "integrity": "sha512-FvizvDW0QViA/VLIWl90IKbsWcPPypMtqau27+Se3+oM1rXZra2eWZn187plXozzECdkqpLDOMv0cLGysPShPg==",
+      "requires": {}
     },
     "@babel/code-frame": {
       "version": "7.12.11",
@@ -1093,7 +1095,8 @@
       "version": "5.3.2",
       "resolved": "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.3.2.tgz",
       "integrity": "sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==",
-      "dev": true
+      "dev": true,
+      "requires": {}
     },
     "acorn-walk": {
       "version": "7.2.0",
@@ -1266,19 +1269,19 @@
       "dependencies": {
         "@balena/dockerignore": {
           "version": "1.0.2",
-          "resolved": ""
+          "bundled": true
         },
         "at-least-node": {
           "version": "1.0.0",
-          "resolved": ""
+          "bundled": true
         },
         "balanced-match": {
           "version": "1.0.2",
-          "resolved": ""
+          "bundled": true
         },
         "brace-expansion": {
           "version": "1.1.11",
-          "resolved": "",
+          "bundled": true,
           "requires": {
             "balanced-match": "^1.0.0",
             "concat-map": "0.0.1"
@@ -1286,15 +1289,15 @@
         },
         "case": {
           "version": "1.6.3",
-          "resolved": ""
+          "bundled": true
         },
         "concat-map": {
           "version": "0.0.1",
-          "resolved": ""
+          "bundled": true
         },
         "fs-extra": {
           "version": "9.1.0",
-          "resolved": "",
+          "bundled": true,
           "requires": {
             "at-least-node": "^1.0.0",
             "graceful-fs": "^4.2.0",
@@ -1304,15 +1307,15 @@
         },
         "graceful-fs": {
           "version": "4.2.10",
-          "resolved": ""
+          "bundled": true
         },
         "ignore": {
           "version": "5.2.0",
-          "resolved": ""
+          "bundled": true
         },
         "jsonfile": {
           "version": "6.1.0",
-          "resolved": "",
+          "bundled": true,
           "requires": {
             "graceful-fs": "^4.1.6",
             "universalify": "^2.0.0"
@@ -1320,44 +1323,44 @@
         },
         "jsonschema": {
           "version": "1.4.1",
-          "resolved": ""
+          "bundled": true
         },
         "lru-cache": {
           "version": "6.0.0",
-          "resolved": "",
+          "bundled": true,
           "requires": {
             "yallist": "^4.0.0"
           }
         },
         "minimatch": {
           "version": "3.1.2",
-          "resolved": "",
+          "bundled": true,
           "requires": {
             "brace-expansion": "^1.1.7"
           }
         },
         "punycode": {
           "version": "2.1.1",
-          "resolved": ""
+          "bundled": true
         },
         "semver": {
           "version": "7.3.8",
-          "resolved": "",
+          "bundled": true,
           "requires": {
             "lru-cache": "^6.0.0"
           }
         },
         "universalify": {
           "version": "2.0.0",
-          "resolved": ""
+          "bundled": true
         },
         "yallist": {
           "version": "4.0.0",
-          "resolved": ""
+          "bundled": true
         },
         "yaml": {
           "version": "1.10.2",
-          "resolved": ""
+          "bundled": true
         }
       }
     },
@@ -2144,7 +2147,8 @@
       "version": "8.5.0",
       "resolved": "https://registry.npmjs.org/eslint-config-prettier/-/eslint-config-prettier-8.5.0.tgz",
       "integrity": "sha512-obmWKLUNCnhtQRKc+tmnYuQl0pFU1ibYJQ5BGhTVB08bHe9wC8qUeG7c08dj9XX+AuPj1YSGSQIHl1pnDHZR0Q==",
-      "dev": true
+      "dev": true,
+      "requires": {}
     },
     "eslint-plugin-prettier": {
       "version": "3.4.1",
@@ -3431,7 +3435,8 @@
       "version": "1.2.2",
       "resolved": "https://registry.npmjs.org/jest-pnp-resolver/-/jest-pnp-resolver-1.2.2.tgz",
       "integrity": "sha512-olV41bKSMm8BdnuMsewT4jqlZ8+3TCARAXjZGT9jcoSnrfUnRCqnMoF9XEeoWjbzObpqF9dRhHQj0Xb9QdF6/w==",
-      "dev": true
+      "dev": true,
+      "requires": {}
     },
     "jest-regex-util": {
       "version": "26.0.0",
@@ -5576,7 +5581,8 @@
       "version": "7.5.7",
       "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.7.tgz",
       "integrity": "sha512-KMvVuFzpKBuiIXW3E4u3mySRO2/mCHSyZDJQM5NQ9Q9KHWHWh0NHgfbRMLLrceUK5qAL4ytALJbpRMjixFZh8A==",
-      "dev": true
+      "dev": true,
+      "requires": {}
     },
     "xml-name-validator": {
       "version": "3.0.0",
