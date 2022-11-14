@@ -132,7 +132,7 @@ func (ic *InputInstance) uploadReferencesToS3(inputLocations []string, baseDirec
 	for index, input := range inputLocations {
 		trimmedInput := strings.TrimSpace(input)
 		inputWithDirectory := fmt.Sprintf("%s/%s", baseDirectory, trimmedInput)
-		if _, err := stat(inputWithDirectory); err == nil {
+		if fInfo, err := stat(inputWithDirectory); err == nil && !fInfo.IsDir() {
 			log.Debug().Msgf("input value '%s' can be resolved to a file at '%s'", trimmedInput, inputWithDirectory)
 			var formattedInputName string
 			if strings.HasPrefix(trimmedInput, "./") {
