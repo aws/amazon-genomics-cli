@@ -170,21 +170,21 @@ func (ic *InputClientTestSuite) TestUpdateInputs_HappyCase() {
 
 func (ic *InputClientTestSuite) TestUpdateInputs_EmptyString() {
 	inputFile := map[string]interface{}{
-		"a":"",
-		"b":testFile1,
+		"a": "",
+		"b": testFile1,
 	}
 	expectedUpdatedInputFile := map[string]interface{}{
-		"a":"",
-		"b":"s3://bucketName/some/key/testFile.json",
+		"a": "",
+		"b": "s3://bucketName/some/key/testFile.json",
 	}
 
 	mockFileInfo1 := iomocks.NewMockFileInfo(ic.ctrl)
 	mockFileInfo1.EXPECT().IsDir().Return(true)
-	ic.mockOs.EXPECT().Stat("dir/").Return(mockFileInfo1,nil)
+	ic.mockOs.EXPECT().Stat("dir/").Return(mockFileInfo1, nil)
 
 	mockFileInfo2 := iomocks.NewMockFileInfo(ic.ctrl)
 	mockFileInfo2.EXPECT().IsDir().Return(false)
-	ic.mockOs.EXPECT().Stat("dir/"+testFile1).Return(mockFileInfo2,nil)
+	ic.mockOs.EXPECT().Stat("dir/"+testFile1).Return(mockFileInfo2, nil)
 	ic.mockS3Client.EXPECT().UploadFile("bucketName", gomock.Any(), gomock.Any()).AnyTimes().Return(nil)
 
 	actualUpdatedInputFile, err := ic.inputInstance.UpdateInputs(initialProjectDirectory, inputFile, "bucketName", baseS3Key)
