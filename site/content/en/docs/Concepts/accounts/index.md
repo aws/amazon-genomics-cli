@@ -239,6 +239,7 @@ When Amazon Genomics CLI creates a VPC it creates the following VPC endpoints:
 * `com.amazonaws.{region}.ecs-telemetry`
 * `com.amazonaws.{region}.logs`
 * `com.amazonaws.{region}.s3`
+* `com.amazonaws.{region}.ec2`
 
 If you provide your own VPC we recommend that the VPC has these endpoints. This will improve the security posture of
 Amazon Genomics CLI in your VPC and will also reduce NAT gateway traffic charges which can be substantial for genomics analyses that use
