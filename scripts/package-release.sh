@@ -3,9 +3,9 @@
 set -eo pipefail
 
 RELEASE_DIR="dist/amazon-genomics-cli"
-JQ=$(which jq)
 
-if [[ -z "$JQ" ]]; then
+if ! command -v jq &> /dev/null
+then
   echo "Missing required jq package"
   exit 1
 fi
@@ -19,7 +19,7 @@ cp -a scripts/cli/. ${RELEASE_DIR}
 cp -a examples ${RELEASE_DIR}
 cp -a extras ${RELEASE_DIR}
 cp -a packages/cli/bin/local/. ${RELEASE_DIR}
-version=$(${JQ} .version -r < version.json)
+version=$(jq .version -r < version.json)
 commit="${CODEBUILD_RESOLVED_SOURCE_VERSION:-$(git rev-parse --verify HEAD)}"
 
 cat > ${RELEASE_DIR}/build.json <<HERE
