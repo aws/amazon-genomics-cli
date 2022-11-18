@@ -46,6 +46,10 @@ export class ContextAppParameters {
    */
   public readonly engineName: string;
   /**
+   * Workflow language supported by the engine.
+   */
+  public readonly engineType: string;
+  /**
    * Name of the filesystem type to use (e.g. EFS, S3).
    */
   public readonly filesystemType?: string;
@@ -142,6 +146,8 @@ export class ContextAppParameters {
     } else {
       this.customTags = {};
     }
+
+    this.engineType = this.getEngineType();
   }
 
   public getContextBucketPath(): string {
@@ -211,5 +217,29 @@ export class ContextAppParameters {
         throw Error(`Engine '${this.engineName}' is not supported`);
     }
     return defFilesystem;
+  }
+
+  public getEngineType(): string {
+    let engineType: string;
+    switch (this.engineName) {
+      case "cromwell":
+        engineType = "wdl";
+        break;
+      case "nextflow":
+        engineType = "nextflow";
+        break;
+      case "miniwdl":
+        engineType = "wdl";
+        break;
+      case "snakemake":
+        engineType = "snakemake";
+        break;
+      case "toil":
+        engineType = "cwl";
+        break;
+      default:
+        throw Error(`Engine '${this.engineName}' is not supported`);
+    }
+    return engineType;
   }
 }
