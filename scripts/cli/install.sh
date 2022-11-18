@@ -7,7 +7,7 @@ BASE_DIR="$HOME/.agc"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 selectArch () {
-    if [[ $(arch) == "arm64"]]; then
+    if [[ $(arch) == "arm64" ]]; then
         eval $1="arm64"
     else
         if [[ "$OSTYPE" == "linux-gnu"* ]]; then
