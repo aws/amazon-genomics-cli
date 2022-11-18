@@ -6,11 +6,30 @@ USER_BIN_DIR="$HOME/bin"
 BASE_DIR="$HOME/.agc"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+selectArch () {
+    if [[ $(arch) == "arm64" ]]; then
+        eval $1="arm64"
+    else
+        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            eval $1="amd64"
+        fi
+    fi
+}
+
 selectCliFile () {
+    selectArch archKind
+    fileName="agc"
+
+    if [[ -z "$archKind" ]]; then
+        eval $filename="agc"
+    else
+        eval $fileName="$filename-$archKind"
+    fi
+
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        eval $1="agc-amd64"
+        eval $1=filename
     elif [[ "$OSTYPE" == "darwin"* ]]; then
-        eval $1="agc"
+        eval $1=filename
     else
         echo "You are running on ${OSTYPE}. AGC does not yet support this platform."
         echo "Please try macOS or a Debian based OS."

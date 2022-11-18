@@ -15,7 +15,7 @@ all: format test build
 
 build: compile-local
 
-release: compile-darwin compile-linux compile-windows
+release: compile-darwin compile-darwin-arm compile-linux compile-linux-arm compile-windows
 
 compile-local:
 	go build -ldflags "${LINKER_FLAGS}" -o ${DESTINATION} ./cmd/application
@@ -26,8 +26,14 @@ compile-windows:
 compile-linux:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "${LINKER_FLAGS} ${RELEASE_BUILD_LINKER_FLAGS}" -o ${DESTINATION}-amd64 ./cmd/application
 
+compile-linux-arm:
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags "${LINKER_FLAGS} ${RELEASE_BUILD_LINKER_FLAGS}" -o ${DESTINATION}-arm64 ./cmd/application
+
 compile-darwin:
 	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -ldflags "${LINKER_FLAGS} ${RELEASE_BUILD_LINKER_FLAGS}" -o ${DESTINATION} ./cmd/application
+
+compile-darwin-arm:
+	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -ldflags "${LINKER_FLAGS} ${RELEASE_BUILD_LINKER_FLAGS}" -o ${DESTINATION}-arm64 ./cmd/application
 
 format:
 	../../scripts/fiximports.sh
