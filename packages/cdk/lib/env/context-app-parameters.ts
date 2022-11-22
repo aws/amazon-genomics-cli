@@ -221,7 +221,7 @@ export class ContextAppParameters {
 
   public getEngineType(): string {
     let engineType: string;
-    switch (this.engineName) {
+    switch (this.engineName.toLowerCase()) {
       case "cromwell":
         engineType = "wdl";
         break;
@@ -238,7 +238,8 @@ export class ContextAppParameters {
         engineType = "cwl";
         break;
       default:
-        throw Error(`Engine '${this.engineName}' is not supported`);
+        engineType = "(unknown)";
+        break;
     }
     return engineType;
   }
