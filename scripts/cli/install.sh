@@ -21,15 +21,15 @@ selectCliFile () {
     fileName="agc"
 
     if [[ -z "$archKind" ]]; then
-        eval $filename="agc"
+        eval $fileName="agc"
     else
-        eval $fileName="$filename-$archKind"
+        eval $fileName="$fileName-$archKind"
     fi
 
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        eval $1=filename
+        eval $1=$fileName
     elif [[ "$OSTYPE" == "darwin"* ]]; then
-        eval $1=filename
+        eval $1=$fileName
     else
         echo "You are running on ${OSTYPE}. AGC does not yet support this platform."
         echo "Please try macOS or a Debian based OS."
