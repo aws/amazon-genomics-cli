@@ -8,28 +8,28 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 selectArch () {
     if [[ $(arch) == "arm64" ]]; then
-        eval $1="arm64"
+        eval "$1"="arm64"
     else
         if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            eval $1="amd64"
+            eval "$1"="amd64"
         fi
     fi
 }
 
 selectCliFile () {
     selectArch archKind
-    fileName="agc"
+    local fileName="agc"
 
     if [[ -z "$archKind" ]]; then
-        eval $fileName="agc"
+        fileName="agc"
     else
-        eval $fileName="$fileName-$archKind"
+        fileName="$fileName-$archKind"
     fi
 
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        eval $1=$fileName
+        eval "$1"="$fileName"
     elif [[ "$OSTYPE" == "darwin"* ]]; then
-        eval $1=$fileName
+        eval "$1"="$fileName"
     else
         echo "You are running on ${OSTYPE}. AGC does not yet support this platform."
         echo "Please try macOS or a Debian based OS."
@@ -42,7 +42,7 @@ install_cli () {
         exit 1
     fi
 
-    mkdir -p $USER_BIN_DIR
+    mkdir -p "$USER_BIN_DIR"
     cp "$SCRIPT_DIR/$cliFile" "$USER_BIN_DIR/agc"
 
     echo "Please modify your \$PATH variable to include \$HOME/bin directory"
