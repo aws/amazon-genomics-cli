@@ -26,8 +26,8 @@ rule plot_histogram:
         "by-country/{country}.csv"
     output:
         "plots/{country}.hist.svg"
-    container:
-        "docker://faizanbashir/python-datascience:3.6"
+    conda:
+        "envs/matplotlib.yaml"
     script:
         "scripts/plot-hist.py"
 
