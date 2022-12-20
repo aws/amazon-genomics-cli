@@ -1,6 +1,7 @@
 package osutils
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"io/fs"
@@ -19,6 +20,8 @@ var osIsNotExist = os.IsNotExist
 var osCreate = os.Create
 var ioCopy = io.Copy
 var filepathWalkDir = filepath.WalkDir
+
+const agcignore = "./.agcignore"
 
 // DetermineHomeDir returns the file system directory where the AGC files live.
 func DetermineHomeDir() (string, error) {
@@ -75,10 +78,11 @@ func getWalkDirFn(absoluteDestinationDir string, absoluteSourceDir string) fs.Wa
 			// 2. file or sub-directory got deleted after being listed by WalkDir
 			return fmt.Errorf("file '%s' doesn't exist", currentPath)
 		}
-
-		if dirEntry.Name() == ".nextflow" ||
-			dirEntry.Name() == ".snakemake" ||
-			dirEntry.Name() == "work" ||
+		ignoreDir, err := isDirIgnored(dirEntry.Name())
+		if err != nil {
+			return err
+		}
+		if ignoreDir ||
 			strings.HasSuffix(currentPath, ".nextflow.log") {
 			return filepath.SkipDir
 		}
@@ -105,6 +109,29 @@ func getWalkDirFn(absoluteDestinationDir string, absoluteSourceDir string) fs.Wa
 		}
 		return nil
 	}
+}
+
+func isDirIgnored(dirName string) (bool, error) {
+	if _, err := osStat(agcignore); err != nil {
+		return false, nil
+	}
+	file, err := os.Open(agcignore)
+	if err != nil {
+		return false, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		if dirName == scanner.Text() {
+			return true, nil
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return false, err
+	}
+	return false, nil
 }
 
 func getAndCreateRelativePath(currentPath string, sourcePath string, destinationDir string) (string, error) {
