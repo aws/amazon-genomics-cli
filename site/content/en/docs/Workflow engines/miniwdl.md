@@ -2,7 +2,7 @@
 title: "miniwdl"
 date: 2021-10-01T17:27:31-04:00
 draft: false
-weight: 10
+weight: 30
 description: >
     Details on the miniwdl engine deployed by Amazon Genomics CLI
 ---
@@ -20,26 +20,24 @@ also distributed under the MIT licence.
 
 There are four components of a miniwdl engine as deployed in an Amazon Genomics CLI context:
 
-![Image of infrastructure deployed in a miniwdl context](MiniWDLContextArch.png "miniWDL Context Architecture")
-
 ### WES Adapter
 
 Amazon Genomics CLI communicates with the miniwdl engine via a GA4GH [WES](https://github.com/ga4gh/workflow-execution-service-schemas) REST service. The WES Adapter implements
 the WES standard and translates WES calls into calls to the miniwdl head process.
 
-### Head Compute Environment
+### Engine Batch Job
 
 For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the miniwdl process responsible
 for running that workflow. These miniwdl "head" jobs are run in an "On-demand" AWS Fargate compute environment even when the actual workflow
 tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator. 
 
-### Task Compute Environment
+### Compute Environment
 
 Workflow tasks are submitted by the miniwdl head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
 Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
 based on the available work in the queue. Batch will place containers on container hosts as space allows.
 
-#### Session Cache and Input Localization
+#### EFS scratch space and S3 localization
 
 Any context with a miniwdl engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from S3 are
 localized to the volume by jobs that the miniwdl engine spawns to copy these files to the volume. Outputs are copied back 

@@ -34,7 +34,6 @@ RUN curl -fsSL https://rpm.nodesource.com/setup_16.x | bash - \
     && yum install -y \
     python3 \
     rabbitmq-server \
-    erlang \
     nodejs \
     git \
     && yum clean -y all \
@@ -46,7 +45,7 @@ RUN npm install -g concurrently@7.0.0
 # Install Toil
 COPY THIRD-PARTY /opt/
 
-ARG TOIL_VERSION="bf2c046b5b1d38bdfc3043a4ea05f72db279ab64"
+ARG TOIL_VERSION="d831f74e918c4a01e961e3b45504a92d1827b8b3"
 RUN python3 -m pip install git+https://github.com/DataBiosphere/toil.git@${TOIL_VERSION}#egg=toil[aws,cwl,server]
 
 # copy the entrypoint script to the image

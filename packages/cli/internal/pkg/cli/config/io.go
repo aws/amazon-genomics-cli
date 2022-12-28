@@ -1,14 +1,14 @@
 package config
 
 import (
-	"os"
+	"io/ioutil"
 
 	"gopkg.in/yaml.v3"
 )
 
 var (
-	writeFile = os.WriteFile
-	readFile  = os.ReadFile
+	writeFile = ioutil.WriteFile
+	readFile  = ioutil.ReadFile
 )
 
 const (

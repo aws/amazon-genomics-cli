@@ -12,7 +12,7 @@ All intermediate I/O is performed against the EFS filesystem.
 
 ### Advantages
 
-1. Compared with the [S3 Filesystem]( {{< relref "../s3" >}} ) there is no redundant I/O of inputs from S3.
+1. Compared with the [S3 Filesystem]( {{< relref "s3.md" >}} ) there is no redundant I/O of inputs from S3.
 2. Each tasks individual I/O operations tend to be smaller than the copy from S3 so there is less network congestion on the container host.
 3. Option to use provisioned IOPs to provide high sustained throughput.
 4. The volume is elastic and will expand and contract as needed.
@@ -49,6 +49,6 @@ myContext:
 
 ### Supporting Engines
 
-The use of Amazon EFS as a shared file system is supported by the [miniwdl]( {{< relref "../../miniwdl" >}} ) and 
-[Snakemake]( {{< relref "../../snakemake" >}} ) engines. Both use EFS with bursting throughput by default and both 
+The use of Amazon EFS as a shared file system is supported by the [miniwdl]( {{< relref "../miniwdl.md" >}} ) and 
+[Snakemake]( {{< relref "snakemake.md" >}} ) engines. Both use EFS with bursting throughput by default and both 
 support provisioned IOPs.

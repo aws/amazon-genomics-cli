@@ -5,6 +5,7 @@ package cli
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -148,7 +149,7 @@ func TestProjectInit_CreateInitialProject_ValidateSchema(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	bytes, err := os.ReadFile(tempFilePath)
+	bytes, err := ioutil.ReadFile(tempFilePath)
 	if err != nil {
 		t.Fatal(err)
 	}

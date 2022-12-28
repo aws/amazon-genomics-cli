@@ -4,7 +4,7 @@ date: 2022-04-26T15:34:00-04:00
 draft: false
 weight: 20
 description: >
-    Details on the Toil engine (CWL mode) deployed by Amazon Genomics CLI
+    Details on the Toil engine deployed by Amazon Genomics CLI
 ---
 
 ## Description
@@ -13,11 +13,9 @@ description: >
 [Computational Genomics Lab](https://cglgenomics.ucsc.edu/) at the
 [UC Santa Cruz Genomics Institute](https://genomics.ucsc.edu/). In Amazon Genomics
 CLI, Toil is an engine that can be deployed in a
-[context]( {{< relref "../../Concepts/contexts" >}} ) as an
-[engine]( {{< relref "../../Concepts/engines">}} ) to run workflows written in the
-[Common Workflow Language](https://www.commonwl.org/) (CWL) standard, version
-[v1.0](https://www.commonwl.org/v1.0/), [v1.1](https://www.commonwl.org/v1.1/),
-and [v1.2](https://www.commonwl.org/v1.2/) (or mixed versions).
+[context]( {{< relref "../Concepts/contexts" >}} ) as an
+[engine]( {{< relref "../Concepts/engines">}} ) to run workflows based on the
+[CWL](https://www.commonwl.org/) specification.
 
 Toil is an open source project distributed by UC Santa Cruz under the [Apache 2
 license](https://github.com/DataBiosphere/toil/blob/master/LICENSE) and
@@ -29,10 +27,7 @@ available on
 There are two components of a Toil engine as deployed in an Amazon Genomics
 CLI context:
 
-![Image of infrastructure deployed in a Toil context](ToilContextArch.png "Toil Context Architecture")
-
-
-### Toil Server
+### Engine Service
 
 The Toil engine is run in "server mode" as a container service in ECS. The
 engine can run multiple workflows asynchronously. Workflow tasks are run in an
@@ -41,7 +36,7 @@ Amazon Genomics CLI communicates with the Toil engine via a GA4GH
 [WES](https://github.com/ga4gh/workflow-execution-service-schemas) REST service
 which the server offers, available via API Gateway.
 
-### Task Compute Environment
+### Compute Environment
 
 Workflow tasks are submitted by Toil to an AWS Batch queue and run in
 Toil-provided containers using an AWS Compute Environment. Tasks which use the

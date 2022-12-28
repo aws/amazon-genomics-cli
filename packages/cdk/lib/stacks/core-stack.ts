@@ -230,11 +230,6 @@ export class CoreStack extends Stack {
       subnets: subnetSelection,
       open: true,
     });
-    vpc.addInterfaceEndpoint(`${PRODUCT_NAME}Ec2Endpoint`, {
-      service: new InterfaceVpcEndpointService(`com.amazonaws.${this.region}.ec2`),
-      subnets: subnetSelection,
-      open: true,
-    });
 
     return vpc;
   }

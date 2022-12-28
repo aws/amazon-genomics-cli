@@ -27,7 +27,7 @@ func DeDuplicateStrings(strs []string) []string {
 	return dedupped
 }
 
-// SubString performs a unicode aware substring operation on 'str'. Will panic if start or length are out of bounds
+//SubString performs a unicode aware substring operation on 'str'. Will panic if start or length are out of bounds
 func SubString(str string, start int, length int) string {
 	runes := []rune(str)
 	return string(runes[start : start+length])

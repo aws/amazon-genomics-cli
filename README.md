@@ -104,34 +104,23 @@ To run against a development version of Amazon Genomics CLI, first build your re
 set the required environment variables and then enter into an Amazon Genomics CLI command shell.
 
 #### Option 3.  Running from development code manually + Custom images 
-* Update dependencies and build code with `make init && make`. At this point the compiled binary will be found at `packages/cli/bin/local/agc`.
-* Optionally, you may build the install package and install the binary and CDK libraries. `make release && (cd dist/amazon-genomics-cli && ./install.sh)`
-* Before creating any contexts, ensure you have the relevant environment variables set  to point to the ECR repository holding the images of the engines you wish to test. Leave these values unset to test against production images.
+Ensure you have the following environment variables set and then run `./scripts/run-dev.sh`.
 
 ```shell
 export ECR_CROMWELL_ACCOUNT_ID=<some-value>
 export ECR_CROMWELL_REGION=<some-value>
 export ECR_CROMWELL_TAG=<some-value>
-export ECR_CROMWELL_REPOSITORY=<some-value>
-
 export ECR_NEXTFLOW_ACCOUNT_ID=<some-value>
 export ECR_NEXTFLOW_REGION=<some-value>
 export ECR_NEXTFLOW_TAG=<some-value>
-export ECR_NEXTFLOW_REPOSITORY=<some-value>
-
 export ECR_MINIWDL_ACCOUNT_ID=<some-value>
 export ECR_MINIWDL_REGION=<some-value>
 export ECR_MINIWDL_TAG=<some-value>
-export ECR_MINIWDL_REPOSITORY=<some-value>
-
-export ECR_TOIL_ACCOUNT_ID=<some-value>
-export ECR_TOIL_REGION=<some-value>
-export ECR_TOIL_TAG=<some-value>
-export ECR_TOIL_REPOSITORY=<some-value>
 ```
 
-These environment variables point to the ECR account, region, repository and tags of the Cromwell, Nextflow, MiniWDL, and Toil engine respectively
-that will be deployed for your contexts. They are used when you create a context using the corresponding engine types.
+These environment variables point to the ECR account, region, and tags of the Cromwell, Nextflow, and MiniWDL engine respectively
+that will be deployed for your contexts. They are written as Systems Manager Parameter Store variables when you activate
+your Amazon Genomics CLI account region (`agc account activate`).
 
 The `./scripts/run-dev.sh` contains logic to determine the current
 dev versions of the images which you would typically use. You may also use production images, the current values of which will

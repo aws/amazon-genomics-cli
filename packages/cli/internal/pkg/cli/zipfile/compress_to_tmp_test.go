@@ -2,6 +2,7 @@ package zipfile
 
 import (
 	"archive/zip"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -69,10 +70,10 @@ func TestCompressToTmp_SourceDoesNotExist(t *testing.T) {
 
 func createTestFiles(root string) error {
 	content := []byte("Test!")
-	if err := os.WriteFile(filepath.Join(root, testFile1Name), content, 0600); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(root, testFile1Name), content, 0600); err != nil {
 		return err
 	}
-	if err := os.WriteFile(filepath.Join(root, testFile2Name), content, 0600); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(root, testFile2Name), content, 0600); err != nil {
 		return err
 	}
 	if err := os.Mkdir(filepath.Join(root, testDir1Name), 0700); err != nil {
@@ -84,16 +85,16 @@ func createTestFiles(root string) error {
 	if err := os.Mkdir(filepath.Join(root, testDir3Name), 0700); err != nil {
 		return err
 	}
-	if err := os.WriteFile(filepath.Join(root, testDir1Name, testFile1Name), content, 0600); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(root, testDir1Name, testFile1Name), content, 0600); err != nil {
 		return err
 	}
-	if err := os.WriteFile(filepath.Join(root, testDir1Name, testFile2Name), content, 0600); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(root, testDir1Name, testFile2Name), content, 0600); err != nil {
 		return err
 	}
-	if err := os.WriteFile(filepath.Join(root, testDir1Name, testDir2Name, testFile1Name), content, 0600); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(root, testDir1Name, testDir2Name, testFile1Name), content, 0600); err != nil {
 		return err
 	}
-	if err := os.WriteFile(filepath.Join(root, testDir1Name, testDir2Name, testFile2Name), content, 0600); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(root, testDir1Name, testDir2Name, testFile2Name), content, 0600); err != nil {
 		return err
 	}
 	return nil

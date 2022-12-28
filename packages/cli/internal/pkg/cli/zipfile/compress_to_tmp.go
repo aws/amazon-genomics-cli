@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 )
 
 func CompressToTmp(srcPath string) (string, error) {
-	packFile, err := os.CreateTemp("", "workflow_*")
+	packFile, err := ioutil.TempFile("", "workflow_*")
 	if err != nil {
 		return "", err
 	}

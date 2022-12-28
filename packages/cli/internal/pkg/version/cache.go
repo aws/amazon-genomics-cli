@@ -3,6 +3,7 @@ package version
 import (
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -17,8 +18,8 @@ var (
 	expirationTime    = 24 * time.Hour
 
 	userHomeDir = os.UserHomeDir
-	readFile    = os.ReadFile
-	writeFile   = os.WriteFile
+	readFile    = ioutil.ReadFile
+	writeFile   = ioutil.WriteFile
 )
 
 type CacheRecord struct {

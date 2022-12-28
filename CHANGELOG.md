@@ -2,25 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [1.6.0](https://github.com/aws/amazon-genomics-cli/compare/v1.5.2...v1.6.0) (2022-12-28)
-
-
-### Features
-
-* Add ARM support for CLI build ([#569](https://github.com/aws/amazon-genomics-cli/issues/569)) ([f002a3d](https://github.com/aws/amazon-genomics-cli/commit/f002a3d8e1856842a3b8bc915ba3eb1e1365e6d8))
-* added verbose logging to `workflow run` ([#480](https://github.com/aws/amazon-genomics-cli/issues/480)) ([5bec60a](https://github.com/aws/amazon-genomics-cli/commit/5bec60ae95c5c3c857b3aa2db212c6e2034e5d61))
-* reduce permissions related to APIGateway for recommended user role ([#538](https://github.com/aws/amazon-genomics-cli/issues/538)) ([fd9e230](https://github.com/aws/amazon-genomics-cli/commit/fd9e230e993010836baeed3fe0e3280116f6d03f))
-* Support and use Toil 5.8's WES task output ([#501](https://github.com/aws/amazon-genomics-cli/issues/501)) ([a5e52b5](https://github.com/aws/amazon-genomics-cli/commit/a5e52b5b316205290016197eb8163eef3cd864b1))
-* support for PRIVATE API Gateway endpoints ([#507](https://github.com/aws/amazon-genomics-cli/issues/507)) ([357d545](https://github.com/aws/amazon-genomics-cli/commit/357d54590b465aa11b59a6d4b13a4f2609f37765))
-
-
-### Bug Fixes
-
-* bump nextflow version to 22.04.1 ([#450](https://github.com/aws/amazon-genomics-cli/issues/450)) ([ec9c02c](https://github.com/aws/amazon-genomics-cli/commit/ec9c02cd8cdb9d1fcffa31e26844a00ef8260efd)), closes [#387](https://github.com/aws/amazon-genomics-cli/issues/387)
-* Install script output name ([def4335](https://github.com/aws/amazon-genomics-cli/commit/def4335c2193150ab06cc8385f69b45810cc39f5))
-* update go version to fix bug with `go test -race` in OSX Monterey ([#505](https://github.com/aws/amazon-genomics-cli/issues/505)) ([c918e97](https://github.com/aws/amazon-genomics-cli/commit/c918e97fe48d9a23daaaaef42a5f3a1775dc4c72))
-* update nextflow version environment variable ([b8ea514](https://github.com/aws/amazon-genomics-cli/commit/b8ea514213452151ef8b38458503bc044dfa6433))
-
 ## [1.5.2](https://github.com/aws/amazon-genomics-cli/compare/v1.5.1...v1.5.2) (2022-10-18)
 
 ### Security fixes

@@ -10,8 +10,6 @@ import {
   PROJECT_TAG_KEY,
   USER_EMAIL_TAG_KEY,
   USER_ID_TAG_KEY,
-  ENGINE_TAG_KEY,
-  ENGINE_TYPE_TAG_KEY,
 } from "../../lib/constants";
 import { ContextAppParameters } from "../../lib/env";
 import { ContextStack } from "../../lib/stacks/context-stack";
@@ -36,7 +34,5 @@ new ContextStack(app, `${PRODUCT_NAME}-Context-${contextParameters.projectName}-
     [USER_ID_TAG_KEY]: contextParameters.userId,
     [USER_EMAIL_TAG_KEY]: contextParameters.userEmail,
     [AGC_VERSION_KEY]: contextParameters.agcVersion,
-    [ENGINE_TAG_KEY]: contextParameters.engineName,
-    [ENGINE_TYPE_TAG_KEY]: contextParameters.engineType,
   },
 });

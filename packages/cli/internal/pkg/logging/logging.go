@@ -25,8 +25,7 @@ var Silent bool
 // ApplicationConsoleLogger generates a zerolog Logger that pretty prints text (not JSON) to STDERR.
 //
 // This can be used as the default logger as follows:
-//
-//	log.Logger = logging.ApplicationConsoleLogger()
+// 		log.Logger = logging.ApplicationConsoleLogger()
 func ApplicationConsoleLogger() zerolog.Logger {
 	logger := log.Output(zerolog.ConsoleWriter{
 		Out:           os.Stderr,

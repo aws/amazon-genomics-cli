@@ -1,5 +1,5 @@
 # use the upstream miniwdl container as a base image
-ARG MINIWDL_VERSION=v0.7.0
+ARG MINIWDL_VERSION=v0.1.11
 FROM ghcr.io/miniwdl-ext/miniwdl-aws:$MINIWDL_VERSION
 
 RUN yum update -y \

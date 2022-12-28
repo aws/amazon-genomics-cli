@@ -5,7 +5,7 @@ env:
   variables:
     # These variables may be over-ridden as appropriate by the CI/CD pipeline
     CROMWELL_IMAGE_NAME: "cromwell"
-    CROMWELL_VERSION: "83.1-AWS"
+    CROMWELL_VERSION: "64"
     SCALA_VERSION: "2.12.15"
     SBT_VERSION: "1.5.5"
     SBT_OPTS: "-Xms4G -Xmx12G"
@@ -17,7 +17,7 @@ phases:
     commands:
       - curl -s "https://get.sdkman.io" | bash
       - . $HOME/.sdkman/bin/sdkman-init.sh && . $SDKMAN_DIR/src/sdkman-main.sh && sdk install sbt $SBT_VERSION && sdk install scala $SCALA_VERSION
-      - git clone https://github.com/henriqueribeiro/cromwell.git
+      - git clone https://github.com/broadinstitute/cromwell.git
   pre_build:
     commands:
       - cd $CODEBUILD_SRC_DIR/cromwell

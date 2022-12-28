@@ -5,13 +5,13 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
-	"os"
+	"io/ioutil"
 
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/yaml.v3"
 )
 
-var readFile = os.ReadFile
+var readFile = ioutil.ReadFile
 var jsonUnmarshal = json.Unmarshal
 
 //go:embed project_schema.json
@@ -22,11 +22,11 @@ func ToYaml(specFilePath string, projectSpec Project) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(specFilePath, bytes, 0644)
+	return ioutil.WriteFile(specFilePath, bytes, 0644)
 }
 
 func FromYaml(specFilePath string) (Project, error) {
-	bytes, err := os.ReadFile(specFilePath)
+	bytes, err := ioutil.ReadFile(specFilePath)
 	if err != nil {
 		return Project{}, err
 	}

@@ -11,7 +11,7 @@ description: >
 
 [Cromwell](https://cromwell.readthedocs.io/en/stable/) is a workflow engine developed by the [Broad Institute](https://www.broadinstitute.org/). 
 In Amazon Genomics CLI, Cromwell is an engine that can be
-deployed in a [context]( {{< relref "../../Concepts/contexts" >}} ) as an [engine]( {{< relref "../../Concepts/engines" >}} ) 
+deployed in a [context]( {{< relref "../Concepts/contexts" >}} ) as an [engine]( {{< relref "../Concepts/engines" >}} ) 
 to run workflows based on the [WDL](https://openwdl.org/) specification.
 
 Cromwell is an open source project distributed by the Broad Institute under the [Apache 2 license](https://github.com/broadinstitute/cromwell/blob/develop/LICENSE-ASL-2.0) and available on [GitHub](https://github.com/broadinstitute/cromwell).
@@ -20,14 +20,11 @@ Cromwell is an open source project distributed by the Broad Institute under the 
 
 Some minor customizations where made to the AWS Backend adapter for Cromwell to facilitate improved scalability and cross
 region S3 bucket access when deployed with Amazon Genomics CLI. The fork containing these customizations is available [here](https://github.com/markjschreiber/cromwell)
-and we are working to contribute these back to the main code base.
+and we are working to contribute these bask to the main code base.
 
 ## Architecture
 
-There are four components of a Cromwell engine as deployed in an Amazon Genomics CLI context.
-
-
-![Image of infrastructure deployed in a Cromwell context](CromwellContextArch.png "Cromwell Context Architecture")
+There are four components of a Cromwell engine as deployed in an Amazon Genomics CLI context:
 
 ### WES Adapter
 
@@ -35,20 +32,20 @@ Amazon Genomics CLI communicates with the Cromwell engine via a GA4GH [WES](http
 the WES standard and translates WES calls into calls to the [Cromwell REST API](https://cromwell.readthedocs.io/en/stable/api/RESTAPI/). The adapter runs as an Amazon ECS service
  available via API Gateway.
 
-### Cromwell Server
+### Engine Service
 
 The Cromwell engine is run in "server mode" as a container service in ECS and receives instructions from the WES Adapter. The 
 engine can run multiple workflows asynchronously. Workflow tasks are run in an elastic [compute environment]( #compute-environment ) and
 monitored by Cromwell.
 
-### Session Cache
+### Metadata Storage
 
 Cromwell can use workflow run metadata to perform call caching. When deployed by Amazon Genomics CLI call caching is enabled
-by default. Metadata is stored by an embedded HSQL DB with file storage in an attached EFS volume. The EFS volume 
+by default. Metadata is stored by an embedded Hypersonic DB with file storage in an attached EFS volume. The EFS volume 
 exists for the lifetime of the context the engine is deployed in so re-runs of workflows within the lifetime can benefit
 from call caching.
 
-### Task Compute Environment
+### Compute Environment
 
 Workflow tasks are submitted by Cromwell to an AWS Batch queue and run in containers using an AWS Compute Environment.
 Container characteristics are defined by the `runtime`. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)

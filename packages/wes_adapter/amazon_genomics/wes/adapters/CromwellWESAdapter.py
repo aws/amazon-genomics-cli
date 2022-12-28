@@ -252,7 +252,7 @@ class CromwellWESAdapter(AbstractWESAdapter):  # inherit from ABC to enforce int
                 self.logger.debug(f"RUN_WORKFLOW :: using '{workflow_url}' as is")
                 data["workflowUrl"] = workflow_url
 
-            # process workflow attachments
+            # process workflow attachements
             # this is expected to be only a workflow inputs file
             if workflow_attachment:
                 for file in workflow_attachment:
