@@ -9,17 +9,17 @@ description: >
 
 ## Prerequisites
 
-Ensure you have completed the [prerequisites]( {{< relref "../Getting started/prerequisites" >}} ) before beginning.
+Ensure you have completed the [prerequisites]( {{< relref "../../Getting started/prerequisites" >}} ) before beginning.
 
 
 ## Download and install Amazon Genomics CLI
 
-Download the Amazon Genomics CLI according to the [installation]( {{< relref "../Getting started/installation" >}} )
+Download the Amazon Genomics CLI according to the [installation]( {{< relref "../../Getting started/installation" >}} )
 instructions.
 
 ## Setup
 
-Ensure you have initialized your account and created a username by following the [setup]( {{< relref "../Getting started/setup" >}} )
+Ensure you have initialized your account and created a username by following the [setup]( {{< relref "../../Getting started/setup" >}} )
 instructions.
 
 ## Initialize a project

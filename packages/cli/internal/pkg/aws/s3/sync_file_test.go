@@ -3,7 +3,6 @@ package s3
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	nethttp "net/http"
 	"os"
 	"path/filepath"
@@ -61,7 +60,7 @@ func TestClient_SyncFile_NoChange(t *testing.T) {
 func TestClient_SyncFile_TimeChange(t *testing.T) {
 	tempDir := t.TempDir()
 	inputPath := filepath.Join(tempDir, "input.txt")
-	_ = ioutil.WriteFile(inputPath, []byte("inputData"), 0644)
+	_ = os.WriteFile(inputPath, []byte("inputData"), 0644)
 	then := time.Date(1920, time.July, 25, 0, 0, 0, 0, time.UTC)
 	client := NewMockClient()
 	client.s3.(*S3Mock).On("HeadObject", context.Background(), &s3.HeadObjectInput{

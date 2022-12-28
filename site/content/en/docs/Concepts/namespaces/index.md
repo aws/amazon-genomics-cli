@@ -42,4 +42,6 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
 | agc-user-id    | The unique username                                             |
 | agc-user-email | The users email                                                 |
 | agc-context    | The name of the context in which the infrastructure is deployed |
+| agc-engine     | The name of the engine being run in the context                 |
+| agc-engine-type| The workflow language run by the engine                         |
 

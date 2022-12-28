@@ -4,6 +4,12 @@ set -eo pipefail
 
 RELEASE_DIR="dist/amazon-genomics-cli"
 
+if ! command -v jq &> /dev/null
+then
+  echo "Missing required jq package"
+  exit 1
+fi
+
 mkdir -p ${RELEASE_DIR}
 cp ./{LICENSE,THIRD-PARTY,CHANGELOG.md} ${RELEASE_DIR}
 cp packages/cdk/cdk.tgz ${RELEASE_DIR}

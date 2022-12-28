@@ -40,11 +40,19 @@ export class ContextAppParameters {
    * A list of ARNs that batch will access for workflow reads and writes.
    */
   public readonly readWriteBucketArns?: string[];
+  /**
+   * A KMS Policy to enable cross account S3 SSE-KMS.
+   */
+  public readonly kmsDecryptPolicy?: string;
 
   /**
    * Name of the engine to run.
    */
   public readonly engineName: string;
+  /**
+   * Workflow language supported by the engine.
+   */
+  public readonly engineType: string;
   /**
    * Name of the filesystem type to use (e.g. EFS, S3).
    */
@@ -119,6 +127,8 @@ export class ContextAppParameters {
     this.readBucketArns = getEnvStringListOrDefault(node, "READ_BUCKET_ARNS");
     this.readWriteBucketArns = getEnvStringListOrDefault(node, "READ_WRITE_BUCKET_ARNS");
 
+    this.kmsDecryptPolicy = getEnvStringOrDefault(node, "KMS_DECRYPT_POLICY", undefined);
+
     this.engineName = getEnvString(node, "ENGINE_NAME");
     this.filesystemType = getEnvStringOrDefault(node, "FILESYSTEM_TYPE", this.getDefaultFilesystem());
     this.fsProvisionedThroughput = getEnvNumber(node, "FS_PROVISIONED_THROUGHPUT");
@@ -142,6 +152,8 @@ export class ContextAppParameters {
     } else {
       this.customTags = {};
     }
+
+    this.engineType = this.getEngineType();
   }
 
   public getContextBucketPath(): string {
@@ -211,5 +223,30 @@ export class ContextAppParameters {
         throw Error(`Engine '${this.engineName}' is not supported`);
     }
     return defFilesystem;
+  }
+
+  public getEngineType(): string {
+    let engineType: string;
+    switch (this.engineName.toLowerCase()) {
+      case "cromwell":
+        engineType = "wdl";
+        break;
+      case "nextflow":
+        engineType = "nextflow";
+        break;
+      case "miniwdl":
+        engineType = "wdl";
+        break;
+      case "snakemake":
+        engineType = "snakemake";
+        break;
+      case "toil":
+        engineType = "cwl";
+        break;
+      default:
+        engineType = "(unknown)";
+        break;
+    }
+    return engineType;
   }
 }

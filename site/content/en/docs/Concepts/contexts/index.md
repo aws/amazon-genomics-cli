@@ -8,22 +8,22 @@ description: >
 ---
 ## What is a Context?
 
-A context is a set of cloud resources. Amazon Genomics CLI runs [workflows]( {{< relref "workflows" >}} ) in a context. A deployed context will include an 
-[engine]( {{< relref "engines" >}}) that can interpret
+A context is a set of cloud resources. Amazon Genomics CLI runs [workflows]( {{< relref "../workflows" >}} ) in a context. A deployed context will include an 
+[engine]( {{< relref "../engines" >}}) that can interpret
 and manage the running of a workflow along with compute resources that will run the individual tasks of the workflow. The
 deployed context will also contain any resources needed by the engine or compute resources including any security, permissions
-and [logging]( {{< relref "logs" >}} ) capabilities. Deployed contexts are [namespaced]( {{< relref "namespaces" >}}) based on the user, project and context name so that resources
+and [logging]( {{< relref "../logs" >}} ) capabilities. Deployed contexts are [namespaced]( {{< relref "../namespaces" >}}) based on the user, project and context name so that resources
 are isolated, preventing collisions.
 
 When a workflow is run the user will decide which context will run it. For example, you might choose to submit a workflow
 to a context that uses "Spot priced" resources or one that uses "On Demand" priced resources.
 
-When deployed context resources that require a VPC will be deployed into the VPC that was specified when the [account]( {{< relref "accounts" >}} ) was
+When deployed context resources that require a VPC will be deployed into the VPC that was specified when the [account]( {{< relref "../accounts" >}} ) was
 activated.
 
 ## How is a Context Defined?
 
-A context is defined in the YAML file that defines the [project]( {{< relref "projects" >}} ). A project has at least one context but may have many.
+A context is defined in the YAML file that defines the [project]( {{< relref "../projects" >}} ). A project has at least one context but may have many.
 Contexts must have unique names and are defined as YAML maps.
 
 A context may request use of [Spot priced](https://aws.amazon.com/ec2/spot/pricing/) compute resources with `requestSpotInstances: true`. The default value is `false`.
@@ -31,6 +31,12 @@ A context may request use of [Spot priced](https://aws.amazon.com/ec2/spot/prici
 A context must define an array of one or more `engines`. Each engine definition must specify the workflow language that it 
 will interpret. For each language Amazon Genomics CLI has a default engine however, users may specify the exact engine in the `engine`
 parameter.
+
+## General Architecture of a Context
+
+The exact architecture of a context will depend on the context properties described below and defined in their `agc-project.yaml`. However, the architecture deployed on execution of `agc context deploy` is shown in the following diagram:
+
+![Image of the general architecture of a context](ContextGeneralArchitecture.png "General Architecture of a Context")
 
 ## Context Properties
 
@@ -125,7 +131,7 @@ However note that while these instances are given a security group that will blo
 
 ## Context Commands
 
-A full reference of context commands is [here]( {{< relref "../Reference/agc_context" >}} )
+A full reference of context commands is [here]( {{< relref "../../Reference/agc_context" >}} )
 
 ### `describe`
 
