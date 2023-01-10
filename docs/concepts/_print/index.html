@@ -111,7 +111,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.3ceb339afcde8270ff6cb7cf889c6a72.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.06b0c5955bc113885ef5ee712f184f33.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -157,7 +157,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>1: <a href="#pg-2963b5c10b24c2ba4a3f465f160f5d62">Accounts</a></li>
+<li>1: <a href="#pg-066f39d8bd5975f3b952848463686251">Accounts</a></li>
 
 
     
@@ -165,7 +165,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>2: <a href="#pg-6c3b47ed284797f4d9857b16ce4c5eb1">Users</a></li>
+<li>2: <a href="#pg-b0d1207de3f7e8058620c9b3818c853a">Users</a></li>
 
 
     
@@ -173,7 +173,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>3: <a href="#pg-ff64678ea67dff6fd1ea3d5d85e8e476">Projects</a></li>
+<li>3: <a href="#pg-b41c57afea2d53f03bfa28dfdb1a3bf0">Projects</a></li>
 
 
     
@@ -181,7 +181,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>4: <a href="#pg-a7d705da5f4adbeb71a7224548e34061">Contexts</a></li>
+<li>4: <a href="#pg-d16ac579d635480780fbe450f165eacc">Contexts</a></li>
 
 
     
@@ -189,7 +189,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>5: <a href="#pg-299f35e607006a1dee5afe49c4a0a878">Data</a></li>
+<li>5: <a href="#pg-1ff71a9907bf49ed87b12c7febbb39bd">Data</a></li>
 
 
     
@@ -197,7 +197,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>6: <a href="#pg-7772fd5fbc3f6441618b6c1f078c917e">Workflows</a></li>
+<li>6: <a href="#pg-900e1456416cb0b3c4f22083cd91ed97">Workflows</a></li>
 
 
     
@@ -205,7 +205,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>7: <a href="#pg-15c0077a382ab390489264a40cfeb3fc">Engines</a></li>
+<li>7: <a href="#pg-2869b2da52301e3f4f4c5d9eb8c7b4d0">Engines</a></li>
 
 
     
@@ -213,7 +213,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>8: <a href="#pg-bd5d038508289f7248d640789cd44657">Logs</a></li>
+<li>8: <a href="#pg-c33111d4be9c15b2c385e73525ef3cb7">Logs</a></li>
 
 
     
@@ -221,7 +221,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>9: <a href="#pg-18daad18448df7a8b715228d871df05e">Namespaces</a></li>
+<li>9: <a href="#pg-5e6dd65c447d662e49f170e91dc29803">Namespaces</a></li>
 
 
     
@@ -256,7 +256,7 @@ organized.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-2963b5c10b24c2ba4a3f465f160f5d62">1 - Accounts</h1>
+	<h1 id="pg-066f39d8bd5975f3b952848463686251">1 - Accounts</h1>
     <div class="lead">How AWS Genomics CLI interacts with AWS Accounts</div>
 	<p>Amazon Genomics CLI requires an AWS account in which to deploy the cloud infrastructure required to run and manage workflows. To begin
 working with Amazon Genomics CLI and account must be &ldquo;Activated&rdquo; by the Amazon Genomics CLI application using the <a href="#activate">account activate</a> command.</p>
@@ -270,10 +270,13 @@ All that is required is that you have an existing AWS account (or create a new o
 For example, if your AWS profile uses <code>us-east-1</code> then Amazon Genomics CLI will use the same. Likewise, if you set the <code>AWS_REGION</code> environment
 variable to <code>eu-west-1</code> then that region will be used by Amazon Genomics CLI for all subsequent commands in that shell.</p>
 <h2 id="shared-infrastructure">Shared Infrastructure</h2>
-<p>When a region is first activated for Amazon Genomics CLI, some basic infrastructure is deployed including a <a href="https://docs.aws.amazon.com/vpc/latest/userguide/index.html">VPC</a>
-and an <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/index.html">S3</a> bucket. This
-core infrastructure will be shared by all Amazon Genomics CLI users and projects in that region. Note that context specific infrastructure
-is not shared and is unique and namespaced by user and project.</p>
+<p>When a region is first activated for Amazon Genomics CLI, some basic infrastructure is deployed including a
+<a href="https://docs.aws.amazon.com/vpc/latest/userguide/index.html">VPC</a>, which is used for the compute infrastructure that will be deployed in a <a href="/amazon-genomics-cli/docs/concepts/contexts/">context</a>,
+and an <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/index.html">S3</a> bucket which will be used to store workflow intermediates and results. This
+core infrastructure will be shared by all Amazon Genomics CLI users and projects in that region.</p>
+<p>The following diagram shows the infrastructure deployed when the command <code>agc account activate</code> is run:</p>
+<p><img src="AccountActivateArchitecture.png" alt="Image of shared infrastructure" title="Shared Infrastructure Components"></p>
+<p>Note that context specific infrastructure is not shared and is unique and namespaced by user and project.</p>
 <h2 id="bring-your-own-vpc-and-s3-bucket">Bring your Own VPC and S3 Bucket</h2>
 <p>During account <a href="#activate">activation</a> you may specify an existing VPC ID or S3 bucket name for use by Amazon Genomics CLI. If you do not these will
 be created for you. Although we use AWS best practices for these, if your organization has specific security requirements
@@ -422,6 +425,7 @@ NAT gateways.</p>
 <li><code>com.amazonaws.{region}.ecs-telemetry</code></li>
 <li><code>com.amazonaws.{region}.logs</code></li>
 <li><code>com.amazonaws.{region}.s3</code></li>
+<li><code>com.amazonaws.{region}.ec2</code></li>
 </ul>
 <p>If you provide your own VPC we recommend that the VPC has these endpoints. This will improve the security posture of
 Amazon Genomics CLI in your VPC and will also reduce NAT gateway traffic charges which can be substantial for genomics analyses that use
@@ -447,7 +451,7 @@ infrastructure can be found in <a href="https://github.com/aws/amazon-genomics-c
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-6c3b47ed284797f4d9857b16ce4c5eb1">2 - Users</h1>
+	<h1 id="pg-b0d1207de3f7e8058620c9b3818c853a">2 - Users</h1>
     <div class="lead">How Amazon Genomics CLI identifies users</div>
 	<p>When the CLI is set up, the user of the CLI is defined using the <code>agc configure email</code> command. This email should be
 unique to the individual user. This email address is used to determine a unique user ID which will be used to uniquely
@@ -483,7 +487,7 @@ console and remove it from there.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-ff64678ea67dff6fd1ea3d5d85e8e476">3 - Projects</h1>
+	<h1 id="pg-b41c57afea2d53f03bfa28dfdb1a3bf0">3 - Projects</h1>
     <div class="lead">A project defines the contexts, engines, data and workflows that make up a genomics analysis</div>
 	<p>An Amazon Genomics CLI project defines the <a href="/amazon-genomics-cli/docs/concepts/projects/">projects</a>, <a href="/amazon-genomics-cli/docs/concepts/contexts/">contexts</a>, <a href="/amazon-genomics-cli/docs/concepts/data/">data</a> and <a href="/amazon-genomics-cli/docs/concepts/workflows/">workflows</a> that make up a genomics analysis. Each project is defined
 in a project file named <code>agc-project.yaml</code>.</p>
@@ -598,7 +602,7 @@ context infrastructure.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-a7d705da5f4adbeb71a7224548e34061">4 - Contexts</h1>
+	<h1 id="pg-d16ac579d635480780fbe450f165eacc">4 - Contexts</h1>
     <div class="lead">Contexts are the set of cloud resources used to run a workflow</div>
 	<h2 id="what-is-a-context">What is a Context?</h2>
 <p>A context is a set of cloud resources. Amazon Genomics CLI runs <a href="/amazon-genomics-cli/docs/concepts/workflows/">workflows</a> in a context. A deployed context will include an
@@ -618,6 +622,9 @@ Contexts must have unique names and are defined as YAML maps.</p>
 <p>A context must define an array of one or more <code>engines</code>. Each engine definition must specify the workflow language that it
 will interpret. For each language Amazon Genomics CLI has a default engine however, users may specify the exact engine in the <code>engine</code>
 parameter.</p>
+<h2 id="general-architecture-of-a-context">General Architecture of a Context</h2>
+<p>The exact architecture of a context will depend on the context properties described below and defined in their <code>agc-project.yaml</code>. However, the architecture deployed on execution of <code>agc context deploy</code> is shown in the following diagram:</p>
+<p><img src="ContextGeneralArchitecture.png" alt="Image of the general architecture of a context" title="General Architecture of a Context"></p>
 <h2 id="context-properties">Context Properties</h2>
 <h3 id="instance-types">Instance Types</h3>
 <p>You may optionally specify the instance types to be used in a context. This can be a specific type such as <code>r5.2xlarge</code>
@@ -780,7 +787,7 @@ code we recommend destroying any relevant running contexts and redeploying them.
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-299f35e607006a1dee5afe49c4a0a878">5 - Data</h1>
+	<h1 id="pg-1ff71a9907bf49ed87b12c7febbb39bd">5 - Data</h1>
     <div class="lead">Data sets</div>
 	<p>To run an analysis you need data. In the <code>agc-project.yaml</code> file of an Amazon Genomics CLI <a href="/amazon-genomics-cli/docs/concepts/projects/">project</a> <code>data</code> is a list of data locations
 which can be used by the <a href="/amazon-genomics-cli/docs/concepts/contexts/">contexts</a> of the project.</p>
@@ -841,7 +848,7 @@ The CDK code does not modify any data in the buckets or any other bucket policie
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-7772fd5fbc3f6441618b6c1f078c917e">6 - Workflows</h1>
+	<h1 id="pg-900e1456416cb0b3c4f22083cd91ed97">6 - Workflows</h1>
     <div class="lead">A Workflow is a series of steps or tasks to be executed as part of an analysis.</div>
 	<p>A Workflow is a series of steps or tasks to be executed as part of an analysis. To run a workflow using Amazon Genomics CLI, first you must
 have deployed a context with suitable compute resources and with a workflow engine that can interpret the language of
@@ -1031,7 +1038,7 @@ possible at the level of an individual workflow.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-15c0077a382ab390489264a40cfeb3fc">7 - Engines</h1>
+	<h1 id="pg-2869b2da52301e3f4f4c5d9eb8c7b4d0">7 - Engines</h1>
     <div class="lead">Workflow engines parse and manage the tasks in a workflow</div>
 	<p>A workflow engine is defined as part of a <a href="/amazon-genomics-cli/docs/concepts/contexts/">context</a>. A context is currently limited to one workflow engine. The workflow engine will manage the execution of any <a href="/amazon-genomics-cli/docs/concepts/workflows/">workflows</a> submitted
 by Amazon Genomics CLI. When the context is deployed, an endpoint will be made available
@@ -1135,7 +1142,7 @@ controlling and destroying the resources that will be used for task execution.</
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-bd5d038508289f7248d640789cd44657">8 - Logs</h1>
+	<h1 id="pg-c33111d4be9c15b2c385e73525ef3cb7">8 - Logs</h1>
     <div class="lead">Logs are produced by contexts, engines and workflow tasks. Understanding how to access them is critical to monitoring and debugging workflows.</div>
 	<p>The infrastructure deployed by Amazon Genomics CLI records logs for many activities including the workflow runs, workflow
 engines as well as infrastructure. The logs are recorded in CloudWatch but are accessible through the CLI.</p>
@@ -1179,7 +1186,7 @@ removed from an account. If they are no longer needed they may be removed using 
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-18daad18448df7a8b715228d871df05e">9 - Namespaces</h1>
+	<h1 id="pg-5e6dd65c447d662e49f170e91dc29803">9 - Namespaces</h1>
     <div class="lead">Amazon Genomics CLI uses namespacing to prevent conflicts</div>
 	<p>Amazon Genomics CLI uses namespacing to prevent conflicts when there are multiple <a href="/amazon-genomics-cli/docs/concepts/users/">users</a>, <a href="/amazon-genomics-cli/docs/concepts/contexts/">contexts</a>, and <a href="/amazon-genomics-cli/docs/concepts/projects/">projects</a> in the same AWS account and region.</p>
 <p>In any given account and region, an individual user may have many projects with many deployed contexts all running at the
@@ -1226,6 +1233,14 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
 <tr>
 <td>agc-context</td>
 <td>The name of the context in which the infrastructure is deployed</td>
+</tr>
+<tr>
+<td>agc-engine</td>
+<td>The name of the engine being run in the context</td>
+</tr>
+<tr>
+<td>agc-engine-type</td>
+<td>The workflow language run by the engine</td>
 </tr>
 </tbody>
 </table>
@@ -1282,7 +1297,7 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2022 Amazon Web Services, Inc. or its affiliates. All Rights Reserved</small>
+        <small class="text-white">&copy; 2023 Amazon Web Services, Inc. or its affiliates. All Rights Reserved</small>
         <small class="ml-1"><a href="https://aws.amazon.com/privacy" target="_blank" rel="noopener">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/amazon-genomics-cli/about/">About Amazon Genomics CLI</a></p>

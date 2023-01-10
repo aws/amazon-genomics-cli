@@ -34,10 +34,13 @@ All that is required is that you have an existing AWS account (or create a new o
 For example, if your AWS profile uses &lt;code&gt;us-east-1&lt;/code&gt; then Amazon Genomics CLI will use the same. Likewise, if you set the &lt;code&gt;AWS_REGION&lt;/code&gt; environment
 variable to &lt;code&gt;eu-west-1&lt;/code&gt; then that region will be used by Amazon Genomics CLI for all subsequent commands in that shell.&lt;/p&gt;
 &lt;h2 id=&#34;shared-infrastructure&#34;&gt;Shared Infrastructure&lt;/h2&gt;
-&lt;p&gt;When a region is first activated for Amazon Genomics CLI, some basic infrastructure is deployed including a &lt;a href=&#34;https://docs.aws.amazon.com/vpc/latest/userguide/index.html&#34;&gt;VPC&lt;/a&gt;
-and an &lt;a href=&#34;https://docs.aws.amazon.com/AmazonS3/latest/userguide/index.html&#34;&gt;S3&lt;/a&gt; bucket. This
-core infrastructure will be shared by all Amazon Genomics CLI users and projects in that region. Note that context specific infrastructure
-is not shared and is unique and namespaced by user and project.&lt;/p&gt;
+&lt;p&gt;When a region is first activated for Amazon Genomics CLI, some basic infrastructure is deployed including a
+&lt;a href=&#34;https://docs.aws.amazon.com/vpc/latest/userguide/index.html&#34;&gt;VPC&lt;/a&gt;, which is used for the compute infrastructure that will be deployed in a &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt;,
+and an &lt;a href=&#34;https://docs.aws.amazon.com/AmazonS3/latest/userguide/index.html&#34;&gt;S3&lt;/a&gt; bucket which will be used to store workflow intermediates and results. This
+core infrastructure will be shared by all Amazon Genomics CLI users and projects in that region.&lt;/p&gt;
+&lt;p&gt;The following diagram shows the infrastructure deployed when the command &lt;code&gt;agc account activate&lt;/code&gt; is run:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;AccountActivateArchitecture.png&#34; alt=&#34;Image of shared infrastructure&#34; title=&#34;Shared Infrastructure Components&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Note that context specific infrastructure is not shared and is unique and namespaced by user and project.&lt;/p&gt;
 &lt;h2 id=&#34;bring-your-own-vpc-and-s3-bucket&#34;&gt;Bring your Own VPC and S3 Bucket&lt;/h2&gt;
 &lt;p&gt;During account &lt;a href=&#34;#activate&#34;&gt;activation&lt;/a&gt; you may specify an existing VPC ID or S3 bucket name for use by Amazon Genomics CLI. If you do not these will
 be created for you. Although we use AWS best practices for these, if your organization has specific security requirements
@@ -186,6 +189,7 @@ NAT gateways.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.ecs-telemetry&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.logs&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.s3&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;com.amazonaws.{region}.ec2&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If you provide your own VPC we recommend that the VPC has these endpoints. This will improve the security posture of
 Amazon Genomics CLI in your VPC and will also reduce NAT gateway traffic charges which can be substantial for genomics analyses that use
@@ -370,6 +374,9 @@ Contexts must have unique names and are defined as YAML maps.&lt;/p&gt;
 &lt;p&gt;A context must define an array of one or more &lt;code&gt;engines&lt;/code&gt;. Each engine definition must specify the workflow language that it
 will interpret. For each language Amazon Genomics CLI has a default engine however, users may specify the exact engine in the &lt;code&gt;engine&lt;/code&gt;
 parameter.&lt;/p&gt;
+&lt;h2 id=&#34;general-architecture-of-a-context&#34;&gt;General Architecture of a Context&lt;/h2&gt;
+&lt;p&gt;The exact architecture of a context will depend on the context properties described below and defined in their &lt;code&gt;agc-project.yaml&lt;/code&gt;. However, the architecture deployed on execution of &lt;code&gt;agc context deploy&lt;/code&gt; is shown in the following diagram:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;ContextGeneralArchitecture.png&#34; alt=&#34;Image of the general architecture of a context&#34; title=&#34;General Architecture of a Context&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;context-properties&#34;&gt;Context Properties&lt;/h2&gt;
 &lt;h3 id=&#34;instance-types&#34;&gt;Instance Types&lt;/h3&gt;
 &lt;p&gt;You may optionally specify the instance types to be used in a context. This can be a specific type such as &lt;code&gt;r5.2xlarge&lt;/code&gt;
@@ -958,6 +965,14 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
 &lt;tr&gt;
 &lt;td&gt;agc-context&lt;/td&gt;
 &lt;td&gt;The name of the context in which the infrastructure is deployed&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;agc-engine&lt;/td&gt;
+&lt;td&gt;The name of the engine being run in the context&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;agc-engine-type&lt;/td&gt;
+&lt;td&gt;The workflow language run by the engine&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;

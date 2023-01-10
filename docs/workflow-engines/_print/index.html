@@ -111,7 +111,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.3ceb339afcde8270ff6cb7cf889c6a72.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.06b0c5955bc113885ef5ee712f184f33.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -172,7 +172,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>1.1: <a href="#pg-dded0714e7076ba02ca9bb1acd6b5a28">EFS Workflow Filesystem</a></li>
+<li>1.1: <a href="#pg-a7306251dc90f1875557c7a11ff0f93a">EFS Workflow Filesystem</a></li>
 
 
     
@@ -180,7 +180,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>1.2: <a href="#pg-99fc65bfd4f076f2cfc1b170e810e7cb">S3 Workflow Filesystem</a></li>
+<li>1.2: <a href="#pg-19616ac8f2aad0f2837809bb712f923f">S3 Workflow Filesystem</a></li>
 
 
     
@@ -192,7 +192,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>2: <a href="#pg-2545b4751912a9ded4164c210293fd69">Toil</a></li>
+<li>2: <a href="#pg-af64b29c5b4863574a0443d0cbe07685">miniwdl</a></li>
 
 
     
@@ -200,7 +200,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>3: <a href="#pg-b812d6d6ccf08050a8b058f849258f24">Cromwell</a></li>
+<li>3: <a href="#pg-9e36ebeae2c9ae3d0d24a18848d9127d">Toil</a></li>
 
 
     
@@ -208,7 +208,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>4: <a href="#pg-ce78b9e5a84e9a8a9ba2d03b23c23514">miniwdl</a></li>
+<li>4: <a href="#pg-0cab9f4369feb9796b181f397a37ef6b">Cromwell</a></li>
 
 
     
@@ -216,7 +216,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>5: <a href="#pg-213fbc809c7f219340e18bd5d4675202">Snakemake</a></li>
+<li>5: <a href="#pg-1c12bfd52303c1cd05412a038e33080e">Nextflow</a></li>
 
 
     
@@ -224,7 +224,7 @@ This is the multi-page printable view of this section.
     
     
 	
-<li>6: <a href="#pg-201f7953fd8f191a875eff2bec53af2d">Nextflow</a></li>
+<li>6: <a href="#pg-f618495f8100c470fcd842c394d407d9">Snakemake</a></li>
 
 
     
@@ -284,7 +284,7 @@ filesystems that can be deployed by Amazon Genomics CLI.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-dded0714e7076ba02ca9bb1acd6b5a28">1.1 - EFS Workflow Filesystem</h1>
+	<h1 id="pg-a7306251dc90f1875557c7a11ff0f93a">1.1 - EFS Workflow Filesystem</h1>
     
 	<h2 id="amazon-efs-workflow-filesystem">Amazon EFS Workflow Filesystem</h2>
 <p>Workflow engines that support it may use Amazon EFS as a shared &ldquo;scratch&rdquo; space for hosting workflow intermediates and
@@ -340,7 +340,7 @@ support provisioned IOPs.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-99fc65bfd4f076f2cfc1b170e810e7cb">1.2 - S3 Workflow Filesystem</h1>
+	<h1 id="pg-19616ac8f2aad0f2837809bb712f923f">1.2 - S3 Workflow Filesystem</h1>
     
 	<h2 id="amazon-s3-workflow-filesystem">Amazon S3 Workflow Filesystem</h2>
 <p>Some workflow engines deployed by Amazon Genomics CLI can use S3 as their shared &ldquo;filesystem&rdquo;. Because S3 is not a POSIX
@@ -394,16 +394,77 @@ Contexts using these engines will use this filesystem by default.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-2545b4751912a9ded4164c210293fd69">2 - Toil</h1>
-    <div class="lead">Details on the Toil engine deployed by Amazon Genomics CLI</div>
+	<h1 id="pg-af64b29c5b4863574a0443d0cbe07685">2 - miniwdl</h1>
+    <div class="lead">Details on the miniwdl engine deployed by Amazon Genomics CLI</div>
+	<h2 id="description">Description</h2>
+<p><a href="https://miniwdl.readthedocs.io/en/latest/index.html">miniwdl</a> is free open source software distributed under the MIT licence
+developed by the <a href="https://chanzuckerberg.com/">Chan Zuckerberg Initiative</a>.</p>
+<p>The source code for miniwdl is available on <a href="https://github.com/chanzuckerberg/miniwdl">GitHub</a>. When deployed with
+Amazon Genomics CLI miniwdl makes use of the <a href="https://github.com/miniwdl-ext/miniwdl-aws">miniwdl-aws extension</a> which is
+also distributed under the MIT licence.</p>
+<h2 id="architecture">Architecture</h2>
+<p>There are four components of a miniwdl engine as deployed in an Amazon Genomics CLI context:</p>
+<p><img src="MiniWDLContextArch.png" alt="Image of infrastructure deployed in a miniwdl context" title="miniWDL Context Architecture"></p>
+<h3 id="wes-adapter">WES Adapter</h3>
+<p>Amazon Genomics CLI communicates with the miniwdl engine via a GA4GH <a href="https://github.com/ga4gh/workflow-execution-service-schemas">WES</a> REST service. The WES Adapter implements
+the WES standard and translates WES calls into calls to the miniwdl head process.</p>
+<h3 id="head-compute-environment">Head Compute Environment</h3>
+<p>For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the miniwdl process responsible
+for running that workflow. These miniwdl &ldquo;head&rdquo; jobs are run in an &ldquo;On-demand&rdquo; AWS Fargate compute environment even when the actual workflow
+tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.</p>
+<h3 id="task-compute-environment">Task Compute Environment</h3>
+<p>Workflow tasks are submitted by the miniwdl head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
+Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on container hosts as space allows.</p>
+<h4 id="session-cache-and-input-localization">Session Cache and Input Localization</h4>
+<p>Any context with a miniwdl engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from S3 are
+localized to the volume by jobs that the miniwdl engine spawns to copy these files to the volume. Outputs are copied back
+to S3 using a similar process. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.</p>
+<p>The EFS volume is used by all miniwdl engine &ldquo;head&rdquo; jobs to store metadata necessary for call caching.</p>
+<p>The EFS volume will remain in your account for the lifetime of the context and are destroyed when contexts are destroyed.
+Because the volume will grow in size as you run more workflows we recommend destroying the context when done to avoid on going EFS
+charges.</p>
+<h2 id="using-miniwdl-as-a-context-engine">Using miniwdl as a Context Engine</h2>
+<p>You may declare miniwdl to be the <code>engine</code> for any contexts <code>wdl</code> type engine. For example:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">contexts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">onDemandCtx</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">requestSpotInstances</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">false</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">wdl</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">miniwdl</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></code></pre></div><h2 id="call-caching">Call Caching</h2>
+<p>Call caching is enabled by default for miniwdl and because the metadata is stored in the contexts EFS volume call caching
+will work across different engine &ldquo;head&rdquo; jobs.</p>
+<p>To disable call caching you can provide the <code>--no-cache</code> engine option. You may do this in a workflows <code>MANIFEST.json</code> by
+adding the following key/ value pair.</p>
+<pre><code>  &quot;engineOptions&quot;: &quot;--no-cache&quot;
+</code></pre>
+</div>
+
+
+
+    
+	
+  
+    
+    
+	
+    
+
+<div class="td-content" style="page-break-before: always">
+    
+	<h1 id="pg-9e36ebeae2c9ae3d0d24a18848d9127d">3 - Toil</h1>
+    <div class="lead">Details on the Toil engine (CWL mode) deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="http://toil.ucsc-cgl.org/">Toil</a> is a workflow engine developed by the
 <a href="https://cglgenomics.ucsc.edu/">Computational Genomics Lab</a> at the
 <a href="https://genomics.ucsc.edu/">UC Santa Cruz Genomics Institute</a>. In Amazon Genomics
 CLI, Toil is an engine that can be deployed in a
 <a href="/amazon-genomics-cli/docs/concepts/contexts/">context</a> as an
-<a href="/amazon-genomics-cli/docs/concepts/engines/">engine</a> to run workflows based on the
-<a href="https://www.commonwl.org/">CWL</a> specification.</p>
+<a href="/amazon-genomics-cli/docs/concepts/engines/">engine</a> to run workflows written in the
+<a href="https://www.commonwl.org/">Common Workflow Language</a> (CWL) standard, version
+<a href="https://www.commonwl.org/v1.0/">v1.0</a>, <a href="https://www.commonwl.org/v1.1/">v1.1</a>,
+and <a href="https://www.commonwl.org/v1.2/">v1.2</a> (or mixed versions).</p>
 <p>Toil is an open source project distributed by UC Santa Cruz under the <a href="https://github.com/DataBiosphere/toil/blob/master/LICENSE">Apache 2
 license</a> and
 available on
@@ -411,14 +472,15 @@ available on
 <h2 id="architecture">Architecture</h2>
 <p>There are two components of a Toil engine as deployed in an Amazon Genomics
 CLI context:</p>
-<h3 id="engine-service">Engine Service</h3>
+<p><img src="ToilContextArch.png" alt="Image of infrastructure deployed in a Toil context" title="Toil Context Architecture"></p>
+<h3 id="toil-server">Toil Server</h3>
 <p>The Toil engine is run in &ldquo;server mode&rdquo; as a container service in ECS. The
 engine can run multiple workflows asynchronously. Workflow tasks are run in an
 elastic <a href="#compute-environment">compute environment</a> and monitored by Toil.
 Amazon Genomics CLI communicates with the Toil engine via a GA4GH
 <a href="https://github.com/ga4gh/workflow-execution-service-schemas">WES</a> REST service
 which the server offers, available via API Gateway.</p>
-<h3 id="compute-environment">Compute Environment</h3>
+<h3 id="task-compute-environment">Task Compute Environment</h3>
 <p>Workflow tasks are submitted by Toil to an AWS Batch queue and run in
 Toil-provided containers using an AWS Compute Environment. Tasks which use the
 <a href="https://www.commonwl.org/user_guide/07-containers/index.html">CWL <code>DockerRequirement</code></a>
@@ -451,7 +513,7 @@ faster than the expansion process can react).</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-b812d6d6ccf08050a8b058f849258f24">3 - Cromwell</h1>
+	<h1 id="pg-0cab9f4369feb9796b181f397a37ef6b">4 - Cromwell</h1>
     <div class="lead">Details on the Cromwell engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="https://cromwell.readthedocs.io/en/stable/">Cromwell</a> is a workflow engine developed by the <a href="https://www.broadinstitute.org/">Broad Institute</a>.
@@ -462,23 +524,24 @@ to run workflows based on the <a href="https://openwdl.org/">WDL</a> specificati
 <h3 id="customizations">Customizations</h3>
 <p>Some minor customizations where made to the AWS Backend adapter for Cromwell to facilitate improved scalability and cross
 region S3 bucket access when deployed with Amazon Genomics CLI. The fork containing these customizations is available <a href="https://github.com/markjschreiber/cromwell">here</a>
-and we are working to contribute these bask to the main code base.</p>
+and we are working to contribute these back to the main code base.</p>
 <h2 id="architecture">Architecture</h2>
-<p>There are four components of a Cromwell engine as deployed in an Amazon Genomics CLI context:</p>
+<p>There are four components of a Cromwell engine as deployed in an Amazon Genomics CLI context.</p>
+<p><img src="CromwellContextArch.png" alt="Image of infrastructure deployed in a Cromwell context" title="Cromwell Context Architecture"></p>
 <h3 id="wes-adapter">WES Adapter</h3>
 <p>Amazon Genomics CLI communicates with the Cromwell engine via a GA4GH <a href="https://github.com/ga4gh/workflow-execution-service-schemas">WES</a> REST service. The WES Adapter implements
 the WES standard and translates WES calls into calls to the <a href="https://cromwell.readthedocs.io/en/stable/api/RESTAPI/">Cromwell REST API</a>. The adapter runs as an Amazon ECS service
 available via API Gateway.</p>
-<h3 id="engine-service">Engine Service</h3>
+<h3 id="cromwell-server">Cromwell Server</h3>
 <p>The Cromwell engine is run in &ldquo;server mode&rdquo; as a container service in ECS and receives instructions from the WES Adapter. The
 engine can run multiple workflows asynchronously. Workflow tasks are run in an elastic <a href="#compute-environment">compute environment</a> and
 monitored by Cromwell.</p>
-<h3 id="metadata-storage">Metadata Storage</h3>
+<h3 id="session-cache">Session Cache</h3>
 <p>Cromwell can use workflow run metadata to perform call caching. When deployed by Amazon Genomics CLI call caching is enabled
-by default. Metadata is stored by an embedded Hypersonic DB with file storage in an attached EFS volume. The EFS volume
+by default. Metadata is stored by an embedded HSQL DB with file storage in an attached EFS volume. The EFS volume
 exists for the lifetime of the context the engine is deployed in so re-runs of workflows within the lifetime can benefit
 from call caching.</p>
-<h3 id="compute-environment">Compute Environment</h3>
+<h3 id="task-compute-environment">Task Compute Environment</h3>
 <p>Workflow tasks are submitted by Cromwell to an AWS Batch queue and run in containers using an AWS Compute Environment.
 Container characteristics are defined by the <code>runtime</code>. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
 based on the available work in the queue. Batch will place containers on container hosts as space allows.</p>
@@ -521,50 +584,35 @@ and is ignored.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-ce78b9e5a84e9a8a9ba2d03b23c23514">4 - miniwdl</h1>
-    <div class="lead">Details on the miniwdl engine deployed by Amazon Genomics CLI</div>
+	<h1 id="pg-1c12bfd52303c1cd05412a038e33080e">5 - Nextflow</h1>
+    <div class="lead">Details on the Nextflow engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
-<p><a href="https://miniwdl.readthedocs.io/en/latest/index.html">miniwdl</a> is free open source software distributed under the MIT licence
-developed by the <a href="https://chanzuckerberg.com/">Chan Zuckerberg Initiative</a>.</p>
-<p>The source code for miniwdl is available on <a href="https://github.com/chanzuckerberg/miniwdl">GitHub</a>. When deployed with
-Amazon Genomics CLI miniwdl makes use of the <a href="https://github.com/miniwdl-ext/miniwdl-aws">miniwdl-aws extension</a> which is
-also distributed under the MIT licence.</p>
+<p><a href="https://www.nextflow.io/">Nextflow</a> is free open source software distributed under the Apache 2.0 licence
+developed by <a href="http://www.seqera.io/">Seqera</a> Labs.
+The project was started in the Notredame Lab at the <a href="http://www.crg.eu/">Centre for Genomic Regulation (CRG)</a>.</p>
+<p>The source code for Nextflow is available on <a href="https://github.com/nextflow-io/nextflow">GitHub</a>.</p>
 <h2 id="architecture">Architecture</h2>
-<p>There are four components of a miniwdl engine as deployed in an Amazon Genomics CLI context:</p>
+<p>There are four components of a Nextflow engine as deployed in an Amazon Genomics CLI context:</p>
+<p><img src="NextflowContextArch.png" alt="Image of infrastructure deployed in a Nextflow context" title="Nextflow Context Architecture"></p>
 <h3 id="wes-adapter">WES Adapter</h3>
-<p>Amazon Genomics CLI communicates with the miniwdl engine via a GA4GH <a href="https://github.com/ga4gh/workflow-execution-service-schemas">WES</a> REST service. The WES Adapter implements
-the WES standard and translates WES calls into calls to the miniwdl head process.</p>
-<h3 id="engine-batch-job">Engine Batch Job</h3>
-<p>For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the miniwdl process responsible
-for running that workflow. These miniwdl &ldquo;head&rdquo; jobs are run in an &ldquo;On-demand&rdquo; AWS Fargate compute environment even when the actual workflow
+<p>Amazon Genomics CLI communicates with the Nextflow engine via a GA4GH <a href="https://github.com/ga4gh/workflow-execution-service-schemas">WES</a> REST service. The WES Adapter implements
+the WES standard and translates WES calls into calls to the Nextflow head process.</p>
+<h3 id="head-compute-environment">Head Compute Environment</h3>
+<p>For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the Nextflow process responsible
+for running that workflow. These Nextflow &ldquo;head&rdquo; jobs are run in an &ldquo;On-demand&rdquo; compute environment even when the actual workflow
 tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.</p>
-<h3 id="compute-environment">Compute Environment</h3>
-<p>Workflow tasks are submitted by the miniwdl head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
+<h3 id="task-compute-environment">Task Compute Environment</h3>
+<p>Workflow tasks are submitted by the Nextflow head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
 Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
 based on the available work in the queue. Batch will place containers on container hosts as space allows.</p>
-<h4 id="efs-scratch-space-and-s3-localization">EFS scratch space and S3 localization</h4>
-<p>Any context with a miniwdl engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from S3 are
-localized to the volume by jobs that the miniwdl engine spawns to copy these files to the volume. Outputs are copied back
-to S3 using a similar process. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.</p>
-<p>The EFS volume is used by all miniwdl engine &ldquo;head&rdquo; jobs to store metadata necessary for call caching.</p>
-<p>The EFS volume will remain in your account for the lifetime of the context and are destroyed when contexts are destroyed.
-Because the volume will grow in size as you run more workflows we recommend destroying the context when done to avoid on going EFS
-charges.</p>
-<h2 id="using-miniwdl-as-a-context-engine">Using miniwdl as a Context Engine</h2>
-<p>You may declare miniwdl to be the <code>engine</code> for any contexts <code>wdl</code> type engine. For example:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">contexts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">onDemandCtx</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">requestSpotInstances</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">false</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">engines</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">type</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">wdl</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">engine</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">miniwdl</span><span style="color:#f8f8f8;text-decoration:underline">
-</span></code></pre></div><h2 id="call-caching">Call Caching</h2>
-<p>Call caching is enabled by default for miniwdl and because the metadata is stored in the contexts EFS volume call caching
-will work across different engine &ldquo;head&rdquo; jobs.</p>
-<p>To disable call caching you can provide the <code>--no-cache</code> engine option. You may do this in a workflows <code>MANIFEST.json</code> by
-adding the following key/ value pair.</p>
-<pre><code>  &quot;engineOptions&quot;: &quot;--no-cache&quot;
-</code></pre>
+<h4 id="fetch-and-run-strategy">Fetch and Run Strategy</h4>
+<p>Execution of workflow tasks uses a &ldquo;Fetch and Run&rdquo; strategy. Input files required by a workflow task are fetched from
+S3 into the task container. Output files are copied out of the container to S3.</p>
+<h4 id="disk-expansion">Disk Expansion</h4>
+<p>Container hosts in the Batch compute environment use EBS volumes as local scratch space. As an EBS volume approaches a
+capacity threshold, new EBS volumes will be attached and merged into the file system. These volumes are destroyed when
+AWS Batch terminates the container host.</p>
+
 </div>
 
 
@@ -579,7 +627,7 @@ adding the following key/ value pair.</p>
 
 <div class="td-content" style="page-break-before: always">
     
-	<h1 id="pg-213fbc809c7f219340e18bd5d4675202">5 - Snakemake</h1>
+	<h1 id="pg-f618495f8100c470fcd842c394d407d9">6 - Snakemake</h1>
     <div class="lead">Details on the Snakemake engine deployed by Amazon Genomics CLI</div>
 	<h2 id="description">Description</h2>
 <p><a href="https://snakemake.readthedocs.io/en/stable/">Snakemake</a> is free open source software distributed under the MIT licence
@@ -588,18 +636,19 @@ developed by <a href="https://snakemake.readthedocs.io/en/stable/project_info/au
 Amazon Genomics CLI snakemake uses Batch to distribute the underlying tasks.</p>
 <h2 id="architecture">Architecture</h2>
 <p>There are four components of a snakemake engine as deployed in an Amazon Genomics CLI context:</p>
+<p><img src="SnakeMakeContextArch.png" alt="Image of infrastructure deployed in a SnakeMake context" title="SnakeMake Context Architecture"></p>
 <h3 id="wes-adapter">WES Adapter</h3>
 <p>Amazon Genomics CLI communicates with the snakemake engine via a GA4GH <a href="https://github.com/ga4gh/workflow-execution-service-schemas">WES</a> REST service. The WES Adapter implements
 the WES standard and translates WES calls into calls to the snakemake head process.</p>
-<h3 id="engine-batch-job">Engine Batch Job</h3>
+<h3 id="head-compute-environment">Head Compute Environment</h3>
 <p>For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the snakemake process responsible
 for running that workflow. These snakemake &ldquo;head&rdquo; jobs are run in an &ldquo;On-demand&rdquo; AWS Fargate compute environment even when the actual workflow
 tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.</p>
-<h3 id="compute-environment">Compute Environment</h3>
+<h3 id="task-compute-environment">Task Compute Environment</h3>
 <p>Workflow tasks are submitted by the snakemake head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
 Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
 based on the available work in the queue. Batch will place containers on container hosts as space allows.</p>
-<h4 id="efs-scratch-space-and-s3-localization">EFS scratch space and S3 localization</h4>
+<h4 id="session-cache-and-input-localization">Session Cache and Input Localization</h4>
 <p>Any context with a snakemake engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from the workflow
 are localized to the volume by jobs that the snakemake engine spawns to copy these files to the volume. Outputs are copied back
 to S3 after the workflow is complete. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.</p>
@@ -625,48 +674,6 @@ will take.</p>
 adding the following key/ value pair.</p>
 <pre><code>  &quot;engineOptions&quot;: &quot;-j 10 --conda-prefix /mnt/efs/snakemake/conda&quot;
 </code></pre>
-</div>
-
-
-
-    
-	
-  
-    
-    
-	
-    
-
-<div class="td-content" style="page-break-before: always">
-    
-	<h1 id="pg-201f7953fd8f191a875eff2bec53af2d">6 - Nextflow</h1>
-    <div class="lead">Details on the Nextflow engine deployed by Amazon Genomics CLI</div>
-	<h2 id="description">Description</h2>
-<p><a href="https://www.nextflow.io/">Nextflow</a> is free open source software distributed under the Apache 2.0 licence
-developed by <a href="http://www.seqera.io/">Seqera</a> Labs.
-The project was started in the Notredame Lab at the <a href="http://www.crg.eu/">Centre for Genomic Regulation (CRG)</a>.</p>
-<p>The source code for Nextflow is available on <a href="https://github.com/nextflow-io/nextflow">GitHub</a>.</p>
-<h2 id="architecture">Architecture</h2>
-<p>There are four components of a Nextflow engine as deployed in an Amazon Genomics CLI context:</p>
-<h3 id="wes-adapter">WES Adapter</h3>
-<p>Amazon Genomics CLI communicates with the Nextflow engine via a GA4GH <a href="https://github.com/ga4gh/workflow-execution-service-schemas">WES</a> REST service. The WES Adapter implements
-the WES standard and translates WES calls into calls to the Nextflow head process.</p>
-<h3 id="engine-batch-job">Engine Batch Job</h3>
-<p>For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the Nextflow process responsible
-for running that workflow. These Nextflow &ldquo;head&rdquo; jobs are run in an &ldquo;On-demand&rdquo; compute environment even when the actual workflow
-tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.</p>
-<h3 id="compute-environment">Compute Environment</h3>
-<p>Workflow tasks are submitted by the Nextflow head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
-Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
-based on the available work in the queue. Batch will place containers on container hosts as space allows.</p>
-<h4 id="fetch-and-run-strategy">Fetch and Run Strategy</h4>
-<p>Execution of workflow tasks uses a &ldquo;Fetch and Run&rdquo; strategy. Input files required by a workflow task are fetched from
-S3 into the task container. Output files are copied out of the container to S3.</p>
-<h4 id="disk-expansion">Disk Expansion</h4>
-<p>Container hosts in the Batch compute environment use EBS volumes as local scratch space. As an EBS volume approaches a
-capacity threshold, new EBS volumes will be attached and merged into the file system. These volumes are destroyed when
-AWS Batch terminates the container host.</p>
-
 </div>
 
 
@@ -719,7 +726,7 @@ AWS Batch terminates the container host.</p>
         
       </div>
       <div class="col-12 col-sm-4 text-center py-2 order-sm-2">
-        <small class="text-white">&copy; 2022 Amazon Web Services, Inc. or its affiliates. All Rights Reserved</small>
+        <small class="text-white">&copy; 2023 Amazon Web Services, Inc. or its affiliates. All Rights Reserved</small>
         <small class="ml-1"><a href="https://aws.amazon.com/privacy" target="_blank" rel="noopener">Privacy Policy</a></small>
 	
 		<p class="mt-2"><a href="/amazon-genomics-cli/about/">About Amazon Genomics CLI</a></p>

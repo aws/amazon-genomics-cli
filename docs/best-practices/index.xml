@@ -16,10 +16,10 @@
     
     <item>
       <title>Docs: IAM Permissions</title>
-      <link>https://aws.github.io/amazon-genomics-cli/docs/best-practices/iampermissions/</link>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/best-practices/iam-permissions/</link>
       <pubDate>Thu, 07 Apr 2022 09:51:56 -0400</pubDate>
       
-      <guid>https://aws.github.io/amazon-genomics-cli/docs/best-practices/iampermissions/</guid>
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/best-practices/iam-permissions/</guid>
       <description>
         
         
@@ -127,10 +127,10 @@ arn:aws:cloudformation:us-east-1:123456789123:stack/AgcPermissionsStack/6ace55f0
     
     <item>
       <title>Docs: Controlling Costs</title>
-      <link>https://aws.github.io/amazon-genomics-cli/docs/best-practices/controllingcosts/</link>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/best-practices/controlling-costs/</link>
       <pubDate>Fri, 17 Sep 2021 18:01:56 -0400</pubDate>
       
-      <guid>https://aws.github.io/amazon-genomics-cli/docs/best-practices/controllingcosts/</guid>
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/best-practices/controlling-costs/</guid>
       <description>
         
         
@@ -218,10 +218,10 @@ use for Amazon Genomics CLI.&lt;/p&gt;
     
     <item>
       <title>Docs: Scaling Workloads</title>
-      <link>https://aws.github.io/amazon-genomics-cli/docs/best-practices/scalingworkloads/</link>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/best-practices/scaling-workloads/</link>
       <pubDate>Fri, 17 Sep 2021 17:59:52 -0400</pubDate>
       
-      <guid>https://aws.github.io/amazon-genomics-cli/docs/best-practices/scalingworkloads/</guid>
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/best-practices/scaling-workloads/</guid>
       <description>
         
         

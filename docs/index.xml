@@ -34,10 +34,13 @@ All that is required is that you have an existing AWS account (or create a new o
 For example, if your AWS profile uses &lt;code&gt;us-east-1&lt;/code&gt; then Amazon Genomics CLI will use the same. Likewise, if you set the &lt;code&gt;AWS_REGION&lt;/code&gt; environment
 variable to &lt;code&gt;eu-west-1&lt;/code&gt; then that region will be used by Amazon Genomics CLI for all subsequent commands in that shell.&lt;/p&gt;
 &lt;h2 id=&#34;shared-infrastructure&#34;&gt;Shared Infrastructure&lt;/h2&gt;
-&lt;p&gt;When a region is first activated for Amazon Genomics CLI, some basic infrastructure is deployed including a &lt;a href=&#34;https://docs.aws.amazon.com/vpc/latest/userguide/index.html&#34;&gt;VPC&lt;/a&gt;
-and an &lt;a href=&#34;https://docs.aws.amazon.com/AmazonS3/latest/userguide/index.html&#34;&gt;S3&lt;/a&gt; bucket. This
-core infrastructure will be shared by all Amazon Genomics CLI users and projects in that region. Note that context specific infrastructure
-is not shared and is unique and namespaced by user and project.&lt;/p&gt;
+&lt;p&gt;When a region is first activated for Amazon Genomics CLI, some basic infrastructure is deployed including a
+&lt;a href=&#34;https://docs.aws.amazon.com/vpc/latest/userguide/index.html&#34;&gt;VPC&lt;/a&gt;, which is used for the compute infrastructure that will be deployed in a &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt;,
+and an &lt;a href=&#34;https://docs.aws.amazon.com/AmazonS3/latest/userguide/index.html&#34;&gt;S3&lt;/a&gt; bucket which will be used to store workflow intermediates and results. This
+core infrastructure will be shared by all Amazon Genomics CLI users and projects in that region.&lt;/p&gt;
+&lt;p&gt;The following diagram shows the infrastructure deployed when the command &lt;code&gt;agc account activate&lt;/code&gt; is run:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;AccountActivateArchitecture.png&#34; alt=&#34;Image of shared infrastructure&#34; title=&#34;Shared Infrastructure Components&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Note that context specific infrastructure is not shared and is unique and namespaced by user and project.&lt;/p&gt;
 &lt;h2 id=&#34;bring-your-own-vpc-and-s3-bucket&#34;&gt;Bring your Own VPC and S3 Bucket&lt;/h2&gt;
 &lt;p&gt;During account &lt;a href=&#34;#activate&#34;&gt;activation&lt;/a&gt; you may specify an existing VPC ID or S3 bucket name for use by Amazon Genomics CLI. If you do not these will
 be created for you. Although we use AWS best practices for these, if your organization has specific security requirements
@@ -186,6 +189,7 @@ NAT gateways.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.ecs-telemetry&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.logs&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;com.amazonaws.{region}.s3&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;com.amazonaws.{region}.ec2&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;If you provide your own VPC we recommend that the VPC has these endpoints. This will improve the security posture of
 Amazon Genomics CLI in your VPC and will also reduce NAT gateway traffic charges which can be substantial for genomics analyses that use
@@ -229,6 +233,61 @@ recommend stopping all running workflows and destroying all your deployed contex
 If you do not do this, you or an account administrator will need to identify any un-needed infrastructure in the CloudFormation
 console and remove it from there.&lt;/p&gt;
 
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: miniwdl</title>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/miniwdl/</link>
+      <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>
+      
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/miniwdl/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://miniwdl.readthedocs.io/en/latest/index.html&#34;&gt;miniwdl&lt;/a&gt; is free open source software distributed under the MIT licence
+developed by the &lt;a href=&#34;https://chanzuckerberg.com/&#34;&gt;Chan Zuckerberg Initiative&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The source code for miniwdl is available on &lt;a href=&#34;https://github.com/chanzuckerberg/miniwdl&#34;&gt;GitHub&lt;/a&gt;. When deployed with
+Amazon Genomics CLI miniwdl makes use of the &lt;a href=&#34;https://github.com/miniwdl-ext/miniwdl-aws&#34;&gt;miniwdl-aws extension&lt;/a&gt; which is
+also distributed under the MIT licence.&lt;/p&gt;
+&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
+&lt;p&gt;There are four components of a miniwdl engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;MiniWDLContextArch.png&#34; alt=&#34;Image of infrastructure deployed in a miniwdl context&#34; title=&#34;miniWDL Context Architecture&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
+&lt;p&gt;Amazon Genomics CLI communicates with the miniwdl engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
+the WES standard and translates WES calls into calls to the miniwdl head process.&lt;/p&gt;
+&lt;h3 id=&#34;head-compute-environment&#34;&gt;Head Compute Environment&lt;/h3&gt;
+&lt;p&gt;For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the miniwdl process responsible
+for running that workflow. These miniwdl &amp;ldquo;head&amp;rdquo; jobs are run in an &amp;ldquo;On-demand&amp;rdquo; AWS Fargate compute environment even when the actual workflow
+tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.&lt;/p&gt;
+&lt;h3 id=&#34;task-compute-environment&#34;&gt;Task Compute Environment&lt;/h3&gt;
+&lt;p&gt;Workflow tasks are submitted by the miniwdl head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
+Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
+&lt;h4 id=&#34;session-cache-and-input-localization&#34;&gt;Session Cache and Input Localization&lt;/h4&gt;
+&lt;p&gt;Any context with a miniwdl engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from S3 are
+localized to the volume by jobs that the miniwdl engine spawns to copy these files to the volume. Outputs are copied back
+to S3 using a similar process. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.&lt;/p&gt;
+&lt;p&gt;The EFS volume is used by all miniwdl engine &amp;ldquo;head&amp;rdquo; jobs to store metadata necessary for call caching.&lt;/p&gt;
+&lt;p&gt;The EFS volume will remain in your account for the lifetime of the context and are destroyed when contexts are destroyed.
+Because the volume will grow in size as you run more workflows we recommend destroying the context when done to avoid on going EFS
+charges.&lt;/p&gt;
+&lt;h2 id=&#34;using-miniwdl-as-a-context-engine&#34;&gt;Using miniwdl as a Context Engine&lt;/h2&gt;
+&lt;p&gt;You may declare miniwdl to be the &lt;code&gt;engine&lt;/code&gt; for any contexts &lt;code&gt;wdl&lt;/code&gt; type engine. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;onDemandCtx&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;requestSpotInstances&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;miniwdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;call-caching&#34;&gt;Call Caching&lt;/h2&gt;
+&lt;p&gt;Call caching is enabled by default for miniwdl and because the metadata is stored in the contexts EFS volume call caching
+will work across different engine &amp;ldquo;head&amp;rdquo; jobs.&lt;/p&gt;
+&lt;p&gt;To disable call caching you can provide the &lt;code&gt;--no-cache&lt;/code&gt; engine option. You may do this in a workflows &lt;code&gt;MANIFEST.json&lt;/code&gt; by
+adding the following key/ value pair.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  &amp;quot;engineOptions&amp;quot;: &amp;quot;--no-cache&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
       </description>
     </item>
     
@@ -587,7 +646,7 @@ For example, the following will give you all error logs from the workflow engine
 &lt;/li&gt;
 &lt;li&gt;Internet access&lt;/li&gt;
 &lt;li&gt;An AWS Account&lt;/li&gt;
-&lt;li&gt;An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/best-practices/iampermissions/&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/best-practices/iam-permissions/&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Running Amazon Genomics CLI on Windows has not been tested, but it should run in WSL 2 with Ubuntu 20.04&lt;/p&gt;
 &lt;h2 id=&#34;prerequisite-installation&#34;&gt;Prerequisite installation&lt;/h2&gt;
@@ -601,14 +660,14 @@ sudo apt-get install -y nodejs
 &lt;li&gt;Install and configure AWS CLI&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre&gt;&lt;code&gt;sudo apt install awscli
-`aws configure`
-`# ... set access key ID, secret access key, and region`
+aws configure
+# ... set access key ID, secret access key, and region
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;amazon-linux-2-eg-on-an-ec2-instance&#34;&gt;Amazon Linux 2 (e.g. on an EC2 instance)&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;Install node&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre&gt;&lt;code&gt;`curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
-sudo yum install -y nodejs`
+&lt;pre&gt;&lt;code&gt;curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
+sudo yum install -y nodejs
 &lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
 &lt;li&gt;If you have not already done so, configure your AWS credentials and default region&lt;/li&gt;
 &lt;/ul&gt;
@@ -621,11 +680,11 @@ sudo yum install -y nodejs`
 &lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
 &lt;li&gt;Install node&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre&gt;&lt;code&gt;`brew install node`
+&lt;pre&gt;&lt;code&gt;brew install node
 &lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
 &lt;li&gt;Install and configure AWS CLI&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre&gt;&lt;code&gt;`brew install awscli`
+&lt;pre&gt;&lt;code&gt;brew install awscli
 aws configure
 # ... set access key ID, secret access key, and region
 &lt;/code&gt;&lt;/pre&gt;
@@ -758,8 +817,10 @@ context infrastructure.&lt;/p&gt;
 &lt;a href=&#34;https://genomics.ucsc.edu/&#34;&gt;UC Santa Cruz Genomics Institute&lt;/a&gt;. In Amazon Genomics
 CLI, Toil is an engine that can be deployed in a
 &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/contexts/&#34;&gt;context&lt;/a&gt; as an
-&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/engines/&#34;&gt;engine&lt;/a&gt; to run workflows based on the
-&lt;a href=&#34;https://www.commonwl.org/&#34;&gt;CWL&lt;/a&gt; specification.&lt;/p&gt;
+&lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/concepts/engines/&#34;&gt;engine&lt;/a&gt; to run workflows written in the
+&lt;a href=&#34;https://www.commonwl.org/&#34;&gt;Common Workflow Language&lt;/a&gt; (CWL) standard, version
+&lt;a href=&#34;https://www.commonwl.org/v1.0/&#34;&gt;v1.0&lt;/a&gt;, &lt;a href=&#34;https://www.commonwl.org/v1.1/&#34;&gt;v1.1&lt;/a&gt;,
+and &lt;a href=&#34;https://www.commonwl.org/v1.2/&#34;&gt;v1.2&lt;/a&gt; (or mixed versions).&lt;/p&gt;
 &lt;p&gt;Toil is an open source project distributed by UC Santa Cruz under the &lt;a href=&#34;https://github.com/DataBiosphere/toil/blob/master/LICENSE&#34;&gt;Apache 2
 license&lt;/a&gt; and
 available on
@@ -767,14 +828,15 @@ available on
 &lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
 &lt;p&gt;There are two components of a Toil engine as deployed in an Amazon Genomics
 CLI context:&lt;/p&gt;
-&lt;h3 id=&#34;engine-service&#34;&gt;Engine Service&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&#34;ToilContextArch.png&#34; alt=&#34;Image of infrastructure deployed in a Toil context&#34; title=&#34;Toil Context Architecture&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;toil-server&#34;&gt;Toil Server&lt;/h3&gt;
 &lt;p&gt;The Toil engine is run in &amp;ldquo;server mode&amp;rdquo; as a container service in ECS. The
 engine can run multiple workflows asynchronously. Workflow tasks are run in an
 elastic &lt;a href=&#34;#compute-environment&#34;&gt;compute environment&lt;/a&gt; and monitored by Toil.
 Amazon Genomics CLI communicates with the Toil engine via a GA4GH
 &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service
 which the server offers, available via API Gateway.&lt;/p&gt;
-&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
+&lt;h3 id=&#34;task-compute-environment&#34;&gt;Task Compute Environment&lt;/h3&gt;
 &lt;p&gt;Workflow tasks are submitted by Toil to an AWS Batch queue and run in
 Toil-provided containers using an AWS Compute Environment. Tasks which use the
 &lt;a href=&#34;https://www.commonwl.org/user_guide/07-containers/index.html&#34;&gt;CWL &lt;code&gt;DockerRequirement&lt;/code&gt;&lt;/a&gt;
@@ -814,23 +876,24 @@ to run workflows based on the &lt;a href=&#34;https://openwdl.org/&#34;&gt;WDL&l
 &lt;h3 id=&#34;customizations&#34;&gt;Customizations&lt;/h3&gt;
 &lt;p&gt;Some minor customizations where made to the AWS Backend adapter for Cromwell to facilitate improved scalability and cross
 region S3 bucket access when deployed with Amazon Genomics CLI. The fork containing these customizations is available &lt;a href=&#34;https://github.com/markjschreiber/cromwell&#34;&gt;here&lt;/a&gt;
-and we are working to contribute these bask to the main code base.&lt;/p&gt;
+and we are working to contribute these back to the main code base.&lt;/p&gt;
 &lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
-&lt;p&gt;There are four components of a Cromwell engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
+&lt;p&gt;There are four components of a Cromwell engine as deployed in an Amazon Genomics CLI context.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;CromwellContextArch.png&#34; alt=&#34;Image of infrastructure deployed in a Cromwell context&#34; title=&#34;Cromwell Context Architecture&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
 &lt;p&gt;Amazon Genomics CLI communicates with the Cromwell engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
 the WES standard and translates WES calls into calls to the &lt;a href=&#34;https://cromwell.readthedocs.io/en/stable/api/RESTAPI/&#34;&gt;Cromwell REST API&lt;/a&gt;. The adapter runs as an Amazon ECS service
 available via API Gateway.&lt;/p&gt;
-&lt;h3 id=&#34;engine-service&#34;&gt;Engine Service&lt;/h3&gt;
+&lt;h3 id=&#34;cromwell-server&#34;&gt;Cromwell Server&lt;/h3&gt;
 &lt;p&gt;The Cromwell engine is run in &amp;ldquo;server mode&amp;rdquo; as a container service in ECS and receives instructions from the WES Adapter. The
 engine can run multiple workflows asynchronously. Workflow tasks are run in an elastic &lt;a href=&#34;#compute-environment&#34;&gt;compute environment&lt;/a&gt; and
 monitored by Cromwell.&lt;/p&gt;
-&lt;h3 id=&#34;metadata-storage&#34;&gt;Metadata Storage&lt;/h3&gt;
+&lt;h3 id=&#34;session-cache&#34;&gt;Session Cache&lt;/h3&gt;
 &lt;p&gt;Cromwell can use workflow run metadata to perform call caching. When deployed by Amazon Genomics CLI call caching is enabled
-by default. Metadata is stored by an embedded Hypersonic DB with file storage in an attached EFS volume. The EFS volume
+by default. Metadata is stored by an embedded HSQL DB with file storage in an attached EFS volume. The EFS volume
 exists for the lifetime of the context the engine is deployed in so re-runs of workflows within the lifetime can benefit
 from call caching.&lt;/p&gt;
-&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
+&lt;h3 id=&#34;task-compute-environment&#34;&gt;Task Compute Environment&lt;/h3&gt;
 &lt;p&gt;Workflow tasks are submitted by Cromwell to an AWS Batch queue and run in containers using an AWS Compute Environment.
 Container characteristics are defined by the &lt;code&gt;runtime&lt;/code&gt;. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
 based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
@@ -927,10 +990,10 @@ Examples
 &lt;/ul&gt;
 &lt;pre&gt;&lt;code&gt;export PATH=$HOME/bin:$PATH
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you are running this on MacOS, you may see this below popup window when you initially run any agc commands due to Apple&amp;rsquo;s security restrictions.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/aws/amazon-genomics-cli/blob/mac-doc/site/static/images/agc-cannot-open-popup.png?raw=true&#34; alt=&#34;alt text&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;agc-cannot-open-popup.png&#34; alt=&#34;image of cannot open popup&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Click Cancel and navigate to Apple&amp;rsquo;s System Preferences, click Security &amp;amp; Privacy, then click General. Near the bottom, you will see a line indicating &lt;code&gt;&amp;quot;agc&amp;quot; was blocked from use because it is not from an identified developer.&lt;/code&gt; To the right, click Allow Anyway.&lt;/p&gt;
 &lt;p&gt;Now go back to the terminal and run &lt;code&gt;agc --help&lt;/code&gt; again. You will see this new popup window below asking you to override the system security.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/aws/amazon-genomics-cli/blob/mac-doc/site/static/images/agc-cannot-verify-developer-popup.png?raw=true&#34; alt=&#34;alt text&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;agc-cannot-verify-developer-popup.png&#34; alt=&#34;image of cannot verify developer popup&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Click Open and now your &lt;code&gt;agc&lt;/code&gt; is correctly installed.&lt;/p&gt;
 &lt;p&gt;Verify that you have the latest version of Amazon Genomics CLI with:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc --version
@@ -998,6 +1061,9 @@ Contexts must have unique names and are defined as YAML maps.&lt;/p&gt;
 &lt;p&gt;A context must define an array of one or more &lt;code&gt;engines&lt;/code&gt;. Each engine definition must specify the workflow language that it
 will interpret. For each language Amazon Genomics CLI has a default engine however, users may specify the exact engine in the &lt;code&gt;engine&lt;/code&gt;
 parameter.&lt;/p&gt;
+&lt;h2 id=&#34;general-architecture-of-a-context&#34;&gt;General Architecture of a Context&lt;/h2&gt;
+&lt;p&gt;The exact architecture of a context will depend on the context properties described below and defined in their &lt;code&gt;agc-project.yaml&lt;/code&gt;. However, the architecture deployed on execution of &lt;code&gt;agc context deploy&lt;/code&gt; is shown in the following diagram:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;ContextGeneralArchitecture.png&#34; alt=&#34;Image of the general architecture of a context&#34; title=&#34;General Architecture of a Context&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;context-properties&#34;&gt;Context Properties&lt;/h2&gt;
 &lt;h3 id=&#34;instance-types&#34;&gt;Instance Types&lt;/h3&gt;
 &lt;p&gt;You may optionally specify the instance types to be used in a context. This can be a specific type such as &lt;code&gt;r5.2xlarge&lt;/code&gt;
@@ -1150,116 +1216,6 @@ code we recommend destroying any relevant running contexts and redeploying them.
     </item>
     
     <item>
-      <title>Docs: miniwdl</title>
-      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/miniwdl/</link>
-      <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>
-      
-      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/miniwdl/</guid>
-      <description>
-        
-        
-        &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://miniwdl.readthedocs.io/en/latest/index.html&#34;&gt;miniwdl&lt;/a&gt; is free open source software distributed under the MIT licence
-developed by the &lt;a href=&#34;https://chanzuckerberg.com/&#34;&gt;Chan Zuckerberg Initiative&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The source code for miniwdl is available on &lt;a href=&#34;https://github.com/chanzuckerberg/miniwdl&#34;&gt;GitHub&lt;/a&gt;. When deployed with
-Amazon Genomics CLI miniwdl makes use of the &lt;a href=&#34;https://github.com/miniwdl-ext/miniwdl-aws&#34;&gt;miniwdl-aws extension&lt;/a&gt; which is
-also distributed under the MIT licence.&lt;/p&gt;
-&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
-&lt;p&gt;There are four components of a miniwdl engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
-&lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
-&lt;p&gt;Amazon Genomics CLI communicates with the miniwdl engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
-the WES standard and translates WES calls into calls to the miniwdl head process.&lt;/p&gt;
-&lt;h3 id=&#34;engine-batch-job&#34;&gt;Engine Batch Job&lt;/h3&gt;
-&lt;p&gt;For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the miniwdl process responsible
-for running that workflow. These miniwdl &amp;ldquo;head&amp;rdquo; jobs are run in an &amp;ldquo;On-demand&amp;rdquo; AWS Fargate compute environment even when the actual workflow
-tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.&lt;/p&gt;
-&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
-&lt;p&gt;Workflow tasks are submitted by the miniwdl head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
-Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
-based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
-&lt;h4 id=&#34;efs-scratch-space-and-s3-localization&#34;&gt;EFS scratch space and S3 localization&lt;/h4&gt;
-&lt;p&gt;Any context with a miniwdl engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from S3 are
-localized to the volume by jobs that the miniwdl engine spawns to copy these files to the volume. Outputs are copied back
-to S3 using a similar process. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.&lt;/p&gt;
-&lt;p&gt;The EFS volume is used by all miniwdl engine &amp;ldquo;head&amp;rdquo; jobs to store metadata necessary for call caching.&lt;/p&gt;
-&lt;p&gt;The EFS volume will remain in your account for the lifetime of the context and are destroyed when contexts are destroyed.
-Because the volume will grow in size as you run more workflows we recommend destroying the context when done to avoid on going EFS
-charges.&lt;/p&gt;
-&lt;h2 id=&#34;using-miniwdl-as-a-context-engine&#34;&gt;Using miniwdl as a Context Engine&lt;/h2&gt;
-&lt;p&gt;You may declare miniwdl to be the &lt;code&gt;engine&lt;/code&gt; for any contexts &lt;code&gt;wdl&lt;/code&gt; type engine. For example:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;onDemandCtx&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;requestSpotInstances&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;wdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;miniwdl&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;call-caching&#34;&gt;Call Caching&lt;/h2&gt;
-&lt;p&gt;Call caching is enabled by default for miniwdl and because the metadata is stored in the contexts EFS volume call caching
-will work across different engine &amp;ldquo;head&amp;rdquo; jobs.&lt;/p&gt;
-&lt;p&gt;To disable call caching you can provide the &lt;code&gt;--no-cache&lt;/code&gt; engine option. You may do this in a workflows &lt;code&gt;MANIFEST.json&lt;/code&gt; by
-adding the following key/ value pair.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;  &amp;quot;engineOptions&amp;quot;: &amp;quot;--no-cache&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: Snakemake</title>
-      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/snakemake/</link>
-      <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>
-      
-      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/snakemake/</guid>
-      <description>
-        
-        
-        &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/&#34;&gt;Snakemake&lt;/a&gt; is free open source software distributed under the MIT licence
-developed by &lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/project_info/authors.html&#34;&gt;Johannes Köster and their team&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The source code for snakemake is available on &lt;a href=&#34;https://github.com/snakemake/snakemake&#34;&gt;GitHub&lt;/a&gt;. When deployed with
-Amazon Genomics CLI snakemake uses Batch to distribute the underlying tasks.&lt;/p&gt;
-&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
-&lt;p&gt;There are four components of a snakemake engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
-&lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
-&lt;p&gt;Amazon Genomics CLI communicates with the snakemake engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
-the WES standard and translates WES calls into calls to the snakemake head process.&lt;/p&gt;
-&lt;h3 id=&#34;engine-batch-job&#34;&gt;Engine Batch Job&lt;/h3&gt;
-&lt;p&gt;For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the snakemake process responsible
-for running that workflow. These snakemake &amp;ldquo;head&amp;rdquo; jobs are run in an &amp;ldquo;On-demand&amp;rdquo; AWS Fargate compute environment even when the actual workflow
-tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.&lt;/p&gt;
-&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
-&lt;p&gt;Workflow tasks are submitted by the snakemake head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
-Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
-based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
-&lt;h4 id=&#34;efs-scratch-space-and-s3-localization&#34;&gt;EFS scratch space and S3 localization&lt;/h4&gt;
-&lt;p&gt;Any context with a snakemake engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from the workflow
-are localized to the volume by jobs that the snakemake engine spawns to copy these files to the volume. Outputs are copied back
-to S3 after the workflow is complete. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.&lt;/p&gt;
-&lt;p&gt;The EFS volume can used by all snakemake engine &amp;ldquo;head&amp;rdquo; jobs to store metadata necessary for dependency caching by specifying an argument
-for the conda workspace that is common across all executions. An example of this is &lt;code&gt;--conda-prefix /mnt/efs/snakemake/conda&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;The EFS volume will remain in your account for the lifetime of the context and are destroyed when contexts are destroyed.
-Because the volume will grow in size as you run more workflows we recommend destroying the context when done to avoid on going EFS
-charges.&lt;/p&gt;
-&lt;h2 id=&#34;using-snakemake-as-a-context-engine&#34;&gt;Using Snakemake as a Context Engine&lt;/h2&gt;
-&lt;p&gt;You may declare snakemake to be the &lt;code&gt;engine&lt;/code&gt; for any contexts &lt;code&gt;snakemake&lt;/code&gt; type engine. For example:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;onDemandCtx&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;requestSpotInstances&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;snakemake&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;snakemake&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;conda-dependency-caching&#34;&gt;Conda Dependency Caching&lt;/h2&gt;
-&lt;p&gt;Dependency caching is disabled by default so that each workflow can be run independently. If you would like workflow
-runs to re-use the Conda cache then please specify a folder under &amp;ldquo;/mnt/efs&amp;rdquo; which is where the EFS storage space is
-attached. This will enable snakemake to re-use the dependency which will decrease the time that subsequent workflow runs
-will take.&lt;/p&gt;
-&lt;p&gt;To disable call caching you can provide the &lt;code&gt;--conda-prefix&lt;/code&gt; engine option. You may do this in a workflows &lt;code&gt;MANIFEST.json&lt;/code&gt; by
-adding the following key/ value pair.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;  &amp;quot;engineOptions&amp;quot;: &amp;quot;-j 10 --conda-prefix /mnt/efs/snakemake/conda&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-      </description>
-    </item>
-    
-    <item>
       <title>Docs: Setup</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/getting-started/setup/</link>
       <pubDate>Tue, 07 Sep 2021 13:42:50 -0400</pubDate>
@@ -1367,14 +1323,15 @@ The project was started in the Notredame Lab at the &lt;a href=&#34;http://www.c
 &lt;p&gt;The source code for Nextflow is available on &lt;a href=&#34;https://github.com/nextflow-io/nextflow&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
 &lt;p&gt;There are four components of a Nextflow engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;NextflowContextArch.png&#34; alt=&#34;Image of infrastructure deployed in a Nextflow context&#34; title=&#34;Nextflow Context Architecture&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
 &lt;p&gt;Amazon Genomics CLI communicates with the Nextflow engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
 the WES standard and translates WES calls into calls to the Nextflow head process.&lt;/p&gt;
-&lt;h3 id=&#34;engine-batch-job&#34;&gt;Engine Batch Job&lt;/h3&gt;
+&lt;h3 id=&#34;head-compute-environment&#34;&gt;Head Compute Environment&lt;/h3&gt;
 &lt;p&gt;For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the Nextflow process responsible
 for running that workflow. These Nextflow &amp;ldquo;head&amp;rdquo; jobs are run in an &amp;ldquo;On-demand&amp;rdquo; compute environment even when the actual workflow
 tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.&lt;/p&gt;
-&lt;h3 id=&#34;compute-environment&#34;&gt;Compute Environment&lt;/h3&gt;
+&lt;h3 id=&#34;task-compute-environment&#34;&gt;Task Compute Environment&lt;/h3&gt;
 &lt;p&gt;Workflow tasks are submitted by the Nextflow head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
 Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
 based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
@@ -1386,6 +1343,63 @@ S3 into the task container. Output files are copied out of the container to S3.&
 capacity threshold, new EBS volumes will be attached and merged into the file system. These volumes are destroyed when
 AWS Batch terminates the container host.&lt;/p&gt;
 
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Snakemake</title>
+      <link>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/snakemake/</link>
+      <pubDate>Fri, 01 Oct 2021 17:27:31 -0400</pubDate>
+      
+      <guid>https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/snakemake/</guid>
+      <description>
+        
+        
+        &lt;h2 id=&#34;description&#34;&gt;Description&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/&#34;&gt;Snakemake&lt;/a&gt; is free open source software distributed under the MIT licence
+developed by &lt;a href=&#34;https://snakemake.readthedocs.io/en/stable/project_info/authors.html&#34;&gt;Johannes Köster and their team&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The source code for snakemake is available on &lt;a href=&#34;https://github.com/snakemake/snakemake&#34;&gt;GitHub&lt;/a&gt;. When deployed with
+Amazon Genomics CLI snakemake uses Batch to distribute the underlying tasks.&lt;/p&gt;
+&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;
+&lt;p&gt;There are four components of a snakemake engine as deployed in an Amazon Genomics CLI context:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;SnakeMakeContextArch.png&#34; alt=&#34;Image of infrastructure deployed in a SnakeMake context&#34; title=&#34;SnakeMake Context Architecture&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;wes-adapter&#34;&gt;WES Adapter&lt;/h3&gt;
+&lt;p&gt;Amazon Genomics CLI communicates with the snakemake engine via a GA4GH &lt;a href=&#34;https://github.com/ga4gh/workflow-execution-service-schemas&#34;&gt;WES&lt;/a&gt; REST service. The WES Adapter implements
+the WES standard and translates WES calls into calls to the snakemake head process.&lt;/p&gt;
+&lt;h3 id=&#34;head-compute-environment&#34;&gt;Head Compute Environment&lt;/h3&gt;
+&lt;p&gt;For every workflow submitted, the WES adapter will create a new AWS Batch Job that contains the snakemake process responsible
+for running that workflow. These snakemake &amp;ldquo;head&amp;rdquo; jobs are run in an &amp;ldquo;On-demand&amp;rdquo; AWS Fargate compute environment even when the actual workflow
+tasks run in a Spot environment. This is to prevent Spot interruptions from terminating the workflow coordinator.&lt;/p&gt;
+&lt;h3 id=&#34;task-compute-environment&#34;&gt;Task Compute Environment&lt;/h3&gt;
+&lt;p&gt;Workflow tasks are submitted by the snakemake head job to an AWS Batch queue and run in containers using an AWS Compute Environment.
+Container characteristics are defined by the resources requested in the workflow configuration. AWS Batch coordinates the elastic provisioning of EC2 instances (container hosts)
+based on the available work in the queue. Batch will place containers on container hosts as space allows.&lt;/p&gt;
+&lt;h4 id=&#34;session-cache-and-input-localization&#34;&gt;Session Cache and Input Localization&lt;/h4&gt;
+&lt;p&gt;Any context with a snakemake engine will use an Amazon Elastic File System (EFS) volume as scratch space. Inputs from the workflow
+are localized to the volume by jobs that the snakemake engine spawns to copy these files to the volume. Outputs are copied back
+to S3 after the workflow is complete. Workflow tasks access the EFS volume to obtain inputs and write intermediates and outputs.&lt;/p&gt;
+&lt;p&gt;The EFS volume can used by all snakemake engine &amp;ldquo;head&amp;rdquo; jobs to store metadata necessary for dependency caching by specifying an argument
+for the conda workspace that is common across all executions. An example of this is &lt;code&gt;--conda-prefix /mnt/efs/snakemake/conda&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The EFS volume will remain in your account for the lifetime of the context and are destroyed when contexts are destroyed.
+Because the volume will grow in size as you run more workflows we recommend destroying the context when done to avoid on going EFS
+charges.&lt;/p&gt;
+&lt;h2 id=&#34;using-snakemake-as-a-context-engine&#34;&gt;Using Snakemake as a Context Engine&lt;/h2&gt;
+&lt;p&gt;You may declare snakemake to be the &lt;code&gt;engine&lt;/code&gt; for any contexts &lt;code&gt;snakemake&lt;/code&gt; type engine. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;contexts&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;onDemandCtx&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;requestSpotInstances&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engines&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;- &lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;snakemake&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;engine&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;snakemake&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;conda-dependency-caching&#34;&gt;Conda Dependency Caching&lt;/h2&gt;
+&lt;p&gt;Dependency caching is disabled by default so that each workflow can be run independently. If you would like workflow
+runs to re-use the Conda cache then please specify a folder under &amp;ldquo;/mnt/efs&amp;rdquo; which is where the EFS storage space is
+attached. This will enable snakemake to re-use the dependency which will decrease the time that subsequent workflow runs
+will take.&lt;/p&gt;
+&lt;p&gt;To disable call caching you can provide the &lt;code&gt;--conda-prefix&lt;/code&gt; engine option. You may do this in a workflows &lt;code&gt;MANIFEST.json&lt;/code&gt; by
+adding the following key/ value pair.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  &amp;quot;engineOptions&amp;quot;: &amp;quot;-j 10 --conda-prefix /mnt/efs/snakemake/conda&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
       </description>
     </item>
     
@@ -1404,7 +1418,7 @@ with some demo projects including a simple &amp;ldquo;hello world&amp;rdquo; wor
 &lt;ol&gt;
 &lt;li&gt;Ensure you have met the &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; and &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/installation/&#34;&gt;installed&lt;/a&gt; Amazon Genomics CLI&lt;/li&gt;
 &lt;li&gt;Ensure you have followed the &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/setup/&#34;&gt;activation&lt;/a&gt; steps&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cd ~/agc/examples/demo-wdl-project&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd ~/amazon-genomics-cli/examples/demo-wdl-project&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;agc context deploy --context myContext&lt;/code&gt;, this step takes approximately 5 minutes to deploy the infrastructure&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;agc workflow run hello --context myContext&lt;/code&gt;, take note of the returned workflow instance ID.&lt;/li&gt;
 &lt;li&gt;Check on the status of the workflow &lt;code&gt;agc workflow status -r &amp;lt;workflow-instance-id&amp;gt;&lt;/code&gt;. Initially you will see status like &lt;code&gt;SUBMITTED&lt;/code&gt; but after the elastic compute resources have been spun up and the workflow runs you should see something like the following: &lt;code&gt;WORKFLOWINSTANCE    myContext    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z&lt;/code&gt;&lt;/li&gt;
@@ -1832,6 +1846,14 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
 &lt;td&gt;agc-context&lt;/td&gt;
 &lt;td&gt;The name of the context in which the infrastructure is deployed&lt;/td&gt;
 &lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;agc-engine&lt;/td&gt;
+&lt;td&gt;The name of the engine being run in the context&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;agc-engine-type&lt;/td&gt;
+&lt;td&gt;The workflow language run by the engine&lt;/td&gt;
+&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
@@ -1841,7 +1863,7 @@ Aside from the core account infrastructure, all deployed infrastructure is tagge
     <item>
       <title>Docs: agc</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc/</guid>
       <description>
@@ -1881,7 +1903,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     <item>
       <title>Docs: agc account</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account/</guid>
       <description>
@@ -1914,7 +1936,7 @@ These commands should be used to install or remove AGC from your AWS account.&lt
     <item>
       <title>Docs: agc account activate</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_activate/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_activate/</guid>
       <description>
@@ -1965,7 +1987,7 @@ Install or remove AGC from your account.&lt;/li&gt;
     <item>
       <title>Docs: agc account deactivate</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_deactivate/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_account_deactivate/</guid>
       <description>
@@ -2005,7 +2027,7 @@ Install or remove AGC from your account.&lt;/li&gt;
     <item>
       <title>Docs: agc completion</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion/</guid>
       <description>
@@ -2037,7 +2059,7 @@ See each sub-command&amp;rsquo;s help for details on how to use the generated sc
     <item>
       <title>Docs: agc completion bash</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_bash/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_bash/</guid>
       <description>
@@ -2076,7 +2098,7 @@ $ agc completion bash &amp;gt; /usr/local/etc/bash_completion.d/agc&lt;/p&gt;
     <item>
       <title>Docs: agc completion fish</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_fish/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_fish/</guid>
       <description>
@@ -2110,7 +2132,7 @@ $ agc completion fish &amp;gt; ~/.config/fish/completions/agc.fish&lt;/p&gt;
     <item>
       <title>Docs: agc completion powershell</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_powershell/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_powershell/</guid>
       <description>
@@ -2143,7 +2165,7 @@ to your powershell profile.&lt;/p&gt;
     <item>
       <title>Docs: agc completion zsh</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_zsh/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_completion_zsh/</guid>
       <description>
@@ -2181,7 +2203,7 @@ to enable it.  You can execute the following once:&lt;/p&gt;
     <item>
       <title>Docs: agc configure</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure/</guid>
       <description>
@@ -2214,7 +2236,7 @@ Configure local settings and preferences to customize the CLI experience.&lt;/p&
     <item>
       <title>Docs: agc configure describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_describe/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_describe/</guid>
       <description>
@@ -2248,7 +2270,7 @@ Configuration is stored per user.&lt;/li&gt;
     <item>
       <title>Docs: agc configure email</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_email/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_email/</guid>
       <description>
@@ -2276,7 +2298,7 @@ Configuration is stored per user.&lt;/li&gt;
     <item>
       <title>Docs: agc configure format</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_format/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_configure_format/</guid>
       <description>
@@ -2304,7 +2326,7 @@ Configuration is stored per user.&lt;/li&gt;
     <item>
       <title>Docs: agc context</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context/</guid>
       <description>
@@ -2341,7 +2363,7 @@ particular context.&lt;/p&gt;
     <item>
       <title>Docs: agc context deploy</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_deploy/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_deploy/</guid>
       <description>
@@ -2384,7 +2406,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_describe/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_describe/</guid>
       <description>
@@ -2423,7 +2445,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context destroy</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_destroy/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_destroy/</guid>
       <description>
@@ -2460,7 +2482,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context list</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_list/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_list/</guid>
       <description>
@@ -2493,7 +2515,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc context status</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_status/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_context_status/</guid>
       <description>
@@ -2528,7 +2550,7 @@ Contexts specify workflow engines and computational fleets to use when running a
     <item>
       <title>Docs: agc logs</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs/</guid>
       <description>
@@ -2564,7 +2586,7 @@ access rights to.&lt;/p&gt;
     <item>
       <title>Docs: agc logs access</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_access/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_access/</guid>
       <description>
@@ -2610,7 +2632,7 @@ If no start, end, or look back periods are set, this command will show logs from
     <item>
       <title>Docs: agc logs adapter</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_adapter/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_adapter/</guid>
       <description>
@@ -2656,7 +2678,7 @@ If no start, end, or look back periods are set, this command will show logs from
     <item>
       <title>Docs: agc logs engine</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_engine/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_engine/</guid>
       <description>
@@ -2703,7 +2725,7 @@ If no start, end, or look back periods are set, this command will show logs from
     <item>
       <title>Docs: agc logs workflow</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_workflow/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_logs_workflow/</guid>
       <description>
@@ -2749,7 +2771,7 @@ If the &amp;ndash;run flag is omitted then the latest workflow run is used.&lt;/
     <item>
       <title>Docs: agc project</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project/</guid>
       <description>
@@ -2781,7 +2803,7 @@ and contexts you are working with.&lt;/p&gt;
     <item>
       <title>Docs: agc project describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_describe/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_describe/</guid>
       <description>
@@ -2815,7 +2837,7 @@ DATA: Location ReadOnly&lt;/p&gt;
     <item>
       <title>Docs: agc project init</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_init/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_init/</guid>
       <description>
@@ -2849,7 +2871,7 @@ Initialize a new project named &amp;quot;myProject&amp;quot;.
     <item>
       <title>Docs: agc project validate</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_validate/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_project_validate/</guid>
       <description>
@@ -2884,7 +2906,7 @@ DATA: Location ReadOnly&lt;/p&gt;
     <item>
       <title>Docs: agc workflow</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow/</guid>
       <description>
@@ -2923,7 +2945,7 @@ typed according to which workflow definition language they use (e.g. WDL).&lt;/p
     <item>
       <title>Docs: agc workflow describe</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_describe/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_describe/</guid>
       <description>
@@ -2957,7 +2979,7 @@ Workflows are potentially-dynamic graphs of computational tasks to execute.&lt;/
     <item>
       <title>Docs: agc workflow list</title>
       <link>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_list/</link>
-      <pubDate>Tue, 20 Sep 2022 19:55:08 +0000</pubDate>
+      <pubDate>Tue, 10 Jan 2023 20:55:15 +0000</pubDate>
       
       <guid>https://aws.github.io/amazon-genomics-cli/docs/reference/agc_workflow_list/</guid>
       <description>

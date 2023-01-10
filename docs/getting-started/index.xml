@@ -34,7 +34,7 @@
 &lt;/li&gt;
 &lt;li&gt;Internet access&lt;/li&gt;
 &lt;li&gt;An AWS Account&lt;/li&gt;
-&lt;li&gt;An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/best-practices/iampermissions/&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;An AWS role with sufficient access. To generate the minimum required policies for admins and users, please follow the instructions &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/best-practices/iam-permissions/&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Running Amazon Genomics CLI on Windows has not been tested, but it should run in WSL 2 with Ubuntu 20.04&lt;/p&gt;
 &lt;h2 id=&#34;prerequisite-installation&#34;&gt;Prerequisite installation&lt;/h2&gt;
@@ -48,14 +48,14 @@ sudo apt-get install -y nodejs
 &lt;li&gt;Install and configure AWS CLI&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre&gt;&lt;code&gt;sudo apt install awscli
-`aws configure`
-`# ... set access key ID, secret access key, and region`
+aws configure
+# ... set access key ID, secret access key, and region
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;amazon-linux-2-eg-on-an-ec2-instance&#34;&gt;Amazon Linux 2 (e.g. on an EC2 instance)&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;Install node&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre&gt;&lt;code&gt;`curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
-sudo yum install -y nodejs`
+&lt;pre&gt;&lt;code&gt;curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
+sudo yum install -y nodejs
 &lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
 &lt;li&gt;If you have not already done so, configure your AWS credentials and default region&lt;/li&gt;
 &lt;/ul&gt;
@@ -68,11 +68,11 @@ sudo yum install -y nodejs`
 &lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
 &lt;li&gt;Install node&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre&gt;&lt;code&gt;`brew install node`
+&lt;pre&gt;&lt;code&gt;brew install node
 &lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
 &lt;li&gt;Install and configure AWS CLI&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre&gt;&lt;code&gt;`brew install awscli`
+&lt;pre&gt;&lt;code&gt;brew install awscli
 aws configure
 # ... set access key ID, secret access key, and region
 &lt;/code&gt;&lt;/pre&gt;
@@ -144,10 +144,10 @@ Examples
 &lt;/ul&gt;
 &lt;pre&gt;&lt;code&gt;export PATH=$HOME/bin:$PATH
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you are running this on MacOS, you may see this below popup window when you initially run any agc commands due to Apple&amp;rsquo;s security restrictions.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/aws/amazon-genomics-cli/blob/mac-doc/site/static/images/agc-cannot-open-popup.png?raw=true&#34; alt=&#34;alt text&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;agc-cannot-open-popup.png&#34; alt=&#34;image of cannot open popup&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Click Cancel and navigate to Apple&amp;rsquo;s System Preferences, click Security &amp;amp; Privacy, then click General. Near the bottom, you will see a line indicating &lt;code&gt;&amp;quot;agc&amp;quot; was blocked from use because it is not from an identified developer.&lt;/code&gt; To the right, click Allow Anyway.&lt;/p&gt;
 &lt;p&gt;Now go back to the terminal and run &lt;code&gt;agc --help&lt;/code&gt; again. You will see this new popup window below asking you to override the system security.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://github.com/aws/amazon-genomics-cli/blob/mac-doc/site/static/images/agc-cannot-verify-developer-popup.png?raw=true&#34; alt=&#34;alt text&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;agc-cannot-verify-developer-popup.png&#34; alt=&#34;image of cannot verify developer popup&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Click Open and now your &lt;code&gt;agc&lt;/code&gt; is correctly installed.&lt;/p&gt;
 &lt;p&gt;Verify that you have the latest version of Amazon Genomics CLI with:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;agc --version
@@ -238,7 +238,7 @@ with some demo projects including a simple &amp;ldquo;hello world&amp;rdquo; wor
 &lt;ol&gt;
 &lt;li&gt;Ensure you have met the &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/prerequisites/&#34;&gt;prerequisites&lt;/a&gt; and &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/installation/&#34;&gt;installed&lt;/a&gt; Amazon Genomics CLI&lt;/li&gt;
 &lt;li&gt;Ensure you have followed the &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/getting-started/setup/&#34;&gt;activation&lt;/a&gt; steps&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cd ~/agc/examples/demo-wdl-project&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd ~/amazon-genomics-cli/examples/demo-wdl-project&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;agc context deploy --context myContext&lt;/code&gt;, this step takes approximately 5 minutes to deploy the infrastructure&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;agc workflow run hello --context myContext&lt;/code&gt;, take note of the returned workflow instance ID.&lt;/li&gt;
 &lt;li&gt;Check on the status of the workflow &lt;code&gt;agc workflow status -r &amp;lt;workflow-instance-id&amp;gt;&lt;/code&gt;. Initially you will see status like &lt;code&gt;SUBMITTED&lt;/code&gt; but after the elastic compute resources have been spun up and the workflow runs you should see something like the following: &lt;code&gt;WORKFLOWINSTANCE    myContext    9ff7600a-6d6e-4bda-9ab6-c615f5d90734    COMPLETE    2021-09-01T20:17:49Z&lt;/code&gt;&lt;/li&gt;
