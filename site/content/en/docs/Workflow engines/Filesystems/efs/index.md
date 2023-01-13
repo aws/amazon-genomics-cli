@@ -20,11 +20,11 @@ All intermediate I/O is performed against the EFS filesystem.
 
 ### Disadvantages
 
-1. Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned IOPs.
+1. Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned throughput.
 2. The volume exists for the lifetime of the context and will incur costs based on its size for the lifetime of the context. If you no longer need the context we recommend destroying it.
 3. Call caching is only possible for as long as the volume exists, i.e. the lifetime of the context.
 
-### Provisioned IOPs
+### Provisioned Throughput
 
 Amazon EFS volumes deployed by the Amazon Genomics CLI use ["bursting"](https://docs.aws.amazon.com/efs/latest/ug/performance.html#bursting) 
 throughput by default. For workflows that have high I/O throughput or in scenarios where you may have many workflows 
@@ -57,4 +57,4 @@ myContext:
 
 The use of Amazon EFS as a shared file system is supported by the [miniwdl]( {{< relref "../../miniwdl" >}} ) and 
 [Snakemake]( {{< relref "../../snakemake" >}} ) engines. Both use EFS with bursting throughput by default and both 
-support provisioned IOPs.
+support provisioned throughput.
