@@ -20,18 +20,24 @@ All intermediate I/O is performed against the EFS filesystem.
 
 ### Disadvantages
 
-1. Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned IOPs.
+1. Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned throughput.
 2. The volume exists for the lifetime of the context and will incur costs based on its size for the lifetime of the context. If you no longer need the context we recommend destroying it.
 3. Call caching is only possible for as long as the volume exists, i.e. the lifetime of the context.
 
-### Provisioned IOPs
+### Provisioned Throughput
 
 Amazon EFS volumes deployed by the Amazon Genomics CLI use ["bursting"](https://docs.aws.amazon.com/efs/latest/ug/performance.html#bursting) 
 throughput by default. For workflows that have high I/O throughput or in scenarios where you may have many workflows 
 running in the same context at the same time, you may exhaust the burst credits of the volume. 
 This might cause a workflow to slow down or even fail. Available volume credits can be [monitored](https://docs.aws.amazon.com/efs/latest/ug/monitoring_overview.html)
-in the Amazon EFS console, and/ or Amazon CloudWatch. If you observe the exhaustion of burst credits you may want to consider
-deploying a context with [provisioned](https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput) throughput IOPs.
+in the Amazon EFS console, and/ or Amazon CloudWatch. 
+
+If you observe the exhaustion of burst credits you may want to consider
+deploying a context with [provisioned throughput](https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput).
+Throughput is provisioned in MiB/s and may be upto 1024 MiB/s. Note that this is an **additional expense** for the EFS volume
+and is charged even when the volume has no data stored in it. If you choose an EFS volume with provisioned throughput we encourage
+you to destroy the context whenever it is not in use to minimize costs. To determine the costs of provisioned throughput
+you may use the [AWS Price Calculator for EFS](https://calculator.aws/#/addService/EFS)
 
 The following fragment of an `agc-project.yaml` file is an example of how to configure provisioned throughput for the
 Amazon EFS volume used by miniwdl in an Amazon Genomics CLI context.
@@ -44,11 +50,11 @@ myContext:
         filesystem:
           fsType: EFS
           configuration:
-            provisionedThroughput: 1024
+            provisionedThroughput: 100
 ```
 
 ### Supporting Engines
 
 The use of Amazon EFS as a shared file system is supported by the [miniwdl]( {{< relref "../../miniwdl" >}} ) and 
 [Snakemake]( {{< relref "../../snakemake" >}} ) engines. Both use EFS with bursting throughput by default and both 
-support provisioned IOPs.
+support provisioned throughput.
