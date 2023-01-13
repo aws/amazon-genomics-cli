@@ -30,8 +30,14 @@ Amazon EFS volumes deployed by the Amazon Genomics CLI use ["bursting"](https://
 throughput by default. For workflows that have high I/O throughput or in scenarios where you may have many workflows 
 running in the same context at the same time, you may exhaust the burst credits of the volume. 
 This might cause a workflow to slow down or even fail. Available volume credits can be [monitored](https://docs.aws.amazon.com/efs/latest/ug/monitoring_overview.html)
-in the Amazon EFS console, and/ or Amazon CloudWatch. If you observe the exhaustion of burst credits you may want to consider
-deploying a context with [provisioned](https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput) throughput IOPs.
+in the Amazon EFS console, and/ or Amazon CloudWatch. 
+
+If you observe the exhaustion of burst credits you may want to consider
+deploying a context with [provisioned throughput](https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput).
+Throughput is provisioned in MiB/s and may be upto 1024 MiB/s. Note that this is an **additional expense** for the EFS volume
+and is charged even when the volume has no data stored in it. If you choose an EFS volume with provisioned throughput we encourage
+you to destroy the context whenever it is not in use to minimize costs. To determine the costs of provisioned throughput
+you may use the [AWS Price Calculator for EFS](https://calculator.aws/#/addService/EFS)
 
 The following fragment of an `agc-project.yaml` file is an example of how to configure provisioned throughput for the
 Amazon EFS volume used by miniwdl in an Amazon Genomics CLI context.
@@ -44,7 +50,7 @@ myContext:
         filesystem:
           fsType: EFS
           configuration:
-            provisionedThroughput: 1024
+            provisionedThroughput: 100
 ```
 
 ### Supporting Engines
