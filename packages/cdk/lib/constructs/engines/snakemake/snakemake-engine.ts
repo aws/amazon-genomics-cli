@@ -7,6 +7,7 @@ import { Batch } from "../../batch";
 import { FargatePlatformVersion } from "aws-cdk-lib/aws-ecs";
 import { AccessPoint, FileSystem } from "aws-cdk-lib/aws-efs";
 import { Size } from "aws-cdk-lib";
+import { SecurityGroup } from "aws-cdk-lib/aws-ec2";
 
 export interface SnakemakeEngineProps extends EngineProps {
   readonly engineBatch: Batch;
@@ -22,6 +23,7 @@ export class SnakemakeEngine extends Engine {
   private readonly engineMemoryMiB = 4096;
   public readonly fsap: AccessPoint;
   public readonly fileSystem: FileSystem;
+  private readonly securityGroup: SecurityGroup;
 
   constructor(scope: Construct, id: string, props: SnakemakeEngineProps) {
     super(scope, id);
@@ -33,8 +35,8 @@ export class SnakemakeEngine extends Engine {
       this.fileSystem = this.createFileSystemIOPS(vpc, subnets, iops);
     }
     this.fsap = this.createAccessPoint(this.fileSystem);
-
-    this.fileSystem.connections.allowDefaultPortFromAnyIpv4();
+    this.fileSystem.connections.allowDefaultPortFrom(engineBatch.computeEnvironment.connections);
+    this.fileSystem.connections.allowDefaultPortFrom(workerBatch.computeEnvironment.connections);
     this.fileSystem.grant(engineBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
     this.fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
     this.headJobDefinition = new EngineJobDefinition(this, "SnakemakeHeadJobDef", {

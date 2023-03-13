@@ -37,11 +37,10 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
 
     // Generate the engine that will run snakemake on batch
     this.snakemakeEngine = this.createSnakemakeEngine(props, this.batchHead, this.batchWorkers);
-
     // Adds necessary policies to our snakemake batch engine
     this.attachAdditionalBatchPolicies();
 
-    // Generate the role the Wes lambda will use + add additonal policies
+    // Generate the role the Wes lambda will use + add additional policies
     const adapterRole = this.createAdapterRole();
     this.outputBucket = Bucket.fromBucketName(this, "OutputBucket", params.outputBucketName);
     this.outputBucket.grantRead(adapterRole);
