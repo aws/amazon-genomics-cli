@@ -30,6 +30,6 @@
     "constructs": "^10.1.152",
     "minimatch": ">=3.0.5",
     "source-map-support": "^0.5.20",
-    "vm2": ">=3.9.11"
+    "vm2": ">=3.9.16"
   }
 }
