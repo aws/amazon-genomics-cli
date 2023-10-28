@@ -27,6 +27,7 @@ run_agc_cli () {
 }
 
 build_wes_adapter() {
+  echo "Building WES Adapter"
   mkdir -p "$HOME/.agc/wes"
   (cd "${SCRIPT_DIR}"/../packages/wes_adapter && ./install.sh)
   mv "${SCRIPT_DIR}"/../packages/wes_adapter/dist/wes_adapter.zip $HOME/.agc/wes/

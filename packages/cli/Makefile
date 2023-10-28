@@ -4,7 +4,8 @@ VERSION_FILE=../../version.json
 GOBIN=${PWD}/bin/tools
 COVERAGE=coverage.out
 
-DESTINATION=./bin/local/${BINARY_NAME}
+PREFIX=${PWD}/../..
+DESTINATION=${PREFIX}/bin/local/${BINARY_NAME}
 VERSION=$(shell jq .version -r < ${VERSION_FILE})
 
 LINKER_FLAGS=-X github.com/aws/amazon-genomics-cli/internal/pkg/version.Version=${VERSION}

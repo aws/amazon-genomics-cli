@@ -4,7 +4,7 @@ set -eo pipefail
 
 USER_BIN_DIR="$HOME/bin"
 BASE_DIR="$HOME/.agc"
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}/../../" )" &> /dev/null && pwd )"
 
 uninstall_cli () {
     rm -f $USER_BIN_DIR/agc
