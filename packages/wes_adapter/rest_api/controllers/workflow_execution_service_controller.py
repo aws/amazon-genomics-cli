@@ -10,7 +10,7 @@ from rest_api.models import (
     RunStatus,
     ServiceInfo,
 )
-
+import boto3
 from rest_api.exception.Exceptions import InvalidRequestError
 
 from amazon_genomics.util.method_logger import logged
@@ -28,12 +28,23 @@ JOB_DEFINITION = os.getenv("JOB_DEFINITION")
 ENGINE_LOG_GROUP = os.getenv("ENGINE_LOG_GROUP")
 OUTPUT_DIR_S3_URI = os.getenv("OUTPUT_DIR_S3_URI")
 
+from mypy_boto3_batch import BatchClient
+from botocore.client import Config
+
+config = Config(connect_timeout=5, read_timeout=5)
+
 if ENGINE_NAME == "nextflow":
     print("Using Nextflow adapter")
     adapter = NextflowWESAdapter(
         job_queue=JOB_QUEUE,
         job_definition=JOB_DEFINITION,
         engine_log_group=ENGINE_LOG_GROUP,
+        aws_logs=boto3.client(
+            "logs", region_name=os.environ["AWS_REGION"], config=config
+        ),
+        aws_batch=boto3.client(
+            "batch", region_name=os.environ["AWS_REGION"], config=config
+        ),
     )
 elif ENGINE_NAME == "snakemake":
     print("Using Snakemake adapter")
@@ -157,7 +168,6 @@ def run_workflow(
     }
 
     for arg in args:
-
         if arg in ("workflow_attachment"):
             # file lists
             args[arg] = request.files.getlist(arg)

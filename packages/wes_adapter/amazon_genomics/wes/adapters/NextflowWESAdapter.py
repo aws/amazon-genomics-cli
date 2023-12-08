@@ -94,6 +94,7 @@ class NextflowWESAdapter(BatchAdapter):
     def get_child_tasks(
         self, head_job: JobDetailTypeDef
     ) -> typing.List[JobDetailTypeDef]:
+        print(f"get_child_tasks", head_job)
         if "logStreamName" not in head_job["container"]:
             return []
         log_stream = head_job["container"]["logStreamName"]

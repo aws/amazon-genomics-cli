@@ -23,6 +23,12 @@ from rest_api.models import (
     RunStatus,
 )
 
+# Added:
+from botocore.client import Config
+
+config = Config(connect_timeout=5, read_timeout=5)
+
+
 USER_CANCELLATION_REASON = "User Canceled"
 
 
@@ -81,12 +87,15 @@ class BatchAdapter(AbstractWESAdapter):
 
     def get_run_log(self, run_id) -> Optional[RunLog]:
         head_job = self.describe_job(run_id)
+        print(f"head_job={head_job}")
         if not head_job:
             return None
 
         try:
             child_jobs = self.get_child_tasks(head_job)
+            print(f"child_jobs={child_jobs}")
             task_logs = list(map(lambda task_job: self.to_log(task_job), child_jobs))
+            print(f"task_logs={task_logs}")
         except Exception as e:
             traceback.print_exc()
             raise InternalServerError(f"Failed to load child tasks for job {run_id}", e)
@@ -174,23 +183,30 @@ class BatchAdapter(AbstractWESAdapter):
         return RunId(submit_job_response["jobId"])
 
     def describe_job(self, job_id: str) -> Optional[JobDetailTypeDef]:
+        print("describe_job", job_id)
         jobs = self.describe_jobs([job_id])
         if not jobs:
             return None
         else:
             return jobs[0]
 
+    def _describe_jobs(self, jobs):
+        print("_describe_jobs", jobs)
+        ret = self.aws_batch.describe_jobs(jobs=jobs)
+        print("self.aws_batch.describe_jobs(jobs=jobs) = ", ret)
+        return ret
+
     def describe_jobs(self, job_ids: typing.List[str]) -> typing.List[JobDetailTypeDef]:
+        print("describe_jobs", job_ids)
         if not job_ids:
             return []
 
         jobs = []
         job_ids_sets = chunks(job_ids, 100)
         with ThreadPoolExecutor(max_workers=10) as executor:
+            print("executor = ", executor)
             future_jobs = {
-                executor.submit(
-                    self.aws_batch.describe_jobs, jobs=job_ids_set
-                ): job_ids_set
+                executor.submit(self._describe_jobs, jobs=job_ids_set): job_ids_set
                 for job_ids_set in job_ids_sets
             }
             for future in as_completed(future_jobs):

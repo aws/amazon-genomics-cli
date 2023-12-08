@@ -7,7 +7,7 @@ import inspect
 def logged(
     _func=None,
     *,
-    level=logging.INFO,
+    level=logging.WARNING,
     logger=None,
     log_input=True,
     log_output=True,
