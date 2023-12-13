@@ -2,6 +2,10 @@
 
 [![Join the chat at https://gitter.im/aws/amazon-genomics-cli](https://badges.gitter.im/aws/amazon-genomics-cli.svg)](https://gitter.im/aws/amazon-genomics-cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+# END OF LIFE NOTIFICATION
+
+he Amazon Genomics CLI project has entered its End Of Life (EOL) phase. From Jan 12 2024 we will archive this repository. During this time we encourage users to migrate to using the AWS HealthOmics service to run their genomics workflows in the cloud. While the source code of AGC will still be available after the EOL date, we will not make any updates after this time. Additionally, we will not accept any new issues or Pull Requests.
+
 ## Overview
 
 The Amazon Genomics CLI is a tool to simplify the processes of deploying the AWS infrastructure required to
