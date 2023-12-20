@@ -2,3 +2,4 @@
 /dist/
 *.js
 __pycache__/
+.python-version

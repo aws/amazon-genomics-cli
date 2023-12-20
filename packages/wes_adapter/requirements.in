@@ -1,0 +1,14 @@
+boto3
+boto3-stubs[batch,logs,resourcegroupstaggingapi,s3]
+connexion==2.14.1
+docker
+flask==2.2.2
+paste
+pytest
+python_dateutil
+requests
+serverless-wsgi
+setuptools
+swagger-ui-bundle
+werkzeug
+jsonschema==4.17.3
