@@ -22,6 +22,10 @@ build-cli:
 release: release-cli release-cdk release-wes
 	./scripts/package-release.sh
 
+publish: release
+	cd dist && zip -r amazon-genomics-cli.zip amazon-genomics-cli/
+	aws s3 cp dist/amazon-genomics-cli.zip s3://agc-releases-677005746634-us-east-1/amazon-genomics-cli-$(VERSION).zip
+
 release-cli:
 	(cd packages/cli; $(MAKE) release)
 
