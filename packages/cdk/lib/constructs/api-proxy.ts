@@ -58,7 +58,7 @@ export class ApiProxy extends Construct {
     this.accessLogGroup = new LogGroup(this, "AccessLogGroup");
     this.restApi = new RestApi(this, "Resource", {
       restApiName: props.apiName,
-      endpointTypes: [EndpointType.REGIONAL],
+      endpointTypes: [EndpointType.PRIVATE],
       description: "API proxy endpoint for a service",
       apiKeySourceType: ApiKeySourceType.HEADER,
       deployOptions: {

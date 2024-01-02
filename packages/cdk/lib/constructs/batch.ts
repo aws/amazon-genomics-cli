@@ -1,5 +1,5 @@
 import { Fn, Names, Stack } from "aws-cdk-lib";
-import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "@aws-cdk/aws-batch-alpha";
+import { ComputeEnvironment, ComputeResourceType, IJobQueue, JobQueue } from "@aws-cdk/aws-batch-alpha";
 import { CfnLaunchTemplate, IMachineImage, InstanceType, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import {
   CfnInstanceProfile,
@@ -105,7 +105,7 @@ const defaultComputeType = ComputeResourceType.ON_DEMAND;
 export class Batch extends Construct {
   // This is the role that the backing instances use, not the role that batch jobs run as.
   public readonly role: IRole;
-  public readonly computeEnvironment: IComputeEnvironment;
+  public readonly computeEnvironment: ComputeEnvironment;
   public readonly jobQueue: IJobQueue;
 
   constructor(scope: Construct, id: string, props: BatchProps) {
@@ -188,7 +188,7 @@ export class Batch extends Construct {
     });
   }
 
-  private renderComputeEnvironment(options: ComputeOptions): IComputeEnvironment {
+  private renderComputeEnvironment(options: ComputeOptions): ComputeEnvironment {
     const computeType = options.computeType || defaultComputeType;
     if (computeType == ComputeResourceType.FARGATE || computeType == ComputeResourceType.FARGATE_SPOT) {
       return new ComputeEnvironment(this, "ComputeEnvironment", {

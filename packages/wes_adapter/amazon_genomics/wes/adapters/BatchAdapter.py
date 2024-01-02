@@ -32,11 +32,11 @@ class BatchAdapter(AbstractWESAdapter):
     """
 
     def __init__(
-        self,
-        job_queue: str,
-        job_definition: str,
-        aws_batch: BatchClient = None,
-        logger=None,
+            self,
+            job_queue: str,
+            job_definition: str,
+            aws_batch: BatchClient = None,
+            logger=None,
     ):
         super().__init__(logger)
         self.job_queue = job_queue
@@ -49,14 +49,14 @@ class BatchAdapter(AbstractWESAdapter):
 
     @abstractmethod
     def command(
-        self,
-        workflow_params=None,
-        workflow_type=None,
-        workflow_type_version=None,
-        tags=None,
-        workflow_engine_parameters=None,
-        workflow_url=None,
-        workflow_attachment=None,
+            self,
+            workflow_params=None,
+            workflow_type=None,
+            workflow_type_version=None,
+            tags=None,
+            workflow_engine_parameters=None,
+            workflow_url=None,
+            workflow_attachment=None,
     ):
         pass
 
@@ -141,14 +141,14 @@ class BatchAdapter(AbstractWESAdapter):
         return RunListResponse(runs=runs, next_page_token=next_token)
 
     def run_workflow(
-        self,
-        workflow_params=None,
-        workflow_type=None,
-        workflow_type_version=None,
-        tags=None,
-        workflow_engine_parameters=None,
-        workflow_url=None,
-        workflow_attachment=None,
+            self,
+            workflow_params=None,
+            workflow_type=None,
+            workflow_type_version=None,
+            tags=None,
+            workflow_engine_parameters=None,
+            workflow_url=None,
+            workflow_attachment=None,
     ) -> RunId:
         """
         Submit "workflow job" based on given configuration details; return the Batch job uuid
@@ -205,7 +205,7 @@ class BatchAdapter(AbstractWESAdapter):
 
     @abstractmethod
     def get_child_tasks(
-        self, head_job: JobDetailTypeDef
+            self, head_job: JobDetailTypeDef
     ) -> typing.List[JobDetailTypeDef]:
         pass
 
@@ -271,4 +271,4 @@ def to_iso(epoch: Optional[int]) -> Optional[str]:
 def chunks(l: list, n: int) -> Iterable[list]:
     """split list l into chunks of size n"""
     for i in range(0, len(l), n):
-        yield l[i : i + n]
+        yield l[i: i + n]
