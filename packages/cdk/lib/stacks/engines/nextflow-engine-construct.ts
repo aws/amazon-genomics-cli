@@ -5,11 +5,11 @@ import { Bucket } from "aws-cdk-lib/aws-s3";
 import { ApiProxy } from "../../constructs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
-import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
+import { IJobQueue } from "aws-cdk-lib/aws-batch";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
 import { Construct } from "constructs";
-import { IMachineImage } from "aws-cdk-lib/aws-ec2";
+import { MachineImage } from "aws-cdk-lib/aws-ec2";
 
 export interface NextflowEngineConstructProps extends EngineOptions {
   /**
@@ -23,7 +23,7 @@ export interface NextflowEngineConstructProps extends EngineOptions {
   /**
    * Image used for the Nextflow head node
    */
-  readonly computeEnvImage: IMachineImage;
+  readonly computeEnvImage: MachineImage;
 }
 
 export class NextflowEngineConstruct extends EngineConstruct {

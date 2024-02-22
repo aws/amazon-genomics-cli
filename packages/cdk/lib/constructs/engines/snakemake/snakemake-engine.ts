@@ -1,10 +1,9 @@
 import { Construct } from "constructs";
-import { JobDefinition, PlatformCapabilities } from "@aws-cdk/aws-batch-alpha";
+import { EcsEc2ContainerDefinition, EcsJobDefinition } from "aws-cdk-lib/aws-batch";
 import { createEcrImage } from "../../../util";
 import { EngineJobDefinition } from "../engine-job-definition";
 import { Engine, EngineProps } from "../engine";
 import { Batch } from "../../batch";
-import { FargatePlatformVersion } from "aws-cdk-lib/aws-ecs";
 import { AccessPoint, FileSystem } from "aws-cdk-lib/aws-efs";
 import { Size } from "aws-cdk-lib";
 
@@ -17,9 +16,10 @@ export interface SnakemakeEngineProps extends EngineProps {
 const SNAKEMAKE_IMAGE_DESIGNATION = "snakemake";
 
 export class SnakemakeEngine extends Engine {
-  readonly headJobDefinition: JobDefinition;
+  readonly headJobDefinition: EcsJobDefinition;
   private readonly volumeName = "efs";
-  private readonly engineMemoryMiB = 4096;
+  private readonly cpu = 4;
+  private readonly memory = Size.mebibytes(4096);
   public readonly fsap: AccessPoint;
   public readonly fileSystem: FileSystem;
 
@@ -39,13 +39,12 @@ export class SnakemakeEngine extends Engine {
     this.fileSystem.grant(workerBatch.role, "elasticfilesystem:DescribeMountTargets", "elasticfilesystem:DescribeFileSystems");
     this.headJobDefinition = new EngineJobDefinition(this, "SnakemakeHeadJobDef", {
       logGroup: this.logGroup,
-      platformCapabilities: [PlatformCapabilities.FARGATE],
-      container: {
-        memoryLimitMiB: this.engineMemoryMiB,
+      container: new EcsEc2ContainerDefinition(scope, "containerDefn", {
+        cpu: this.cpu,
+        memory: this.memory,
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
         image: createEcrImage(this, SNAKEMAKE_IMAGE_DESIGNATION),
-        platformVersion: FargatePlatformVersion.VERSION1_4,
         command: [],
         environment: {
           SM__AWS__FS: this.fileSystem.fileSystemId,
@@ -54,8 +53,7 @@ export class SnakemakeEngine extends Engine {
           SM_S3_OUTPUT_URI: props.rootDirS3Uri,
         },
         volumes: [this.toVolume(this.fileSystem, this.fsap, this.volumeName)],
-        mountPoints: [this.toMountPoint("/mnt/efs", this.volumeName)],
-      },
+      }),
     });
   }
 }

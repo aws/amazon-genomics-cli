@@ -4,11 +4,10 @@ import { EngineOptions } from "../../types";
 import { ApiProxy, Batch } from "../../constructs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
-import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { ENGINE_SNAKEMAKE } from "../../constants";
 import { Construct } from "constructs";
 import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
-import { IMachineImage, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
@@ -16,6 +15,7 @@ import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import { BucketOperations } from "../../common/BucketOperations";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
 import { IFunction } from "aws-cdk-lib/aws-lambda";
+import { EcsMachineImage } from "aws-cdk-lib/aws-batch";
 
 export class SnakemakeEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -31,8 +31,8 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     const { vpc, subnets, contextParameters, computeEnvImage } = props;
     const params = props.contextParameters;
 
-    this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, ComputeResourceType.FARGATE);
-    const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
+    this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, "FARGATE");
+    const workerComputeType = contextParameters.requestSpotInstances ? "SPOT" : "ON_DEMAND";
     this.batchWorkers = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, workerComputeType, computeEnvImage);
 
     // Generate the engine that will run snakemake on batch
@@ -167,8 +167,8 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     vpc: IVpc,
     subnets: SubnetSelection,
     appParams: ContextAppParameters,
-    computeType?: ComputeResourceType,
-    computeEnvImage?: IMachineImage
+    computeType?: string,
+    computeEnvImage?: EcsMachineImage
   ): Batch {
     return new Batch(this, id, {
       vpc,

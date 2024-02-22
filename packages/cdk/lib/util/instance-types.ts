@@ -1,10 +1,9 @@
 import { InstanceType, InstanceArchitecture } from "aws-cdk-lib/aws-ec2";
-import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 
 // https://github.com/aws-samples/aws-genomics-workflows/blob/master/src/templates/gwfcore/gwfcore-batch.template.yaml#L145-L180
 // batch 'optimal' isn't optimal for genomics computation, these types have been tuned over several customer engagements
-export const optimalInstanceTypes: { [key in ComputeResourceType]: string[] } = {
-  [ComputeResourceType.ON_DEMAND]: [
+export const optimalInstanceTypes: { [key: string]: string[] } = {
+  ["ON_DEMAND"]: [
     "c5.large",
     "c5.xlarge",
     "c5.2xlarge",
@@ -42,7 +41,7 @@ export const optimalInstanceTypes: { [key in ComputeResourceType]: string[] } = 
     "r5n.2xlarge",
     "r5n.4xlarge",
   ],
-  [ComputeResourceType.SPOT]: [
+  ["SPOT"]: [
     "c4.large",
     "c4.xlarge",
     "c4.2xlarge",
@@ -93,8 +92,8 @@ export const optimalInstanceTypes: { [key in ComputeResourceType]: string[] } = 
     "r5n.4xlarge",
   ],
   // TODO: Determine optimal instances for fargate when it's supported
-  [ComputeResourceType.FARGATE]: [],
-  [ComputeResourceType.FARGATE_SPOT]: [],
+  ["FARGATE"]: [],
+  ["FARGATE_SPOT"]: [],
 };
 
 // These need to be manually updated as regions release new instance types
@@ -174,7 +173,7 @@ const unLaunchedInstanceTypesByRegion: { [key in string]: { [key in string]: boo
   "sa-east-1": { "m5n.large": true, "m5n.xlarge": true, "m5n.2xlarge": true, "m5n.4xlarge": true },
 };
 
-export const getInstanceTypesForBatch = (instanceTypes: InstanceType[] | undefined, computeType: ComputeResourceType, region?: string): InstanceType[] => {
+export const getInstanceTypesForBatch = (instanceTypes: InstanceType[] | undefined, computeType: string, region?: string): InstanceType[] => {
   if (instanceTypes && instanceTypes.length > 0) {
     const armBasedInstances = instanceTypes.filter((instanceType) => instanceType.architecture == InstanceArchitecture.ARM_64);
     if (armBasedInstances.length > 0) {

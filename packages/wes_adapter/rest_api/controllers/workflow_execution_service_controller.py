@@ -157,7 +157,6 @@ def run_workflow(
     }
 
     for arg in args:
-
         if arg in ("workflow_attachment"):
             # file lists
             args[arg] = request.files.getlist(arg)

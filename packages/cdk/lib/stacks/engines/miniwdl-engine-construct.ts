@@ -5,9 +5,8 @@ import { EngineConstruct, EngineOutputs } from "./engine-construct";
 import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
-import { IMachineImage, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { ENGINE_MINIWDL } from "../../constants";
-import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { BucketOperations } from "../../common/BucketOperations";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
@@ -15,6 +14,7 @@ import { BatchPolicies } from "../../roles/policies/batch-policies";
 import { EngineOptions } from "../../types";
 import { Construct } from "constructs";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
+import { EcsMachineImage } from "aws-cdk-lib/aws-batch";
 
 export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -31,8 +31,8 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     const params = props.contextParameters;
     const rootDirS3Uri = params.getEngineBucketPath();
 
-    this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, ComputeResourceType.FARGATE);
-    const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.ON_DEMAND;
+    this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, "FARGATE");
+    const workerComputeType = contextParameters.requestSpotInstances ? "SPOT" : "ON_DEMAND";
     this.batchWorkers = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, workerComputeType, computeEnvImage);
 
     this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
@@ -134,8 +134,8 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     vpc: IVpc,
     subnets: SubnetSelection,
     appParams: ContextAppParameters,
-    computeType?: ComputeResourceType,
-    computeEnvImage?: IMachineImage
+    computeType?: string,
+    computeEnvImage?: EcsMachineImage
   ): Batch {
     return new Batch(this, id, {
       vpc,

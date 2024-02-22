@@ -1,5 +1,5 @@
 import { Size, Stack, StackProps } from "aws-cdk-lib";
-import { IMachineImage, IVpc, MachineImage, SubnetSelection, Vpc } from "aws-cdk-lib/aws-ec2";
+import { IVpc, MachineImage, SubnetSelection, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
 import { getCommonParameter, getCommonParameterList, subnetSelectionFromIds } from "../util";
 import {
@@ -30,7 +30,7 @@ export class ContextStack extends Stack {
   private readonly vpc: IVpc;
   private readonly iops: Size;
   private readonly subnets: SubnetSelection;
-  private readonly computeEnvImage: IMachineImage;
+  private readonly computeEnvImage: MachineImage;
 
   constructor(scope: Construct, id: string, props: ContextStackProps) {
     super(scope, id, props);

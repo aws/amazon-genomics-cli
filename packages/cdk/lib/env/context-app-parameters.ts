@@ -86,7 +86,7 @@ export class ContextAppParameters {
   /**
    * The maximum number of Amazon EC2 vCPUs that an environment can reach.
    */
-  public readonly maxVCpus?: number;
+  public readonly maxVCpus: number;
   /**
    * Property to specify if the compute environment uses On-Demand or Spot compute resources.
    */

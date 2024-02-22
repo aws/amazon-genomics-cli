@@ -1,9 +1,10 @@
 import { Construct } from "constructs";
-import { JobDefinition } from "@aws-cdk/aws-batch-alpha";
+import { EcsEc2ContainerDefinition, EcsJobDefinition } from "aws-cdk-lib/aws-batch";
 import { IRole } from "aws-cdk-lib/aws-iam";
 import { createEcrImage } from "../../../util";
 import { EngineJobDefinition } from "../engine-job-definition";
 import { Engine, EngineProps } from "../engine";
+import { Size } from "aws-cdk-lib";
 
 export interface NextflowEngineProps extends EngineProps {
   readonly jobQueueArn: string;
@@ -13,14 +14,18 @@ export interface NextflowEngineProps extends EngineProps {
 const NEXTFLOW_IMAGE_DESIGNATION = "nextflow";
 
 export class NextflowEngine extends Engine {
-  readonly headJobDefinition: JobDefinition;
+  readonly headJobDefinition: EcsJobDefinition;
+  private readonly cpu = 4;
+  private readonly memory = Size.mebibytes(4096);
 
   constructor(scope: Construct, id: string, props: NextflowEngineProps) {
     super(scope, id);
 
     this.headJobDefinition = new EngineJobDefinition(this, "NexflowHeadJobDef", {
       logGroup: this.logGroup,
-      container: {
+      container: new EcsEc2ContainerDefinition(scope, "containerDefn", {
+        cpu: this.cpu,
+        memory: this.memory,
         jobRole: props.taskRole,
         image: createEcrImage(this, NEXTFLOW_IMAGE_DESIGNATION),
         command: [],
@@ -30,7 +35,7 @@ export class NextflowEngine extends Engine {
           NF_LOGSDIR: `${props.rootDirS3Uri}/logs`,
         },
         volumes: [],
-      },
+      }),
     });
   }
 }

@@ -3,7 +3,8 @@ import { Construct } from "constructs";
 import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { AccessPoint, FileSystem, PerformanceMode, ThroughputMode } from "aws-cdk-lib/aws-efs";
 import { RemovalPolicy, Size } from "aws-cdk-lib";
-import { MountPoint, Volume } from "aws-cdk-lib/aws-ecs";
+import { MountPoint } from "aws-cdk-lib/aws-ecs";
+import { EcsVolume } from "aws-cdk-lib/aws-batch";
 
 export interface EngineProps {
   readonly vpc: IVpc;
@@ -27,18 +28,15 @@ export class Engine extends Construct {
     };
   }
 
-  protected toVolume(fileSystem: FileSystem, accessPoint: AccessPoint, volumeName: string): Volume {
-    return {
+  protected toVolume(fileSystem: FileSystem, accessPoint: AccessPoint, volumeName: string): EcsVolume {
+    return EcsVolume.efs({
       name: volumeName,
-      efsVolumeConfiguration: {
-        fileSystemId: fileSystem.fileSystemId,
-        transitEncryption: "ENABLED",
-        authorizationConfig: {
-          accessPointId: accessPoint.accessPointId,
-          iam: "ENABLED",
-        },
-      },
-    };
+      fileSystem: fileSystem,
+      containerPath: "/mnt/efs",
+      useJobRole: true,
+      accessPointId: accessPoint.accessPointId,
+      enableTransitEncryption: true,
+    });
   }
 
   protected createAccessPoint(fileSystem: FileSystem): AccessPoint {

@@ -1,5 +1,4 @@
-import { JobDefinition, PlatformCapabilities } from "@aws-cdk/aws-batch-alpha";
-import { FargatePlatformVersion } from "aws-cdk-lib/aws-ecs";
+import { EcsEc2ContainerDefinition, EcsJobDefinition } from "aws-cdk-lib/aws-batch";
 import { Construct } from "constructs";
 import { createEcrImage } from "../../../util";
 import { Batch } from "../../batch";
@@ -17,8 +16,9 @@ export interface MiniWdlEngineProps extends EngineProps {
 const MINIWDL_IMAGE_DESIGNATION = "miniwdl";
 
 export class MiniWdlEngine extends Engine {
-  readonly headJobDefinition: JobDefinition;
-  private readonly engineMemoryMiB = 4096;
+  readonly headJobDefinition: EcsJobDefinition;
+  private readonly cpu = 4;
+  private readonly memory = Size.mebibytes(4096);
   private readonly volumeName = "efs";
   readonly fileSystem: FileSystem;
 
@@ -39,13 +39,12 @@ export class MiniWdlEngine extends Engine {
 
     this.headJobDefinition = new EngineJobDefinition(this, "MiniwdlHeadJobDef", {
       logGroup: this.logGroup,
-      platformCapabilities: [PlatformCapabilities.FARGATE],
-      container: {
-        memoryLimitMiB: this.engineMemoryMiB,
+      container: new EcsEc2ContainerDefinition(scope, "containerDefn", {
+        cpu: this.cpu,
+        memory: this.memory,
         jobRole: engineBatch.role,
         executionRole: engineBatch.role,
         image: createEcrImage(this, MINIWDL_IMAGE_DESIGNATION),
-        platformVersion: FargatePlatformVersion.VERSION1_4,
         environment: {
           MINIWDL__AWS__FS: this.fileSystem.fileSystemId,
           MINIWDL__AWS__FSAP: accessPoint.accessPointId,
@@ -53,8 +52,7 @@ export class MiniWdlEngine extends Engine {
           MINIWDL_S3_OUTPUT_URI: rootDirS3Uri,
         },
         volumes: [this.toVolume(this.fileSystem, accessPoint, this.volumeName)],
-        mountPoints: [this.toMountPoint("/mnt/efs", this.volumeName)],
-      },
+      }),
     });
   }
 }

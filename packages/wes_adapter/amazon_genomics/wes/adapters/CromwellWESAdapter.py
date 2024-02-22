@@ -215,7 +215,6 @@ class CromwellWESAdapter(AbstractWESAdapter):  # inherit from ABC to enforce int
         # this is needed for any file downloads
         # once complete the temp dir will be removed and all open files will be closed
         with tempfile.TemporaryDirectory() as tmpdir:
-
             self.logger.debug(f"RUN_WORKFLOW :: tmpdir={tmpdir}")
 
             data = {
@@ -418,7 +417,6 @@ class CromwellWESAdapter(AbstractWESAdapter):  # inherit from ABC to enforce int
         return self._get_workflow_state_(status, status_code)
 
     def _get_workflow_state_(self, status, status_code=None):
-
         self.logger.info("_get_workflow_state_(%s, %s)" % (status, status_code))
         if (status_code is not None) and (status_code != 200):
             if (status_code >= 400) and (status_code <= 403):

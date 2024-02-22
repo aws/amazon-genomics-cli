@@ -1,5 +1,5 @@
 import { Repository } from "aws-cdk-lib/aws-ecr";
-import { ContainerImage, TaskDefinition } from "aws-cdk-lib/aws-ecs";
+import { ContainerImage, LogDriverConfig, TaskDefinition } from "aws-cdk-lib/aws-ecs";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import { Maybe, ServiceContainer } from "../types";
 import { Arn, CfnParameter, Fn, Stack } from "aws-cdk-lib";
@@ -8,7 +8,6 @@ import { APP_NAME } from "../constants";
 import { SecureService } from "../constructs";
 import { Protocol } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { IVpc, Subnet, SubnetSelection } from "aws-cdk-lib/aws-ec2";
-import { LogConfiguration, LogDriver as BatchLogDriver } from "@aws-cdk/aws-batch-alpha";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
 
 export const getContext = (node: Node, key: string): string => {
@@ -86,9 +85,9 @@ export const renderServiceWithTaskDefinition = (
   });
 };
 
-export function renderBatchLogConfiguration(scope: Construct, logGroup: ILogGroup): LogConfiguration {
+export function renderBatchLogConfiguration(scope: Construct, logGroup: ILogGroup): LogDriverConfig {
   return {
-    logDriver: BatchLogDriver.AWSLOGS,
+    logDriver: "awslogs",
     options: {
       "awslogs-group": logGroup.logGroupName,
     },

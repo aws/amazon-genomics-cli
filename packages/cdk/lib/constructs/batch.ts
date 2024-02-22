@@ -1,18 +1,7 @@
 import { Fn, Names, Stack } from "aws-cdk-lib";
-import { ComputeEnvironment, ComputeResourceType, IComputeEnvironment, IJobQueue, JobQueue } from "@aws-cdk/aws-batch-alpha";
-import { CfnLaunchTemplate, IMachineImage, InstanceType, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
-import {
-  CfnInstanceProfile,
-  Grant,
-  IGrantable,
-  IManagedPolicy,
-  IRole,
-  ManagedPolicy,
-  PolicyDocument,
-  PolicyStatement,
-  Role,
-  ServicePrincipal,
-} from "aws-cdk-lib/aws-iam";
+import { IComputeEnvironment, IJobQueue, JobQueue, FargateComputeEnvironment, ManagedEc2EcsComputeEnvironment, EcsMachineImage } from "aws-cdk-lib/aws-batch";
+import { InstanceType, IVpc, LaunchTemplate, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { Grant, IGrantable, IManagedPolicy, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { getInstanceTypesForBatch } from "../util/instance-types";
 import { batchArn, ec2Arn } from "../util";
 import { APP_NAME, APP_TAG_KEY, TAGGED_RESOURCE_TYPES } from "../constants";
@@ -23,7 +12,7 @@ export interface ComputeOptions {
   /**
    * The VPC to run the batch in.
    */
-  vpc: IVpc;
+  vpc?: IVpc;
   /**
    * Private subnets of VPC to use for Batch compute environments
    */
@@ -39,7 +28,7 @@ export interface ComputeOptions {
    *
    * @default ON_DEMAND
    */
-  computeType?: ComputeResourceType;
+  computeType?: string;
   /**
    * The types of EC2 instances that may be launched in the compute environment.
    *
@@ -56,7 +45,7 @@ export interface ComputeOptions {
    *
    * @default aws-batch:{@link ComputeResources#maxvCpus}
    */
-  maxVCpus?: number;
+  maxVCpus: number;
 
   /**
    * The tags to apply to any compute resources
@@ -78,7 +67,7 @@ export interface ComputeOptions {
    * The machine image to use for compute
    * @default managed by Batch
    */
-  computeEnvImage?: IMachineImage;
+  computeEnvImage?: EcsMachineImage;
 }
 
 export interface BatchProps extends ComputeOptions {
@@ -100,7 +89,7 @@ export interface BatchProps extends ComputeOptions {
   workflowOrchestrator?: string;
 }
 
-const defaultComputeType = ComputeResourceType.ON_DEMAND;
+const defaultComputeType = "EC2";
 
 export class Batch extends Construct {
   // This is the role that the backing instances use, not the role that batch jobs run as.
@@ -132,9 +121,9 @@ export class Batch extends Construct {
     });
   }
 
-  private renderRole(computeType?: ComputeResourceType, awsPolicyNames?: string[]): IRole {
+  private renderRole(computeType?: string, awsPolicyNames?: string[]): IRole {
     const awsPolicies = awsPolicyNames?.map((policyName) => ManagedPolicy.fromAwsManagedPolicyName(policyName));
-    if (computeType == ComputeResourceType.FARGATE || computeType == ComputeResourceType.FARGATE_SPOT) {
+    if (computeType == "FARGATE" || computeType == "FARGATE_SPOT") {
       return this.renderEcsRole(awsPolicies);
     }
     return this.renderEc2Role(awsPolicies);
@@ -190,14 +179,11 @@ export class Batch extends Construct {
 
   private renderComputeEnvironment(options: ComputeOptions): IComputeEnvironment {
     const computeType = options.computeType || defaultComputeType;
-    if (computeType == ComputeResourceType.FARGATE || computeType == ComputeResourceType.FARGATE_SPOT) {
-      return new ComputeEnvironment(this, "ComputeEnvironment", {
-        computeResources: {
-          vpc: options.vpc,
-          type: computeType,
-          maxvCpus: options.maxVCpus,
-          vpcSubnets: options.subnets,
-        },
+    if (computeType == "FARGATE" || computeType == "FARGATE_SPOT") {
+      return new FargateComputeEnvironment(this, "ComputeEnvironment", {
+        vpc: options.vpc as IVpc,
+        vpcSubnets: options.subnets,
+        maxvCpus: options.maxVCpus,
       });
     }
 
@@ -207,25 +193,18 @@ export class Batch extends Construct {
      * TAKE NOTE! If you change the launch template you will need to destroy any existing contexts and deploy. A CDK update won't
      * be enough to trigger an update of the Batch compute environment to use the new template.
      */
-    const launchTemplate = launchTemplateProps ? new CfnLaunchTemplate(this, "LaunchTemplate", launchTemplateProps) : undefined;
+    const launchTemplate = launchTemplateProps ? new LaunchTemplate(this, "LaunchTemplate", launchTemplateProps) : undefined;
 
-    const instanceProfile = new CfnInstanceProfile(this, "ComputeProfile", {
-      roles: [this.role.roleName],
-    });
-    return new ComputeEnvironment(this, "ComputeEnvironment", {
-      computeResources: {
-        vpc: options.vpc,
-        type: computeType,
-        maxvCpus: options.maxVCpus,
-        image: options.computeEnvImage,
-        instanceRole: instanceProfile.attrArn,
-        instanceTypes: getInstanceTypesForBatch(options.instanceTypes, computeType, Stack.of(this).region),
-        launchTemplate: launchTemplate && {
-          launchTemplateName: launchTemplate.launchTemplateName!,
-        },
-        computeResourcesTags: options.resourceTags,
-        vpcSubnets: options.subnets,
-      },
+    const images = options.computeEnvImage ? [options.computeEnvImage] : undefined;
+
+    return new ManagedEc2EcsComputeEnvironment(this, "ComputeEnvironment", {
+      vpc: options.vpc as IVpc,
+      vpcSubnets: options.subnets,
+      maxvCpus: options.maxVCpus,
+      images: images,
+      instanceRole: this.role,
+      instanceTypes: getInstanceTypesForBatch(options.instanceTypes, computeType, Stack.of(this).region),
+      launchTemplate: launchTemplate,
     });
   }
 

@@ -1,10 +1,9 @@
-import { IMachineImage, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { IVpc, MachineImage, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { Stack } from "aws-cdk-lib";
 import { Batch } from "../../constructs";
 import { ContextAppParameters } from "../../env";
 import { BucketOperations } from "../../common/BucketOperations";
 import { IRole } from "aws-cdk-lib/aws-iam";
-import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { Construct } from "constructs";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
 
@@ -32,7 +31,7 @@ export interface BatchConstructProps {
   /**
    * AMI used for compute
    */
-  readonly computeEnvImage?: IMachineImage;
+  readonly computeEnvImage?: MachineImage;
 }
 
 export class BatchConstruct extends Construct {
@@ -45,10 +44,10 @@ export class BatchConstruct extends Construct {
     const { vpc, contextParameters, createSpotBatch, createOnDemandBatch, subnets, computeEnvImage } = props;
     const { artifactBucketName, outputBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
     if (createSpotBatch) {
-      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, subnets, contextParameters, ComputeResourceType.SPOT, computeEnvImage);
+      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, subnets, contextParameters, "SPOT", computeEnvImage);
     }
     if (createOnDemandBatch) {
-      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, ComputeResourceType.ON_DEMAND, computeEnvImage);
+      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, "ON_DEMAND", computeEnvImage);
     }
 
     const artifactBucket = BucketOperations.importBucket(this, "ArtifactBucket", artifactBucketName);
@@ -69,8 +68,8 @@ export class BatchConstruct extends Construct {
     vpc: IVpc,
     subnets: SubnetSelection,
     appParams: ContextAppParameters,
-    computeType?: ComputeResourceType,
-    computeEnvImage?: IMachineImage
+    computeType?: string,
+    computeEnvImage?: MachineImage
   ): Batch {
     return new Batch(this, id, {
       vpc,

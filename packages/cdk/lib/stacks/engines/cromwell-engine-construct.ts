@@ -12,7 +12,7 @@ import { LogGroup, ILogGroup } from "aws-cdk-lib/aws-logs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { CromwellEngineRole } from "../../roles/cromwell-engine-role";
 import { CromwellAdapterRole } from "../../roles/cromwell-adapter-role";
-import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
+import { IJobQueue } from "aws-cdk-lib/aws-batch";
 import { Construct } from "constructs";
 
 export interface CromwellEngineConstructProps extends EngineOptions {

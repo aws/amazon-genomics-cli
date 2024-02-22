@@ -1,27 +1,26 @@
-import { JobDefinition, JobDefinitionProps } from "@aws-cdk/aws-batch-alpha";
+import { EcsEc2ContainerDefinition, EcsJobDefinition, EcsJobDefinitionProps } from "aws-cdk-lib/aws-batch";
 import { Construct } from "constructs";
-import { renderBatchLogConfiguration } from "../../util";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
+import { Size } from "aws-cdk-lib";
 
-interface EngineJobDefinitionProps extends JobDefinitionProps {
+interface EngineJobDefinitionProps extends EcsJobDefinitionProps {
   readonly logGroup: ILogGroup;
 }
 
-export class EngineJobDefinition extends JobDefinition {
+export class EngineJobDefinition extends EcsJobDefinition {
   constructor(scope: Construct, id: string, props: EngineJobDefinitionProps) {
     super(scope, id, {
       ...props,
-      container: {
+      container: new EcsEc2ContainerDefinition(scope, "containerDefn", {
         ...props.container,
-        logConfiguration: renderBatchLogConfiguration(scope, props.logGroup),
+        cpu: props.container.cpu || 1,
+        memory: props.container.memory || Size.mebibytes(2048),
         environment: {
           AWS_METADATA_SERVICE_TIMEOUT: "10",
           AWS_METADATA_SERVICE_NUM_ATTEMPTS: "10",
           ...props.container.environment,
         },
-        memoryLimitMiB: props.container.memoryLimitMiB || 2048,
-        vcpus: props.container.vcpus || 1,
-      },
+      }),
     });
   }
 }

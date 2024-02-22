@@ -10,7 +10,7 @@ import { ILogGroup, LogGroup } from "aws-cdk-lib/aws-logs";
 import { EngineConstruct, EngineOutputs } from "./engine-construct";
 import { ToilJobRole } from "../../roles/toil-job-role";
 import { ToilEngineRole } from "../../roles/toil-engine-role";
-import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
+import { IJobQueue } from "aws-cdk-lib/aws-batch";
 import { Construct } from "constructs";
 
 export interface ToilEngineConstructProps extends EngineOptions {
