@@ -61,7 +61,10 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       fsapId: this.snakemakeEngine.fsap.accessPointId,
       outputBucket: params.getEngineBucketPath(),
     });
-    this.adapterLogGroup = lambda.logGroup;
+    // Referencing the Lambda's logGroup property causes a deprecated
+    // NodeJS14.x custom resource Lambda to be created in the background
+    // Do not reference the Lambda's logGroup or the CFT stack creation will fail
+    // this.adapterLogGroup = lambda.logGroup;
 
     // Generate our api gateway proxy
     this.apiProxy = this.createApiProxy(params, lambda);

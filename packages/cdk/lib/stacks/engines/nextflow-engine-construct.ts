@@ -71,8 +71,11 @@ export class NextflowEngineConstruct extends EngineConstruct {
       vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
       subnets: props.contextParameters.usePublicSubnets ? undefined : props.subnets,
     });
-    this.adapterLogGroup = lambda.logGroup;
-
+    // Referencing the Lambda's logGroup property causes a deprecated
+    // NodeJS14.x custom resource Lambda to be created in the background
+    // Do not reference the Lambda's logGroup or the CFT stack creation will fail
+    // this.adapterLogGroup = lambda.logGroup;
+    
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}NextflowApiProxy`,
       lambda,
