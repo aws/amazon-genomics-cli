@@ -248,6 +248,10 @@ export class Batch extends Construct {
         launchTemplateData: {
           userData: Fn.base64(launchTemplateData),
           tagSpecifications,
+          metadataOptions: {
+            httpTokens: "required",
+            httpPutResponseHopLimit: 2,
+          },
         },
       };
     }
