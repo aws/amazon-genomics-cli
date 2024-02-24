@@ -4,7 +4,7 @@ import { EngineOptions } from "../../types";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { ApiProxy } from "../../constructs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
-import { ILogGroup } from "aws-cdk-lib/aws-logs";
+import { LogGroup, ILogGroup } from "aws-cdk-lib/aws-logs";
 import { IJobQueue } from "@aws-cdk/aws-batch-alpha";
 import { NextflowEngineRole } from "../../roles/nextflow-engine-role";
 import { NextflowAdapterRole } from "../../roles/nextflow-adapter-role";
@@ -71,10 +71,7 @@ export class NextflowEngineConstruct extends EngineConstruct {
       vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
       subnets: props.contextParameters.usePublicSubnets ? undefined : props.subnets,
     });
-    // Referencing the Lambda's logGroup property causes a deprecated
-    // NodeJS14.x custom resource Lambda to be created in the background
-    // Do not reference the Lambda's logGroup or the CFT stack creation will fail
-    // this.adapterLogGroup = lambda.logGroup;
+    this.adapterLogGroup = LogGroup.fromLogGroupName(this, "NextflowAdapterLogGroup", "/aws/lambda/" + lambda.functionName);
     
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}NextflowApiProxy`,

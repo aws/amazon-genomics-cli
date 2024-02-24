@@ -3,7 +3,7 @@ import { SnakemakeEngine } from "../../constructs/engines/snakemake/snakemake-en
 import { EngineOptions } from "../../types";
 import { ApiProxy, Batch } from "../../constructs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
-import { ILogGroup } from "aws-cdk-lib/aws-logs";
+import { LogGroup, ILogGroup } from "aws-cdk-lib/aws-logs";
 import { ComputeResourceType } from "@aws-cdk/aws-batch-alpha";
 import { ENGINE_SNAKEMAKE } from "../../constants";
 import { Construct } from "constructs";
@@ -61,10 +61,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
       fsapId: this.snakemakeEngine.fsap.accessPointId,
       outputBucket: params.getEngineBucketPath(),
     });
-    // Referencing the Lambda's logGroup property causes a deprecated
-    // NodeJS14.x custom resource Lambda to be created in the background
-    // Do not reference the Lambda's logGroup or the CFT stack creation will fail
-    // this.adapterLogGroup = lambda.logGroup;
+    this.adapterLogGroup = LogGroup.fromLogGroupName(this, "SnakemakeAdapterLogGroup", "/aws/lambda/" + lambda.functionName);
 
     // Generate our api gateway proxy
     this.apiProxy = this.createApiProxy(params, lambda);

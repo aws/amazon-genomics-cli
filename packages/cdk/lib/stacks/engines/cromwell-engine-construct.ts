@@ -71,10 +71,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
       userId: params.userId,
       engineEndpoint: this.engine.loadBalancer.loadBalancerDnsName,
     });
-    // Referencing the Lambda's logGroup property causes a deprecated
-    // NodeJS14.x custom resource Lambda to be created in the background
-    // Do not reference the Lambda's logGroup or the CFT stack creation will fail
-    // this.adapterLogGroup = lambda.logGroup;
+    this.adapterLogGroup = LogGroup.fromLogGroupName(this, "CromwellAdapterLogGroup", "/aws/lambda/" + lambda.functionName);
 
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.contextName}${engineContainer.serviceName}ApiProxy`,
