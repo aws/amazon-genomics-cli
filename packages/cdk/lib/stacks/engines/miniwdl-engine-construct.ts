@@ -3,7 +3,7 @@ import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import { ApiProxy, Batch } from "../../constructs";
 import { EngineConstruct, EngineOutputs } from "./engine-construct";
 import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
-import { ILogGroup } from "aws-cdk-lib/aws-logs";
+import { LogGroup, ILogGroup } from "aws-cdk-lib/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
 import { IMachineImage, IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { ENGINE_MINIWDL } from "../../constants";
@@ -96,8 +96,8 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       vpc: props.contextParameters.usePublicSubnets ? undefined : props.vpc,
       vcpSubnets: props.contextParameters.usePublicSubnets ? undefined : props.subnets,
     });
-    this.adapterLogGroup = lambda.logGroup;
-
+    this.adapterLogGroup = LogGroup.fromLogGroupName(this, "MiniWdlAdapterLogGroup", "/aws/lambda/" + lambda.functionName);
+    
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}MiniWdlApiProxy`,
       lambda,
