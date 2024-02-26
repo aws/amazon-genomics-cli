@@ -71,7 +71,7 @@ export class CromwellEngineConstruct extends EngineConstruct {
       userId: params.userId,
       engineEndpoint: this.engine.loadBalancer.loadBalancerDnsName,
     });
-    this.adapterLogGroup = lambda.logGroup;
+    this.adapterLogGroup = LogGroup.fromLogGroupName(this, "CromwellAdapterLogGroup", "/aws/lambda/" + lambda.functionName);
 
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.contextName}${engineContainer.serviceName}ApiProxy`,
