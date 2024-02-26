@@ -26,7 +26,7 @@ click==8.1.7
     #   flask
 clickclick==20.10.2
     # via connexion
-connexion==2.14.1
+connexion==2.14.2
     # via -r requirements.in
 docker==7.0.0
     # via -r requirements.in
@@ -120,7 +120,7 @@ urllib3==2.0.7
     #   botocore
     #   docker
     #   requests
-werkzeug==2.3.8
+werkzeug==2.2.3
     # via
     #   -r requirements.in
     #   connexion
