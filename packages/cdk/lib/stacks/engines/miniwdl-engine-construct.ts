@@ -97,7 +97,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
       vcpSubnets: props.contextParameters.usePublicSubnets ? undefined : props.subnets,
     });
     this.adapterLogGroup = LogGroup.fromLogGroupName(this, "MiniWdlAdapterLogGroup", "/aws/lambda/" + lambda.functionName);
-    
+
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}MiniWdlApiProxy`,
       lambda,

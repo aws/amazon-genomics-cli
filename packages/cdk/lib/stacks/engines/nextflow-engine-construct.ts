@@ -72,7 +72,7 @@ export class NextflowEngineConstruct extends EngineConstruct {
       subnets: props.contextParameters.usePublicSubnets ? undefined : props.subnets,
     });
     this.adapterLogGroup = LogGroup.fromLogGroupName(this, "NextflowAdapterLogGroup", "/aws/lambda/" + lambda.functionName);
-    
+
     this.apiProxy = new ApiProxy(this, {
       apiName: `${params.projectName}${params.userId}${params.contextName}NextflowApiProxy`,
       lambda,
