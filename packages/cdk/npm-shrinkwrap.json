@@ -31,14 +31,12 @@
     "@aws-cdk/aws-batch-alpha": {
       "version": "2.67.0-alpha.0",
       "resolved": "https://registry.npmjs.org/@aws-cdk/aws-batch-alpha/-/aws-batch-alpha-2.67.0-alpha.0.tgz",
-      "integrity": "sha512-kRgM3nyuTCqaibZ5mxeyv4bk5kwpTnIjqO4vvzoooOiOvHyrswSvi8lUfsZEcHpCTe/NHKO8RRrnhDoBsedjrA==",
-      "requires": {}
+      "integrity": "sha512-kRgM3nyuTCqaibZ5mxeyv4bk5kwpTnIjqO4vvzoooOiOvHyrswSvi8lUfsZEcHpCTe/NHKO8RRrnhDoBsedjrA=="
     },
     "@aws-cdk/aws-lambda-python-alpha": {
       "version": "2.128.0-alpha.0",
       "resolved": "https://registry.npmjs.org/@aws-cdk/aws-lambda-python-alpha/-/aws-lambda-python-alpha-2.128.0-alpha.0.tgz",
-      "integrity": "sha512-rXGm9RxyI/uOwBYu0mepVmQ5+4yDrawR6EFS+I0JAdJt08fq7HKEqWzKriJg16tREu31KKFA358j6Nw1N486PQ==",
-      "requires": {}
+      "integrity": "sha512-rXGm9RxyI/uOwBYu0mepVmQ5+4yDrawR6EFS+I0JAdJt08fq7HKEqWzKriJg16tREu31KKFA358j6Nw1N486PQ=="
     },
     "@babel/code-frame": {
       "version": "7.12.11",
@@ -1110,8 +1108,7 @@
       "version": "5.3.2",
       "resolved": "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.3.2.tgz",
       "integrity": "sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==",
-      "dev": true,
-      "requires": {}
+      "dev": true
     },
     "acorn-walk": {
       "version": "7.2.0",
@@ -2264,8 +2261,7 @@
       "version": "8.5.0",
       "resolved": "https://registry.npmjs.org/eslint-config-prettier/-/eslint-config-prettier-8.5.0.tgz",
       "integrity": "sha512-obmWKLUNCnhtQRKc+tmnYuQl0pFU1ibYJQ5BGhTVB08bHe9wC8qUeG7c08dj9XX+AuPj1YSGSQIHl1pnDHZR0Q==",
-      "dev": true,
-      "requires": {}
+      "dev": true
     },
     "eslint-plugin-prettier": {
       "version": "3.4.1",
@@ -3552,8 +3548,7 @@
       "version": "1.2.2",
       "resolved": "https://registry.npmjs.org/jest-pnp-resolver/-/jest-pnp-resolver-1.2.2.tgz",
       "integrity": "sha512-olV41bKSMm8BdnuMsewT4jqlZ8+3TCARAXjZGT9jcoSnrfUnRCqnMoF9XEeoWjbzObpqF9dRhHQj0Xb9QdF6/w==",
-      "dev": true,
-      "requires": {}
+      "dev": true
     },
     "jest-regex-util": {
       "version": "26.0.0",
@@ -5698,8 +5693,7 @@
       "version": "7.5.7",
       "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.7.tgz",
       "integrity": "sha512-KMvVuFzpKBuiIXW3E4u3mySRO2/mCHSyZDJQM5NQ9Q9KHWHWh0NHgfbRMLLrceUK5qAL4ytALJbpRMjixFZh8A==",
-      "dev": true,
-      "requires": {}
+      "dev": true
     },
     "xml-name-validator": {
       "version": "3.0.0",

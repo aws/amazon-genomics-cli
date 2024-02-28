@@ -10,7 +10,7 @@ export class HeadJobBatchPolicy extends Policy {
         BatchPolicies.listAndDescribe,
         new PolicyStatement({
           effect: Effect.ALLOW,
-          actions: ["batch:RegisterJobDefinition", "batch:DeregisterJobDefinition"],
+          actions: ["batch:RegisterJobDefinition", "batch:DeregisterJobDefinition", "batch:TagResource"],
           resources: [batchArn(scope, "job-definition")],
         }),
       ],
