@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "aws-cdk": "^2.128.0",
-    "vm2": ">=3.9.11",
     "minimatch": ">=3.0.5"
   }
 }
