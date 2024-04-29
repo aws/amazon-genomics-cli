@@ -22,14 +22,13 @@
     "typescript": "~4.4.3"
   },
   "dependencies": {
-    "@aws-cdk/aws-iam": "^2.128.0",
+    "@aws-cdk/aws-iam": "^1.204.0",
     "@aws-cdk/cloud-assembly-schema": "^2.128.0",
-    "@aws-cdk/core": "^2.128.0",
+    "@aws-cdk/core": "^1.204.0",
     "@aws-cdk/cx-api": "^2.128.0",
     "aws-cdk-lib": "^2.128.0",
     "constructs": "^10.1.152",
     "minimatch": ">=3.0.5",
-    "source-map-support": "^0.5.20",
-    "vm2": ">=3.9.11"
+    "source-map-support": "^0.5.20"
   }
 }
