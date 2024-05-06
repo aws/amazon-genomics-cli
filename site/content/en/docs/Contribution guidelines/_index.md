@@ -6,6 +6,11 @@ description: >
   How to contribute to AWS Genomics CLI
 ---
 
+{{% alert title="Attention" color="warning" %}}
+**The Amazon Genomics CLI project has entered its End Of Life (EOL) phase**. The code is no longer actively maintained and the **Github repository will be archived on May 31 2024**. During this time, we encourage customers to migrate to [AWS HealthOmics](https://aws.amazon.com/healthomics/) to run their genomics workflows on AWS, or [reach out to their AWS account team](https://aws.amazon.com/contact-us/?nc2=h_header) for alternative solutions. While the source code of AGC will still be available after the EOL date, we will not make any updates inclusive of addressing issues or accepting Pull Requests.
+{{% /alert %}
+
+
 We use Go as the main language of the AWS Genomics CLI. To interact with AWS Services we use the AWS SDK for Go v2. Infrastructure to be deployed into an AWS Account is coded as TypeScript
 using the AWS CDK.
 
