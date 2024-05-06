@@ -111,7 +111,7 @@
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.06b0c5955bc113885ef5ee712f184f33.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.5b9e4484129882d00aca4788c54396ab.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -234,7 +234,16 @@ This is the multi-page printable view of this section.
 
 
 <div class="content">
-      <p>The following pages provide details on the workflow engines that are currently supported by Amazon Genomics CLI.</p>
+      
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Attention</h4>
+
+    <strong>The Amazon Genomics CLI project has entered its End Of Life (EOL) phase</strong>. The code is no longer actively maintained and the <strong>Github repository will be archived on May 31 2024</strong>. During this time, we encourage customers to migrate to <a href="https://aws.amazon.com/healthomics/">AWS HealthOmics</a> to run their genomics workflows on AWS, or <a href="https://aws.amazon.com/contact-us/?nc2=h_header">reach out to their AWS account team</a> for alternative solutions. While the source code of AGC will still be available after the EOL date, we will not make any updates inclusive of addressing issues or accepting Pull Requests.
+
+</div>
+
+<p>The following pages provide details on the workflow engines that are currently supported by Amazon Genomics CLI.</p>
 
 </div>
 </div>
@@ -254,11 +263,20 @@ This is the multi-page printable view of this section.
 	
     
 
-<div class="td-content" style="">
+<div class="td-content" style="page-break-before: always">
     
 	<h1 id="pg-a4021d5b24308a0389c949e8f2bf5f99">1 - Filesystems</h1>
     <div class="lead">Workflow Filesystems</div>
-	<p>The tasks in a workflow require a common filesystem or scratch space where the outputs of tasks can be written so they
+	
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Attention</h4>
+
+    <strong>The Amazon Genomics CLI project has entered its End Of Life (EOL) phase</strong>. The code is no longer actively maintained and the <strong>Github repository will be archived on May 31 2024</strong>. During this time, we encourage customers to migrate to <a href="https://aws.amazon.com/healthomics/">AWS HealthOmics</a> to run their genomics workflows on AWS, or <a href="https://aws.amazon.com/contact-us/?nc2=h_header">reach out to their AWS account team</a> for alternative solutions. While the source code of AGC will still be available after the EOL date, we will not make any updates inclusive of addressing issues or accepting Pull Requests.
+
+</div>
+
+<p>The tasks in a workflow require a common filesystem or scratch space where the outputs of tasks can be written so they
 are available to the inputs of dependent tasks in the same workflow. The following pages provide details on the engine
 filesystems that can be deployed by Amazon Genomics CLI.</p>
 
@@ -300,17 +318,22 @@ All intermediate I/O is performed against the EFS filesystem.</p>
 </ol>
 <h3 id="disadvantages">Disadvantages</h3>
 <ol>
-<li>Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned IOPs.</li>
+<li>Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned throughput.</li>
 <li>The volume exists for the lifetime of the context and will incur costs based on its size for the lifetime of the context. If you no longer need the context we recommend destroying it.</li>
 <li>Call caching is only possible for as long as the volume exists, i.e. the lifetime of the context.</li>
 </ol>
-<h3 id="provisioned-iops">Provisioned IOPs</h3>
+<h3 id="provisioned-throughput">Provisioned Throughput</h3>
 <p>Amazon EFS volumes deployed by the Amazon Genomics CLI use <a href="https://docs.aws.amazon.com/efs/latest/ug/performance.html#bursting">&ldquo;bursting&rdquo;</a>
 throughput by default. For workflows that have high I/O throughput or in scenarios where you may have many workflows
 running in the same context at the same time, you may exhaust the burst credits of the volume.
 This might cause a workflow to slow down or even fail. Available volume credits can be <a href="https://docs.aws.amazon.com/efs/latest/ug/monitoring_overview.html">monitored</a>
-in the Amazon EFS console, and/ or Amazon CloudWatch. If you observe the exhaustion of burst credits you may want to consider
-deploying a context with <a href="https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput">provisioned</a> throughput IOPs.</p>
+in the Amazon EFS console, and/ or Amazon CloudWatch.</p>
+<p>If you observe the exhaustion of burst credits you may want to consider
+deploying a context with <a href="https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput">provisioned throughput</a>.
+Throughput is provisioned in MiB/s and may be upto 1024 MiB/s. Note that this is an <strong>additional expense</strong> for the EFS volume
+and is charged even when the volume has no data stored in it. If you choose an EFS volume with provisioned throughput we encourage
+you to destroy the context whenever it is not in use to minimize costs. To determine the costs of provisioned throughput
+you may use the <a href="https://calculator.aws/#/addService/EFS">AWS Price Calculator for EFS</a></p>
 <p>The following fragment of an <code>agc-project.yaml</code> file is an example of how to configure provisioned throughput for the
 Amazon EFS volume used by miniwdl in an Amazon Genomics CLI context.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">myContext</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -320,11 +343,11 @@ Amazon EFS volume used by miniwdl in an Amazon Genomics CLI context.</p>
 </span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">filesystem</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">          </span><span style="color:#204a87;font-weight:bold">fsType</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">EFS</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">          </span><span style="color:#204a87;font-weight:bold">configuration</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">            </span><span style="color:#204a87;font-weight:bold">provisionedThroughput</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1024</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">            </span><span style="color:#204a87;font-weight:bold">provisionedThroughput</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">100</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div><h3 id="supporting-engines">Supporting Engines</h3>
 <p>The use of Amazon EFS as a shared file system is supported by the <a href="/amazon-genomics-cli/docs/workflow-engines/miniwdl/">miniwdl</a> and
 <a href="/amazon-genomics-cli/docs/workflow-engines/snakemake/">Snakemake</a> engines. Both use EFS with bursting throughput by default and both
-support provisioned IOPs.</p>
+support provisioned throughput.</p>
 
 </div>
 

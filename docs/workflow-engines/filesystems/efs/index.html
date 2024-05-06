@@ -27,13 +27,13 @@ Advantages  Compared with the S3 Filesystem there is no redundant I/O of inputs 
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://aws.github.io/amazon-genomics-cli/docs/workflow-engines/filesystems/efs/" /><meta property="article:section" content="docs" />
 <meta property="article:published_time" content="2022-03-11T15:21:15-05:00" />
-<meta property="article:modified_time" content="2022-12-28T11:52:56-08:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
+<meta property="article:modified_time" content="2024-05-06T16:42:53-04:00" /><meta property="og:site_name" content="Amazon Genomics CLI" />
 
 <meta itemprop="name" content="EFS Workflow Filesystem">
 <meta itemprop="description" content="Amazon EFS Workflow Filesystem Workflow engines that support it may use Amazon EFS as a shared &ldquo;scratch&rdquo; space for hosting workflow intermediates and outputs. Initial inputs are localized once from S3 and final outputs are written back to S3 when the workflow is complete. All intermediate I/O is performed against the EFS filesystem.
 Advantages  Compared with the S3 Filesystem there is no redundant I/O of inputs from S3. Each tasks individual I/O operations tend to be smaller than the copy from S3 so there is less network congestion on the container host."><meta itemprop="datePublished" content="2022-03-11T15:21:15-05:00" />
-<meta itemprop="dateModified" content="2022-12-28T11:52:56-08:00" />
-<meta itemprop="wordCount" content="381">
+<meta itemprop="dateModified" content="2024-05-06T16:42:53-04:00" />
+<meta itemprop="wordCount" content="456">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="EFS Workflow Filesystem"/>
 <meta name="twitter:description" content="Amazon EFS Workflow Filesystem Workflow engines that support it may use Amazon EFS as a shared &ldquo;scratch&rdquo; space for hosting workflow intermediates and outputs. Initial inputs are localized once from S3 and final outputs are written back to S3 when the workflow is complete. All intermediate I/O is performed against the EFS filesystem.
@@ -114,7 +114,7 @@ Advantages  Compared with the S3 Filesystem there is no redundant I/O of inputs 
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.06b0c5955bc113885ef5ee712f184f33.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.5b9e4484129882d00aca4788c54396ab.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -136,7 +136,7 @@ Advantages  Compared with the S3 Filesystem there is no redundant I/O of inputs 
   aria-label="Search this site…"
   autocomplete="off"
   
-  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.06b0c5955bc113885ef5ee712f184f33.json"
+  data-offline-search-index-json-src="/amazon-genomics-cli/offline-search-index.5b9e4484129882d00aca4788c54396ab.json"
   data-offline-search-base-href="/"
   data-offline-search-max-results="10"
 >
@@ -336,7 +336,7 @@ Advantages  Compared with the S3 Filesystem there is no redundant I/O of inputs 
       <ul>
         <li><a href="#advantages">Advantages</a></li>
         <li><a href="#disadvantages">Disadvantages</a></li>
-        <li><a href="#provisioned-iops">Provisioned IOPs</a></li>
+        <li><a href="#provisioned-throughput">Provisioned Throughput</a></li>
         <li><a href="#supporting-engines">Supporting Engines</a></li>
       </ul>
     </li>
@@ -419,17 +419,22 @@ All intermediate I/O is performed against the EFS filesystem.</p>
 </ol>
 <h3 id="disadvantages">Disadvantages</h3>
 <ol>
-<li>Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned IOPs.</li>
+<li>Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned throughput.</li>
 <li>The volume exists for the lifetime of the context and will incur costs based on its size for the lifetime of the context. If you no longer need the context we recommend destroying it.</li>
 <li>Call caching is only possible for as long as the volume exists, i.e. the lifetime of the context.</li>
 </ol>
-<h3 id="provisioned-iops">Provisioned IOPs</h3>
+<h3 id="provisioned-throughput">Provisioned Throughput</h3>
 <p>Amazon EFS volumes deployed by the Amazon Genomics CLI use <a href="https://docs.aws.amazon.com/efs/latest/ug/performance.html#bursting">&ldquo;bursting&rdquo;</a>
 throughput by default. For workflows that have high I/O throughput or in scenarios where you may have many workflows
 running in the same context at the same time, you may exhaust the burst credits of the volume.
 This might cause a workflow to slow down or even fail. Available volume credits can be <a href="https://docs.aws.amazon.com/efs/latest/ug/monitoring_overview.html">monitored</a>
-in the Amazon EFS console, and/ or Amazon CloudWatch. If you observe the exhaustion of burst credits you may want to consider
-deploying a context with <a href="https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput">provisioned</a> throughput IOPs.</p>
+in the Amazon EFS console, and/ or Amazon CloudWatch.</p>
+<p>If you observe the exhaustion of burst credits you may want to consider
+deploying a context with <a href="https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput">provisioned throughput</a>.
+Throughput is provisioned in MiB/s and may be upto 1024 MiB/s. Note that this is an <strong>additional expense</strong> for the EFS volume
+and is charged even when the volume has no data stored in it. If you choose an EFS volume with provisioned throughput we encourage
+you to destroy the context whenever it is not in use to minimize costs. To determine the costs of provisioned throughput
+you may use the <a href="https://calculator.aws/#/addService/EFS">AWS Price Calculator for EFS</a></p>
 <p>The following fragment of an <code>agc-project.yaml</code> file is an example of how to configure provisioned throughput for the
 Amazon EFS volume used by miniwdl in an Amazon Genomics CLI context.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#204a87;font-weight:bold">myContext</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -439,16 +444,16 @@ Amazon EFS volume used by miniwdl in an Amazon Genomics CLI context.</p>
 </span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">filesystem</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">          </span><span style="color:#204a87;font-weight:bold">fsType</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">EFS</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">          </span><span style="color:#204a87;font-weight:bold">configuration</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">            </span><span style="color:#204a87;font-weight:bold">provisionedThroughput</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1024</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">            </span><span style="color:#204a87;font-weight:bold">provisionedThroughput</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">100</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></code></pre></div><h3 id="supporting-engines">Supporting Engines</h3>
 <p>The use of Amazon EFS as a shared file system is supported by the <a href="/amazon-genomics-cli/docs/workflow-engines/miniwdl/">miniwdl</a> and
 <a href="/amazon-genomics-cli/docs/workflow-engines/snakemake/">Snakemake</a> engines. Both use EFS with bursting throughput by default and both
-support provisioned IOPs.</p>
+support provisioned throughput.</p>
 
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified December 28, 2022: <a href="https://github.com/aws/amazon-genomics-cli/commit/b537741c2d0396e50158656aa0138f68b6092e49">Merge pull request #584 from aws/bump/v1.6.0 (b537741)</a>
+  Last modified May 6, 2024: <a href="https://github.com/aws/amazon-genomics-cli/commit/c3beaf93917a64545811043f1a0c287f3e54bb51">chore: fix typo in docs (#648) (c3beaf9)</a>
 </div>
 
 </div>

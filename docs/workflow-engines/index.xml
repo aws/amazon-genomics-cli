@@ -23,7 +23,16 @@
       <description>
         
         
-        &lt;p&gt;The tasks in a workflow require a common filesystem or scratch space where the outputs of tasks can be written so they
+        
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Attention&lt;/h4&gt;
+
+    &lt;strong&gt;The Amazon Genomics CLI project has entered its End Of Life (EOL) phase&lt;/strong&gt;. The code is no longer actively maintained and the &lt;strong&gt;Github repository will be archived on May 31 2024&lt;/strong&gt;. During this time, we encourage customers to migrate to &lt;a href=&#34;https://aws.amazon.com/healthomics/&#34;&gt;AWS HealthOmics&lt;/a&gt; to run their genomics workflows on AWS, or &lt;a href=&#34;https://aws.amazon.com/contact-us/?nc2=h_header&#34;&gt;reach out to their AWS account team&lt;/a&gt; for alternative solutions. While the source code of AGC will still be available after the EOL date, we will not make any updates inclusive of addressing issues or accepting Pull Requests.
+
+&lt;/div&gt;
+
+&lt;p&gt;The tasks in a workflow require a common filesystem or scratch space where the outputs of tasks can be written so they
 are available to the inputs of dependent tasks in the same workflow. The following pages provide details on the engine
 filesystems that can be deployed by Amazon Genomics CLI.&lt;/p&gt;
 

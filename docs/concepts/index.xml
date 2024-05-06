@@ -28,7 +28,7 @@ working with Amazon Genomics CLI and account must be &amp;ldquo;Activated&amp;rd
 &lt;p&gt;Amazon Genomics CLI uses the same &lt;a href=&#34;https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-precedence&#34;&gt;AWS credential chain&lt;/a&gt;
 used by the AWS CLI to determine what account should be used and with what credentials.
 All that is required is that you have an existing AWS account (or create a new one) which contains at least one IAM Principal
-(User/ Role) that you have can access.&lt;/p&gt;
+(User/ Role) that you can access.&lt;/p&gt;
 &lt;h2 id=&#34;which-region-is-used-by-amazon-genomics-cli&#34;&gt;Which Region is Used by Amazon Genomics CLI?&lt;/h2&gt;
 &lt;p&gt;Much like accounts and credentials, Amazon Genomics CLI uses the same chain used by the AWS CLI to determine the region that is being targeted.
 For example, if your AWS profile uses &lt;code&gt;us-east-1&lt;/code&gt; then Amazon Genomics CLI will use the same. Likewise, if you set the &lt;code&gt;AWS_REGION&lt;/code&gt; environment

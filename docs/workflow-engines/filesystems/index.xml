@@ -37,17 +37,22 @@ All intermediate I/O is performed against the EFS filesystem.&lt;/p&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;disadvantages&#34;&gt;Disadvantages&lt;/h3&gt;
 &lt;ol&gt;
-&lt;li&gt;Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned IOPs.&lt;/li&gt;
+&lt;li&gt;Amazon EFS volumes are more expensive than storing intermediates and output in S3, especially when the volume uses provisioned throughput.&lt;/li&gt;
 &lt;li&gt;The volume exists for the lifetime of the context and will incur costs based on its size for the lifetime of the context. If you no longer need the context we recommend destroying it.&lt;/li&gt;
 &lt;li&gt;Call caching is only possible for as long as the volume exists, i.e. the lifetime of the context.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h3 id=&#34;provisioned-iops&#34;&gt;Provisioned IOPs&lt;/h3&gt;
+&lt;h3 id=&#34;provisioned-throughput&#34;&gt;Provisioned Throughput&lt;/h3&gt;
 &lt;p&gt;Amazon EFS volumes deployed by the Amazon Genomics CLI use &lt;a href=&#34;https://docs.aws.amazon.com/efs/latest/ug/performance.html#bursting&#34;&gt;&amp;ldquo;bursting&amp;rdquo;&lt;/a&gt;
 throughput by default. For workflows that have high I/O throughput or in scenarios where you may have many workflows
 running in the same context at the same time, you may exhaust the burst credits of the volume.
 This might cause a workflow to slow down or even fail. Available volume credits can be &lt;a href=&#34;https://docs.aws.amazon.com/efs/latest/ug/monitoring_overview.html&#34;&gt;monitored&lt;/a&gt;
-in the Amazon EFS console, and/ or Amazon CloudWatch. If you observe the exhaustion of burst credits you may want to consider
-deploying a context with &lt;a href=&#34;https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput&#34;&gt;provisioned&lt;/a&gt; throughput IOPs.&lt;/p&gt;
+in the Amazon EFS console, and/ or Amazon CloudWatch.&lt;/p&gt;
+&lt;p&gt;If you observe the exhaustion of burst credits you may want to consider
+deploying a context with &lt;a href=&#34;https://docs.aws.amazon.com/efs/latest/ug/performance.html#provisioned-throughput&#34;&gt;provisioned throughput&lt;/a&gt;.
+Throughput is provisioned in MiB/s and may be upto 1024 MiB/s. Note that this is an &lt;strong&gt;additional expense&lt;/strong&gt; for the EFS volume
+and is charged even when the volume has no data stored in it. If you choose an EFS volume with provisioned throughput we encourage
+you to destroy the context whenever it is not in use to minimize costs. To determine the costs of provisioned throughput
+you may use the &lt;a href=&#34;https://calculator.aws/#/addService/EFS&#34;&gt;AWS Price Calculator for EFS&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;The following fragment of an &lt;code&gt;agc-project.yaml&lt;/code&gt; file is an example of how to configure provisioned throughput for the
 Amazon EFS volume used by miniwdl in an Amazon Genomics CLI context.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;myContext&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -57,11 +62,11 @@ Amazon EFS volume used by miniwdl in an Amazon Genomics CLI context.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;filesystem&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;fsType&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000&#34;&gt;EFS&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;configuration&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;            &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;provisionedThroughput&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;1024&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;            &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;provisionedThroughput&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;100&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;supporting-engines&#34;&gt;Supporting Engines&lt;/h3&gt;
 &lt;p&gt;The use of Amazon EFS as a shared file system is supported by the &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/workflow-engines/miniwdl/&#34;&gt;miniwdl&lt;/a&gt; and
 &lt;a href=&#34;https://aws.github.io/amazon-genomics-cli/amazon-genomics-cli/docs/workflow-engines/snakemake/&#34;&gt;Snakemake&lt;/a&gt; engines. Both use EFS with bursting throughput by default and both
-support provisioned IOPs.&lt;/p&gt;
+support provisioned throughput.&lt;/p&gt;
 
       </description>
     </item>
