@@ -26,7 +26,7 @@ feature requests, code of conduct and license terms.
 
 * [Github Hello World!](https://guides.github.com/activities/hello-world/): A basic introduction to GitHub concepts and workflow.
 * [Golang](https://golang.org): Information about the Go language
-* [TypeScript](https://typescriptlang.org): Information about the Go language
+* [TypeScript](https://typescriptlang.org): Information about the TypeScript language
 * [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/home.html): Developer guide to the AWS Cloud Development Kit (CDK)
 * [AWS SDK for Go v2](https://aws.github.io/aws-sdk-go-v2/docs/): Developer guide for the AWS SDK for Go v2
 * [Docsy user guide](https://www.docsy.dev/docs/): All about Docsy, including how it manages navigation, look and feel, and multi-language support.
