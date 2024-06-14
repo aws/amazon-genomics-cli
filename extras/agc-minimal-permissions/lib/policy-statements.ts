@@ -118,6 +118,8 @@ export class AgcPermissions {
                 "GetBucketPolicy",
                 "GetBucketLocation",
                 "ListBucket",
+                "GetObject",
+                "GetObjectVersion",             
                 "ListObjectVersions",
                 "ListBucketVersions",
             ),
